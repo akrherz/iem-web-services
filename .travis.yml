@@ -26,7 +26,8 @@ before_install:
   - sudo ln -s `pwd` /opt/iem-json-services
   - chmod 755 $HOME
   # need apache2-dev for mod-wsgi to build
-  - sudo apt-get install apache2 apache2-dev memcached
+  # apache2-utils is for rotatelogs
+  - sudo apt-get install apache2 apache2-dev memcached apache2-utils
   - sudo service memcached start
   - sudo a2enmod headers rewrite proxy cgi expires authz_groupfile
   # we do things the old fashioned way, we earn it
