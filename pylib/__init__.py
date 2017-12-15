@@ -19,10 +19,13 @@ def dispatch(fields, environ, start_response):
     if hasattr(mod, 'get_mckey'):
         mckey = "/api/%s/%s/%s" % (version, service, mod.get_mckey(fields))
         res = mc.get(mckey)
+        response_headers = [('Content-type', 'application/json'),
+                            ('Content-Length', str(len(res)))]
+        start_response("200 OK", response_headers)
         if res:
             if cb:
-                return "%s(%s)" % (cb, res)
-            return res
+                return ["%s(%s)" % (cb, res)]
+            return [res]
     res = mod.handler(version, fields, environ)
     if isinstance(res, pd.DataFrame):
         res = res.to_json(orient='table')
