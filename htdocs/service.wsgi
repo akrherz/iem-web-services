@@ -6,7 +6,6 @@
 """
 import sys
 import os
-import json
 
 from paste.request import parse_formvars  # @UnresolvedImport
 
@@ -26,11 +25,4 @@ from pylib import dispatch  # NoPEP8 pylint: disable=wrong-import-position
 def application(environ, start_response):
     """Our Application!"""
     fields = parse_formvars(environ)
-    output = json.dumps(dispatch(fields, environ))
-
-    response_headers = [('Content-type', 'application/json'),
-                        ('Content-Length', str(len(output)))]
-
-    start_response("200 OK", response_headers)
-
-    return [output]
+    return dispatch(fields, environ, start_response)
