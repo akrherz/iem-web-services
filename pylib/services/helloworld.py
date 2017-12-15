@@ -1,6 +1,7 @@
 """Something simple"""
+import json
 
 
 def handler(version, fields, environ):
     """Handle the request, return dict"""
-    return {'hello': 'world'}
+    return json.dumps({'hello': 'world'})
