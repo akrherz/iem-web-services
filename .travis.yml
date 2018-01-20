@@ -17,13 +17,13 @@ addons:
     - iem.local
     - iem-memcached
     - talltowers-db.local
-    - iem-json-services.local
+    - iem-web-services.local
 language: python
 python:
   - "2.7"
 before_install:
   - sudo mkdir -p /mesonet/www/logs
-  - sudo ln -s `pwd` /opt/iem-json-services
+  - sudo ln -s `pwd` /opt/iem-web-services
   - chmod 755 $HOME
   # need apache2-dev for mod-wsgi to build
   # apache2-utils is for rotatelogs
@@ -63,5 +63,5 @@ install:
 script:
   # restart apache
   - sudo service apache2 restart || sudo cat /var/log/apache2/error.log
-  - curl http://iem-json-services.local/service.wsgi
+  - curl http://iem-web-services.local/service.wsgi
   - sudo cat /var/log/apache2/error.log

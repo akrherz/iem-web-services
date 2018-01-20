@@ -1,7 +1,7 @@
 """Our front-end to IEM JSON Services
 
 1. IEM Requests come in like so:  /api/version/servicename.json?queryparams
-2. Apache proxies to http://iem-json-services.local/service.wsgi
+2. Apache proxies to http://iem-web-services.local/service.wsgi
 3. We profit
 """
 import sys

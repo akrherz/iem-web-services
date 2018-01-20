@@ -1,2 +1,2 @@
-# iem-json-services
+# iem-web-services
 Code servicing IEM API requests
