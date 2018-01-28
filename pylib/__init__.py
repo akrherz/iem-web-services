@@ -6,11 +6,19 @@ import pandas as pd
 import memcache
 
 
+def get_header_by_extension(extension):
+    """What is our mime-type for this extension"""
+    if extension == 'txt':
+        return "text/plain"
+    return "application/json"
+
+
 def dispatch(fields, environ, start_response):
     """Our main dispatcher"""
     cb = fields.get('callback', None)
     version = fields.get('_version', 1)
     service = fields.get('_service', 'helloworld')
+    fmt = fields.get("_format", "json")
     name = "pylib/services/%s" % (service, )
     (fn, pathname, description) = imp.find_module(name)
     mod = imp.load_module(name, fn, pathname, description)
@@ -20,7 +28,7 @@ def dispatch(fields, environ, start_response):
         mckey = "/api/%s/%s/%s" % (version, service, mod.get_mckey(fields))
         res = mc.get(mckey)
         if res:
-            response_headers = [('Content-type', 'application/json'),
+            response_headers = [('Content-type', get_header_by_extension(fmt)),
                                 ('Content-Length', str(len(res)))]
             start_response("200 OK", response_headers)
             if cb:
@@ -33,7 +41,7 @@ def dispatch(fields, environ, start_response):
 
     if mckey:
         mc.set(mckey, res, 3600)
-    response_headers = [('Content-type', 'application/json'),
+    response_headers = [('Content-type', get_header_by_extension(fmt)),
                         ('Content-Length', str(len(res)))]
     start_response("200 OK", response_headers)
 
