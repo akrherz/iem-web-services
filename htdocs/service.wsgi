@@ -7,6 +7,10 @@
 import sys
 import os
 
+import numpy as np
+# Attempt to stop hangs within mod_wsgi and numpy
+np.seterr(all='ignore')
+
 from paste.request import parse_formvars  # @UnresolvedImport
 
 
