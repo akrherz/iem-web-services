@@ -8,13 +8,17 @@
 """
 import os
 import tempfile
+import warnings
 
 import numpy as np
+from metpy.units import units, masked_array
 from pandas.io.sql import read_sql
 from geopandas import read_postgis
 from pyiem.util import get_dbconn
 from pyiem.datatypes import temperature, speed
-from pyiem.meteorology import feelslike
+from pyiem.meteorology import mcalc_feelslike
+# prevent warnings that may trip up mod_wsgi
+warnings.simplefilter('ignore')
 
 CACHE_EXPIRE = 60
 # Avoid three table aggregate by initial window join
@@ -78,9 +82,16 @@ def compute(df):
     """Compute other things that we can't easily do in the database"""
     # replace any None values with np.nan
     df.fillna(value=np.nan, inplace=True)
-    df['feel'] = feelslike(temperature(df['tmpf'].values, 'F'),
-                           temperature(df['dwpf'].values, 'F'),
-                           speed(df['sknt'].values, 'KT')).value('F')
+    if df.empty:
+        df['feel'] = None
+        return
+    tmpf = masked_array(df['tmpf'].values, units('degF'),
+                        mask=df['tmpf'].isnull())
+    dwpf = masked_array(df['dwpf'].values, units('degF'),
+                        mask=df['dwpf'].isnull())
+    smps = masked_array(df['sknt'].values, units('knots'),
+                        mask=df['sknt'].isnull())
+    df['feel'] = mcalc_feelslike(tmpf, dwpf, smps).to(units('degF')).magnitude
     # contraversy here, drop any columns that are all missing
     # df.dropna(how='all', axis=1, inplace=True)
 
