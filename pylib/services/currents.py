@@ -17,35 +17,51 @@ from pyiem.datatypes import temperature, speed
 from pyiem.meteorology import feelslike
 
 CACHE_EXPIRE = 60
+# Avoid three table aggregate by initial window join
 SQL = """
-    SELECT t.id as station, t.name, t.county, t.state, t.network,
-    to_char(s.day, 'YYYY-mm-dd') as local_date, snow, snowd, snoww,
+WITH agg as (
+    SELECT c.iemid, t.tzname, t.id, c.valid,
+    t.id as station, t.name, t.county, t.state, t.network,
     to_char(c.valid at time zone 'UTC', 'YYYY-MM-DDThh24:MI:SSZ') as utc_valid,
     to_char(c.valid at time zone t.tzname,
             'YYYY-MM-DDThh24:MI:SS') as local_valid,
-    tmpf, max_tmpf, min_tmpf, dwpf, relh, vsby, sknt, drct,
+    tmpf, dwpf, relh, vsby, sknt, drct,
     c1smv, c2smv, c3smv, c4smv, c5smv,
     c1tmpf, c2tmpf, c3tmpf, c4tmpf, c5tmpf,
-    c.pday as ob_pday, c.pmonth as ob_pmonth, s.pmonth as s_pmonth,
-    max_sknt, max_gust, gust, mslp, pres,
+    c.pday as ob_pday, c.pmonth as ob_pmonth,
+    gust, mslp, pres,
     scond0, scond1, scond2, scond3, srad,
     tsf0, tsf1, tsf2, tsf3, rwis_subf, raw, phour,
     skyl1, skyc1, skyl2, skyc2, skyl3, skyc3, skyl4, skyc4, alti,
     array_to_string(wxcodes, ' ') as wxcodes,
-    t.geom,
+    t.geom, ST_x(t.geom) as lon, ST_y(t.geom) as lat
+    from current c JOIN stations t on (c.iemid = t.iemid) WHERE
+    REPLACEME and not t.metasite
+)
+    SELECT c.id as station, c.name, c.county, c.state, c.network,
+    to_char(s.day, 'YYYY-mm-dd') as local_date, snow, snowd, snoww,
+    c.utc_valid, c.local_valid,
+    tmpf, max_tmpf, min_tmpf, dwpf, relh, vsby, sknt, drct,
+    c1smv, c2smv, c3smv, c4smv, c5smv,
+    c1tmpf, c2tmpf, c3tmpf, c4tmpf, c5tmpf,
+    ob_pday, ob_pmonth, s.pmonth as s_pmonth,
+    max_sknt, max_gust, gust, mslp, pres,
+    scond0, scond1, scond2, scond3, srad,
+    tsf0, tsf1, tsf2, tsf3, rwis_subf, raw, phour,
+    skyl1, skyc1, skyl2, skyc2, skyl3, skyc3, skyl4, skyc4, alti,
+    wxcodes,
+    geom,
     to_char(s.max_gust_ts at time zone 'UTC',
         'YYYY-MM-DDThh24:MI:SSZ') as utc_max_gust_ts,
-    to_char(s.max_gust_ts at time zone t.tzname,
+    to_char(s.max_gust_ts at time zone c.tzname,
             'YYYY-MM-DDThh24:MI:SS') as local_max_gust_ts,
     to_char(s.max_sknt_ts at time zone 'UTC',
         'YYYY-MM-DDThh24:MI:SSZ') as utc_max_sknt_ts,
-    to_char(s.max_sknt_ts at time zone t.tzname,
+    to_char(s.max_sknt_ts at time zone c.tzname,
             'YYYY-MM-DDThh24:MI:SS') as local_max_sknt_ts,
-    ST_x(t.geom) as lon, ST_y(t.geom) as lat, s.pday
-    from current c, summary s, stations t WHERE
-    REPLACEME and t.iemid = s.iemid and t.iemid = c.iemid
-    and s.day = date(now() at time zone t.tzname)
-    and not t.metasite
+    lon, lat, s.pday
+    from agg c, summary s WHERE s.day >= 'TODAY':: date - '2 days'::interval
+    and c.iemid = s.iemid and s.day = date(c.valid at time zone c.tzname)
 """
 
 
