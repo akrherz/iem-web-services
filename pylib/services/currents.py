@@ -85,13 +85,18 @@ def compute(df):
     if df.empty:
         df['feel'] = None
         return
-    tmpf = masked_array(df['tmpf'].values, units('degF'),
-                        mask=df['tmpf'].isnull())
-    dwpf = masked_array(df['dwpf'].values, units('degF'),
-                        mask=df['dwpf'].isnull())
-    smps = masked_array(df['sknt'].values, units('knots'),
-                        mask=df['sknt'].isnull())
-    df['feel'] = mcalc_feelslike(tmpf, dwpf, smps).to(units('degF')).magnitude
+    df['feel'] = None
+    df2 = df[['tmpf', 'dwpf', 'sknt']].dropna(axis=0, how='any')
+    tmpf = masked_array(df2['tmpf'].values, units('degF'),
+                        mask=df2['tmpf'].isnull())
+    dwpf = masked_array(df2['dwpf'].values, units('degF'),
+                        mask=df2['dwpf'].isnull())
+    smps = masked_array(df2['sknt'].values, units('knots'),
+                        mask=df2['sknt'].isnull())
+    df.loc[df2.index]['feel'] = mcalc_feelslike(tmpf,
+                                                dwpf,
+                                                smps).to(
+                                                    units('degF')).magnitude
     # contraversy here, drop any columns that are all missing
     # df.dropna(how='all', axis=1, inplace=True)
 
