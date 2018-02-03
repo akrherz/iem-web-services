@@ -37,7 +37,7 @@ def dispatch(fields, environ, start_response):
             return [res]
     res = mod.handler(version, fields, environ)
     if isinstance(res, pd.DataFrame):
-        data = res.to_json(orient='table')
+        data = res.to_json(orient='table', default_handler=repr)
         res = data
 
     if mckey:
