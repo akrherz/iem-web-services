@@ -15,7 +15,6 @@ from metpy.units import units, masked_array
 from pandas.io.sql import read_sql
 from geopandas import read_postgis
 from pyiem.util import get_dbconn
-from pyiem.datatypes import temperature, speed
 from pyiem.meteorology import mcalc_feelslike
 # prevent warnings that may trip up mod_wsgi
 warnings.simplefilter('ignore')
@@ -85,18 +84,13 @@ def compute(df):
     if df.empty:
         df['feel'] = None
         return
-    df['feel'] = None
-    df2 = df[['tmpf', 'dwpf', 'sknt']].dropna(axis=0, how='any')
-    tmpf = masked_array(df2['tmpf'].values, units('degF'),
-                        mask=df2['tmpf'].isnull())
-    dwpf = masked_array(df2['dwpf'].values, units('degF'),
-                        mask=df2['dwpf'].isnull())
-    smps = masked_array(df2['sknt'].values, units('knots'),
-                        mask=df2['sknt'].isnull())
-    df.loc[df2.index]['feel'] = mcalc_feelslike(tmpf,
-                                                dwpf,
-                                                smps).to(
-                                                    units('degF')).magnitude
+    tmpf = masked_array(df['tmpf'].values, units('degF'),
+                        mask=df['tmpf'].isnull())
+    dwpf = masked_array(df['dwpf'].values, units('degF'),
+                        mask=df['dwpf'].isnull())
+    smps = masked_array(df['sknt'].values, units('knots'),
+                        mask=df['sknt'].isnull())
+    df['feel'] = mcalc_feelslike(tmpf, dwpf, smps).to(units('degF')).magnitude
     # contraversy here, drop any columns that are all missing
     # df.dropna(how='all', axis=1, inplace=True)
 
