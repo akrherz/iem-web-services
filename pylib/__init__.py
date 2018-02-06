@@ -25,8 +25,8 @@ def dispatch(fields, environ, start_response):
     mc = memcache.Client(['iem-memcached:11211'], debug=0)
     mckey = None
     if hasattr(mod, 'get_mckey'):
-        mckey = "/api/%s/%s.%s/%s" % (version, service, fmt,
-                                      mod.get_mckey(fields))
+        mckey = ("/api/%s/%s.%s/%s" % (version, service, fmt,
+                                       mod.get_mckey(fields)))[:250]
         res = mc.get(mckey)
         if res:
             response_headers = [('Content-type', get_header_by_extension(fmt)),
