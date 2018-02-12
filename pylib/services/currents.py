@@ -135,7 +135,7 @@ def handler(_version, fields, _environ):
     (tmpfd, tmpfn) = tempfile.mkstemp()
     os.close(tmpfd)
     if fmt == 'txt':
-        df.to_csv(tmpfn, index=False)
+        df.to_csv(tmpfn, index=True)
     elif fmt == 'json':
         # Implement our 'table-schema' option
         return df
