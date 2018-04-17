@@ -37,7 +37,8 @@ def dispatch(fields, environ, start_response):
             return [res]
     res = mod.handler(version, fields, environ)
     if isinstance(res, pd.DataFrame):
-        data = res.to_json(orient='table')
+        # Needs this to avoid OverFlowError?
+        data = res.to_json(orient='table', default_handler=str)
         res = data
 
     if mckey:
