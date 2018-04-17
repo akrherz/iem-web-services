@@ -98,6 +98,8 @@ def compute(df):
 def handler(_version, fields, _environ):
     """Handle the request, return dict"""
     fmt = fields.get("_format", "json")
+    if fmt == 'geojson':
+        raise ValueError("geojson is not implemented")
     network = fields.get('network', 'IA_ASOS')[:32]
     networkclass = fields.get('networkclass', '')[:32]
     wfo = fields.get('wfo', '')[:4]
