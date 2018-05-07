@@ -34,7 +34,7 @@ def dispatch(fields, environ, start_response):
             start_response("200 OK", response_headers)
             if cb:
                 return ["%s(%s)" % (cb, res)]
-            return [res]
+            return [res.encode('utf-8')]
     res = mod.handler(version, fields, environ)
     if isinstance(res, pd.DataFrame):
         # Needs this to avoid OverFlowError?
@@ -47,4 +47,4 @@ def dispatch(fields, environ, start_response):
                         ('Content-Length', str(len(res)))]
     start_response("200 OK", response_headers)
 
-    return [res]
+    return [res.encode('utf-8')]
