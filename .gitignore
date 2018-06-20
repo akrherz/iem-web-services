@@ -1,3 +1,4 @@
 /.project
 /.pydevproject
 /.vscode
+.pytest_cache

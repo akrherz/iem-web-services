@@ -17,8 +17,8 @@ def compute_times(fields):
     """Figure out our start and end times"""
     if 'begints' in fields:
         begints = datetime.datetime.strptime(fields['begints'][:16],
-                                             ISO9660[:16])
-        endts = datetime.datetime.strptime(fields['endts'][:16], ISO9660[:16])
+                                             ISO9660[:14])
+        endts = datetime.datetime.strptime(fields['endts'][:16], ISO9660[:14])
     else:
         ets = datetime.datetime.utcnow()
         sts = ets - datetime.timedelta(hours=25)
@@ -317,7 +317,7 @@ class COWSession(object):
             lsrs = cascaded_union(
                 self.stormreports_buffered[_ev['stormreports']])
             overlap = geometry.intersection(lsrs)
-            self.events.loc[eidx, 'areaverify'] = overlap.area
+            self.events.loc[eidx, 'areaverify'] = overlap.area / 1000000.
 
     def clean_dataframes(self):
         """Get rid of types we can not handle"""
@@ -352,7 +352,28 @@ def handler(_version, fields, _environ):
                                              cow.stormreports.to_json())
 
 
-if __name__ == '__main__':
+def test_one():
+    """Compare with what we have from legacy PHP based Cow"""
+    from paste.util.multidict import MultiDict
+    flds = MultiDict()
+    flds.add('wfo', 'DMX')
+    flds.add('begints', '2018-06-18T12:00')
+    flds.add('endts', '2018-06-20T12:00')
+    flds.add('hailsize', 1.0)
+    cow = COWSession(flds)
+    cow.milk()
+    assert cow.stats['events_total'] == 5
+    assert cow.stats['events_verified'] == 2
+    assert abs(cow.stats['size_poly_vs_county[%]'] - 24.3) < 0.1
+    # variance: PHP has this at 15.0
+    assert abs(cow.stats['area_verify[%]'] - 16.5) < 0.1
+    _ev = cow.events.iloc[0]
+    assert abs(_ev['parea'] - 950.) < 1
+    assert abs(_ev['parea'] / _ev['carea'] - 0.159) < 0.01
+
+
+def main():
+    """A main func for testing"""
     from paste.util.multidict import MultiDict
     flds = MultiDict()
     flds.add('wfo', 'DVN')
@@ -366,3 +387,7 @@ if __name__ == '__main__':
                ) % (props['wfo'], props['eventid'],
                     props['phenomena'], props['parea']))
     # print(json.dumps(js, indent=2))
+
+
+if __name__ == '__main__':
+    main()
