@@ -21,7 +21,7 @@ def compute_times(fields):
         endts = datetime.datetime.strptime(fields['endts'][:16], ISO9660[:14])
     else:
         ets = datetime.datetime.utcnow()
-        sts = ets - datetime.timedelta(hours=25)
+        sts = ets - datetime.timedelta(hours=4)
         begints = utc(int(fields.get('syear', sts.year)),
                       int(fields.get('smonth', sts.month)),
                       int(fields.get('sday', sts.day)),
@@ -54,7 +54,7 @@ class COWSession(object):
         self.lsrtype = fields.getall('lsrtype')
         if not self.lsrtype:
             self.lsrtype = ['TO', 'SV', 'FF', 'MA']
-        self.hailsize = float(fields.get('hailsize', 0.75))
+        self.hailsize = float(fields.get('hailsize', 1.0))
         self.lsrbuffer = float(fields.get('lsrbuffer', 15))
         self.warningbuffer = float(fields.get('warningbuffer', 1))
         self.wind = float(fields.get('wind', 58))
