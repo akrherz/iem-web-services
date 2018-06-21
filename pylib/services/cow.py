@@ -6,12 +6,20 @@
 """
 import datetime
 import json
+import sys
 
 import pytz
 import geopandas as gpd
 from shapely.ops import cascaded_union
 from pyiem.util import utc, get_dbconn
 ISO9660 = "%Y-%m-%dT%H:%M:%SZ"
+
+
+def printt(msg):
+    """Print a message with a timestamp included"""
+    if sys.stdout.isatty():
+        print(("%s %s"
+               ) % (datetime.datetime.now().strftime("%H:%M:%S.%f"), msg))
 
 
 def compute_times(fields):
@@ -78,6 +86,7 @@ class COWSession(object):
 
     def compute_stats(self):
         """Fill out the stats attribute"""
+        printt("compute_stats called...")
         _ev = self.events
         _sr = self.stormreports
         self.stats['area_verify[%]'] = (
@@ -170,6 +179,7 @@ class COWSession(object):
 
     def load_events(self):
         """Build out the listing of events based on the request"""
+        printt("load_events called...")
         self.events = gpd.read_postgis("""
         WITH stormbased as (
             SELECT wfo, phenomena, eventid, hailtag, windtag,
@@ -225,6 +235,7 @@ class COWSession(object):
 
     def load_stormreports(self):
         """Build out the listing of storm reports based on the request"""
+        printt("load_stormreports called...")
         self.stormreports = gpd.read_postgis("""
         SELECT distinct valid, type, magnitude, city, county, state,
         source, remark, wfo, typetext, ST_x(geom) as lon0, ST_y(geom) as lat0,
@@ -250,6 +261,7 @@ class COWSession(object):
 
     def compute_shared_border(self):
         """Compute a stat"""
+        printt("compute_shared_border called...")
         cursor = self.dbconn.cursor()
         for eidx, row in self.events.iterrows():
             cursor.execute("""
@@ -277,13 +289,15 @@ class COWSession(object):
 
     def sbw_verify(self):
         """Verify the events"""
+        printt("sbw_verify called...")
         centroids = self.stormreports_buffered.centroid
         for eidx, geometry in self.events_buffered.iteritems():
             _ev = self.events.loc[eidx]
-            for sidx, _ in centroids.within(geometry).iteritems():
+            indicies = ((self.stormreports['valid'] >= _ev['issue']) &
+                        (self.stormreports['valid'] < _ev['expire']))
+            for sidx, _ in centroids[indicies].within(geometry).iteritems():
                 _sr = self.stormreports.loc[sidx]
-                if (_sr['valid'] < _ev['issue'] or
-                        _sr['valid'] >= _ev['expire'] or _sr['events']):
+                if _sr['events']:
                     continue
                 verify = False
                 if _ev['phenomena'] == 'FF' and _sr['type'] in ['F', 'x']:
@@ -314,6 +328,7 @@ class COWSession(object):
 
     def area_verify(self):
         """Do Areal verification"""
+        printt("area_verify called...")
         for eidx, geometry in self.events_buffered.iteritems():
             _ev = self.events.loc[eidx]
             if not _ev['stormreports']:
@@ -400,8 +415,8 @@ def main():
     """A main func for testing"""
     from paste.util.multidict import MultiDict
     flds = MultiDict()
-    flds.add('begints', '2018-06-18T12:00')
-    flds.add('endts', '2018-06-20T12:00')
+    flds.add('begints', '2018-01-01T12:00')
+    flds.add('endts', '2018-06-21T12:00')
     flds.add('hailsize', 1.0)
     flds.add('wfo', 'DMX')
     js = json.loads(handler('1', flds, dict()))
