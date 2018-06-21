@@ -7,6 +7,7 @@
 import datetime
 import json
 
+import pytz
 import geopandas as gpd
 from shapely.ops import cascaded_union
 from pyiem.util import utc, get_dbconn
@@ -18,7 +19,9 @@ def compute_times(fields):
     if 'begints' in fields:
         begints = datetime.datetime.strptime(fields['begints'][:16],
                                              ISO9660[:14])
+        begints = begints.replace(tzinfo=pytz.utc)
         endts = datetime.datetime.strptime(fields['endts'][:16], ISO9660[:14])
+        endts = endts.replace(tzinfo=pytz.utc)
     else:
         ets = datetime.datetime.utcnow()
         sts = ets - datetime.timedelta(hours=4)
@@ -280,7 +283,7 @@ class COWSession(object):
             for sidx, _ in centroids.within(geometry).iteritems():
                 _sr = self.stormreports.loc[sidx]
                 if (_sr['valid'] < _ev['issue'] or
-                        _sr['valid'] >= _ev['expire']):
+                        _sr['valid'] >= _ev['expire'] or _sr['events']):
                     continue
                 verify = False
                 if _ev['phenomena'] == 'FF' and _sr['type'] in ['F', 'x']:
@@ -307,6 +310,7 @@ class COWSession(object):
                 if not _ev['stormreports']:
                     self.events.at[eidx, 'lead0'] = leadtime
                 self.events.at[eidx, 'stormreports'].append(sidx)
+                self.stormreports.at[sidx, 'events'].append(eidx)
 
     def area_verify(self):
         """Do Areal verification"""
@@ -352,6 +356,26 @@ def handler(_version, fields, _environ):
                                              cow.stormreports.to_json())
 
 
+def test_180620():
+    """Compare with what we have from legacy PHP based Cow"""
+    from paste.util.multidict import MultiDict
+    flds = MultiDict()
+    flds.add('wfo', 'DMX')
+    flds.add('begints', '2018-06-20T12:00')
+    flds.add('endts', '2018-06-21T12:00')
+    flds.add('hailsize', 1.0)
+    cow = COWSession(flds)
+    cow.milk()
+    assert cow.stats['events_total'] == 18
+    assert cow.stats['events_verified'] == 4
+    assert abs(cow.stats['size_poly_vs_county[%]'] - 13.3) < 0.1
+    # variance: PHP has this at 17.0
+    assert abs(cow.stats['area_verify[%]'] - 11.35) < 0.1
+    _ev = cow.events.iloc[0]
+    assert abs(_ev['parea'] - 919.) < 1
+    assert abs(_ev['parea'] / _ev['carea'] - 0.19) < 0.01
+
+
 def test_one():
     """Compare with what we have from legacy PHP based Cow"""
     from paste.util.multidict import MultiDict
@@ -376,16 +400,18 @@ def main():
     """A main func for testing"""
     from paste.util.multidict import MultiDict
     flds = MultiDict()
-    flds.add('wfo', 'DVN')
+    flds.add('begints', '2018-06-18T12:00')
+    flds.add('endts', '2018-06-20T12:00')
+    flds.add('hailsize', 1.0)
     flds.add('wfo', 'DMX')
-    flds.add('wfo', 'OAX')
     js = json.loads(handler('1', flds, dict()))
     print(json.dumps(js['stats'], indent=2))
     for event in js['events']['features']:
         props = event['properties']
-        print(("%s %3s %s %7.2f"
+        print(("%s %3s %s %3s %s %7.2f %s"
                ) % (props['wfo'], props['eventid'],
-                    props['phenomena'], props['parea']))
+                    props['issue'], props['expire'],
+                    props['phenomena'], props['parea'], props['stormreports']))
     # print(json.dumps(js, indent=2))
 
 
