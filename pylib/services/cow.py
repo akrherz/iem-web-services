@@ -198,8 +198,8 @@ class COWSession(object):
             array_agg(u.ugc) as ar_ugc,
             array_agg(u.name ||' '||u.state) as ar_ugcname,
             sum(ST_area(ST_transform(u.geom,2163)) / 1000000.0) as carea,
-            min(issue) as missue,
-            max(expire) as mexpire,
+            min(issue at time zone 'UTC') as missue,
+            max(expire at time zone 'UTC') as mexpire,
             extract(year from issue at time zone 'UTC') as year, w.fcster
             from warnings w JOIN ugcs u on (u.gid = w.gid) WHERE
             w.gid is not null """ + self.sql_wfo_limiter() + """ and
@@ -237,7 +237,8 @@ class COWSession(object):
         """Build out the listing of storm reports based on the request"""
         printt("load_stormreports called...")
         self.stormreports = gpd.read_postgis("""
-        SELECT distinct valid, type, magnitude, city, county, state,
+        SELECT distinct valid at time zone 'UTC' as valid,
+        type, magnitude, city, county, state,
         source, remark, wfo, typetext, ST_x(geom) as lon0, ST_y(geom) as lat0,
         geom
         from lsrs w WHERE valid >= %s and valid < %s
@@ -342,7 +343,7 @@ class COWSession(object):
         """Get rid of types we can not handle"""
         for df in [self.events, self.stormreports]:
             for colname in df.select_dtypes(
-                    include=['datetime64[ns, utc]']).columns:
+                    include=['datetime64[ns]']).columns:
                 df[colname] = df[colname].dt.strftime(ISO9660)
 
 
