@@ -371,6 +371,8 @@ def handler(_version, fields, _environ):
                       'lsrbuffer': cow.lsrbuffer, 'wind': cow.wind,
                       'windhailtag': cow.windhailtag,
                       'limitwarns': cow.limitwarns,
+                      'begints': cow.begints.strftime(ISO9660),
+                      'endts': cow.endts.strftime(ISO9660),
                       'warningbuffer': cow.warningbuffer},
            'stats': cow.stats,
            'events': "REPLACEME1",
