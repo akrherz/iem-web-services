@@ -301,7 +301,7 @@ class COWSession(object):
     def sbw_verify(self):
         """Verify the events"""
         printt("sbw_verify called...")
-        if self.stormreports_buffered is None:
+        if self.stormreports_buffered is None or self.events_buffered is None:
             return
         centroids = self.stormreports_buffered.centroid
         for eidx, geometry in self.events_buffered.iteritems():
