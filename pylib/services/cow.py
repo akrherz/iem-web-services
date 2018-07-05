@@ -126,12 +126,22 @@ class COWSession(object):
         )
         self.stats['events_total'] = len(_ev.index)
         self.stats['reports_total'] = len(_sr.index)
-        pod = self.stats['warned_reports'] / float(self.stats['reports_total'])
+        if self.stats['reports_total'] > 0:
+            pod = (self.stats['warned_reports'] /
+                   float(self.stats['reports_total']))
+        else:
+            pod = 0
         self.stats['POD[1]'] = pod
-        far = (self.stats['events_total'] -
-               self.stats['events_verified']) / self.stats['events_total']
+        if self.stats['events_total'] > 0:
+            far = (self.stats['events_total'] -
+                   self.stats['events_verified']) / self.stats['events_total']
+        else:
+            far = 0
         self.stats['FAR[1]'] = far
-        self.stats['CSI[1]'] = (((pod)**-1 + (1 - far)**-1) - 1)**-1
+        if far > 0 and pod > 0:
+            self.stats['CSI[1]'] = (((pod)**-1 + (1 - far)**-1) - 1)**-1
+        else:
+            self.stats['CSI[1]'] = 0.
         self.stats['avg_size[sq km]'] = (
             0 if _ev.empty else _ev['parea'].mean()
         )
@@ -291,6 +301,8 @@ class COWSession(object):
     def sbw_verify(self):
         """Verify the events"""
         printt("sbw_verify called...")
+        if self.stormreports_buffered is None:
+            return
         centroids = self.stormreports_buffered.centroid
         for eidx, geometry in self.events_buffered.iteritems():
             _ev = self.events.loc[eidx]
@@ -330,6 +342,8 @@ class COWSession(object):
     def area_verify(self):
         """Do Areal verification"""
         printt("area_verify called...")
+        if self.events_buffered is None:
+            return
         for eidx, geometry in self.events_buffered.iteritems():
             _ev = self.events.loc[eidx]
             if not _ev['stormreports']:
@@ -370,6 +384,18 @@ def handler(_version, fields, _environ):
     return json.dumps(res).replace('"REPLACEME1"', cow.events.to_json()
                                    ).replace('"REPLACEME2"',
                                              cow.stormreports.to_json())
+
+
+def test_empty():
+    """Can we run when no data is found?"""
+    from paste.util.multidict import MultiDict
+    flds = MultiDict()
+    flds.add('wfo', 'XXX')
+    flds.add('begints', '2018-06-20T12:00')
+    flds.add('endts', '2018-06-21T12:00')
+    cow = COWSession(flds)
+    cow.milk()
+    assert cow.stats['events_total'] == 0
 
 
 def test_180620():
