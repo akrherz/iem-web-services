@@ -61,10 +61,10 @@ class COWSession(object):
         # query parameters
         self.phenomena = fields.getall('phenomena')
         if not self.phenomena:
-            self.phenomena = ['TO', 'SV', 'FF', 'MA']
+            self.phenomena = ['TO', 'SV', 'FF', 'MA', 'DS']
         self.lsrtype = fields.getall('lsrtype')
         if not self.lsrtype:
-            self.lsrtype = ['TO', 'SV', 'FF', 'MA']
+            self.lsrtype = ['TO', 'SV', 'FF', 'MA', 'DS']
         self.hailsize = float(fields.get('hailsize', 1.0))
         self.lsrbuffer = float(fields.get('lsrbuffer', 15))
         self.warningbuffer = float(fields.get('warningbuffer', 1))
@@ -161,6 +161,8 @@ class COWSession(object):
             ltypes.extend(['F', 'x'])
         if 'MA' in self.lsrtype:
             ltypes.extend(['M', 'W'])
+        if 'DS' in self.lsrtype:
+            ltypes.append('2')
         if len(ltypes) == 1:
             return " and type = '%s'" % (ltypes[0], )
         return " and type in %s " % (tuple(ltypes), )
@@ -200,6 +202,7 @@ class COWSession(object):
             extract(year from issue at time zone 'UTC') as year
             from sbw w WHERE status = 'NEW' """ + self.sql_wfo_limiter() + """
             and issue >= %s and issue < %s and expire < %s
+            and significance = 'W'
             and phenomena in %s """ + self.sql_tag_limiter() + """
         ),
         countybased as (
@@ -214,6 +217,7 @@ class COWSession(object):
             from warnings w JOIN ugcs u on (u.gid = w.gid) WHERE
             w.gid is not null """ + self.sql_wfo_limiter() + """ and
             issue >= %s and issue < %s and expire < %s
+            and significance = 'W'
             and phenomena in %s """ + self.sql_tag_limiter() + """
             """ + self.sql_fcster_limiter() + """
             GROUP by w.wfo, phenomena, eventid, significance, year, fcster
@@ -234,6 +238,7 @@ class COWSession(object):
                                        crs={'init': 'epsg:4326'})
         if self.events.empty:
             return
+        print(tuple(self.phenomena))
         s2163 = self.events['geom'].to_crs(epsg=2163)
         self.events_buffered = s2163.buffer(self.warningbuffer * 1000.)
         self.events['stormreports'] = [[] for _ in range(
@@ -253,7 +258,7 @@ class COWSession(object):
         geom
         from lsrs w WHERE valid >= %s and valid < %s
         """ + self.sql_wfo_limiter() + """ """ + self.sql_lsr_limiter() + """
-        and ((type = 'M' and magnitude >= 34) or
+        and ((type = 'M' and magnitude >= 34) or type = '2' or
         (type = 'H' and magnitude >= %s) or type = 'W' or
          type = 'T' or (type = 'G' and magnitude >= %s) or type = 'D'
          or type = 'F' or type = 'x') ORDER by valid ASC
@@ -320,6 +325,9 @@ class COWSession(object):
                         verify = True
                     else:
                         self.stormreports.at[sidx, 'tdq'] = True
+                elif _ev['phenomena'] == 'DS':
+                    if _sr['type'] == '2':
+                        verify = True
                 elif (_ev['phenomena'] == 'MA' and
                         _sr['type'] in ['W', 'M', 'H']):
                     verify = True
@@ -398,6 +406,21 @@ def test_empty():
     cow = COWSession(flds)
     cow.milk()
     assert cow.stats['events_total'] == 0
+
+
+def test_dsw():
+    """Dust Storm Warnings"""
+    from paste.util.multidict import MultiDict
+    flds = MultiDict()
+    flds.add('wfo', 'PSR')
+    flds.add('phenomena', 'DS')
+    flds.add('lsrtype', 'DS')
+    flds.add('begints', '2018-07-01T12:00')
+    flds.add('endts', '2018-07-10T12:00')
+    flds.add('hailsize', 1.0)
+    cow = COWSession(flds)
+    cow.milk()
+    assert cow.stats['events_total'] == 18
 
 
 def test_180620():
