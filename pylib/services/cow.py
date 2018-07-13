@@ -13,6 +13,8 @@ import geopandas as gpd
 from shapely.ops import cascaded_union
 from pyiem.util import utc, get_dbconn
 ISO9660 = "%Y-%m-%dT%H:%M:%SZ"
+LSRTYPE2PHENOM = {'T': 'TO', 'H': 'SV', 'G': 'SV', 'D': 'SV', 'F': 'FF',
+                  'x': 'FF', 'M': 'MA', 'W': 'MA', '2': 'DS'}
 
 
 def printt(msg):
@@ -274,6 +276,9 @@ class COWSession(object):
         self.stormreports['tdq'] = False
         self.stormreports['warned'] = False
         self.stormreports['leadtime'] = None
+        self.stormreports['lsrtype'] = self.stormreports['type'].map(
+            LSRTYPE2PHENOM
+        )
 
     def compute_shared_border(self):
         """Compute a stat"""
