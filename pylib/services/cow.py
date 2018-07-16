@@ -285,6 +285,7 @@ class COWSession(object):
         printt("compute_shared_border called...")
         cursor = self.dbconn.cursor()
         for eidx, row in self.events.iterrows():
+            # re ST_Buffer(simple_geom) see akrherz/iem#163
             cursor.execute("""
     WITH stormbased as (
         SELECT geom from sbw_""" + str(row["year"]) + """
@@ -292,7 +293,7 @@ class COWSession(object):
         and eventid = %s and significance = %s
         and phenomena = %s and status = 'NEW'),
     countybased as (
-        SELECT ST_Union(u.geom) as geom from
+        SELECT ST_Union(ST_Buffer(u.simple_geom, 0)) as geom from
         warnings_""" + str(row["year"]) + """ w JOIN ugcs u on (u.gid = w.gid)
         WHERE w.wfo = %s and eventid = %s and
         significance = %s and phenomena = %s)
@@ -399,6 +400,18 @@ def handler(_version, fields, _environ):
     return json.dumps(res).replace('"REPLACEME1"', cow.events.to_json()
                                    ).replace('"REPLACEME2"',
                                              cow.stormreports.to_json())
+
+
+def test_iemissue163_slowlix():
+    """See why this query is so slow!"""
+    from paste.util.multidict import MultiDict
+    flds = MultiDict()
+    flds.add('wfo', 'LIX')
+    flds.add('begints', '2018-01-01T12:00')
+    flds.add('endts', '2018-07-16T12:00')
+    cow = COWSession(flds)
+    cow.milk()
+    assert cow.stats['events_total'] == 395
 
 
 def test_empty():
