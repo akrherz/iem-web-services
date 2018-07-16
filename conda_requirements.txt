@@ -1,2 +1,4 @@
+numpy
+geopandas
 paste
 python-memcached
