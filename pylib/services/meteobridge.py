@@ -16,13 +16,12 @@ def handler(version, fields, environ):
     if not PROPS:
         sys.stderr.write("Loading properties()...\n")
         PROPS.update(get_properties())
-    if fields.get('key') not in [
-            PROPS.get('meteobridge.key.OT0013'),
-            PROPS.get('meteobridge.key.OT0014')]:
+    lookup = {}
+    for sid in ['OT0013', 'OT0014', 'OT0015']:
+        lookup[PROPS.get('meteobridge.key.' + sid)] = sid
+    if fields.get('key') not in lookup:
         return json.dumps("BAD_KEY")
-    sid = ('OT0013'
-           if PROPS.get('meteobridge.key.OT0013') == fields.get('key')
-           else 'OT0014')
+    sid = lookup[fields.get('key')]
     if len(fields.get('time', '')) == 14:
         _t = fields.get('time')
         now = utc(int(_t[:4]), int(_t[4:6]), int(_t[6:8]), int(_t[8:10]),
