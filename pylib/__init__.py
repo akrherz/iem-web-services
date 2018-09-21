@@ -20,8 +20,10 @@ def dispatch(fields, environ, start_response):
     service = fields.get('_service', 'helloworld')
     fmt = fields.get("_format", "json")
     name = "pylib/services/%s" % (service, )
-    (fn, pathname, description) = imp.find_module(name)
-    mod = imp.load_module(name, fn, pathname, description)
+    mod = sys.modules.get(name, None)
+    if mod is None:
+        (fn, pathname, description) = imp.find_module(name)
+        mod = imp.load_module(name, fn, pathname, description)
     mc = memcache.Client(['iem-memcached:11211'], debug=0)
     mckey = None
     if hasattr(mod, 'get_mckey'):
