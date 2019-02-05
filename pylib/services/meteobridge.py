@@ -12,7 +12,7 @@ PROPS = {}
 
 def handler(version, fields, environ):
     """Handle the request, return dict"""
-    sys.stderr.write(repr(fields))
+    # sys.stderr.write(repr(fields))
     if not PROPS:
         sys.stderr.write("Loading properties()...\n")
         PROPS.update(get_properties())
