@@ -56,6 +56,11 @@ def handler(_version, fields, _environ):
         # Implement our 'table-schema' option
         return df
     elif fmt == 'geojson':
+        if df.empty:
+            return """{
+  "type": "FeatureCollection",
+  "features": []
+}"""
         df.to_file(tmpfn, driver="GeoJSON")
 
     return open(tmpfn).read()
