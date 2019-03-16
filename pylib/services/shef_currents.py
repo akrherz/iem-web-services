@@ -48,9 +48,9 @@ def handler(_version, fields, _environ):
     else:
         df = read_sql(sql, pgconn)
         df.drop('geom', axis=1, inplace=True)
-    (tmpfd, tmpfn) = tempfile.mkstemp(text=True)
-    os.close(tmpfd)
     if fmt == 'txt':
+        (tmpfd, tmpfn) = tempfile.mkstemp(text=True)
+        os.close(tmpfd)
         df.to_csv(tmpfn, index=False)
     elif fmt == 'json':
         # Implement our 'table-schema' option
@@ -61,6 +61,10 @@ def handler(_version, fields, _environ):
   "type": "FeatureCollection",
   "features": []
 }"""
+        (tmpfd, tmpfn) = tempfile.mkstemp(text=True)
+        os.close(tmpfd)
         df.to_file(tmpfn, driver="GeoJSON")
 
-    return open(tmpfn).read()
+    res = open(tmpfn).read()
+    os.unlink(tmpfn)
+    return res

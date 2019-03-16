@@ -129,14 +129,18 @@ def handler(_version, fields, _environ):
     if event is not None and event in df.columns:
         df = df[df[event].notna()]
     compute(df)
-    (tmpfd, tmpfn) = tempfile.mkstemp(text=True)
-    os.close(tmpfd)
     if fmt == 'txt':
+        (tmpfd, tmpfn) = tempfile.mkstemp(text=True)
+        os.close(tmpfd)
         df.to_csv(tmpfn, index=True)
     elif fmt == 'json':
         # Implement our 'table-schema' option
         return df
     elif fmt == 'geojson':
+        (tmpfd, tmpfn) = tempfile.mkstemp(text=True)
+        os.close(tmpfd)
         df.to_file(tmpfn, driver="GeoJSON")
 
-    return open(tmpfn).read()
+    res = open(tmpfn).read()
+    os.unlink(tmpfn)
+    return res
