@@ -35,6 +35,7 @@ def dispatch(fields, environ, start_response):
                                 ('Content-Length', str(len(res)))]
             start_response("200 OK", response_headers)
             if cb:
+                # TODO this needs to be XSS safe
                 return ["%s(%s)" % (cb, res)]
             return [res.encode('utf-8')]
     res = mod.handler(version, fields, environ)
