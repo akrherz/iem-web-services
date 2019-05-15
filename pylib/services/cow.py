@@ -240,7 +240,6 @@ class COWSession(object):
                                        crs={'init': 'epsg:4326'})
         if self.events.empty:
             return
-        print(tuple(self.phenomena))
         s2163 = self.events['geom'].to_crs(epsg=2163)
         self.events_buffered = s2163.buffer(self.warningbuffer * 1000.)
         self.events['stormreports'] = [[] for _ in range(
