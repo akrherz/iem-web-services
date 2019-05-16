@@ -318,7 +318,11 @@ class COWSession(object):
             _ev = self.events.loc[eidx]
             indicies = ((self.stormreports['valid'] >= _ev['issue']) &
                         (self.stormreports['valid'] < _ev['expire']))
-            for sidx, _ in centroids[indicies].within(geometry).iteritems():
+            # NB the within operation returns a boolean series sometimes false
+            for sidx, isinside in centroids[indicies].within(
+                    geometry).iteritems():
+                if not isinside:
+                    continue
                 _sr = self.stormreports.loc[sidx]
                 if _sr['events']:
                     continue
@@ -357,13 +361,15 @@ class COWSession(object):
         printt("area_verify called...")
         if self.events_buffered is None:
             return
-        for eidx, geometry in self.events_buffered.iteritems():
-            _ev = self.events.loc[eidx]
+        e2163 = self.events.to_crs(epsg=2163)
+        for eidx, _ev in e2163.iterrows():
             if not _ev['stormreports']:
                 continue
+            # Union all the LSRs into one shape
             lsrs = cascaded_union(
                 self.stormreports_buffered[_ev['stormreports']])
-            overlap = geometry.intersection(lsrs)
+            # Intersect with this warning geometry to find overlap
+            overlap = _ev['geom'].intersection(lsrs)
             self.events.loc[eidx, 'areaverify'] = overlap.area / 1000000.
 
     def clean_dataframes(self):
@@ -453,8 +459,7 @@ def test_180620():
     assert cow.stats['events_total'] == 18
     assert cow.stats['events_verified'] == 4
     assert abs(cow.stats['size_poly_vs_county[%]'] - 13.3) < 0.1
-    # variance: PHP has this at 17.0
-    assert abs(cow.stats['area_verify[%]'] - 11.35) < 0.1
+    assert abs(cow.stats['area_verify[%]'] - 17.0) < 0.1
     _ev = cow.events.iloc[0]
     assert abs(_ev['parea'] - 919.) < 1
     assert abs(_ev['parea'] / _ev['carea'] - 0.19) < 0.01
@@ -473,8 +478,7 @@ def test_one():
     assert cow.stats['events_total'] == 5
     assert cow.stats['events_verified'] == 2
     assert abs(cow.stats['size_poly_vs_county[%]'] - 24.3) < 0.1
-    # variance: PHP has this at 15.0
-    assert abs(cow.stats['area_verify[%]'] - 16.5) < 0.1
+    assert abs(cow.stats['area_verify[%]'] - 15.2) < 0.1
     _ev = cow.events.iloc[0]
     assert abs(_ev['parea'] - 950.) < 1
     assert abs(_ev['parea'] / _ev['carea'] - 0.159) < 0.01
