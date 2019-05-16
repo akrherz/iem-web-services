@@ -286,22 +286,25 @@ class COWSession(object):
         for eidx, row in self.events.iterrows():
             # re ST_Buffer(simple_geom) see akrherz/iem#163
             cursor.execute("""
-    WITH stormbased as (
-        SELECT geom from sbw_""" + str(row["year"]) + """
-        where wfo = %s
-        and eventid = %s and significance = %s
-        and phenomena = %s and status = 'NEW'),
-    countybased as (
-        SELECT ST_Union(ST_Buffer(u.simple_geom, 0)) as geom from
-        warnings_""" + str(row["year"]) + """ w JOIN ugcs u on (u.gid = w.gid)
-        WHERE w.wfo = %s and eventid = %s and
-        significance = %s and phenomena = %s)
+                WITH stormbased as (
+                    SELECT geom from sbw_""" + str(row["year"]) + """
+                    where wfo = %s
+                    and eventid = %s and significance = %s
+                    and phenomena = %s and status = 'NEW'),
+                countybased as (
+                    SELECT ST_Union(ST_Buffer(u.simple_geom, 0)) as geom from
+                    warnings_""" + str(row["year"]) + """ w
+                    JOIN ugcs u on (u.gid = w.gid)
+                    WHERE w.wfo = %s and eventid = %s and
+                    significance = %s and phenomena = %s)
 
-        SELECT sum(ST_Length(ST_transform(geo,2163))) as s from
-            (SELECT ST_SetSRID(ST_intersection(
-             ST_buffer(ST_exteriorring(ST_geometryn(ST_multi(c.geom),1)),0.02),
-             ST_exteriorring(ST_geometryn(ST_multi(s.geom),1))), 4326) as geo
-             from stormbased s, countybased c) as foo
+                SELECT sum(ST_Length(ST_transform(geo,2163))) as s from
+                (SELECT ST_SetSRID(ST_intersection(
+                ST_buffer(ST_exteriorring(
+                    ST_geometryn(ST_multi(c.geom),1)),0.02),
+                ST_exteriorring(ST_geometryn(
+                    ST_multi(s.geom),1))), 4326) as geo
+                from stormbased s, countybased c) as foo
             """, (row['wfo'], row['eventid'], row['significance'],
                   row['phenomena'], row['wfo'], row['eventid'],
                   row['significance'], row['phenomena']))
@@ -369,7 +372,7 @@ class COWSession(object):
             lsrs = cascaded_union(
                 self.stormreports_buffered[_ev['stormreports']])
             # Intersect with this warning geometry to find overlap
-            overlap = _ev['geom'].intersection(lsrs)
+            overlap = _ev['geom'].buffer(0).intersection(lsrs)
             self.events.loc[eidx, 'areaverify'] = overlap.area / 1000000.
 
     def clean_dataframes(self):
@@ -488,10 +491,14 @@ def main():
     """A main func for testing"""
     from paste.util.multidict import MultiDict
     flds = MultiDict()
-    flds.add('begints', '2018-01-01T12:00')
-    flds.add('endts', '2018-06-21T12:00')
+    flds.add('begints', '2015-01-01T12:00')
+    flds.add('endts', '2019-05-16T12:00')
     flds.add('hailsize', 1.0)
-    flds.add('wfo', 'DMX')
+    flds.add('wfo', 'LMK')
+    flds.add('lsrtype', 'TO')
+    flds.add('lsrtype', 'SV')
+    flds.add('phenomena', 'TO')
+    flds.add('phenomena', 'SV')
     js = json.loads(handler('1', flds, dict()))
     print(json.dumps(js['stats'], indent=2))
     for event in js['events']['features']:
