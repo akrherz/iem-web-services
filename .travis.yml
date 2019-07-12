@@ -64,7 +64,7 @@ install:
   - rm -f $HOME/miniconda/pkgs/cache/*
 script:
   # restart apache
-  - ls -l /home/travis/miniconda/lib/python3.6/site-packages/mod_wsgi/server/
+  - find /home/travis/miniconda/lib/python3.6/site-packages -name '*.so' -print
   - sudo service apache2 restart || sudo cat /var/log/apache2/error.log
   - curl http://iem-web-services.local/service.wsgi
   - sudo cat /var/log/apache2/error.log
