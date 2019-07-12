@@ -61,6 +61,7 @@ install:
   - conda clean --packages
   # Then do additional pip stuff
   - pip install -r pip_requirements.txt
+  - find /home/travis/miniconda/lib/python${PYTHON_VERSION}/envs/test-environment/site-packages/mod_wsgi/server/ -type f -name '*.so'
   # now delete out some cache stuff, so that our travis-ci cache is still valid
   - rm -f $HOME/miniconda/pkgs/cache/*
 script:
