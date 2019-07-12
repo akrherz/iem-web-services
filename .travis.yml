@@ -1,10 +1,5 @@
 sudo: required
 dist: trusty
-cache:
-  timeout: 1000
-  directories:
-    - $HOME/.cache/pip
-    - $HOME/miniconda
 addons:
   postgresql: "9.5"
   apt:
@@ -19,8 +14,11 @@ addons:
     - talltowers-db.local
     - iem-web-services.local
 language: python
-python:
-  - "2.7"
+env:
+  global:
+    - MPLLOCALFREETYPE=1
+  matrix:
+    - PYTHON_VERSION=3.6
 before_install:
   - sudo mkdir -p /mesonet/www/logs
   - sudo ln -s `pwd` /opt/iem-web-services
@@ -40,24 +38,30 @@ before_install:
   - echo 'export LD_PRELOAD=/home/travis/miniconda/lib/libz.so' | sudo tee -a /etc/apache2/envvars > /dev/null
   - echo 'WSGIDaemonProcess iemwsgi_ap processes=1 threads=15 display-name=%{GROUP} maximum-requests=100' | sudo tee -a /etc/apache2/sites-enabled/mod_wsgi.conf
   # use conda provided mod_wsgi
-  - echo "LoadModule wsgi_module $HOME/miniconda/lib/python2.7/site-packages/mod_wsgi/server/mod_wsgi-py27.so" | sudo tee -a /etc/apache2/mods-enabled/wsgi.load > /dev/null
+  - echo "LoadModule wsgi_module $HOME/miniconda/envs/test-environment/lib/python${PYTHON_VERSION}/site-packages/mod_wsgi/server/mod_wsgi-py36.cpython-36m-x86_64-linux-gnu.so" | sudo tee -a /etc/apache2/mods-enabled/wsgi.load > /dev/null
 install:
-  - if [[ ! -f $HOME/miniconda/bin/python ]]; then
-      wget https://repo.continuum.io/miniconda/Miniconda2-4.3.27.1-Linux-x86_64.sh -O miniconda.sh;
-      bash miniconda.sh -f -b -p $HOME/miniconda;
-      $HOME/miniconda/bin/conda config --set quiet True --set always_yes yes --set changeps1 no;
-      $HOME/miniconda/bin/conda config --append channels conda-forge;
-      $HOME/miniconda/bin/conda update conda;
-    fi
+  - wget http://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
+  - bash miniconda.sh -b -p $HOME/miniconda
   - export PATH="$HOME/miniconda/bin:$PATH"
+
+  # Create the basic testing environment
+  # ------------------------------------
+  - conda config --set always_yes yes --set changeps1 no --set show_channel_urls yes
+  - conda update -q conda
+  - . $HOME/miniconda/etc/profile.d/conda.sh
+  # current guidance on conda-forge usage
+  - conda config --prepend channels conda-forge
+  - conda config --set channel_priority strict
+  - conda create -n test-environment python=$PYTHON_VERSION
+  - conda activate test-environment
   - conda config --set always_yes yes --set changeps1 no
-  - conda config --append channels conda-forge
-  - hash -r
+
   - conda install --file conda_requirements.txt
   # Remove packages to save space
   - conda clean --packages
   # Then do additional pip stuff
   - pip install -r pip_requirements.txt
+  - find /home/travis/miniconda/envs/test-environment/lib/python${PYTHON_VERSION}/site-packages/mod_wsgi/server/ -type f -name '*.so'
   # now delete out some cache stuff, so that our travis-ci cache is still valid
   - rm -f $HOME/miniconda/pkgs/cache/*
 script:
