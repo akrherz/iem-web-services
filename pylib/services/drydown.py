@@ -30,7 +30,7 @@ def handler(_version, fields, _environ):
 
     pgconn = get_dbconn('iemre')
     df = read_sql("""
-        SELECT valid, high_tmpk, low_tmpk, (max_rh - min_rh) / 2 as avg_rh
+        SELECT valid, high_tmpk, low_tmpk, (max_rh + min_rh) / 2 as avg_rh
         from iemre_daily WHERE gid = %s and valid > '1980-01-01' and
         to_char(valid, 'mmdd') between '0901' and '1101'
         ORDER by valid ASC
