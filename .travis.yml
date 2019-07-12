@@ -38,7 +38,7 @@ before_install:
   - echo 'export LD_PRELOAD=/home/travis/miniconda/lib/libz.so' | sudo tee -a /etc/apache2/envvars > /dev/null
   - echo 'WSGIDaemonProcess iemwsgi_ap processes=1 threads=15 display-name=%{GROUP} maximum-requests=100' | sudo tee -a /etc/apache2/sites-enabled/mod_wsgi.conf
   # use conda provided mod_wsgi
-  - echo "LoadModule wsgi_module $HOME/miniconda/lib/python${PYTHON_VERSION}/envs/test-environment/site-packages/mod_wsgi/server/mod_wsgi-py36.cpython-36m-x86_64-linux-gnu.so" | sudo tee -a /etc/apache2/mods-enabled/wsgi.load > /dev/null
+  - echo "LoadModule wsgi_module $HOME/miniconda/envs/test-environment/lib/python${PYTHON_VERSION}/site-packages/mod_wsgi/server/mod_wsgi-py36.cpython-36m-x86_64-linux-gnu.so" | sudo tee -a /etc/apache2/mods-enabled/wsgi.load > /dev/null
 install:
   - wget http://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
   - bash miniconda.sh -b -p $HOME/miniconda
