@@ -64,8 +64,8 @@ WITH agg as (
     to_char(s.max_sknt_ts at time zone c.tzname,
             'YYYY-MM-DDThh24:MI:SS') as local_max_sknt_ts,
     lon, lat, s.pday
-    from agg c, summary s WHERE s.day >= 'TODAY':: date - '2 days'::interval
-    and c.iemid = s.iemid and s.day = date(c.valid at time zone c.tzname)
+    from agg c JOIN summary s on
+    (c.iemid = s.iemid and s.day = date(c.valid at time zone c.tzname))
 """
 
 
