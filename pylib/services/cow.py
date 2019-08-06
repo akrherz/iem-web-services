@@ -345,7 +345,19 @@ class COWSession(object):
                     verify = True
                 elif (_ev['phenomena'] == 'SV' and
                         _sr['type'] in ['G', 'D', 'H']):
-                    verify = True
+                    # If we are to verify based on the windhag tag, then we
+                    # need to compare the magnitudes
+                    if self.windhailtag:
+                        if (_sr['type'] == 'H' and
+                                _sr['magnitude'] >= _ev['hailtag']):
+                            verify = True
+                        elif (_sr['type'] == 'G' and
+                                _sr['magnitude'] >= _ev['windtag']):
+                            verify = True
+                        elif _sr['type'] == 'D':  # can't tag verify these
+                            verify = True
+                    else:
+                        verify = True
                 if not verify:
                     continue
                 self.events.at[eidx, 'verify'] = True
@@ -447,6 +459,23 @@ def test_dsw():
     cow = COWSession(flds)
     cow.milk()
     assert cow.stats['events_total'] == 18
+
+
+def test_190806():
+    """Test that we can limit verification to tags."""
+    from paste.util.multidict import MultiDict
+    flds = MultiDict()
+    flds.add('wfo', 'DMX')
+    flds.add('begints', '2018-06-20T12:00')
+    flds.add('endts', '2018-06-30T12:00')
+    flds.add('hailsize', 1.0)
+    cow = COWSession(flds)
+    cow.milk()
+    assert cow.stats['warned_reports'] == 56
+    flds.add('windhailtag', 'Y')
+    cow2 = COWSession(flds)
+    cow2.milk()
+    assert cow2.stats['warned_reports'] == 46
 
 
 def test_180620():
