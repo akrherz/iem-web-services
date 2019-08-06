@@ -39,7 +39,7 @@ WITH agg as (
     array_to_string(wxcodes, ' ') as wxcodes,
     t.geom, ST_x(t.geom) as lon, ST_y(t.geom) as lat
     from current c JOIN stations t on (c.iemid = t.iemid) WHERE
-    REPLACEME not t.metasite
+    REPLACEME not t.metasite and t.online
 )
     SELECT c.id as station, c.name, c.county, c.state, c.network,
     to_char(s.day, 'YYYY-mm-dd') as local_date, snow, snowd, snoww,
