@@ -40,6 +40,7 @@ WITH agg as (
     t.geom, ST_x(t.geom) as lon, ST_y(t.geom) as lat
     from current c JOIN stations t on (c.iemid = t.iemid) WHERE
     REPLACEME not t.metasite and t.online
+    and c.valid > (now() - '%s minutes'::interval)
 )
     SELECT c.id as station, c.name, c.county, c.state, c.network,
     to_char(s.day, 'YYYY-mm-dd') as local_date, snow, snowd, snoww,
@@ -71,10 +72,11 @@ WITH agg as (
 
 def get_mckey(fields):
     """What's the key for this request"""
-    return "%s_%s_%s_%s_%s_%s" % (
+    return "%s_%s_%s_%s_%s_%s_%s" % (
         fields.get('network', ''), fields.get('networkclass', ''),
         fields.get('wfo', ''), fields.get('state', ''),
-        ",".join(fields.getall('station')), fields.get('event', '')
+        ",".join(fields.getall('station')), fields.get('event', ''),
+        fields.get('minutes', 10 * 1440)
     )
 
 
@@ -95,31 +97,33 @@ def handler(_version, fields, _environ):
     state = fields.get('state', '')[:2]
     event = fields.get('event')
     station = fields.getall('station')
+    minutes = int(fields.get('minutes', 1440 * 10))
     pgconn = get_dbconn('iem')
     if station:
-        params = (tuple(station), )
+        params = [tuple(station), ]
         sql = SQL.replace("REPLACEME",
                           "t.id in %s and")
     elif networkclass != '' and wfo != '':
-        params = (wfo, networkclass)
+        params = [wfo, networkclass]
         sql = SQL.replace("REPLACEME",
                           "t.wfo = %s and t.network ~* %s and")
     elif wfo != '':
-        params = (wfo, )
+        params = [wfo, ]
         sql = SQL.replace("REPLACEME",
                           "t.wfo = %s and")
     elif state != '':
-        params = (state, )
+        params = [state, ]
         sql = SQL.replace("REPLACEME",
                           "t.state = %s and")
     elif network != '':
         sql = SQL.replace("REPLACEME",
                           "t.network = %s and")
-        params = (network, )
+        params = [network, ]
     else:
         sql = SQL.replace("REPLACEME", "")
         params = []
 
+    params.append(minutes)
     if fmt == 'geojson':
         df = read_postgis(sql, pgconn, params=params,
                           index_col='station', geom_col='geom')
