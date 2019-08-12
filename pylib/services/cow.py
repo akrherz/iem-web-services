@@ -394,6 +394,15 @@ class COWSession(object):
                     include=['datetime64[ns]']).columns:
                 df[colname] = df[colname].dt.strftime(ISO9660)
 
+        def _to_csv(val):
+            """helper."""
+            return ",".join([str(s) for s in val])
+        # Convert hacky column of lists to csv
+        self.events['stormreports'] = self.events['stormreports'].apply(
+            _to_csv)
+        self.stormreports['events'] = self.stormreports['events'].apply(
+            _to_csv)
+
 
 def handler(_version, fields, _environ):
     """Handle the request, return dict"""
