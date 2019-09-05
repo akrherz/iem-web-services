@@ -5,6 +5,7 @@ import os
 import json
 from io import StringIO
 
+import numpy as np
 from metpy.units import units
 from metpy.calc import relative_humidity_from_dewpoint
 from pandas.io.sql import read_sql
@@ -63,8 +64,10 @@ def append_cfs(res, lon, lat):
         nc.variables['low_tmpk'][:, gridy, gridx] * units.degK).to(
             units.degF).m
     # RH hack
+    # found ~20% bias with this value, so arb addition for now
     rh = relative_humidity_from_dewpoint(
-        high * units.degF, low * units.degF).m * 100.
+        high * units.degF, low * units.degF).m * 100. + 20.
+    rh = np.where(rh > 95, 95, rh)
     entry = res["data"][thisyear]
     # lastdate is either August 31 or a date after, so our first forecast
     # date is i+1
@@ -90,6 +93,7 @@ def handler(_version, fields, _environ):
         SELECT valid, high_tmpk, low_tmpk, (max_rh + min_rh) / 2 as avg_rh
         from iemre_daily WHERE gid = %s and valid > '1980-01-01' and
         to_char(valid, 'mmdd') between '0901' and '1101'
+        and high_tmpk is not null and low_tmpk is not null
         ORDER by valid ASC
     """, pgconn, params=(int(gid), ), parse_dates='valid', index_col=None)
     df['max_tmpf'] = (df['high_tmpk'].values * units.degK).to(units.degF).m
