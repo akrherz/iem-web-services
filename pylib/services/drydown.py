@@ -66,7 +66,9 @@ def append_cfs(res, lon, lat):
     rh = relative_humidity_from_dewpoint(
         high * units.degF, low * units.degF).m * 100.
     entry = res["data"][thisyear]
-    tidx = daily_offset(lastdate)
+    # lastdate is either August 31 or a date after, so our first forecast
+    # date is i+1
+    tidx = daily_offset(lastdate + datetime.timedelta(days=1))
     for i in range(tidx, 365):
         lts = datetime.date(thisyear, 1, 1) + datetime.timedelta(days=i)
         if lts.month in [9, 10]:
