@@ -238,16 +238,16 @@ class COWSession(object):
                                   self.begints, self.endts,
                                   self.endts, tuple(self.phenomena)),
                                        crs={'init': 'epsg:4326'})
-        if self.events.empty:
-            return
-        s2163 = self.events['geom'].to_crs(epsg=2163)
-        self.events_buffered = s2163.buffer(self.warningbuffer * 1000.)
         self.events['stormreports'] = [[] for _ in range(
             len(self.events.index))]
         self.events['verify'] = False
         self.events['lead0'] = None
         self.events['areaverify'] = 0
         self.events['sharedborder'] = 0
+        if self.events.empty:
+            return
+        s2163 = self.events['geom'].to_crs(epsg=2163)
+        self.events_buffered = s2163.buffer(self.warningbuffer * 1000.)
 
     def load_stormreports(self):
         """Build out the listing of storm reports based on the request"""
@@ -266,10 +266,6 @@ class COWSession(object):
         """, self.dbconn, params=(self.begints, self.endts,
                                   self.hailsize, self.wind), geom_col='geom',
                                              crs={'init': 'epsg:4326'})
-        if self.stormreports.empty:
-            return
-        s2163 = self.stormreports['geom'].to_crs(epsg=2163)
-        self.stormreports_buffered = s2163.buffer(self.lsrbuffer * 1000.)
         self.stormreports['events'] = [[] for _ in range(
             len(self.stormreports.index))]
         self.stormreports['tdq'] = False
@@ -278,6 +274,10 @@ class COWSession(object):
         self.stormreports['lsrtype'] = self.stormreports['type'].map(
             LSRTYPE2PHENOM
         )
+        if self.stormreports.empty:
+            return
+        s2163 = self.stormreports['geom'].to_crs(epsg=2163)
+        self.stormreports_buffered = s2163.buffer(self.lsrbuffer * 1000.)
 
     def compute_shared_border(self):
         """Compute a stat"""
