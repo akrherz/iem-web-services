@@ -7,6 +7,7 @@ from geopandas import read_postgis
 from pyiem.util import get_dbconn
 
 ISO = "%Y-%m-%dT%H:%M:%SZ"
+CACHE_EXPIRE = 60
 
 
 def get_mckey(fields):
