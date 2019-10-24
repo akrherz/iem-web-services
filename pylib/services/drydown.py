@@ -74,7 +74,7 @@ def append_cfs(res, lon, lat):
     tidx = daily_offset(lastdate + datetime.timedelta(days=1))
     for i in range(tidx, 365):
         lts = datetime.date(thisyear, 1, 1) + datetime.timedelta(days=i)
-        if lts.month in [9, 10]:
+        if lts.month in [9, 10, 11]:
             entry['dates'].append(lts.strftime("%Y-%m-%d"))
             entry['high'].append(int(high[i]))
             entry['low'].append(int(low[i]))
