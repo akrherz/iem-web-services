@@ -15,8 +15,9 @@ import numpy as np
 from pandas.io.sql import read_sql
 from geopandas import read_postgis
 from pyiem.util import get_dbconn
+
 # prevent warnings that may trip up mod_wsgi
-warnings.simplefilter('ignore')
+warnings.simplefilter("ignore")
 
 CACHE_EXPIRE = 60
 # Avoid three table aggregate by initial window join
@@ -73,10 +74,13 @@ WITH agg as (
 def get_mckey(fields):
     """What's the key for this request"""
     return "%s_%s_%s_%s_%s_%s_%s" % (
-        fields.get('network', ''), fields.get('networkclass', ''),
-        fields.get('wfo', ''), fields.get('state', ''),
-        ",".join(fields.getall('station')), fields.get('event', ''),
-        fields.get('minutes', 10 * 1440)
+        fields.get("network", ""),
+        fields.get("networkclass", ""),
+        fields.get("wfo", ""),
+        fields.get("state", ""),
+        ",".join(fields.getall("station")),
+        fields.get("event", ""),
+        fields.get("minutes", 10 * 1440),
     )
 
 
@@ -91,56 +95,52 @@ def compute(df):
 def handler(_version, fields, _environ):
     """Handle the request, return dict"""
     fmt = fields.get("_format", "json")
-    network = fields.get('network', '')[:32]
-    networkclass = fields.get('networkclass', '')[:32]
-    wfo = fields.get('wfo', '')[:4]
-    state = fields.get('state', '')[:2]
-    event = fields.get('event')
-    station = fields.getall('station')
-    minutes = int(fields.get('minutes', 1440 * 10))
-    pgconn = get_dbconn('iem')
+    network = fields.get("network", "")[:32]
+    networkclass = fields.get("networkclass", "")[:32]
+    wfo = fields.get("wfo", "")[:4]
+    state = fields.get("state", "")[:2]
+    event = fields.get("event")
+    station = fields.getall("station")
+    minutes = int(fields.get("minutes", 1440 * 10))
+    pgconn = get_dbconn("iem")
     if station:
-        params = [tuple(station), ]
-        sql = SQL.replace("REPLACEME",
-                          "t.id in %s and")
-    elif networkclass != '' and wfo != '':
+        params = [tuple(station)]
+        sql = SQL.replace("REPLACEME", "t.id in %s and")
+    elif networkclass != "" and wfo != "":
         params = [wfo, networkclass]
-        sql = SQL.replace("REPLACEME",
-                          "t.wfo = %s and t.network ~* %s and")
-    elif wfo != '':
-        params = [wfo, ]
-        sql = SQL.replace("REPLACEME",
-                          "t.wfo = %s and")
-    elif state != '':
-        params = [state, ]
-        sql = SQL.replace("REPLACEME",
-                          "t.state = %s and")
-    elif network != '':
-        sql = SQL.replace("REPLACEME",
-                          "t.network = %s and")
-        params = [network, ]
+        sql = SQL.replace("REPLACEME", "t.wfo = %s and t.network ~* %s and")
+    elif wfo != "":
+        params = [wfo]
+        sql = SQL.replace("REPLACEME", "t.wfo = %s and")
+    elif state != "":
+        params = [state]
+        sql = SQL.replace("REPLACEME", "t.state = %s and")
+    elif network != "":
+        sql = SQL.replace("REPLACEME", "t.network = %s and")
+        params = [network]
     else:
         sql = SQL.replace("REPLACEME", "")
         params = []
 
     params.append(minutes)
-    if fmt == 'geojson':
-        df = read_postgis(sql, pgconn, params=params,
-                          index_col='station', geom_col='geom')
+    if fmt == "geojson":
+        df = read_postgis(
+            sql, pgconn, params=params, index_col="station", geom_col="geom"
+        )
     else:
-        df = read_sql(sql, pgconn, params=params, index_col='station')
-        df.drop('geom', axis=1, inplace=True)
+        df = read_sql(sql, pgconn, params=params, index_col="station")
+        df.drop("geom", axis=1, inplace=True)
     if event is not None and event in df.columns:
         df = df[df[event].notna()]
     compute(df)
-    if fmt == 'txt':
+    if fmt == "txt":
         (tmpfd, tmpfn) = tempfile.mkstemp(text=True)
         os.close(tmpfd)
         df.to_csv(tmpfn, index=True)
-    elif fmt == 'json':
+    elif fmt == "json":
         # Implement our 'table-schema' option
         return df
-    elif fmt == 'geojson':
+    elif fmt == "geojson":
         (tmpfd, tmpfn) = tempfile.mkstemp(text=True)
         os.close(tmpfd)
         df.to_file(tmpfn, driver="GeoJSON")

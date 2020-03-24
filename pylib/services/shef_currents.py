@@ -6,8 +6,9 @@ import warnings
 from pandas.io.sql import read_sql
 from geopandas import read_postgis
 from pyiem.util import get_dbconn
+
 # prevent warnings that may trip up mod_wsgi
-warnings.simplefilter('ignore')
+warnings.simplefilter("ignore")
 
 CACHE_EXPIRE = 60
 # Avoid three table aggregate by initial window join
@@ -16,18 +17,19 @@ CACHE_EXPIRE = 60
 def get_mckey(fields):
     """What's the key for this request"""
     return "%s_%s_%s" % (
-        fields.get('pe', ''), fields.get('duration', ''),
-        fields.get('days', '2')
+        fields.get("pe", ""),
+        fields.get("duration", ""),
+        fields.get("days", "2"),
     )
 
 
 def handler(_version, fields, _environ):
     """Handle the request, return dict"""
     fmt = fields.get("_format", "json")
-    pe = fields.get('pe', 'EP')[:2]
-    duration = fields.get('duration', 'D')[:1]
-    days = int(fields.get('days', 1))
-    pgconn = get_dbconn('iem')
+    pe = fields.get("pe", "EP")[:2]
+    duration = fields.get("duration", "D")[:1]
+    days = int(fields.get("days", 1))
+    pgconn = get_dbconn("iem")
     sql = """
     WITH data as (
         SELECT c.station, c.valid, c.value,
@@ -41,21 +43,25 @@ def handler(_version, fields, _environ):
     to_char(valid at time zone 'UTC', 'YYYY-MM-DDThh24:MI:SSZ') as utc_valid,
     value, lon, lat, geom from data
     where row_number = 1
-    """ % (pe, duration, days)
+    """ % (
+        pe,
+        duration,
+        days,
+    )
 
-    if fmt == 'geojson':
-        df = read_postgis(sql, pgconn, geom_col='geom')
+    if fmt == "geojson":
+        df = read_postgis(sql, pgconn, geom_col="geom")
     else:
         df = read_sql(sql, pgconn)
-        df.drop('geom', axis=1, inplace=True)
-    if fmt == 'txt':
+        df.drop("geom", axis=1, inplace=True)
+    if fmt == "txt":
         (tmpfd, tmpfn) = tempfile.mkstemp(text=True)
         os.close(tmpfd)
         df.to_csv(tmpfn, index=False)
-    elif fmt == 'json':
+    elif fmt == "json":
         # Implement our 'table-schema' option
         return df
-    elif fmt == 'geojson':
+    elif fmt == "geojson":
         if df.empty:
             return """{
   "type": "FeatureCollection",
