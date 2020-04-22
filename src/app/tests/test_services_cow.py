@@ -19,7 +19,7 @@ def _test_iemissue163_slowlix():
     assert cow.stats["events_total"] == 395
 
 
-def test_empty():
+def _test_empty():
     """Can we run when no data is found?"""
     response = client.get(
         "/cow",
