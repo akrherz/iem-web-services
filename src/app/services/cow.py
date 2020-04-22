@@ -8,10 +8,9 @@ import datetime
 import json
 import sys
 
-import pytz
 import geopandas as gpd
 from shapely.ops import cascaded_union
-from pyiem.util import utc, get_dbconn
+from pyiem.util import get_dbconn
 
 ISO9660 = "%Y-%m-%dT%H:%M:%SZ"
 LSRTYPE2PHENOM = {
@@ -33,39 +32,28 @@ def printt(msg):
         print(("%s %s") % (datetime.datetime.now().strftime("%H:%M:%S.%f"), msg))
 
 
-def compute_times(fields):
-    """Figure out our start and end times"""
-    if "begints" in fields:
-        begints = datetime.datetime.strptime(fields["begints"][:16], ISO9660[:14])
-        begints = begints.replace(tzinfo=pytz.utc)
-        endts = datetime.datetime.strptime(fields["endts"][:16], ISO9660[:14])
-        endts = endts.replace(tzinfo=pytz.utc)
-    else:
-        ets = datetime.datetime.utcnow()
-        sts = ets - datetime.timedelta(hours=4)
-        begints = utc(
-            int(fields.get("syear", sts.year)),
-            int(fields.get("smonth", sts.month)),
-            int(fields.get("sday", sts.day)),
-            int(fields.get("shour", sts.hour)),
-        )
-        endts = utc(
-            int(fields.get("eyear", ets.year)),
-            int(fields.get("emonth", ets.month)),
-            int(fields.get("eday", ets.day)),
-            int(fields.get("ehour", ets.hour)),
-        )
-    return begints, endts
-
-
 class COWSession(object):
     """Things that we could do while generating Cow stats"""
 
-    def __init__(self, fields):
+    def __init__(
+        self,
+        wfo,
+        begints,
+        endts,
+        phenomena,
+        lsrtype,
+        hailsize,
+        lsrbuffer,
+        warningbuffer,
+        wind,
+        windhailtag,
+        limitwarns,
+        fcster,
+    ):
         """Build out our session based on provided fields"""
-        self.wfo = fields.getall("wfo")
+        self.wfo = wfo
         # Figure out the begin and end times
-        self.begints, self.endts = compute_times(fields)
+        self.begints, self.endts = begints, endts
         # Storage of data
         self.events = gpd.GeoDataFrame()
         self.events_buffered = None
@@ -73,19 +61,19 @@ class COWSession(object):
         self.stormreports_buffered = None
         self.stats = dict()
         # query parameters
-        self.phenomena = fields.getall("phenomena")
+        self.phenomena = phenomena
         if not self.phenomena:
             self.phenomena = ["TO", "SV", "FF", "MA", "DS"]
-        self.lsrtype = fields.getall("lsrtype")
+        self.lsrtype = lsrtype
         if not self.lsrtype:
             self.lsrtype = ["TO", "SV", "FF", "MA", "DS"]
-        self.hailsize = float(fields.get("hailsize", 1.0))
-        self.lsrbuffer = float(fields.get("lsrbuffer", 15))
-        self.warningbuffer = float(fields.get("warningbuffer", 1))
-        self.wind = float(fields.get("wind", 58))
-        self.windhailtag = fields.get("windhailtag", "N").upper() == "Y"
-        self.limitwarns = fields.get("limitwarns", "N").upper() == "Y"
-        self.fcster = fields.get("fcster", None)
+        self.hailsize = hailsize
+        self.lsrbuffer = lsrbuffer
+        self.warningbuffer = warningbuffer
+        self.wind = wind
+        self.windhailtag = windhailtag.upper() == "Y"
+        self.limitwarns = limitwarns.upper() == "Y"
+        self.fcster = fcster
         # our database connection
         self.dbconn = get_dbconn("postgis")
 
@@ -428,10 +416,38 @@ class COWSession(object):
         self.stormreports["events"] = self.stormreports["events"].apply(_to_csv)
 
 
-def handler(_version, fields, _environ):
+def handler(
+    wfo,
+    begints,
+    endts,
+    phenomena,
+    lsrtype,
+    hailsize,
+    lsrbuffer,
+    warningbuffer,
+    wind,
+    windhailtag,
+    limitwarns,
+    fcster,
+):
     """Handle the request, return dict"""
-    cow = COWSession(fields)
+    cow = COWSession(
+        wfo,
+        begints,
+        endts,
+        phenomena,
+        lsrtype,
+        hailsize,
+        lsrbuffer,
+        warningbuffer,
+        wind,
+        windhailtag,
+        limitwarns,
+        fcster,
+    )
     cow.milk()
+    # Some stuff is not JSON serializable
+    cow.clean_dataframes()
     res = {
         "generated_at": datetime.datetime.utcnow().strftime(ISO9660),
         "params": {
@@ -448,20 +464,14 @@ def handler(_version, fields, _environ):
             "warningbuffer": cow.warningbuffer,
         },
         "stats": cow.stats,
-        "events": "REPLACEME1",
-        "stormreports": "REPLACEME2",
+        "events": json.loads(cow.events.to_json()),
+        "stormreports": json.loads(cow.stormreports.to_json()),
     }
     # only include when the easter egg is enabled
     if cow.fcster:
         res["params"]["fcster"] = cow.fcster
-    # Some stuff is not JSON serializable
-    cow.clean_dataframes()
-    # HACK as we need to do raw string subs
-    return (
-        json.dumps(res)
-        .replace('"REPLACEME1"', cow.events.to_json())
-        .replace('"REPLACEME2"', cow.stormreports.to_json())
-    )
+
+    return res
 
 
 def test_iemissue163_slowlix():

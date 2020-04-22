@@ -23,12 +23,8 @@ def get_mckey(fields):
     )
 
 
-def handler(_version, fields, _environ):
+def handler(fmt, pe, duration, days):
     """Handle the request, return dict"""
-    fmt = fields.get("_format", "json")
-    pe = fields.get("pe", "EP")[:2]
-    duration = fields.get("duration", "D")[:1]
-    days = int(fields.get("days", 1))
     pgconn = get_dbconn("iem")
     sql = """
     WITH data as (
@@ -55,21 +51,14 @@ def handler(_version, fields, _environ):
         df = read_sql(sql, pgconn)
         df.drop("geom", axis=1, inplace=True)
     if fmt == "txt":
-        (tmpfd, tmpfn) = tempfile.mkstemp(text=True)
-        os.close(tmpfd)
-        df.to_csv(tmpfn, index=False)
-    elif fmt == "json":
+        return df.to_csv(index=False)
+    if fmt == "json":
         # Implement our 'table-schema' option
-        return df
-    elif fmt == "geojson":
-        if df.empty:
-            return """{
-  "type": "FeatureCollection",
-  "features": []
-}"""
-        (tmpfd, tmpfn) = tempfile.mkstemp(text=True)
-        os.close(tmpfd)
-        df.to_file(tmpfn, driver="GeoJSON")
+        return df.to_json(orient="table", default_handler=str)
+    if df.empty:
+        return {"type": "FeatureCollection", "features": []}
+    (tmpfd, tmpfn) = tempfile.mkstemp(text=True)
+    df.to_file(tmpfn, driver="GeoJSON")
 
     res = open(tmpfn).read()
     os.unlink(tmpfn)

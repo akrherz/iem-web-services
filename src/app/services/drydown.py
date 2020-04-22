@@ -71,11 +71,8 @@ def append_cfs(res, lon, lat):
             entry["rh"].append(int(rh[i]))
 
 
-def handler(_version, fields, _environ):
+def handler(lon, lat):
     """Handle the request."""
-    # fmt = fields.get("_format", "json")
-    lat = float(fields.get("lat", "42.0"))
-    lon = float(fields.get("lon", "-95.0"))
     gid = get_gid(lon, lat)
 
     pgconn = get_dbconn("iemre")
@@ -106,7 +103,4 @@ def handler(_version, fields, _environ):
             "rh": df2["avg_rh"].values.astype("i").tolist(),
         }
     append_cfs(res, lon, lat)
-    sio = StringIO()
-    json.dump(res, sio)
-    sio.seek(0)
-    return sio.read()
+    return res

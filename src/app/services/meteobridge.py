@@ -10,7 +10,7 @@ from pyiem.observation import Observation
 PROPS = {}
 
 
-def handler(version, fields, environ):
+def handler(key, time, tmpf, max_tmpf, min_tmpf, dwpf, relh, sknt, pday, alti, drct):
     """Handle the request, return dict"""
     # sys.stderr.write(repr(fields))
     if not PROPS:
@@ -19,11 +19,11 @@ def handler(version, fields, environ):
     lookup = {}
     for sid in ["OT0013", "OT0014", "OT0015"]:
         lookup[PROPS.get("meteobridge.key." + sid)] = sid
-    if fields.get("key") not in lookup:
-        return json.dumps("BAD_KEY")
-    sid = lookup[fields.get("key")]
-    if len(fields.get("time", "")) == 14:
-        _t = fields.get("time")
+    if key not in lookup:
+        return "BAD_KEY"
+    sid = lookup[key]
+    if len(time) == 14:
+        _t = time
         now = utc(
             int(_t[:4]),
             int(_t[4:6]),
@@ -47,12 +47,12 @@ def handler(version, fields, environ):
         "alti",
         "drct",
     ]:
-        if fields.get(fname, "M") == "M":
+        if vars()[fname] == "M":
             continue
-        ob.data[fname] = float(fields.get(fname))
+        ob.data[fname] = float(vars()[fname])
     pgconn = get_dbconn("iem", user="mesonet")
     cursor = pgconn.cursor()
     ob.save(cursor)
     cursor.close()
     pgconn.commit()
-    return json.dumps("OK")
+    return "OK"
