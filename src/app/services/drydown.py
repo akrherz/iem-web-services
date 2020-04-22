@@ -2,8 +2,6 @@
 import warnings
 import datetime
 import os
-import json
-from io import StringIO
 
 import numpy as np
 from metpy.units import units
@@ -49,12 +47,21 @@ def append_cfs(res, lon, lat):
         if attempt > 9:
             return
     nc = ncopen(testfn)
-    high = (nc.variables["high_tmpk"][:, gridy, gridx] * units.degK).to(units.degF).m
-    low = (nc.variables["low_tmpk"][:, gridy, gridx] * units.degK).to(units.degF).m
+    high = (
+        (nc.variables["high_tmpk"][:, gridy, gridx] * units.degK)
+        .to(units.degF)
+        .m
+    )
+    low = (
+        (nc.variables["low_tmpk"][:, gridy, gridx] * units.degK)
+        .to(units.degF)
+        .m
+    )
     # RH hack
     # found ~20% bias with this value, so arb addition for now
     rh = (
-        relative_humidity_from_dewpoint(high * units.degF, low * units.degF).m * 100.0
+        relative_humidity_from_dewpoint(high * units.degF, low * units.degF).m
+        * 100.0
         + 20.0
     )
     rh = np.where(rh > 95, 95, rh)
@@ -71,11 +78,8 @@ def append_cfs(res, lon, lat):
             entry["rh"].append(int(rh[i]))
 
 
-def handler(_version, fields, _environ):
+def handler(lon, lat):
     """Handle the request."""
-    # fmt = fields.get("_format", "json")
-    lat = float(fields.get("lat", "42.0"))
-    lon = float(fields.get("lon", "-95.0"))
     gid = get_gid(lon, lat)
 
     pgconn = get_dbconn("iemre")
@@ -106,7 +110,4 @@ def handler(_version, fields, _environ):
             "rh": df2["avg_rh"].values.astype("i").tolist(),
         }
     append_cfs(res, lon, lat)
-    sio = StringIO()
-    json.dump(res, sio)
-    sio.seek(0)
-    return sio.read()
+    return res

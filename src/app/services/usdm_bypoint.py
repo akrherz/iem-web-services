@@ -1,5 +1,5 @@
 """US Drought Monitor by lat/lon point"""
-import datetime
+import json
 
 from pandas.io.sql import read_sql
 from pyiem.util import get_dbconn
@@ -16,18 +16,9 @@ def get_mckey(fields):
     return "%s/%s/%s/%s" % (sdate, edate, lon, lat)
 
 
-def make_date(val, default):
-    """Convert the value into a date please"""
-    if val == "":
-        return default
-    return datetime.datetime.strptime(val, "%Y-%m-%d")
-
-
 def run(sdate, edate, lon, lat):
     """Do the work, please"""
     pgconn = get_dbconn("postgis")
-    sdate = make_date(sdate, datetime.date(2000, 1, 1))
-    edate = make_date(edate, datetime.date(2050, 1, 1))
 
     df = read_sql(
         """
@@ -42,14 +33,10 @@ def run(sdate, edate, lon, lat):
         index_col=None,
     )
 
-    return df
+    return json.loads(df.to_json(orient="table", default_handler=str))
 
 
-def handler(_version, fields, _environ):
+def handler(sdate, edate, lon, lat):
     """Handle the request, return dict"""
-    sdate = fields.get("sdate", "")
-    edate = fields.get("edate", "")
-    lat = float(fields.get("lat", 42.0))
-    lon = float(fields.get("lon", -95.0))
 
     return run(sdate, edate, lon, lat)

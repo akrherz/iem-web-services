@@ -1,6 +1,7 @@
-# some of these requirements are cascading from pip install pyIEM
-numpy
-geopandas
-paste
-python-memcached
+# pip won't work for pyIEM requirement of cartopy, so do it here for now
 cartopy
+# 
+fastapi
+geopandas
+pytest
+pytest-runner

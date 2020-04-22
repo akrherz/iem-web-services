@@ -92,16 +92,8 @@ def compute(df):
     # df.dropna(how='all', axis=1, inplace=True)
 
 
-def handler(_version, fields, _environ):
+def handler(network, networkclass, wfo, state, station, event, minutes, fmt):
     """Handle the request, return dict"""
-    fmt = fields.get("_format", "json")
-    network = fields.get("network", "")[:32]
-    networkclass = fields.get("networkclass", "")[:32]
-    wfo = fields.get("wfo", "")[:4]
-    state = fields.get("state", "")[:2]
-    event = fields.get("event")
-    station = fields.getall("station")
-    minutes = int(fields.get("minutes", 1440 * 10))
     pgconn = get_dbconn("iem")
     if station:
         params = [tuple(station)]
@@ -139,7 +131,7 @@ def handler(_version, fields, _environ):
         df.to_csv(tmpfn, index=True)
     elif fmt == "json":
         # Implement our 'table-schema' option
-        return df
+        return df.to_json(orient="table", default_handler=str)
     elif fmt == "geojson":
         (tmpfd, tmpfn) = tempfile.mkstemp(text=True)
         os.close(tmpfd)

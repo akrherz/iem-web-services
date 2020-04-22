@@ -1,71 +1,24 @@
 sudo: required
-dist: trusty
+dist: bionic
 addons:
-  postgresql: "9.5"
-  apt:
-    packages:
-      - postgresql-9.5-postgis-2.3
   hosts:
-    - iemdb
-    - iemdb2
-    - iemdb-hads
-    - iem.local
-    - iem-memcached
-    - talltowers-db.local
     - iem-web-services.local
 language: python
 env:
   global:
     - MPLLOCALFREETYPE=1
   matrix:
-    - PYTHON_VERSION=3.6
+    - PYTHON_VERSION=3.8
 before_install:
-  - sudo mkdir -p /mesonet/www/logs
-  - sudo ln -s `pwd` /opt/iem-web-services
-  - chmod 755 $HOME
-  # need apache2-dev for mod-wsgi to build
-  # apache2-utils is for rotatelogs
-  - sudo apt-get install apache2 apache2-dev memcached apache2-utils
-  # Uh oh, path wierdness
-  - sudo ln -s /usr/bin/rotatelogs /usr/sbin/rotatelogs
-  - sudo service memcached start
-  - sudo a2enmod headers rewrite proxy cgi expires authz_groupfile
-  # we do things the old fashioned way, we earn it
-  - sudo a2dissite 000-default.conf
-  - sudo cp config/apache-vhost.conf /etc/apache2/sites-enabled/ijs.conf
-  # Setup PATH so that miniconda gets in the front
-  - echo 'export PATH=/home/travis/miniconda/bin:$PATH' | sudo tee -a /etc/apache2/envvars > /dev/null
-  - echo 'export LD_PRELOAD=/home/travis/miniconda/lib/libz.so' | sudo tee -a /etc/apache2/envvars > /dev/null
-  - echo 'WSGIDaemonProcess iemwsgi_ap processes=1 threads=15 display-name=%{GROUP} maximum-requests=100' | sudo tee -a /etc/apache2/sites-enabled/mod_wsgi.conf
-  # use conda provided mod_wsgi
-  - echo "LoadModule wsgi_module $HOME/miniconda/envs/test-environment/lib/python${PYTHON_VERSION}/site-packages/mod_wsgi/server/mod_wsgi-py36.cpython-36m-x86_64-linux-gnu.so" | sudo tee -a /etc/apache2/mods-enabled/wsgi.load > /dev/null
+  - git clone --depth 1 https://github.com/akrherz/ci_tooling.git .ci_tooling
+  - . .ci_tooling/miniconda.sh
+
 install:
-  - wget http://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
-  - bash miniconda.sh -b -p $HOME/miniconda
-  - export PATH="$HOME/miniconda/bin:$PATH"
+  - pip install codecov
 
-  # Create the basic testing environment
-  # ------------------------------------
-  - conda config --set always_yes yes --set changeps1 no --set show_channel_urls yes
-  - conda update -q conda
-  - . $HOME/miniconda/etc/profile.d/conda.sh
-  # current guidance on conda-forge usage
-  - conda config --prepend channels conda-forge
-  - conda config --set channel_priority strict
-  - conda create -n test-environment python=$PYTHON_VERSION
-  - conda activate test-environment
-  - conda config --set always_yes yes --set changeps1 no
-
-  - conda install --file conda_requirements.txt
-  # Remove packages to save space
-  - conda clean --packages
-  # Then do additional pip stuff
-  - pip install -r pip_requirements.txt
-  - find /home/travis/miniconda/envs/test-environment/lib/python${PYTHON_VERSION}/site-packages/mod_wsgi/server/ -type f -name '*.so'
-  # now delete out some cache stuff, so that our travis-ci cache is still valid
-  - rm -f $HOME/miniconda/pkgs/cache/*
 script:
-  # restart apache
-  - sudo service apache2 restart || sudo cat /var/log/apache2/error.log
-  - curl http://iem-web-services.local/service.wsgi
-  - sudo cat /var/log/apache2/error.log
+  - coverage run --source=src setup.py test
+  - coverage report
+  - if [[ $PYTHON_VERSION == "3.8" ]]; then
+    codecov -e TRAVIS_PYTHON_VERSION;
+    fi

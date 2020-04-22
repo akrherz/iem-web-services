@@ -1,21 +1,20 @@
-"""/api/1/nwstext.txt?pid=201410071957-KDMX-FXUS63-AFDDMX"""
+"""/api/1/nwstext/201410071957-KDMX-FXUS63-AFDDMX"""
 import datetime
 
 import pytz
 from pyiem.util import get_dbconn
 
 
-def handler(_version, fields, _environ):
+def handler(product_id):
     """Handle the request, return dict"""
-    product = fields.get("pid", "201410071957-KDMX-FXUS63-AFDDMX")[:32]
     pgconn = get_dbconn("afos")
     cursor = pgconn.cursor()
 
     ts = datetime.datetime.strptime(product[:12], "%Y%m%d%H%M")
-    ts = ts.replace(tzinfo=pytz.utc)
+    ts = ts.replace(tzinfo=pytz.UTC)
 
-    source = product[13:17]
-    pil = product[25:]
+    source = product_id[13:17]
+    pil = product_id[25:]
 
     cursor.execute(
         """SELECT data from products where source = %s

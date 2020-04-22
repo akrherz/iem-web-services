@@ -8,10 +8,9 @@ import datetime
 import json
 import sys
 
-import pytz
 import geopandas as gpd
 from shapely.ops import cascaded_union
-from pyiem.util import utc, get_dbconn
+from pyiem.util import get_dbconn
 
 ISO9660 = "%Y-%m-%dT%H:%M:%SZ"
 LSRTYPE2PHENOM = {
@@ -30,42 +29,33 @@ LSRTYPE2PHENOM = {
 def printt(msg):
     """Print a message with a timestamp included"""
     if sys.stdout.isatty():
-        print(("%s %s") % (datetime.datetime.now().strftime("%H:%M:%S.%f"), msg))
-
-
-def compute_times(fields):
-    """Figure out our start and end times"""
-    if "begints" in fields:
-        begints = datetime.datetime.strptime(fields["begints"][:16], ISO9660[:14])
-        begints = begints.replace(tzinfo=pytz.utc)
-        endts = datetime.datetime.strptime(fields["endts"][:16], ISO9660[:14])
-        endts = endts.replace(tzinfo=pytz.utc)
-    else:
-        ets = datetime.datetime.utcnow()
-        sts = ets - datetime.timedelta(hours=4)
-        begints = utc(
-            int(fields.get("syear", sts.year)),
-            int(fields.get("smonth", sts.month)),
-            int(fields.get("sday", sts.day)),
-            int(fields.get("shour", sts.hour)),
+        print(
+            ("%s %s") % (datetime.datetime.now().strftime("%H:%M:%S.%f"), msg)
         )
-        endts = utc(
-            int(fields.get("eyear", ets.year)),
-            int(fields.get("emonth", ets.month)),
-            int(fields.get("eday", ets.day)),
-            int(fields.get("ehour", ets.hour)),
-        )
-    return begints, endts
 
 
 class COWSession(object):
     """Things that we could do while generating Cow stats"""
 
-    def __init__(self, fields):
+    def __init__(
+        self,
+        wfo,
+        begints,
+        endts,
+        phenomena,
+        lsrtype,
+        hailsize,
+        lsrbuffer,
+        warningbuffer,
+        wind,
+        windhailtag,
+        limitwarns,
+        fcster,
+    ):
         """Build out our session based on provided fields"""
-        self.wfo = fields.getall("wfo")
+        self.wfo = wfo
         # Figure out the begin and end times
-        self.begints, self.endts = compute_times(fields)
+        self.begints, self.endts = begints, endts
         # Storage of data
         self.events = gpd.GeoDataFrame()
         self.events_buffered = None
@@ -73,19 +63,19 @@ class COWSession(object):
         self.stormreports_buffered = None
         self.stats = dict()
         # query parameters
-        self.phenomena = fields.getall("phenomena")
+        self.phenomena = phenomena
         if not self.phenomena:
             self.phenomena = ["TO", "SV", "FF", "MA", "DS"]
-        self.lsrtype = fields.getall("lsrtype")
+        self.lsrtype = lsrtype
         if not self.lsrtype:
             self.lsrtype = ["TO", "SV", "FF", "MA", "DS"]
-        self.hailsize = float(fields.get("hailsize", 1.0))
-        self.lsrbuffer = float(fields.get("lsrbuffer", 15))
-        self.warningbuffer = float(fields.get("warningbuffer", 1))
-        self.wind = float(fields.get("wind", 58))
-        self.windhailtag = fields.get("windhailtag", "N").upper() == "Y"
-        self.limitwarns = fields.get("limitwarns", "N").upper() == "Y"
-        self.fcster = fields.get("fcster", None)
+        self.hailsize = hailsize
+        self.lsrbuffer = lsrbuffer
+        self.warningbuffer = warningbuffer
+        self.wind = wind
+        self.windhailtag = windhailtag.upper() == "Y"
+        self.limitwarns = limitwarns.upper() == "Y"
+        self.fcster = fcster
         # our database connection
         self.dbconn = get_dbconn("postgis")
 
@@ -104,28 +94,42 @@ class COWSession(object):
         _ev = self.events
         _sr = self.stormreports
         self.stats["area_verify[%]"] = (
-            0 if _ev.empty else _ev["areaverify"].sum() / _ev["parea"].sum() * 100.0
+            0
+            if _ev.empty
+            else _ev["areaverify"].sum() / _ev["parea"].sum() * 100.0
         )
         self.stats["shared_border[%]"] = (
             0
             if _ev.empty
             else _ev["sharedborder"].sum() / _ev["perimeter"].sum() * 100.0
         )
-        self.stats["max_leadtime[min]"] = None if _sr.empty else _sr["leadtime"].max()
-        self.stats["min_leadtime[min]"] = None if _sr.empty else _sr["leadtime"].min()
-        self.stats["avg_leadtime[min]"] = None if _sr.empty else _sr["leadtime"].mean()
-        self.stats["tdq_stormreports"] = 0 if _sr.empty else len(_sr[_sr["tdq"]].index)
+        self.stats["max_leadtime[min]"] = (
+            None if _sr.empty else _sr["leadtime"].max()
+        )
+        self.stats["min_leadtime[min]"] = (
+            None if _sr.empty else _sr["leadtime"].min()
+        )
+        self.stats["avg_leadtime[min]"] = (
+            None if _sr.empty else _sr["leadtime"].mean()
+        )
+        self.stats["tdq_stormreports"] = (
+            0 if _sr.empty else len(_sr[_sr["tdq"]].index)
+        )
         self.stats["unwarned_reports"] = (
             0 if _sr.empty else len(_sr[~_sr["warned"]].index)
         )
-        self.stats["warned_reports"] = 0 if _sr.empty else len(_sr[_sr["warned"]].index)
+        self.stats["warned_reports"] = (
+            0 if _sr.empty else len(_sr[_sr["warned"]].index)
+        )
         self.stats["events_verified"] = (
             0 if _ev.empty else len(_ev[_ev["verify"]].index)
         )
         self.stats["events_total"] = len(_ev.index)
         self.stats["reports_total"] = len(_sr.index)
         if self.stats["reports_total"] > 0:
-            pod = self.stats["warned_reports"] / float(self.stats["reports_total"])
+            pod = self.stats["warned_reports"] / float(
+                self.stats["reports_total"]
+            )
         else:
             pod = 0
         self.stats["POD[1]"] = pod
@@ -252,7 +256,9 @@ class COWSession(object):
             ),
             crs={"init": "epsg:4326"},
         )
-        self.events["stormreports"] = [[] for _ in range(len(self.events.index))]
+        self.events["stormreports"] = [
+            [] for _ in range(len(self.events.index))
+        ]
         self.events["verify"] = False
         self.events["lead0"] = None
         self.events["areaverify"] = 0
@@ -287,11 +293,15 @@ class COWSession(object):
             geom_col="geom",
             crs={"init": "epsg:4326"},
         )
-        self.stormreports["events"] = [[] for _ in range(len(self.stormreports.index))]
+        self.stormreports["events"] = [
+            [] for _ in range(len(self.stormreports.index))
+        ]
         self.stormreports["tdq"] = False
         self.stormreports["warned"] = False
         self.stormreports["leadtime"] = None
-        self.stormreports["lsrtype"] = self.stormreports["type"].map(LSRTYPE2PHENOM)
+        self.stormreports["lsrtype"] = self.stormreports["type"].map(
+            LSRTYPE2PHENOM
+        )
         if self.stormreports.empty:
             return
         s2163 = self.stormreports["geom"].to_crs(epsg=2163)
@@ -355,7 +365,9 @@ class COWSession(object):
                 self.stormreports["valid"] < _ev["expire"]
             )
             # NB the within operation returns a boolean series sometimes false
-            for sidx, isinside in centroids[indicies].within(geometry).iteritems():
+            for sidx, isinside in (
+                centroids[indicies].within(geometry).iteritems()
+            ):
                 if not isinside:
                     continue
                 _sr = self.stormreports.loc[sidx]
@@ -372,15 +384,29 @@ class COWSession(object):
                 elif _ev["phenomena"] == "DS":
                     if _sr["type"] == "2":
                         verify = True
-                elif _ev["phenomena"] == "MA" and _sr["type"] in ["W", "M", "H"]:
+                elif _ev["phenomena"] == "MA" and _sr["type"] in [
+                    "W",
+                    "M",
+                    "H",
+                ]:
                     verify = True
-                elif _ev["phenomena"] == "SV" and _sr["type"] in ["G", "D", "H"]:
+                elif _ev["phenomena"] == "SV" and _sr["type"] in [
+                    "G",
+                    "D",
+                    "H",
+                ]:
                     # If we are to verify based on the windhag tag, then we
                     # need to compare the magnitudes
                     if self.windhailtag:
-                        if _sr["type"] == "H" and _sr["magnitude"] >= _ev["hailtag"]:
+                        if (
+                            _sr["type"] == "H"
+                            and _sr["magnitude"] >= _ev["hailtag"]
+                        ):
                             verify = True
-                        elif _sr["type"] == "G" and _sr["magnitude"] >= _ev["windtag"]:
+                        elif (
+                            _sr["type"] == "G"
+                            and _sr["magnitude"] >= _ev["windtag"]
+                        ):
                             verify = True
                         elif _sr["type"] == "D":  # can't tag verify these
                             verify = True
@@ -390,7 +416,9 @@ class COWSession(object):
                     continue
                 self.events.at[eidx, "verify"] = True
                 self.stormreports.at[sidx, "warned"] = True
-                leadtime = int((_sr["valid"] - _ev["issue"]).total_seconds() / 60.0)
+                leadtime = int(
+                    (_sr["valid"] - _ev["issue"]).total_seconds() / 60.0
+                )
                 if _sr["leadtime"] is None:
                     self.stormreports.at[sidx, "leadtime"] = leadtime
                 if not _ev["stormreports"]:
@@ -408,7 +436,9 @@ class COWSession(object):
             if not _ev["stormreports"]:
                 continue
             # Union all the LSRs into one shape
-            lsrs = cascaded_union(self.stormreports_buffered[_ev["stormreports"]])
+            lsrs = cascaded_union(
+                self.stormreports_buffered[_ev["stormreports"]]
+            )
             # Intersect with this warning geometry to find overlap
             overlap = _ev["geom"].buffer(0).intersection(lsrs)
             self.events.loc[eidx, "areaverify"] = overlap.area / 1000000.0
@@ -416,7 +446,9 @@ class COWSession(object):
     def clean_dataframes(self):
         """Get rid of types we can not handle"""
         for df in [self.events, self.stormreports]:
-            for colname in df.select_dtypes(include=["datetime64[ns]"]).columns:
+            for colname in df.select_dtypes(
+                include=["datetime64[ns]"]
+            ).columns:
                 df[colname] = df[colname].dt.strftime(ISO9660)
 
         def _to_csv(val):
@@ -424,14 +456,46 @@ class COWSession(object):
             return ",".join([str(s) for s in val])
 
         # Convert hacky column of lists to csv
-        self.events["stormreports"] = self.events["stormreports"].apply(_to_csv)
-        self.stormreports["events"] = self.stormreports["events"].apply(_to_csv)
+        self.events["stormreports"] = self.events["stormreports"].apply(
+            _to_csv
+        )
+        self.stormreports["events"] = self.stormreports["events"].apply(
+            _to_csv
+        )
 
 
-def handler(_version, fields, _environ):
+def handler(
+    wfo,
+    begints,
+    endts,
+    phenomena,
+    lsrtype,
+    hailsize,
+    lsrbuffer,
+    warningbuffer,
+    wind,
+    windhailtag,
+    limitwarns,
+    fcster,
+):
     """Handle the request, return dict"""
-    cow = COWSession(fields)
+    cow = COWSession(
+        wfo,
+        begints,
+        endts,
+        phenomena,
+        lsrtype,
+        hailsize,
+        lsrbuffer,
+        warningbuffer,
+        wind,
+        windhailtag,
+        limitwarns,
+        fcster,
+    )
     cow.milk()
+    # Some stuff is not JSON serializable
+    cow.clean_dataframes()
     res = {
         "generated_at": datetime.datetime.utcnow().strftime(ISO9660),
         "params": {
@@ -448,153 +512,11 @@ def handler(_version, fields, _environ):
             "warningbuffer": cow.warningbuffer,
         },
         "stats": cow.stats,
-        "events": "REPLACEME1",
-        "stormreports": "REPLACEME2",
+        "events": json.loads(cow.events.to_json()),
+        "stormreports": json.loads(cow.stormreports.to_json()),
     }
     # only include when the easter egg is enabled
     if cow.fcster:
         res["params"]["fcster"] = cow.fcster
-    # Some stuff is not JSON serializable
-    cow.clean_dataframes()
-    # HACK as we need to do raw string subs
-    return (
-        json.dumps(res)
-        .replace('"REPLACEME1"', cow.events.to_json())
-        .replace('"REPLACEME2"', cow.stormreports.to_json())
-    )
 
-
-def test_iemissue163_slowlix():
-    """See why this query is so slow!"""
-    from paste.util.multidict import MultiDict
-
-    flds = MultiDict()
-    flds.add("wfo", "LIX")
-    flds.add("begints", "2018-01-01T12:00")
-    flds.add("endts", "2018-07-16T12:00")
-    cow = COWSession(flds)
-    cow.milk()
-    assert cow.stats["events_total"] == 395
-
-
-def test_empty():
-    """Can we run when no data is found?"""
-    from paste.util.multidict import MultiDict
-
-    flds = MultiDict()
-    flds.add("wfo", "XXX")
-    flds.add("begints", "2018-06-20T12:00")
-    flds.add("endts", "2018-06-21T12:00")
-    cow = COWSession(flds)
-    cow.milk()
-    assert cow.stats["events_total"] == 0
-
-
-def test_dsw():
-    """Dust Storm Warnings"""
-    from paste.util.multidict import MultiDict
-
-    flds = MultiDict()
-    flds.add("wfo", "PSR")
-    flds.add("phenomena", "DS")
-    flds.add("lsrtype", "DS")
-    flds.add("begints", "2018-07-01T12:00")
-    flds.add("endts", "2018-07-10T12:00")
-    flds.add("hailsize", 1.0)
-    cow = COWSession(flds)
-    cow.milk()
-    assert cow.stats["events_total"] == 18
-
-
-def test_190806():
-    """Test that we can limit verification to tags."""
-    from paste.util.multidict import MultiDict
-
-    flds = MultiDict()
-    flds.add("wfo", "DMX")
-    flds.add("begints", "2018-06-20T12:00")
-    flds.add("endts", "2018-06-30T12:00")
-    flds.add("hailsize", 1.0)
-    cow = COWSession(flds)
-    cow.milk()
-    assert cow.stats["warned_reports"] == 56
-    flds.add("windhailtag", "Y")
-    cow2 = COWSession(flds)
-    cow2.milk()
-    assert cow2.stats["warned_reports"] == 46
-
-
-def test_180620():
-    """Compare with what we have from legacy PHP based Cow"""
-    from paste.util.multidict import MultiDict
-
-    flds = MultiDict()
-    flds.add("wfo", "DMX")
-    flds.add("begints", "2018-06-20T12:00")
-    flds.add("endts", "2018-06-21T12:00")
-    flds.add("hailsize", 1.0)
-    cow = COWSession(flds)
-    cow.milk()
-    assert cow.stats["events_total"] == 18
-    assert cow.stats["events_verified"] == 4
-    assert abs(cow.stats["size_poly_vs_county[%]"] - 13.3) < 0.1
-    assert abs(cow.stats["area_verify[%]"] - 17.0) < 0.1
-    _ev = cow.events.iloc[0]
-    assert abs(_ev["parea"] - 919.0) < 1
-    assert abs(_ev["parea"] / _ev["carea"] - 0.19) < 0.01
-
-
-def test_one():
-    """Compare with what we have from legacy PHP based Cow"""
-    from paste.util.multidict import MultiDict
-
-    flds = MultiDict()
-    flds.add("wfo", "DMX")
-    flds.add("begints", "2018-06-18T12:00")
-    flds.add("endts", "2018-06-20T12:00")
-    flds.add("hailsize", 1.0)
-    cow = COWSession(flds)
-    cow.milk()
-    assert cow.stats["events_total"] == 5
-    assert cow.stats["events_verified"] == 2
-    assert abs(cow.stats["size_poly_vs_county[%]"] - 24.3) < 0.1
-    assert abs(cow.stats["area_verify[%]"] - 15.2) < 0.1
-    _ev = cow.events.iloc[0]
-    assert abs(_ev["parea"] - 950.0) < 1
-    assert abs(_ev["parea"] / _ev["carea"] - 0.159) < 0.01
-
-
-def main():
-    """A main func for testing"""
-    from paste.util.multidict import MultiDict
-
-    flds = MultiDict()
-    flds.add("begints", "2015-01-01T12:00")
-    flds.add("endts", "2019-05-16T12:00")
-    flds.add("hailsize", 1.0)
-    flds.add("wfo", "LMK")
-    flds.add("lsrtype", "TO")
-    flds.add("lsrtype", "SV")
-    flds.add("phenomena", "TO")
-    flds.add("phenomena", "SV")
-    js = json.loads(handler("1", flds, dict()))
-    print(json.dumps(js["stats"], indent=2))
-    for event in js["events"]["features"]:
-        props = event["properties"]
-        print(
-            ("%s %3s %s %3s %s %7.2f %s")
-            % (
-                props["wfo"],
-                props["eventid"],
-                props["issue"],
-                props["expire"],
-                props["phenomena"],
-                props["parea"],
-                props["stormreports"],
-            )
-        )
-    # print(json.dumps(js, indent=2))
-
-
-if __name__ == "__main__":
-    main()
+    return res
