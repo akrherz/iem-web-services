@@ -1,4 +1,9 @@
 """Unused at the moment."""
+from fastapi.testclient import TestClient
+
+from ..main import app
+
+client = TestClient(app)
 
 
 def _test_iemissue163_slowlix():
@@ -14,17 +19,17 @@ def _test_iemissue163_slowlix():
     assert cow.stats["events_total"] == 395
 
 
-def _test_empty():
+def test_empty():
     """Can we run when no data is found?"""
-    from paste.util.multidict import MultiDict
-
-    flds = MultiDict()
-    flds.add("wfo", "XXX")
-    flds.add("begints", "2018-06-20T12:00")
-    flds.add("endts", "2018-06-21T12:00")
-    cow = COWSession(flds)
-    cow.milk()
-    assert cow.stats["events_total"] == 0
+    response = client.get(
+        "/cow",
+        params={
+            "wfo": "DMX",
+            "begints": "2000-01-01T12:00Z",
+            "endts": "2000-01-02T12:00Z",
+        },
+    )
+    assert response.status_code == 200
 
 
 def _test_dsw():
