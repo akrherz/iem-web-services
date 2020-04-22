@@ -1,5 +1,4 @@
 """US Drought Monitor by lat/lon point"""
-import datetime
 import json
 
 from pandas.io.sql import read_sql

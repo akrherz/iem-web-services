@@ -1,5 +1,4 @@
 """Something simple"""
-import json
 import sys
 import datetime
 
@@ -10,7 +9,9 @@ from pyiem.observation import Observation
 PROPS = {}
 
 
-def handler(key, time, tmpf, max_tmpf, min_tmpf, dwpf, relh, sknt, pday, alti, drct):
+def handler(
+    key, time, tmpf, max_tmpf, min_tmpf, dwpf, relh, sknt, pday, alti, drct
+):
     """Handle the request, return dict"""
     # sys.stderr.write(repr(fields))
     if not PROPS:
