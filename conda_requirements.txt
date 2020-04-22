@@ -1,5 +1,2 @@
 # some of these requirements are cascading from pip install pyIEM
-numpy
 geopandas
-python-memcached
-cartopy
