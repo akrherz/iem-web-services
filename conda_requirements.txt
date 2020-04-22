@@ -1,2 +1,4 @@
 # some of these requirements are cascading from pip install pyIEM
 geopandas
+pytest
+pytest-runner
