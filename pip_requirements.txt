@@ -1,1 +1,1 @@
--e git+https://github.com/akrherz/pyIEM.git#egg=pyIEM
+git+https://github.com/akrherz/pyIEM.git

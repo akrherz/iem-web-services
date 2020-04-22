@@ -1,4 +1,5 @@
-# some of these requirements are cascading from pip install pyIEM
+# 
+fastapi
 geopandas
 pytest
 pytest-runner
