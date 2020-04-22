@@ -1,4 +1,4 @@
-# Need a mechanism to deploy code and have mod_wsgi reload
-cd /opt/iem-web-services
-git pull
-touch htdocs/service.wsgi
+# Fire up our server
+export PYTHONPATH=$(pwd)/src
+
+uvicorn --port 8000 app.main:app &

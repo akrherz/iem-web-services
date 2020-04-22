@@ -17,7 +17,13 @@ from .services import (
     usdm_bypoint,
 )
 
-app = FastAPI()
+app = FastAPI(openapi_prefix="/api/1")
+
+
+@app.get("/servertime")
+def time_service():
+    """Babysteps."""
+    return datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
 @app.get("/usdm_bypoint")
@@ -45,12 +51,15 @@ def shef_currents_service(
         "txt": "text/plain",
     }
     return Response(
-        shef_currents.handler(fmt, pe, duration, days), media_type=mediatypes[fmt]
+        shef_currents.handler(fmt, pe, duration, days),
+        media_type=mediatypes[fmt],
     )
 
 
 @app.get("/nwstext/{product_id}")
-def nwstext_service(product_id: str = Query(..., max_length=31, min_length=31),):
+def nwstext_service(
+    product_id: str = Query(..., max_length=31, min_length=31),
+):
     """Babysteps."""
     return Response(nwstext.handler(product_id), media_type="text/plain")
 
