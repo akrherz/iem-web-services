@@ -1,8 +1,12 @@
-"""Something simple"""
+"""IEM-Only API used to feed in Meteobridge Data.
+
+Unuseful for you all :)
+"""
 import sys
 import datetime
 
 import pytz
+from fastapi import Query
 from pyiem.util import get_properties, get_dbconn, utc
 from pyiem.observation import Observation
 
@@ -57,3 +61,38 @@ def handler(
     cursor.close()
     pgconn.commit()
     return "OK"
+
+
+def factory(app):
+    """Generate."""
+
+    @app.get("/meteobridge.json", description=__doc__)
+    def meteobridge_service(
+        key: str = Query(...),
+        time: str = Query(...),
+        tmpf: str = Query(...),
+        max_tmpf: str = Query(...),
+        min_tmpf: str = Query(...),
+        dwpf: str = Query(...),
+        relh: str = Query(...),
+        sknt: str = Query(...),
+        pday: str = Query(...),
+        alti: str = Query(...),
+        drct: str = Query(...),
+    ):
+        """Replaced above with __doc__."""
+        return handler(
+            key,
+            time,
+            tmpf,
+            max_tmpf,
+            min_tmpf,
+            dwpf,
+            relh,
+            sknt,
+            pday,
+            alti,
+            drct,
+        )
+
+    meteobridge_service.__doc__ = __doc__
