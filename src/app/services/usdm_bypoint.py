@@ -4,7 +4,7 @@ from datetime import date
 
 from pandas.io.sql import read_sql
 from fastapi import Query
-from pyiem.util import get_dbconn
+from ..util import get_dbconn
 
 ISO = "%Y-%m-%dT%H:%M:%SZ"
 

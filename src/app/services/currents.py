@@ -20,9 +20,9 @@ import tempfile
 import numpy as np
 from pandas.io.sql import read_sql
 from geopandas import read_postgis
-from pyiem.util import get_dbconn
-from fastapi import Query, Response, HTTPException
+from fastapi import Query, Response
 from ..models.currents import RootSchema
+from ..util import get_dbconn
 
 
 class SupportedFormats(str, Enum):
@@ -94,12 +94,7 @@ def compute(df):
 
 def handler(network, networkclass, wfo, state, station, event, minutes, fmt):
     """Handle the request, return dict"""
-    try:
-        pgconn = get_dbconn("iem")
-    except Exception:
-        raise HTTPException(
-            status_code=503, detail="Database Connection Failed."
-        )
+    pgconn = get_dbconn("iem")
     if station is not None:
         params = [tuple(station)]
         sql = SQL.replace("REPLACEME", "t.id in %s and")

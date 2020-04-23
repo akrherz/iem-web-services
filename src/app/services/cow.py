@@ -12,9 +12,11 @@ import json
 import sys
 
 import geopandas as gpd
-from fastapi import Query, HTTPException
+import pandas as pd
+from pandas.io.sql import read_sql
+from fastapi import Query
 from shapely.ops import cascaded_union
-from pyiem.util import get_dbconn
+from ..util import get_dbconn
 
 ISO9660 = "%Y-%m-%dT%H:%M:%SZ"
 LSRTYPE2PHENOM = {
@@ -79,21 +81,18 @@ class COWSession(object):
         self.limitwarns = limitwarns.upper() == "Y"
         self.fcster = fcster
         # our database connection
-        try:
-            self.dbconn = get_dbconn("postgis")
-        except Exception:
-            raise HTTPException(
-                status_code=503, detail="Database connection failed."
-            )
+        self.dbconn = get_dbconn("postgis")
 
     def milk(self):
         """Milk the Cow and see what happens"""
+        printt("milk() is called")
         self.load_events()
         self.load_stormreports()
         self.compute_shared_border()
         self.sbw_verify()
         self.area_verify()
         self.compute_stats()
+        printt("milk() is done")
 
     def compute_stats(self):
         """Fill out the stats attribute"""
@@ -200,7 +199,7 @@ class COWSession(object):
         """Build out the listing of events based on the request"""
         printt("load_events called...")
         self.events = gpd.read_postgis(
-            """
+            f"""
         WITH stormbased as (
             SELECT wfo, phenomena, eventid, hailtag, windtag,
             geom, significance,
@@ -208,14 +207,10 @@ class COWSession(object):
             ST_perimeter(ST_transform(geom,2163)) as perimeter,
             ST_xmax(geom) as lon0, ST_ymax(geom) as lat0,
             extract(year from issue at time zone 'UTC') as year
-            from sbw w WHERE status = 'NEW' """
-            + self.sql_wfo_limiter()
-            + """
+            from sbw w WHERE status = 'NEW' {self.sql_wfo_limiter()}
             and issue >= %s and issue < %s and expire < %s
             and significance = 'W'
-            and phenomena in %s """
-            + self.sql_tag_limiter()
-            + """
+            and phenomena in %s {self.sql_tag_limiter()}
         ),
         countybased as (
             SELECT w.wfo, phenomena, eventid, significance,
@@ -227,24 +222,19 @@ class COWSession(object):
             max(expire at time zone 'UTC') as mexpire,
             extract(year from issue at time zone 'UTC') as year, w.fcster
             from warnings w JOIN ugcs u on (u.gid = w.gid) WHERE
-            w.gid is not null """
-            + self.sql_wfo_limiter()
-            + """ and
+            w.gid is not null {self.sql_wfo_limiter()} and
             issue >= %s and issue < %s and expire < %s
             and significance = 'W'
-            and phenomena in %s """
-            + self.sql_tag_limiter()
-            + """
-            """
-            + self.sql_fcster_limiter()
-            + """
+            and phenomena in %s {self.sql_tag_limiter()}
+            {self.sql_fcster_limiter()}
             GROUP by w.wfo, phenomena, eventid, significance, year, fcster
         )
         SELECT s.year::int, s.wfo, s.phenomena, s.eventid, s.geom,
         c.missue as issue,
         c.mexpire as expire, c.statuses, c.fcster,
         s.significance, s.hailtag, s.windtag, c.carea, c.ar_ugc,
-        s.lat0, s.lon0, s.perimeter, s.parea, c.ar_ugcname
+        s.lat0, s.lon0, s.perimeter, s.parea, c.ar_ugcname,
+        s.year || s.wfo || s.eventid || s.phenomena || s.significance as key
         from stormbased s JOIN countybased c on
         (c.eventid = s.eventid and c.wfo = s.wfo and c.year = s.year
         and c.phenomena = s.phenomena and c.significance = s.significance)
@@ -262,6 +252,7 @@ class COWSession(object):
                 tuple(self.phenomena),
             ),
             crs={"init": "epsg:4326"},
+            index_col="key",
         )
         self.events["stormreports"] = [
             [] for _ in range(len(self.events.index))
@@ -279,17 +270,13 @@ class COWSession(object):
         """Build out the listing of storm reports based on the request"""
         printt("load_stormreports called...")
         self.stormreports = gpd.read_postgis(
-            """
+            f"""
         SELECT distinct valid at time zone 'UTC' as valid,
         type, magnitude, city, county, state,
         source, remark, wfo, typetext, ST_x(geom) as lon0, ST_y(geom) as lat0,
         geom
         from lsrs w WHERE valid >= %s and valid < %s
-        """
-            + self.sql_wfo_limiter()
-            + """ """
-            + self.sql_lsr_limiter()
-            + """
+        {self.sql_wfo_limiter()} {self.sql_lsr_limiter()}
         and ((type = 'M' and magnitude >= 34) or type = '2' or
         (type = 'H' and magnitude >= %s) or type = 'W' or
          type = 'T' or (type = 'G' and magnitude >= %s) or type = 'D'
@@ -317,48 +304,59 @@ class COWSession(object):
     def compute_shared_border(self):
         """Compute a stat"""
         printt("compute_shared_border called...")
-        cursor = self.dbconn.cursor()
-        for eidx, row in self.events.iterrows():
-            # re ST_Buffer(simple_geom) see akrherz/iem#163
-            cursor.execute(
-                """
-                WITH stormbased as (
-                    SELECT geom from sbw_"""
-                + str(row["year"])
-                + """
-                    where wfo = %s
-                    and eventid = %s and significance = %s
-                    and phenomena = %s and status = 'NEW'),
-                countybased as (
-                    SELECT ST_Union(ST_Buffer(u.simple_geom, 0)) as geom from
-                    warnings_"""
-                + str(row["year"])
-                + """ w
-                    JOIN ugcs u on (u.gid = w.gid)
-                    WHERE w.wfo = %s and eventid = %s and
-                    significance = %s and phenomena = %s)
-
-                SELECT sum(ST_Length(ST_transform(geo,2163))) as s from
-                (SELECT ST_SetSRID(ST_intersection(
-                ST_buffer(ST_exteriorring(
-                    ST_geometryn(ST_multi(c.geom),1)),0.02),
-                ST_exteriorring(ST_geometryn(
-                    ST_multi(s.geom),1))), 4326) as geo
-                from stormbased s, countybased c) as foo
-            """,
-                (
-                    row["wfo"],
-                    row["eventid"],
-                    row["significance"],
-                    row["phenomena"],
-                    row["wfo"],
-                    row["eventid"],
-                    row["significance"],
-                    row["phenomena"],
-                ),
+        # re ST_Buffer(simple_geom) see akrherz/iem#163
+        df = read_sql(
+            f"""
+            WITH stormbased as (
+                SELECT geom, wfo, eventid, phenomena, significance,
+                extract(year from issue at time zone 'UTC') as year
+                from sbw w WHERE status = 'NEW' {self.sql_wfo_limiter()}
+                and issue >= %s and issue < %s and expire < %s
+                and significance = 'W'
+                and phenomena in %s {self.sql_tag_limiter()}),
+            countybased as (
+                SELECT ST_Union(ST_Buffer(u.simple_geom, 0)) as geom,
+                w.wfo, phenomena, eventid, significance,
+                extract(year from issue at time zone 'UTC') as year, w.fcster
+                from warnings w JOIN ugcs u on (u.gid = w.gid) WHERE
+                w.gid is not null {self.sql_wfo_limiter()} and
+                issue >= %s and issue < %s and expire < %s
+                and significance = 'W'
+                and phenomena in %s {self.sql_tag_limiter()}
+                {self.sql_fcster_limiter()}
+                GROUP by w.wfo, phenomena, eventid, significance, year,
+                fcster),
+            agg as (
+                SELECT ST_SetSRID(ST_intersection(
+                    ST_buffer(ST_exteriorring(
+                        ST_geometryn(ST_multi(c.geom),1)),0.02),
+                    ST_exteriorring(ST_geometryn(
+                        ST_multi(s.geom),1))), 4326) as geo,
+                c.year, c.wfo, c.phenomena, c.significance, c.eventid
+                from stormbased s, countybased c WHERE
+                s.wfo = c.wfo and s.eventid = c.eventid and
+                s.phenomena = c.phenomena and s.significance = c.significance
+                and s.year = c.year
             )
-            if cursor.rowcount > 0:
-                self.events.at[eidx, "sharedborder"] = cursor.fetchone()[0]
+
+            SELECT sum(ST_Length(ST_transform(geo,2163))) as s,
+            year || wfo || eventid || phenomena || significance as key
+            from agg GROUP by key
+        """,
+            self.dbconn,
+            params=(
+                self.begints,
+                self.endts,
+                self.endts,
+                tuple(self.phenomena),
+                self.begints,
+                self.endts,
+                self.endts,
+                tuple(self.phenomena),
+            ),
+            index_col="key",
+        )
+        self.events["sharedborder"] = df["s"]
 
     def sbw_verify(self):
         """Verify the events"""
@@ -368,6 +366,9 @@ class COWSession(object):
         centroids = self.stormreports_buffered.centroid
         for eidx, geometry in self.events_buffered.iteritems():
             _ev = self.events.loc[eidx]
+            # Prevent dups?
+            if isinstance(_ev, pd.DataFrame):
+                _ev = _ev.iloc[0]
             indicies = (self.stormreports["valid"] >= _ev["issue"]) & (
                 self.stormreports["valid"] < _ev["expire"]
             )
