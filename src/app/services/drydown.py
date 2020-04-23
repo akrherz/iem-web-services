@@ -6,7 +6,7 @@ import numpy as np
 from metpy.units import units
 from metpy.calc import relative_humidity_from_dewpoint
 from pandas.io.sql import read_sql
-from fastapi import Query
+from fastapi import Query, HTTPException
 from pyiem.util import ncopen
 from pyiem.iemre import get_gid, find_ij, daily_offset
 from ..util import get_dbconn
@@ -86,6 +86,8 @@ def handler(lon, lat):
         parse_dates="valid",
         index_col=None,
     )
+    if df.empty:
+        raise HTTPException(status_code=404, detail="No data found.")
     df["max_tmpf"] = (df["high_tmpk"].values * units.degK).to(units.degF).m
     df["min_tmpf"] = (df["low_tmpk"].values * units.degK).to(units.degF).m
     df["avg_rh"] = df["avg_rh"].fillna(50)

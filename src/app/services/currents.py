@@ -12,7 +12,6 @@ For better or worse, the ".json" in the URI path above controls the output
 format that the service emits.  This service supports ".json", ".geojson",
 and ".txt" (comma delimited) formats.
 """
-from enum import Enum
 from typing import List
 import os
 import tempfile
@@ -22,15 +21,9 @@ from pandas.io.sql import read_sql
 from geopandas import read_postgis
 from fastapi import Query, Response
 from ..models.currents import RootSchema
+from ..models import SupportedFormats
 from ..util import get_dbconn
-
-
-class SupportedFormats(str, Enum):
-    """Formats supported by service."""
-
-    json = "json"
-    geojson = "geojson"
-    txt = "txt"
+from ..reference import MEDIATYPES
 
 
 # Avoid three table aggregate by initial window join
@@ -158,16 +151,11 @@ def factory(app):
     ):
         """Replaced above with module __doc__"""
 
-        mediatypes = {
-            "json": "application/json",
-            "geojson": "application/vnd.geo+json",
-            "txt": "text/plain",
-        }
         return Response(
             handler(
                 network, networkclass, wfo, state, station, event, minutes, fmt
             ),
-            media_type=mediatypes[fmt],
+            media_type=MEDIATYPES[fmt],
         )
 
     # Not really used
