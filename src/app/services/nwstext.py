@@ -5,8 +5,8 @@ This service emits a text file for a given IEM defined product ID. For example:
 import datetime
 
 import pytz
-from fastapi import Query, Response
-from pyiem.util import get_dbconn
+from fastapi import Query, Response, HTTPException
+from ..util import get_dbconn
 
 
 def handler(product_id):
@@ -27,7 +27,7 @@ def handler(product_id):
     )
 
     if cursor.rowcount == 0:
-        return "Not Found %s %s" % (source, pil)
+        raise HTTPException(status_code=404, detail="Product not found.")
 
     row = cursor.fetchone()
     return row[0].replace("\r\r\n", "\n")

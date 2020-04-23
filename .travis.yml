@@ -6,7 +6,8 @@ addons:
 language: python
 env:
   global:
-    - MPLLOCALFREETYPE=1
+    # allows testing to somewhat proceed without a database involved
+    - NODATABASE=1
   matrix:
     - PYTHON_VERSION=3.8
 before_install:

@@ -7,8 +7,9 @@ import datetime
 
 import pytz
 from fastapi import Query
-from pyiem.util import get_properties, get_dbconn, utc
+from pyiem.util import get_properties, utc
 from pyiem.observation import Observation
+from ..util import get_dbconn
 
 PROPS = {}
 
@@ -55,7 +56,7 @@ def handler(
         if vars()[fname] == "M":
             continue
         ob.data[fname] = float(vars()[fname])
-    pgconn = get_dbconn("iem", user="mesonet")
+    pgconn = get_dbconn("iem")
     cursor = pgconn.cursor()
     ob.save(cursor)
     cursor.close()

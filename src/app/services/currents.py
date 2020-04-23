@@ -20,9 +20,9 @@ import tempfile
 import numpy as np
 from pandas.io.sql import read_sql
 from geopandas import read_postgis
-from pyiem.util import get_dbconn
 from fastapi import Query, Response
 from ..models.currents import RootSchema
+from ..util import get_dbconn
 
 
 class SupportedFormats(str, Enum):
@@ -95,19 +95,19 @@ def compute(df):
 def handler(network, networkclass, wfo, state, station, event, minutes, fmt):
     """Handle the request, return dict"""
     pgconn = get_dbconn("iem")
-    if station:
+    if station is not None:
         params = [tuple(station)]
         sql = SQL.replace("REPLACEME", "t.id in %s and")
-    elif networkclass != "" and wfo != "":
+    elif networkclass is not None and wfo is not None:
         params = [wfo, networkclass]
         sql = SQL.replace("REPLACEME", "t.wfo = %s and t.network ~* %s and")
-    elif wfo != "":
+    elif wfo is not None:
         params = [wfo]
         sql = SQL.replace("REPLACEME", "t.wfo = %s and")
-    elif state != "":
+    elif state is not None:
         params = [state]
         sql = SQL.replace("REPLACEME", "t.state = %s and")
-    elif network != "":
+    elif network is not None:
         sql = SQL.replace("REPLACEME", "t.network = %s and")
         params = [network]
     else:

@@ -1,27 +1,11 @@
 """Provide SHEF Currents for a given pe and duration."""
 import os
 import tempfile
-import warnings
 
 from fastapi import Response, Query
 from pandas.io.sql import read_sql
 from geopandas import read_postgis
-from pyiem.util import get_dbconn
-
-# prevent warnings that may trip up mod_wsgi
-warnings.simplefilter("ignore")
-
-CACHE_EXPIRE = 60
-# Avoid three table aggregate by initial window join
-
-
-def get_mckey(fields):
-    """What's the key for this request"""
-    return "%s_%s_%s" % (
-        fields.get("pe", ""),
-        fields.get("duration", ""),
-        fields.get("days", "2"),
-    )
+from ..util import get_dbconn
 
 
 def handler(fmt, pe, duration, days):
@@ -58,7 +42,7 @@ def handler(fmt, pe, duration, days):
         return df.to_json(orient="table", default_handler=str)
     if df.empty:
         return {"type": "FeatureCollection", "features": []}
-    (tmpfd, tmpfn) = tempfile.mkstemp(text=True)
+    (_tmpfd, tmpfn) = tempfile.mkstemp(text=True)
     df.to_file(tmpfn, driver="GeoJSON")
 
     res = open(tmpfn).read()

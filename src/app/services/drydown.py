@@ -7,8 +7,9 @@ from metpy.units import units
 from metpy.calc import relative_humidity_from_dewpoint
 from pandas.io.sql import read_sql
 from fastapi import Query
-from pyiem.util import get_dbconn, ncopen
+from pyiem.util import ncopen
 from pyiem.iemre import get_gid, find_ij, daily_offset
+from ..util import get_dbconn
 
 
 def append_cfs(res, lon, lat):
@@ -108,6 +109,6 @@ def factory(app):
     @app.get("/drydown.json")
     def drydown_service(lat: float = Query(...), lon: float = Query(...)):
         """Babysteps."""
-        return drydown.handler(lon, lat)
+        return handler(lon, lat)
 
     drydown_service.__doc__ = __doc__
