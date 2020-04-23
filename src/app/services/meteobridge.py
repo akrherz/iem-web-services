@@ -56,7 +56,7 @@ def handler(
         if vars()[fname] == "M":
             continue
         ob.data[fname] = float(vars()[fname])
-    pgconn = get_dbconn("iem", user="mesonet")
+    pgconn = get_dbconn("iem")
     cursor = pgconn.cursor()
     ob.save(cursor)
     cursor.close()
