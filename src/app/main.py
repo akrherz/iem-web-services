@@ -13,9 +13,13 @@ from .services import (
     nwstext,
     shef_currents,
     usdm_bypoint,
+    servertime,
 )
 
 app = FastAPI(openapi_prefix="/api/1", description=__doc__)
+
+# /servertime
+servertime.factory(app)
 
 # /usdm_bypoint.json
 usdm_bypoint.factory(app)
