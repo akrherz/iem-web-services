@@ -12,7 +12,7 @@ import json
 import sys
 
 import geopandas as gpd
-from fastapi import Query
+from fastapi import Query, HTTPException
 from shapely.ops import cascaded_union
 from pyiem.util import get_dbconn
 
@@ -79,7 +79,12 @@ class COWSession(object):
         self.limitwarns = limitwarns.upper() == "Y"
         self.fcster = fcster
         # our database connection
-        self.dbconn = get_dbconn("postgis")
+        try:
+            self.dbconn = get_dbconn("postgis")
+        except Exception:
+            raise HTTPException(
+                status_code=503, detail="Database connection failed."
+            )
 
     def milk(self):
         """Milk the Cow and see what happens"""
