@@ -1,14 +1,18 @@
-"""IEM Cow API
+"""IEM Cow (NWS Storm Based Warning Verification) API
 
-/api/1/cow.json?
-  wfo=ABC&wfo=DEF
+See [IEM Cow](https://mesonet.agron.iastate.edu/cow/) webpage for the user
+frontend to this API and for more discussion about what this does.
 
+While this service only emits JSON, the JSON response embeds to GeoJSON objects
+providing the storm reports and warnings.
 """
-import datetime
+from typing import List
+from datetime import datetime
 import json
 import sys
 
 import geopandas as gpd
+from fastapi import Query
 from shapely.ops import cascaded_union
 from pyiem.util import get_dbconn
 
@@ -29,9 +33,7 @@ LSRTYPE2PHENOM = {
 def printt(msg):
     """Print a message with a timestamp included"""
     if sys.stdout.isatty():
-        print(
-            ("%s %s") % (datetime.datetime.now().strftime("%H:%M:%S.%f"), msg)
-        )
+        print(("%s %s") % (datetime.now().strftime("%H:%M:%S.%f"), msg))
 
 
 class COWSession(object):
@@ -497,7 +499,7 @@ def handler(
     # Some stuff is not JSON serializable
     cow.clean_dataframes()
     res = {
-        "generated_at": datetime.datetime.utcnow().strftime(ISO9660),
+        "generated_at": datetime.utcnow().strftime(ISO9660),
         "params": {
             "wfo": cow.wfo,
             "phenomena": cow.phenomena,
@@ -520,3 +522,40 @@ def handler(
         res["params"]["fcster"] = cow.fcster
 
     return res
+
+
+def factory(app):
+    """Generate."""
+
+    @app.get("/cow.json", description=__doc__)
+    def cow_service(
+        wfo: List[str] = Query(..., max_length=4),
+        begints: datetime = Query(...),
+        endts: datetime = Query(...),
+        phenomena: List[str] = Query(None, max_length=2),
+        lsrtype: List[str] = Query(None, max_length=2),
+        hailsize: float = Query(1),
+        lsrbuffer: float = Query(15),
+        warningbuffer: float = Query(1),
+        wind: float = Query(58),
+        windhailtag: str = Query("N"),
+        limitwarns: str = Query("N"),
+        fcster: str = None,
+    ):
+        """Replaced by __doc__."""
+        return handler(
+            wfo,
+            begints,
+            endts,
+            phenomena,
+            lsrtype,
+            hailsize,
+            lsrbuffer,
+            warningbuffer,
+            wind,
+            windhailtag,
+            limitwarns,
+            fcster,
+        )
+
+    cow_service.__doc__ = __doc__

@@ -3,6 +3,7 @@ import os
 import tempfile
 import warnings
 
+from fastapi import Response, Query
 from pandas.io.sql import read_sql
 from geopandas import read_postgis
 from pyiem.util import get_dbconn
@@ -63,3 +64,26 @@ def handler(fmt, pe, duration, days):
     res = open(tmpfn).read()
     os.unlink(tmpfn)
     return res
+
+
+def factory(app):
+    """Generate."""
+
+    @app.get("/shef_currents.{fmt}", description=__doc__)
+    def shef_currents_service(
+        fmt: str = Query(...),
+        pe: str = Query(..., max_length=2),
+        duration: str = Query(..., max_length=1),
+        days: int = Query(1),
+    ):
+        """Babysteps."""
+        mediatypes = {
+            "json": "application/json",
+            "geojson": "application/vnd.geo+json",
+            "txt": "text/plain",
+        }
+        return Response(
+            handler(fmt, pe, duration, days), media_type=mediatypes[fmt]
+        )
+
+    shef_currents_service.__doc__ = __doc__

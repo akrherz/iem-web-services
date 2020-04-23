@@ -1,25 +1,38 @@
-"""Currents API endpoint supporting a number of calls
+"""IEM Currents Service.
 
-    /api/1/currents.txt?network=IA_ASOS
-    /api/1/currents.txt?networkclass=COOP&wfo=DMX
-    /api/1/currents.txt?state=IA
-    /api/1/currents.txt?wfo=DMX
-    /api/1/currents.txt?station=DSM&station=AMW
-    /api/1/currents.txt?event=ice_accretion_1hr
+You can approach this API via the following ways:
+ - `/currents.json?network=IA_ASOS` :: A single "network" worth of currents.
+ - `/currents.json?networkclass=COOP&wfo=DMX` :: All COOP sites for WFO DMX
+ - `/currents.json?state=IA` :: Everything the IEM has for Iowa
+ - `/currents.json?wfo=DMX` :: Everything the IEM has for WFO DMX
+ - `/currents.json?station=DSM&station=AMW` :: Explicit listing of stations
+ - `/currents.json?event=ice_accretion_1hr` :: Special METAR service.
+
+For better or worse, the ".json" in the URI path above controls the output
+format that the service emits.  This service supports ".json", ".geojson",
+and ".txt" (comma delimited) formats.
 """
+from enum import Enum
+from typing import List
 import os
 import tempfile
-import warnings
 
 import numpy as np
 from pandas.io.sql import read_sql
 from geopandas import read_postgis
 from pyiem.util import get_dbconn
+from fastapi import Query, Response
+from ..models.currents import RootSchema
 
-# prevent warnings that may trip up mod_wsgi
-warnings.simplefilter("ignore")
 
-CACHE_EXPIRE = 60
+class SupportedFormats(str, Enum):
+    """Formats supported by service."""
+
+    json = "json"
+    geojson = "geojson"
+    txt = "txt"
+
+
 # Avoid three table aggregate by initial window join
 SQL = """
 WITH agg as (
@@ -71,23 +84,10 @@ WITH agg as (
 """
 
 
-def get_mckey(fields):
-    """What's the key for this request"""
-    return "%s_%s_%s_%s_%s_%s_%s" % (
-        fields.get("network", ""),
-        fields.get("networkclass", ""),
-        fields.get("wfo", ""),
-        fields.get("state", ""),
-        ",".join(fields.getall("station")),
-        fields.get("event", ""),
-        fields.get("minutes", 10 * 1440),
-    )
-
-
 def compute(df):
     """Compute other things that we can't easily do in the database"""
     # replace any None values with np.nan
-    df.fillna(value=np.nan, inplace=True)
+    return df.fillna(value=np.nan)
     # contraversy here, drop any columns that are all missing
     # df.dropna(how='all', axis=1, inplace=True)
 
@@ -115,7 +115,7 @@ def handler(network, networkclass, wfo, state, station, event, minutes, fmt):
         params = []
 
     params.append(minutes)
-    if fmt == "geojson":
+    if fmt == SupportedFormats.geojson:
         df = read_postgis(
             sql, pgconn, params=params, index_col="station", geom_col="geom"
         )
@@ -124,15 +124,15 @@ def handler(network, networkclass, wfo, state, station, event, minutes, fmt):
         df.drop("geom", axis=1, inplace=True)
     if event is not None and event in df.columns:
         df = df[df[event].notna()]
-    compute(df)
-    if fmt == "txt":
+    df = compute(df)
+    if fmt == SupportedFormats.txt:
         (tmpfd, tmpfn) = tempfile.mkstemp(text=True)
         os.close(tmpfd)
         df.to_csv(tmpfn, index=True)
-    elif fmt == "json":
+    elif fmt == SupportedFormats.json:
         # Implement our 'table-schema' option
         return df.to_json(orient="table", default_handler=str)
-    elif fmt == "geojson":
+    elif fmt == SupportedFormats.geojson:
         (tmpfd, tmpfn) = tempfile.mkstemp(text=True)
         os.close(tmpfd)
         df.to_file(tmpfn, driver="GeoJSON")
@@ -140,3 +140,35 @@ def handler(network, networkclass, wfo, state, station, event, minutes, fmt):
     res = open(tmpfn).read()
     os.unlink(tmpfn)
     return res
+
+
+def factory(app):
+    """Generate the app."""
+
+    @app.get("/currents.{fmt}", response_model=RootSchema, description=__doc__)
+    def currents_service(
+        fmt: SupportedFormats,
+        network: str = Query(None, description="IEM Network Identifier"),
+        networkclass: str = Query(None),
+        wfo: str = Query(None, max_length=4),
+        state: str = Query(None, max_length=2),
+        station: List[str] = Query(None),
+        event: str = Query(None),
+        minutes: int = Query(1440 * 10),
+    ):
+        """Replaced above with module __doc__"""
+
+        mediatypes = {
+            "json": "application/json",
+            "geojson": "application/vnd.geo+json",
+            "txt": "text/plain",
+        }
+        return Response(
+            handler(
+                network, networkclass, wfo, state, station, event, minutes, fmt
+            ),
+            media_type=mediatypes[fmt],
+        )
+
+    # Not really used
+    currents_service.__doc__ = __doc__
