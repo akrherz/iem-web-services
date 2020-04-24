@@ -1,9 +1,11 @@
-"""IEM API!
+"""
+Return to [IEM API Homepage](https://mesonet.agron.iastate.edu/api/).
 
 This answers `/api/1/` versioned requests against the IEM.  This service is
 driven by the awesome [FastAPI](https://fastapi.tiangolo.com/) Python library.
 
 """
+
 from fastapi import FastAPI
 from .services import (
     currents,

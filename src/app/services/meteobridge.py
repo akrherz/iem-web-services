@@ -2,11 +2,12 @@
 
 Unuseful for you all :)
 """
+# pylint: disable=unused-argument
 import sys
 import datetime
 
 import pytz
-from fastapi import Query
+from fastapi import Query, HTTPException
 from pyiem.util import get_properties, utc
 from pyiem.observation import Observation
 from ..util import get_dbconn
@@ -26,7 +27,7 @@ def handler(
     for sid in ["OT0013", "OT0014", "OT0015"]:
         lookup[PROPS.get("meteobridge.key." + sid)] = sid
     if key not in lookup:
-        return "BAD_KEY"
+        raise HTTPException(status_code=404, detail="BAD_KEY")
     sid = lookup[key]
     if len(time) == 14:
         _t = time
