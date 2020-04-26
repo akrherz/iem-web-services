@@ -24,7 +24,7 @@ def handler(
         sys.stderr.write("Loading properties()...\n")
         PROPS.update(get_properties())
     lookup = {}
-    for sid in ["OT0013", "OT0014", "OT0015"]:
+    for sid in ["OT0013", "OT0014", "OT0015", "OT0016"]:
         lookup[PROPS.get("meteobridge.key." + sid)] = sid
     if key not in lookup:
         raise HTTPException(status_code=404, detail="BAD_KEY")
