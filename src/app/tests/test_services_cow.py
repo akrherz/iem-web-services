@@ -10,6 +10,17 @@ client = TestClient(app)
 
 
 @pytest.mark.skipif(os.environ.get("NODATABASE") == "1", reason="NODB")
+def test_issue10_nowfo():
+    """Test that we need not provide a WFO."""
+    res = client.get(
+        "/cow.json",
+        params={"begints": "2020-05-03T12:00Z", "endts": "2020-05-04T12:00Z"},
+    )
+    cow = res.json()
+    assert cow["stats"]["events_total"] == 180
+
+
+@pytest.mark.skipif(os.environ.get("NODATABASE") == "1", reason="NODB")
 def test_iemissue163_slowlix():
     """See why this query is so slow!"""
     res = client.get(
