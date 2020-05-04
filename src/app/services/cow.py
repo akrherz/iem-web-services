@@ -535,7 +535,9 @@ def factory(app):
 
     @app.get("/cow.json", description=__doc__)
     def cow_service(
-        wfo: List[str] = Query(..., max_length=4),
+        wfo: List[str] = Query(
+            [], min_length=3, max_length=4, title="WFO Identifiers"
+        ),
         begints: datetime = Query(...),
         endts: datetime = Query(...),
         phenomena: List[str] = Query(None, max_length=2),
