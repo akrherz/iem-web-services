@@ -16,6 +16,7 @@ from .services import (
     shef_currents,
     usdm_bypoint,
     servertime,
+    spc_watch_outline,
 )
 
 app = FastAPI(openapi_prefix="/api/1", description=__doc__, title="IEM API v1")
@@ -43,3 +44,6 @@ cow.factory(app)
 
 # /currents.{fmt}
 currents.factory(app)
+
+# /spc_watch_outline.geojson
+spc_watch_outline.factory(app)
