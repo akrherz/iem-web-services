@@ -1,5 +1,5 @@
 # pip won't work for pyIEM requirement of cartopy, so do it here for now
-cartopy
+cartopy<0.18
 # 
 fastapi
 geopandas
