@@ -154,6 +154,10 @@ class COWSession(object):
         self.stats["size_poly_vs_county[%]"] = (
             0 if _ev.empty else _ev["parea"].sum() / _ev["carea"].sum() * 100.0
         )
+        # Prevent NaN values from above
+        for key in self.stats:
+            if pd.isnull(self.stats[key]):
+                self.stats[key] = None
 
     def sql_lsr_limiter(self):
         """How to limit LSR types"""
