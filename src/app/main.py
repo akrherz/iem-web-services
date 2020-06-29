@@ -20,7 +20,7 @@ from .services import (
     spc_watch_outline,
 )
 
-app = FastAPI(openapi_prefix="/api/1", description=__doc__, title="IEM API v1")
+app = FastAPI(root_path="/api/1", description=__doc__, title="IEM API v1")
 
 # /servertime
 servertime.factory(app)
