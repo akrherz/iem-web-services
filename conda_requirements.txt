@@ -3,5 +3,7 @@ cartopy<0.18
 # 
 fastapi
 geopandas
+pygrib
+pyproj
 pytest
 pytest-runner
