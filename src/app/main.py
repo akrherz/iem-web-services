@@ -11,6 +11,7 @@ from .services import (
     currents,
     cow,
     drydown,
+    ffg_bypoint,
     meteobridge,
     nwstext,
     shef_currents,
@@ -23,6 +24,9 @@ app = FastAPI(openapi_prefix="/api/1", description=__doc__, title="IEM API v1")
 
 # /servertime
 servertime.factory(app)
+
+# /ffg_bypoint.geojson
+ffg_bypoint.factory(app)
 
 # /usdm_bypoint.json
 usdm_bypoint.factory(app)
