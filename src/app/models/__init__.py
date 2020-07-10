@@ -8,3 +8,10 @@ class SupportedFormats(str, Enum):
     json = "json"
     geojson = "geojson"
     txt = "txt"
+
+
+class SupportedFormatsNoGeoJSON(str, Enum):
+    """Formats supported by service."""
+
+    json = "json"
+    txt = "txt"

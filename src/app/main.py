@@ -13,6 +13,7 @@ from .services import (
     drydown,
     ffg_bypoint,
     meteobridge,
+    mos,
     nwstext,
     shef_currents,
     usdm_bypoint,
@@ -33,6 +34,9 @@ usdm_bypoint.factory(app)
 
 # /shef_currents.{fmt}
 shef_currents.factory(app)
+
+# /mos.{fmt}
+mos.factory(app)
 
 # /nwstext/{product_id}
 nwstext.factory(app)

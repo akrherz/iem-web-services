@@ -1,0 +1,91 @@
+"""Model Output Statistics Service.
+
+This service provides the atomic data from the text station MOS that the NWS
+issues.  Depending on the date, the supported `model=` values are AVN, GFS,
+ETA, NAM, NBS, and ECM.
+"""
+from datetime import datetime
+from typing import List
+
+import pytz
+from pandas.io.sql import read_sql
+from fastapi import Query, Response, HTTPException
+from ..models.currents import RootSchema
+from ..models import SupportedFormatsNoGeoJSON
+from ..util import get_dbconn
+from ..reference import MEDIATYPES
+
+MODEL_DOMAIN = ["AVN", "GFS", "ETA", "NAM", "NBS", "ECM"]
+COLUMNS = (
+    "station,model,runtime,ftime,n_x,tmp,dpt,cld,wdr,wsp,p06,p12,"
+    "q06,q12,t06,t12,snw,cig,vis,obv,poz,pos,typ,sky,swh,lcb,"
+    "i06,slv,s06,pra,ppl,psn,pzr,t03,gst"
+).split(",")
+
+
+def find_runtime(pgconn, station, model):
+    """Figure out what our latest runtime is."""
+    cursor = pgconn.cursor()
+    cursor.execute(
+        "SELECT max(runtime) from alldata WHERE model = %s and "
+        "station in %s and runtime > now() - '48 hours'::interval",
+        (model, tuple(station)),
+    )
+    if cursor.rowcount == 0:
+        raise HTTPException(404, detail="could not find most recent model run")
+    return cursor.fetchone()[0]
+
+
+def handler(station, model, runtime, fmt):
+    """Handle the request."""
+    if model not in MODEL_DOMAIN:
+        raise HTTPException(503, detail="model= is not in processed domain")
+    pgconn = get_dbconn("mos")
+    if runtime is None:
+        runtime = find_runtime(pgconn, station, model)
+
+    # Ready to get the data!
+    df = read_sql(
+        "SELECT *, t06_1 ||'/'||t06_2 as t06, t12_1 ||'/'|| t12_2 as t12, "
+        "runtime at time zone 'UTC' as runtime_utc, "
+        "ftime at time zone 'UTC' as ftime_utc "
+        "from alldata where model = %s and station in %s and "
+        "runtime = %s ORDER by station ASC, ftime ASC",
+        pgconn,
+        params=(model, tuple(station), runtime),
+        index_col=None,
+    )
+    if df.empty:
+        raise HTTPException(404, "No data found for query.")
+    # Hacky
+    df["runtime"] = df["runtime_utc"]
+    df["ftime"] = df["ftime_utc"]
+
+    if fmt == SupportedFormatsNoGeoJSON.txt:
+        return df[COLUMNS].to_csv(index=False)
+    # Implement our 'table-schema' option
+    return df.to_json(orient="table", default_handler=str)
+
+
+def factory(app):
+    """Generate the app."""
+
+    @app.get("/mos.{fmt}", response_model=RootSchema, description=__doc__)
+    def service(
+        fmt: SupportedFormatsNoGeoJSON,
+        station: List[str] = Query(
+            ..., description="Full MOS Station Identifier", max_length=6
+        ),
+        model: str = Query(..., description="MOS Model ID"),
+        runtime: datetime = Query(None, description="MOS Model Cycle Time"),
+    ):
+        """Replaced above with module __doc__"""
+        if runtime.tzinfo is None:
+            runtime = runtime.replace(tzinfo=pytz.UTC)
+
+        return Response(
+            handler(station, model, runtime, fmt), media_type=MEDIATYPES[fmt]
+        )
+
+    # Not really used
+    service.__doc__ = __doc__
