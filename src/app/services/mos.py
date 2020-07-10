@@ -80,7 +80,7 @@ def factory(app):
         runtime: datetime = Query(None, description="MOS Model Cycle Time"),
     ):
         """Replaced above with module __doc__"""
-        if runtime.tzinfo is None:
+        if runtime is not None and runtime.tzinfo is None:
             runtime = runtime.replace(tzinfo=pytz.UTC)
 
         return Response(
