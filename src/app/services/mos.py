@@ -2,7 +2,15 @@
 
 This service provides the atomic data from the text station MOS that the NWS
 issues.  Depending on the date, the supported `model=` values are AVN, GFS,
-ETA, NAM, NBS, and ECM.
+ETA, NAM, NBS, ECM, LAV, and MEX.  The variable names generally match the
+abbreviations found in the raw text files, but a few names are rectified to
+match between various models.  `x_n` is translated to `n_x`, `wnd` to `wsp`,
+and `wgs` to `gst`.
+
+There is an additional quirk to the GFS LAMP (LAV) guidance.
+The model `runtime` found in the raw files has a timestamp of 30 minutes after
+the hour for reasons I am unsure.  This is rectified back to the top of the
+hour.  For example, use `12:00Z` for the 12z run instead of `12:30Z`.
 """
 from datetime import datetime
 from typing import List
@@ -15,11 +23,12 @@ from ..models import SupportedFormatsNoGeoJSON
 from ..util import get_dbconn
 from ..reference import MEDIATYPES
 
-MODEL_DOMAIN = ["AVN", "GFS", "ETA", "NAM", "NBS", "ECM"]
+MODEL_DOMAIN = ["AVN", "GFS", "ETA", "NAM", "NBS", "ECM", "LAV", "MEX"]
 COLUMNS = (
     "station,model,runtime,ftime,n_x,tmp,dpt,cld,wdr,wsp,p06,p12,"
     "q06,q12,t06,t12,snw,cig,vis,obv,poz,pos,typ,sky,swh,lcb,"
-    "i06,slv,s06,pra,ppl,psn,pzr,t03,gst"
+    "i06,slv,s06,pra,ppl,psn,pzr,t03,gst,q24,p24,t24,ccg,ppo,pco,lp1,lc1,cp1,"
+    "cc1"
 ).split(",")
 
 
