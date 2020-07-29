@@ -180,7 +180,7 @@ class COWSession(object):
         """Should we limit the fcster column?"""
         if self.fcster is None:
             return " "
-        return " and fcster = '%s' " % (self.fcster,)
+        return " and fcster ILIKE '%s' " % (self.fcster,)
 
     def sql_wfo_limiter(self):
         """get the SQL for how we limit WFOs"""
@@ -435,7 +435,9 @@ class COWSession(object):
                     self.stormreports.at[sidx, "leadtime"] = leadtime
                 if not _ev["stormreports"]:
                     self.events.at[eidx, "lead0"] = leadtime
-                self.events.at[eidx, "stormreports"].append(sidx)
+                # Tricky business here, could have event duplicates :(
+                for a in self.events.at[eidx, "stormreports"]:
+                    a.append(sidx)
                 self.stormreports.at[sidx, "events"].append(eidx)
 
     def area_verify(self):
