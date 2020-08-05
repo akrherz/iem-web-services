@@ -15,6 +15,7 @@ from .services import (
     meteobridge,
     mos,
     nwstext,
+    obhistory,
     shef_currents,
     usdm_bypoint,
     servertime,
@@ -34,6 +35,9 @@ usdm_bypoint.factory(app)
 
 # /shef_currents.{fmt}
 shef_currents.factory(app)
+
+# /obhistory.{fmt}
+obhistory.factory(app)
 
 # /mos.{fmt}
 mos.factory(app)
