@@ -124,7 +124,7 @@ def get_df(network, station, date):
             index_col=None,
         )
         if df.empty:
-            raise HTTPException(404, "Could not find any data for date.")
+            return df
         df = df.pivot(index="utc_valid", columns="key", values="value")
         df = df.reset_index()
         # Query alldata too as it has the variable conversions done
@@ -151,8 +151,9 @@ def get_df(network, station, date):
 def compute(df, full):
     """Compute other things that we can't easily do in the database"""
     # simplify our timestamps to strings before exporting
-    df["utc_valid"] = df["utc_valid"].dt.strftime("%Y-%m-%dT%H:%MZ")
-    df["local_valid"] = df["local_valid"].dt.strftime("%Y-%m-%dT%H:%M")
+    if not df.empty:
+        df["utc_valid"] = df["utc_valid"].dt.strftime("%Y-%m-%dT%H:%MZ")
+        df["local_valid"] = df["local_valid"].dt.strftime("%Y-%m-%dT%H:%M")
     # Make sure we have all columns
     if full:
         for item in DataItem.__fields__:
@@ -169,8 +170,6 @@ def handler(network, station, date, full, fmt):
     if date is None:
         date = datetime.date.today()
     df = get_df(network, station, date)
-    if df.empty:
-        raise HTTPException(404, "Could not find any data for date.")
     # Run any addition calculations, if necessary
     df = compute(df, full)
     if fmt == SupportedFormatsNoGeoJSON.txt:
