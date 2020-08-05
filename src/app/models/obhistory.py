@@ -15,6 +15,7 @@ class DataItem(BaseModel):
     relh: float = Field(..., title="Relative Humidity [%]")
     feel: float = Field(..., title="Feels Like Temperature [F]")
     sknt: float = Field(..., title="Wind Speed [kts]")
+    gust: float = Field(..., title="Wind Gust [kts]")
     drct: float = Field(..., title="Wind Direction [deg]")
     vsby: float = Field(..., title="Visibility [miles]")
     skyc1: str = Field(..., title="Cloud Coverage Code Level 1")
@@ -35,6 +36,7 @@ class DataItem(BaseModel):
     p06i: float = Field(..., title="ASOS 6 Hour Precipitation Accum [inch]")
     p24i: float = Field(..., title="ASOS 24 Hour Precipitation Accum [inch]")
     raw: str = Field(..., title="METAR or SHEF information")
+    wxcodes: str = Field(..., title="Present Weather METAR Codes")
 
 
 class RootSchema(BaseModel):
