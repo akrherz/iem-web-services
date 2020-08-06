@@ -200,7 +200,7 @@ def factory(app):
         """Replaced above with module __doc__"""
 
         return Response(
-            handler(network, station, date, full, fmt),
+            handler(network.upper(), station.upper(), date, full, fmt),
             media_type=MEDIATYPES[fmt],
         )
 
