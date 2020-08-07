@@ -22,6 +22,8 @@ except ImportError:
 
 import pytz
 import numpy as np
+from metpy.units import masked_array, units
+from metpy.calc import dewpoint_from_relative_humidity
 from pandas.io.sql import read_sql
 from fastapi import Query, Response, HTTPException
 from pyiem.network import Table as NetworkTable
@@ -90,15 +92,26 @@ def get_df(network, station, date):
     if network in ["ISUSM", "ISUAG"]:
         # Use ISUAG
         pgconn = get_dbconn("isuag")
-        return read_sql(
+        df = read_sql(
             "SELECT valid at time zone 'UTC' as utc_valid, "
-            "valid at time zone %s as local_valid, tmpf, dwpf, sknt, drct "
+            "valid at time zone %s as local_valid, tmpf, relh, sknt, drct "
             "from alldata WHERE station = %s and "
             "valid >= %s and valid < %s ORDER by valid ASC",
             pgconn,
             params=(tzname, station, sts, ets),
             index_col=None,
         )
+        # Compute dew point
+        if not df.empty:
+            df["dwpf"] = (
+                dewpoint_from_relative_humidity(
+                    masked_array(df["tmpf"].values, units("degF")),
+                    masked_array(df["relh"].values, units("percent")),
+                )
+                .to(units("degF"))
+                .m
+            )
+        return df
     if network == "OT":
         # Use ISUAG
         pgconn = get_dbconn("other")
