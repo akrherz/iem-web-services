@@ -26,6 +26,4 @@ def test_empty():
     }
     res = client.get("/cow.json", params=params)
     answer = [200]
-    if os.environ.get("NODATABASE", "0") == "1":
-        answer.append(503)
     assert res.status_code in answer

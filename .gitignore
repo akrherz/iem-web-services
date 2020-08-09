@@ -2,3 +2,5 @@
 /.pydevproject
 /.vscode
 .pytest_cache
+.coverage
+**/*.egg-info

@@ -3,19 +3,55 @@ dist: bionic
 addons:
   hosts:
     - iem-web-services.local
+    - iemdb.local
+    - iemdb-hads.local
+    - iemdb-mos.local
+    - iemdb-idep.local
+    - iemdb-iemre.local
+    - iemdb2.local
+    - iemdb-postgis.local
+    - iemdb-mesosite.local
+    - iemdb-afos.local
+    - iemdb-asos.local
+    - iemdb-nldn.local
+    - iemdb-snet.local
+    - iemdb-mos.local
+    - iemdb-rwis.local
+    - iemdb-squaw.local
+    - iemdb-awos.local
+    - iemdb-iem.local
+    - iemdb-other.local
+    - iemdb-scan.local
+    - iemdb-wepp.local
+    - iemdb-coop.local
+    - iemdb-isuag.local
+    - iemdb-portfolio.local
+    - iemdb-smos.local
 language: python
 env:
   global:
-    # allows testing to somewhat proceed without a database involved
-    - NODATABASE=1
+    # allows direct testing against IEM Database, if possible
+    - HAS_IEMDATABASE=0
   matrix:
     - PYTHON_VERSION=3.8
 before_install:
+  - git clone --depth 1 https://github.com/akrherz/iem-database.git database
   - git clone --depth 1 https://github.com/akrherz/ci_tooling.git .ci_tooling
+  - . .ci_tooling/postgres.sh
   - . .ci_tooling/miniconda.sh
 
 install:
   - pip install codecov
+
+before_script:
+  # https://travis-ci.community/t/t/712/12
+  - export PATH="/usr/lib/postgresql/11/bin:$PATH"
+  - psql -c 'CREATE ROLE travis SUPERUSER LOGIN CREATEDB;' -U postgres || true
+  - cd database; sh bootstrap.sh
+  - python schema_manager.py
+  - cd ../testdata
+  - sh load.sh
+  - cd ..
 
 script:
   - coverage run --source=src setup.py test
