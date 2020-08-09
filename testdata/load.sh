@@ -2,7 +2,7 @@
 
 psql -f _postgis_ugcs.sql postgis
 
-for db in postgis
+for db in postgis mesosite other
 do
     for fn in $(ls ${db}*.sql)
     do

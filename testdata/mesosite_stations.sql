@@ -1,0 +1,3 @@
+copy stations(id,synop,name,state,country,elevation,network,online,geom,params,county,plot_name,climate_site,nwn_id,wfo,archive_end,remote_id,modified,spri,tzname,iemid,archive_begin,metasite,sigstage_low,sigstage_action,sigstage_bankfull,sigstage_flood,sigstage_moderate,sigstage_major,sigstage_record,ugc_county,ugc_zone,ncdc81,temp24_hour,precip24_hour) FROM STDIN (FORMAT CSV);
+96404,,Tok 70 SE,AK,US,2000,USCRN,t,0101000020E61000006666666666A661C03D0AD7A3705D4F40,,Southeast Fairbanks,,,,AFG,,,2020-08-07 09:14:06.353647-05,0,America/Anchorage,254829,2018-01-04 20:05:00-06,f,,,,,,,,AKC240,AKZ224,USC00507513,,
+\.

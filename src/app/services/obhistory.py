@@ -124,6 +124,35 @@ def get_df(network, station, date):
             params=(tzname, station, sts, ets),
             index_col=None,
         )
+    if network == "USCRN":
+        pgconn = get_dbconn("other")
+        df = read_sql(
+            "SELECT valid at time zone 'UTC' as utc_valid, "
+            "valid at time zone %s as local_valid, tmpc, rh, "
+            "wind_mps from uscrn_alldata WHERE station = %s and "
+            "valid >= %s and valid < %s ORDER by valid ASC",
+            pgconn,
+            params=(tzname, station, sts, ets),
+            index_col=None,
+        )
+        if df.empty:
+            return df
+        # Do some unit work
+        tmpc = masked_array(df["tmpc"].values, units("degC"))
+        df["tmpf"] = tmpc.to(units("degF")).m
+        df["dwpf"] = (
+            dewpoint_from_relative_humidity(
+                tmpc, masked_array(df["rh"].values, units("percent"))
+            )
+            .to(units("degF"))
+            .m
+        )
+        df["sknt"] = (
+            masked_array(df["wind_mps"], units("meters per second"))
+            .to(units("knots"))
+            .m
+        )
+        return df
     if network.find("_COOP") > 0 or network.find("_DCP") > 0:
         # Use HADS
         pgconn = get_dbconn("hads")
