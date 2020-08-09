@@ -55581,6 +55581,243 @@ $$
 
 DJ
 __",KYC025,SV,W,,-1,2020-05-03 19:00:00-05,2020-05-03 18:11:00-05,f,f
+2020-05-03 17:26:00-05,2020-05-03 18:50:00-05,"
+867
+WHUS53 KMKX 032226
+SMWMKX
+LMZ643>646-669-671-673-675-040030-
+/O.NEW.KMKX.MA.W.0008.200503T2226Z-200504T0030Z/
+
+BULLETIN - IMMEDIATE BROADCAST REQUESTED
+SPECIAL MARINE WARNING
+NATIONAL WEATHER SERVICE MILWAUKEE/SULLIVAN WI
+526 PM CDT SUN MAY 3 2020
+
+THE NATIONAL WEATHER SERVICE IN MILWAUKEE/SULLIVAN HAS ISSUED A
+
+* SPECIAL MARINE WARNING FOR...
+  LAKE MICHIGAN NEARSHORE AND OPEN WATERS TO MID LAKE FROM SHEBOYGAN
+  WI TO WINTHROP HARBOR IL...
+
+* UNTIL 730 PM CDT.
+
+* AT 524 PM CDT...A STRONG COLD FRONT WAS LOCATED NEAR CEDAR
+  GROVE...OR 7 NM NORTHEAST OF PORT WASHINGTON...MOVING SOUTH AT 25
+  KNOTS.
+
+  HAZARD...NORTHEAST WIND GUSTS 34 KNOTS OR GREATER.
+
+  SOURCE...RADAR AND SURFACE OBSERVATIONS.
+
+  IMPACT...SMALL CRAFT COULD BE DAMAGED IN BRIEFLY HIGHER WINDS AND
+           SUDDENLY HIGHER WAVES.
+
+* LOCATIONS IMPACTED INCLUDE...
+  PORT WASHINGTON.
+
+PRECAUTIONARY/PREPAREDNESS ACTIONS...
+
+MOVE TO SAFE HARBOR IMMEDIATELY AS WINDS ABRUPTLY SHIFT TO THE
+NORTHEAST AND GUST TO 35 KNOTS.
+
+&&
+
+LAT...LON 4339 8787 4349 8779 4358 8778 4365 8772
+      4363 8750 4247 8753 4248 8780 4261 8782
+      4278 8775 4286 8784 4297 8785 4301 8789
+      4307 8786 4313 8790 4318 8788 4326 8791
+TIME...MOT...LOC 2224Z 012DEG 25KT 4349 8780
+
+HAIL...0.00IN
+WIND...>34KTS
+
+$$
+
+GEHRING
+",MKX,8,CAN,2020-05-03 18:50:00-05,GEHRING,"__
+530
+FZUS73 KMKX 032257
+MWSMKX
+
+Marine Weather Statement
+National Weather Service Milwaukee/Sullivan WI
+557 PM CDT Sun May 3 2020
+
+LMZ643>646-669-671-673-675-040030-
+/O.CON.KMKX.MA.W.0008.000000T0000Z-200504T0030Z/
+557 PM CDT Sun May 3 2020
+
+...A SPECIAL MARINE WARNING REMAINS IN EFFECT UNTIL 730 PM CDT...
+
+For the following areas...
+Lake Michigan nearshore and open waters to mid lake from Sheboygan WI
+to Winthrop Harbor IL...
+
+At 555 PM CDT, a strong cold front was located near Bayside, moving
+south at 30 knots.
+
+HAZARD...Northeast wind gusts around 35 knots.
+
+SOURCE...Radar indicated and surface observations.
+
+IMPACT...Small craft could be damaged in briefly higher winds and
+         suddenly higher waves.
+
+Locations impacted include...
+Port Washington
+North Point Lighthouse
+Wind Point
+
+PRECAUTIONARY/PREPAREDNESS ACTIONS...
+
+Move to safe harbor immediately as gusty northeast winds and high
+waves are expected.
+
+&&
+
+LAT...LON 4339 8787 4349 8779 4358 8778 4365 8772
+      4363 8750 4247 8753 4248 8780 4261 8782
+      4278 8775 4286 8784 4297 8785 4301 8789
+      4307 8786 4310 8788 4318 8788 4326 8791
+TIME...MOT...LOC 2255Z 014DEG 32KT 4319 8789
+
+HAIL...0.00IN
+WIND...>34KTS
+
+$$
+
+GEHRING
+__
+447
+FZUS73 KMKX 032333
+MWSMKX
+
+Marine Weather Statement
+National Weather Service Milwaukee/Sullivan WI
+633 PM CDT Sun May 3 2020
+
+LMZ643-669-032339-
+/O.CAN.KMKX.MA.W.0008.000000T0000Z-200504T0030Z/
+633 PM CDT Sun May 3 2020
+
+...THE SPECIAL MARINE WARNING IS CANCELLED...
+
+The affected areas were...
+Lake Michigan nearshore and open waters to mid lake from Sheboygan WI
+to Port Washington WI...
+
+The cold front has passed and the northeast winds are weakening.
+However, a Small Craft Advisory remains in effect for brisk
+northeast winds and building waves into Monday morning.
+
+LAT...LON 4338 8787 4336 8778 4337 8751 4247 8753
+      4248 8780 4261 8782 4278 8775 4286 8784
+      4297 8785 4301 8789 4307 8786 4326 8791
+TIME...MOT...LOC 2329Z 357DEG 31KT 4288 8785
+
+$$
+
+LMZ644>646-671-673-675-040030-
+/O.CON.KMKX.MA.W.0008.000000T0000Z-200504T0030Z/
+633 PM CDT Sun May 3 2020
+
+...A SPECIAL MARINE WARNING REMAINS IN EFFECT UNTIL 730 PM CDT...
+
+For the following areas...
+Lake Michigan nearshore and open waters to mid lake from Port
+Washington WI to Winthrop Harbor IL...
+
+At 629 PM CDT, a front was located over Oak Creek, moving south at 30
+knots.
+
+HAZARD...Northeast wind gusts around 35 knots.
+
+SOURCE...Radar indicated and surface observations.
+
+IMPACT...Small craft could be damaged in briefly higher winds and
+         suddenly higher waves.
+
+The front will reach Wind Point around 6:35 PM and Kenosha
+around 6:55 PM.
+
+LAT...LON 4338 8787 4336 8778 4337 8751 4247 8753
+      4248 8780 4261 8782 4278 8775 4286 8784
+      4297 8785 4301 8789 4307 8786 4326 8791
+TIME...MOT...LOC 2329Z 357DEG 31KT 4288 8785
+
+HAIL...0.00IN
+WIND...>34KTS
+
+$$
+
+GEHRING
+__
+683
+FZUS73 KMKX 032350
+MWSMKX
+
+Marine Weather Statement
+National Weather Service Milwaukee/Sullivan WI
+650 PM CDT Sun May 3 2020
+
+LMZ644-671-032357-
+/O.CAN.KMKX.MA.W.0008.000000T0000Z-200504T0030Z/
+650 PM CDT Sun May 3 2020
+
+...THE SPECIAL MARINE WARNING IS CANCELLED...
+
+The affected areas were...
+Nearshore waters from Port Washington WI to North Point Light WI...
+Lake Michigan from Port Washington WI to North Point Light WI 5 nm
+off shore to mid lake...
+
+The cold front has passed and the northeast winds are weakening.
+However, a Small Craft Advisory remains in effect for brisk
+northeast winds and building waves into Monday morning.
+
+LAT...LON 4248 8780 4261 8782 4271 8777 4278 8775
+      4286 8784 4297 8785 4301 8789 4305 8787
+      4305 8752 4247 8753
+TIME...MOT...LOC 2347Z 007DEG 29KT 4269 8777
+
+$$
+
+LMZ645-646-673-675-040030-
+/O.CON.KMKX.MA.W.0008.000000T0000Z-200504T0030Z/
+650 PM CDT Sun May 3 2020
+
+...A SPECIAL MARINE WARNING REMAINS IN EFFECT UNTIL 730 PM CDT...
+
+For the following areas...
+Lake Michigan nearshore and open waters to mid lake from North Point
+Light WI to Winthrop Harbor IL...
+
+At 647 PM CDT, a strong cold front was located over Racine, moving
+south at 30 knots.
+
+HAZARD...Northeast wind gusts around 35 knots.
+
+SOURCE...Radar indicated and surface observations.
+
+IMPACT...Small craft could be damaged in briefly higher winds and
+         suddenly higher waves.
+
+The front will reached Kenosha Harbor around 7 PM.
+
+
+
+LAT...LON 4248 8780 4261 8782 4271 8777 4278 8775
+      4286 8784 4297 8785 4301 8789 4305 8787
+      4305 8752 4247 8753
+TIME...MOT...LOC 2347Z 007DEG 29KT 4269 8777
+
+HAIL...0.00IN
+WIND...>34KTS
+
+$$
+
+GEHRING
+__",LMZ671,MA,W,,-1,2020-05-03 19:30:00-05,2020-05-03 17:26:00-05,f,f
 2020-05-03 17:42:00-05,2020-05-03 18:30:00-05,"
 626
 WUUS53 KLBF 032242
@@ -60043,6 +60280,348 @@ WIND...60MPH
 
 $$
 __",GAC083,SV,W,,-1,2020-05-03 19:00:00-05,2020-05-03 18:13:00-05,f,f
+2020-05-03 17:26:00-05,2020-05-03 18:33:00-05,"
+867
+WHUS53 KMKX 032226
+SMWMKX
+LMZ643>646-669-671-673-675-040030-
+/O.NEW.KMKX.MA.W.0008.200503T2226Z-200504T0030Z/
+
+BULLETIN - IMMEDIATE BROADCAST REQUESTED
+SPECIAL MARINE WARNING
+NATIONAL WEATHER SERVICE MILWAUKEE/SULLIVAN WI
+526 PM CDT SUN MAY 3 2020
+
+THE NATIONAL WEATHER SERVICE IN MILWAUKEE/SULLIVAN HAS ISSUED A
+
+* SPECIAL MARINE WARNING FOR...
+  LAKE MICHIGAN NEARSHORE AND OPEN WATERS TO MID LAKE FROM SHEBOYGAN
+  WI TO WINTHROP HARBOR IL...
+
+* UNTIL 730 PM CDT.
+
+* AT 524 PM CDT...A STRONG COLD FRONT WAS LOCATED NEAR CEDAR
+  GROVE...OR 7 NM NORTHEAST OF PORT WASHINGTON...MOVING SOUTH AT 25
+  KNOTS.
+
+  HAZARD...NORTHEAST WIND GUSTS 34 KNOTS OR GREATER.
+
+  SOURCE...RADAR AND SURFACE OBSERVATIONS.
+
+  IMPACT...SMALL CRAFT COULD BE DAMAGED IN BRIEFLY HIGHER WINDS AND
+           SUDDENLY HIGHER WAVES.
+
+* LOCATIONS IMPACTED INCLUDE...
+  PORT WASHINGTON.
+
+PRECAUTIONARY/PREPAREDNESS ACTIONS...
+
+MOVE TO SAFE HARBOR IMMEDIATELY AS WINDS ABRUPTLY SHIFT TO THE
+NORTHEAST AND GUST TO 35 KNOTS.
+
+&&
+
+LAT...LON 4339 8787 4349 8779 4358 8778 4365 8772
+      4363 8750 4247 8753 4248 8780 4261 8782
+      4278 8775 4286 8784 4297 8785 4301 8789
+      4307 8786 4313 8790 4318 8788 4326 8791
+TIME...MOT...LOC 2224Z 012DEG 25KT 4349 8780
+
+HAIL...0.00IN
+WIND...>34KTS
+
+$$
+
+GEHRING
+",MKX,8,CAN,2020-05-03 18:33:00-05,GEHRING,"__
+530
+FZUS73 KMKX 032257
+MWSMKX
+
+Marine Weather Statement
+National Weather Service Milwaukee/Sullivan WI
+557 PM CDT Sun May 3 2020
+
+LMZ643>646-669-671-673-675-040030-
+/O.CON.KMKX.MA.W.0008.000000T0000Z-200504T0030Z/
+557 PM CDT Sun May 3 2020
+
+...A SPECIAL MARINE WARNING REMAINS IN EFFECT UNTIL 730 PM CDT...
+
+For the following areas...
+Lake Michigan nearshore and open waters to mid lake from Sheboygan WI
+to Winthrop Harbor IL...
+
+At 555 PM CDT, a strong cold front was located near Bayside, moving
+south at 30 knots.
+
+HAZARD...Northeast wind gusts around 35 knots.
+
+SOURCE...Radar indicated and surface observations.
+
+IMPACT...Small craft could be damaged in briefly higher winds and
+         suddenly higher waves.
+
+Locations impacted include...
+Port Washington
+North Point Lighthouse
+Wind Point
+
+PRECAUTIONARY/PREPAREDNESS ACTIONS...
+
+Move to safe harbor immediately as gusty northeast winds and high
+waves are expected.
+
+&&
+
+LAT...LON 4339 8787 4349 8779 4358 8778 4365 8772
+      4363 8750 4247 8753 4248 8780 4261 8782
+      4278 8775 4286 8784 4297 8785 4301 8789
+      4307 8786 4310 8788 4318 8788 4326 8791
+TIME...MOT...LOC 2255Z 014DEG 32KT 4319 8789
+
+HAIL...0.00IN
+WIND...>34KTS
+
+$$
+
+GEHRING
+__
+447
+FZUS73 KMKX 032333
+MWSMKX
+
+Marine Weather Statement
+National Weather Service Milwaukee/Sullivan WI
+633 PM CDT Sun May 3 2020
+
+LMZ643-669-032339-
+/O.CAN.KMKX.MA.W.0008.000000T0000Z-200504T0030Z/
+633 PM CDT Sun May 3 2020
+
+...THE SPECIAL MARINE WARNING IS CANCELLED...
+
+The affected areas were...
+Lake Michigan nearshore and open waters to mid lake from Sheboygan WI
+to Port Washington WI...
+
+The cold front has passed and the northeast winds are weakening.
+However, a Small Craft Advisory remains in effect for brisk
+northeast winds and building waves into Monday morning.
+
+LAT...LON 4338 8787 4336 8778 4337 8751 4247 8753
+      4248 8780 4261 8782 4278 8775 4286 8784
+      4297 8785 4301 8789 4307 8786 4326 8791
+TIME...MOT...LOC 2329Z 357DEG 31KT 4288 8785
+
+$$
+
+LMZ644>646-671-673-675-040030-
+/O.CON.KMKX.MA.W.0008.000000T0000Z-200504T0030Z/
+633 PM CDT Sun May 3 2020
+
+...A SPECIAL MARINE WARNING REMAINS IN EFFECT UNTIL 730 PM CDT...
+
+For the following areas...
+Lake Michigan nearshore and open waters to mid lake from Port
+Washington WI to Winthrop Harbor IL...
+
+At 629 PM CDT, a front was located over Oak Creek, moving south at 30
+knots.
+
+HAZARD...Northeast wind gusts around 35 knots.
+
+SOURCE...Radar indicated and surface observations.
+
+IMPACT...Small craft could be damaged in briefly higher winds and
+         suddenly higher waves.
+
+The front will reach Wind Point around 6:35 PM and Kenosha
+around 6:55 PM.
+
+LAT...LON 4338 8787 4336 8778 4337 8751 4247 8753
+      4248 8780 4261 8782 4278 8775 4286 8784
+      4297 8785 4301 8789 4307 8786 4326 8791
+TIME...MOT...LOC 2329Z 357DEG 31KT 4288 8785
+
+HAIL...0.00IN
+WIND...>34KTS
+
+$$
+
+GEHRING
+__",LMZ643,MA,W,,-1,2020-05-03 19:30:00-05,2020-05-03 17:26:00-05,f,f
+2020-05-03 17:26:00-05,2020-05-03 18:33:00-05,"
+867
+WHUS53 KMKX 032226
+SMWMKX
+LMZ643>646-669-671-673-675-040030-
+/O.NEW.KMKX.MA.W.0008.200503T2226Z-200504T0030Z/
+
+BULLETIN - IMMEDIATE BROADCAST REQUESTED
+SPECIAL MARINE WARNING
+NATIONAL WEATHER SERVICE MILWAUKEE/SULLIVAN WI
+526 PM CDT SUN MAY 3 2020
+
+THE NATIONAL WEATHER SERVICE IN MILWAUKEE/SULLIVAN HAS ISSUED A
+
+* SPECIAL MARINE WARNING FOR...
+  LAKE MICHIGAN NEARSHORE AND OPEN WATERS TO MID LAKE FROM SHEBOYGAN
+  WI TO WINTHROP HARBOR IL...
+
+* UNTIL 730 PM CDT.
+
+* AT 524 PM CDT...A STRONG COLD FRONT WAS LOCATED NEAR CEDAR
+  GROVE...OR 7 NM NORTHEAST OF PORT WASHINGTON...MOVING SOUTH AT 25
+  KNOTS.
+
+  HAZARD...NORTHEAST WIND GUSTS 34 KNOTS OR GREATER.
+
+  SOURCE...RADAR AND SURFACE OBSERVATIONS.
+
+  IMPACT...SMALL CRAFT COULD BE DAMAGED IN BRIEFLY HIGHER WINDS AND
+           SUDDENLY HIGHER WAVES.
+
+* LOCATIONS IMPACTED INCLUDE...
+  PORT WASHINGTON.
+
+PRECAUTIONARY/PREPAREDNESS ACTIONS...
+
+MOVE TO SAFE HARBOR IMMEDIATELY AS WINDS ABRUPTLY SHIFT TO THE
+NORTHEAST AND GUST TO 35 KNOTS.
+
+&&
+
+LAT...LON 4339 8787 4349 8779 4358 8778 4365 8772
+      4363 8750 4247 8753 4248 8780 4261 8782
+      4278 8775 4286 8784 4297 8785 4301 8789
+      4307 8786 4313 8790 4318 8788 4326 8791
+TIME...MOT...LOC 2224Z 012DEG 25KT 4349 8780
+
+HAIL...0.00IN
+WIND...>34KTS
+
+$$
+
+GEHRING
+",MKX,8,CAN,2020-05-03 18:33:00-05,GEHRING,"__
+530
+FZUS73 KMKX 032257
+MWSMKX
+
+Marine Weather Statement
+National Weather Service Milwaukee/Sullivan WI
+557 PM CDT Sun May 3 2020
+
+LMZ643>646-669-671-673-675-040030-
+/O.CON.KMKX.MA.W.0008.000000T0000Z-200504T0030Z/
+557 PM CDT Sun May 3 2020
+
+...A SPECIAL MARINE WARNING REMAINS IN EFFECT UNTIL 730 PM CDT...
+
+For the following areas...
+Lake Michigan nearshore and open waters to mid lake from Sheboygan WI
+to Winthrop Harbor IL...
+
+At 555 PM CDT, a strong cold front was located near Bayside, moving
+south at 30 knots.
+
+HAZARD...Northeast wind gusts around 35 knots.
+
+SOURCE...Radar indicated and surface observations.
+
+IMPACT...Small craft could be damaged in briefly higher winds and
+         suddenly higher waves.
+
+Locations impacted include...
+Port Washington
+North Point Lighthouse
+Wind Point
+
+PRECAUTIONARY/PREPAREDNESS ACTIONS...
+
+Move to safe harbor immediately as gusty northeast winds and high
+waves are expected.
+
+&&
+
+LAT...LON 4339 8787 4349 8779 4358 8778 4365 8772
+      4363 8750 4247 8753 4248 8780 4261 8782
+      4278 8775 4286 8784 4297 8785 4301 8789
+      4307 8786 4310 8788 4318 8788 4326 8791
+TIME...MOT...LOC 2255Z 014DEG 32KT 4319 8789
+
+HAIL...0.00IN
+WIND...>34KTS
+
+$$
+
+GEHRING
+__
+447
+FZUS73 KMKX 032333
+MWSMKX
+
+Marine Weather Statement
+National Weather Service Milwaukee/Sullivan WI
+633 PM CDT Sun May 3 2020
+
+LMZ643-669-032339-
+/O.CAN.KMKX.MA.W.0008.000000T0000Z-200504T0030Z/
+633 PM CDT Sun May 3 2020
+
+...THE SPECIAL MARINE WARNING IS CANCELLED...
+
+The affected areas were...
+Lake Michigan nearshore and open waters to mid lake from Sheboygan WI
+to Port Washington WI...
+
+The cold front has passed and the northeast winds are weakening.
+However, a Small Craft Advisory remains in effect for brisk
+northeast winds and building waves into Monday morning.
+
+LAT...LON 4338 8787 4336 8778 4337 8751 4247 8753
+      4248 8780 4261 8782 4278 8775 4286 8784
+      4297 8785 4301 8789 4307 8786 4326 8791
+TIME...MOT...LOC 2329Z 357DEG 31KT 4288 8785
+
+$$
+
+LMZ644>646-671-673-675-040030-
+/O.CON.KMKX.MA.W.0008.000000T0000Z-200504T0030Z/
+633 PM CDT Sun May 3 2020
+
+...A SPECIAL MARINE WARNING REMAINS IN EFFECT UNTIL 730 PM CDT...
+
+For the following areas...
+Lake Michigan nearshore and open waters to mid lake from Port
+Washington WI to Winthrop Harbor IL...
+
+At 629 PM CDT, a front was located over Oak Creek, moving south at 30
+knots.
+
+HAZARD...Northeast wind gusts around 35 knots.
+
+SOURCE...Radar indicated and surface observations.
+
+IMPACT...Small craft could be damaged in briefly higher winds and
+         suddenly higher waves.
+
+The front will reach Wind Point around 6:35 PM and Kenosha
+around 6:55 PM.
+
+LAT...LON 4338 8787 4336 8778 4337 8751 4247 8753
+      4248 8780 4261 8782 4278 8775 4286 8784
+      4297 8785 4301 8789 4307 8786 4326 8791
+TIME...MOT...LOC 2329Z 357DEG 31KT 4288 8785
+
+HAIL...0.00IN
+WIND...>34KTS
+
+$$
+
+GEHRING
+__",LMZ669,MA,W,,-1,2020-05-03 19:30:00-05,2020-05-03 17:26:00-05,f,f
 2020-05-03 18:13:00-05,2020-05-03 18:44:00-05,"
 896
 WUUS52 KFFC 032313
@@ -63078,6 +63657,243 @@ $$
 
 CDG
 __",TNC129,SV,W,,-1,2020-05-03 19:00:00-05,2020-05-03 18:11:00-05,f,f
+2020-05-03 17:26:00-05,2020-05-03 18:50:00-05,"
+867
+WHUS53 KMKX 032226
+SMWMKX
+LMZ643>646-669-671-673-675-040030-
+/O.NEW.KMKX.MA.W.0008.200503T2226Z-200504T0030Z/
+
+BULLETIN - IMMEDIATE BROADCAST REQUESTED
+SPECIAL MARINE WARNING
+NATIONAL WEATHER SERVICE MILWAUKEE/SULLIVAN WI
+526 PM CDT SUN MAY 3 2020
+
+THE NATIONAL WEATHER SERVICE IN MILWAUKEE/SULLIVAN HAS ISSUED A
+
+* SPECIAL MARINE WARNING FOR...
+  LAKE MICHIGAN NEARSHORE AND OPEN WATERS TO MID LAKE FROM SHEBOYGAN
+  WI TO WINTHROP HARBOR IL...
+
+* UNTIL 730 PM CDT.
+
+* AT 524 PM CDT...A STRONG COLD FRONT WAS LOCATED NEAR CEDAR
+  GROVE...OR 7 NM NORTHEAST OF PORT WASHINGTON...MOVING SOUTH AT 25
+  KNOTS.
+
+  HAZARD...NORTHEAST WIND GUSTS 34 KNOTS OR GREATER.
+
+  SOURCE...RADAR AND SURFACE OBSERVATIONS.
+
+  IMPACT...SMALL CRAFT COULD BE DAMAGED IN BRIEFLY HIGHER WINDS AND
+           SUDDENLY HIGHER WAVES.
+
+* LOCATIONS IMPACTED INCLUDE...
+  PORT WASHINGTON.
+
+PRECAUTIONARY/PREPAREDNESS ACTIONS...
+
+MOVE TO SAFE HARBOR IMMEDIATELY AS WINDS ABRUPTLY SHIFT TO THE
+NORTHEAST AND GUST TO 35 KNOTS.
+
+&&
+
+LAT...LON 4339 8787 4349 8779 4358 8778 4365 8772
+      4363 8750 4247 8753 4248 8780 4261 8782
+      4278 8775 4286 8784 4297 8785 4301 8789
+      4307 8786 4313 8790 4318 8788 4326 8791
+TIME...MOT...LOC 2224Z 012DEG 25KT 4349 8780
+
+HAIL...0.00IN
+WIND...>34KTS
+
+$$
+
+GEHRING
+",MKX,8,CAN,2020-05-03 18:50:00-05,GEHRING,"__
+530
+FZUS73 KMKX 032257
+MWSMKX
+
+Marine Weather Statement
+National Weather Service Milwaukee/Sullivan WI
+557 PM CDT Sun May 3 2020
+
+LMZ643>646-669-671-673-675-040030-
+/O.CON.KMKX.MA.W.0008.000000T0000Z-200504T0030Z/
+557 PM CDT Sun May 3 2020
+
+...A SPECIAL MARINE WARNING REMAINS IN EFFECT UNTIL 730 PM CDT...
+
+For the following areas...
+Lake Michigan nearshore and open waters to mid lake from Sheboygan WI
+to Winthrop Harbor IL...
+
+At 555 PM CDT, a strong cold front was located near Bayside, moving
+south at 30 knots.
+
+HAZARD...Northeast wind gusts around 35 knots.
+
+SOURCE...Radar indicated and surface observations.
+
+IMPACT...Small craft could be damaged in briefly higher winds and
+         suddenly higher waves.
+
+Locations impacted include...
+Port Washington
+North Point Lighthouse
+Wind Point
+
+PRECAUTIONARY/PREPAREDNESS ACTIONS...
+
+Move to safe harbor immediately as gusty northeast winds and high
+waves are expected.
+
+&&
+
+LAT...LON 4339 8787 4349 8779 4358 8778 4365 8772
+      4363 8750 4247 8753 4248 8780 4261 8782
+      4278 8775 4286 8784 4297 8785 4301 8789
+      4307 8786 4310 8788 4318 8788 4326 8791
+TIME...MOT...LOC 2255Z 014DEG 32KT 4319 8789
+
+HAIL...0.00IN
+WIND...>34KTS
+
+$$
+
+GEHRING
+__
+447
+FZUS73 KMKX 032333
+MWSMKX
+
+Marine Weather Statement
+National Weather Service Milwaukee/Sullivan WI
+633 PM CDT Sun May 3 2020
+
+LMZ643-669-032339-
+/O.CAN.KMKX.MA.W.0008.000000T0000Z-200504T0030Z/
+633 PM CDT Sun May 3 2020
+
+...THE SPECIAL MARINE WARNING IS CANCELLED...
+
+The affected areas were...
+Lake Michigan nearshore and open waters to mid lake from Sheboygan WI
+to Port Washington WI...
+
+The cold front has passed and the northeast winds are weakening.
+However, a Small Craft Advisory remains in effect for brisk
+northeast winds and building waves into Monday morning.
+
+LAT...LON 4338 8787 4336 8778 4337 8751 4247 8753
+      4248 8780 4261 8782 4278 8775 4286 8784
+      4297 8785 4301 8789 4307 8786 4326 8791
+TIME...MOT...LOC 2329Z 357DEG 31KT 4288 8785
+
+$$
+
+LMZ644>646-671-673-675-040030-
+/O.CON.KMKX.MA.W.0008.000000T0000Z-200504T0030Z/
+633 PM CDT Sun May 3 2020
+
+...A SPECIAL MARINE WARNING REMAINS IN EFFECT UNTIL 730 PM CDT...
+
+For the following areas...
+Lake Michigan nearshore and open waters to mid lake from Port
+Washington WI to Winthrop Harbor IL...
+
+At 629 PM CDT, a front was located over Oak Creek, moving south at 30
+knots.
+
+HAZARD...Northeast wind gusts around 35 knots.
+
+SOURCE...Radar indicated and surface observations.
+
+IMPACT...Small craft could be damaged in briefly higher winds and
+         suddenly higher waves.
+
+The front will reach Wind Point around 6:35 PM and Kenosha
+around 6:55 PM.
+
+LAT...LON 4338 8787 4336 8778 4337 8751 4247 8753
+      4248 8780 4261 8782 4278 8775 4286 8784
+      4297 8785 4301 8789 4307 8786 4326 8791
+TIME...MOT...LOC 2329Z 357DEG 31KT 4288 8785
+
+HAIL...0.00IN
+WIND...>34KTS
+
+$$
+
+GEHRING
+__
+683
+FZUS73 KMKX 032350
+MWSMKX
+
+Marine Weather Statement
+National Weather Service Milwaukee/Sullivan WI
+650 PM CDT Sun May 3 2020
+
+LMZ644-671-032357-
+/O.CAN.KMKX.MA.W.0008.000000T0000Z-200504T0030Z/
+650 PM CDT Sun May 3 2020
+
+...THE SPECIAL MARINE WARNING IS CANCELLED...
+
+The affected areas were...
+Nearshore waters from Port Washington WI to North Point Light WI...
+Lake Michigan from Port Washington WI to North Point Light WI 5 nm
+off shore to mid lake...
+
+The cold front has passed and the northeast winds are weakening.
+However, a Small Craft Advisory remains in effect for brisk
+northeast winds and building waves into Monday morning.
+
+LAT...LON 4248 8780 4261 8782 4271 8777 4278 8775
+      4286 8784 4297 8785 4301 8789 4305 8787
+      4305 8752 4247 8753
+TIME...MOT...LOC 2347Z 007DEG 29KT 4269 8777
+
+$$
+
+LMZ645-646-673-675-040030-
+/O.CON.KMKX.MA.W.0008.000000T0000Z-200504T0030Z/
+650 PM CDT Sun May 3 2020
+
+...A SPECIAL MARINE WARNING REMAINS IN EFFECT UNTIL 730 PM CDT...
+
+For the following areas...
+Lake Michigan nearshore and open waters to mid lake from North Point
+Light WI to Winthrop Harbor IL...
+
+At 647 PM CDT, a strong cold front was located over Racine, moving
+south at 30 knots.
+
+HAZARD...Northeast wind gusts around 35 knots.
+
+SOURCE...Radar indicated and surface observations.
+
+IMPACT...Small craft could be damaged in briefly higher winds and
+         suddenly higher waves.
+
+The front will reached Kenosha Harbor around 7 PM.
+
+
+
+LAT...LON 4248 8780 4261 8782 4271 8777 4278 8775
+      4286 8784 4297 8785 4301 8789 4305 8787
+      4305 8752 4247 8753
+TIME...MOT...LOC 2347Z 007DEG 29KT 4269 8777
+
+HAIL...0.00IN
+WIND...>34KTS
+
+$$
+
+GEHRING
+__",LMZ644,MA,W,,-1,2020-05-03 19:30:00-05,2020-05-03 17:26:00-05,f,f
 2020-05-03 18:11:00-05,2020-05-03 19:00:00-05,"
 455
 WUUS53 KJKL 032311
@@ -63702,6 +64518,180 @@ $$
 
 DJ
 __",KYC237,SV,W,,-1,2020-05-03 19:00:00-05,2020-05-03 18:11:00-05,f,f
+2020-05-03 18:52:00-05,2020-05-03 20:15:00-05,"
+334
+WHUS53 KLOT 032352
+SMWLOT
+LMZ740-741-777-040115-
+/O.NEW.KLOT.MA.W.0010.200503T2352Z-200504T0115Z/
+
+BULLETIN - IMMEDIATE BROADCAST REQUESTED
+Special Marine Warning
+National Weather Service Chicago/Romeoville
+652 PM CDT Sun May 3 2020
+
+The National Weather Service in Chicago has issued a
+
+* Special Marine Warning for...
+
+  Nearshore Waters from Winthrop Harbor to Northerly Island...
+
+  Open Waters from Winthrop Harbor to Wilmette Harbor out to Mid
+Lake...
+
+* Until 815 PM CDT.
+
+* At 650 PM CDT, a strong cold front was located near Racine, moving
+  southwest at 25 knots. A quick surge in strong northeasterly winds
+  will accompany this front.
+
+  HAZARD...Wind gusts to 40 knots.
+
+  SOURCE...Land observation stations.
+
+  IMPACT...Small craft could be damaged in briefly higher winds and
+           suddenly higher waves.
+
+* Locations impacted include...
+  Waukegan Harbor, Wilmette Harbor and Winthrop Harbor.
+
+PRECAUTIONARY/PREPAREDNESS ACTIONS...
+
+Move to safe harbor immediately as gusty winds and high waves are
+expected.
+
+&&
+
+LAT...LON 4247 8754 4211 8756 4211 8760 4201 8757
+      4201 8766 4208 8768 4211 8773 4223 8781
+      4230 8783 4231 8782 4233 8782 4233 8783
+      4237 8783 4237 8782 4236 8782 4239 8780
+      4248 8780
+TIME...MOT...LOC 2350Z 022DEG 23KT 4277 8789
+
+HAIL...0.00IN
+WIND...40KTS
+
+$$
+
+Donofrio
+",LOT,10,NEW,2020-05-03 18:52:00-05,Donofrio,,LMZ740,MA,W,,-1,2020-05-03 20:15:00-05,2020-05-03 18:52:00-05,f,f
+2020-05-03 18:52:00-05,2020-05-03 20:15:00-05,"
+334
+WHUS53 KLOT 032352
+SMWLOT
+LMZ740-741-777-040115-
+/O.NEW.KLOT.MA.W.0010.200503T2352Z-200504T0115Z/
+
+BULLETIN - IMMEDIATE BROADCAST REQUESTED
+Special Marine Warning
+National Weather Service Chicago/Romeoville
+652 PM CDT Sun May 3 2020
+
+The National Weather Service in Chicago has issued a
+
+* Special Marine Warning for...
+
+  Nearshore Waters from Winthrop Harbor to Northerly Island...
+
+  Open Waters from Winthrop Harbor to Wilmette Harbor out to Mid
+Lake...
+
+* Until 815 PM CDT.
+
+* At 650 PM CDT, a strong cold front was located near Racine, moving
+  southwest at 25 knots. A quick surge in strong northeasterly winds
+  will accompany this front.
+
+  HAZARD...Wind gusts to 40 knots.
+
+  SOURCE...Land observation stations.
+
+  IMPACT...Small craft could be damaged in briefly higher winds and
+           suddenly higher waves.
+
+* Locations impacted include...
+  Waukegan Harbor, Wilmette Harbor and Winthrop Harbor.
+
+PRECAUTIONARY/PREPAREDNESS ACTIONS...
+
+Move to safe harbor immediately as gusty winds and high waves are
+expected.
+
+&&
+
+LAT...LON 4247 8754 4211 8756 4211 8760 4201 8757
+      4201 8766 4208 8768 4211 8773 4223 8781
+      4230 8783 4231 8782 4233 8782 4233 8783
+      4237 8783 4237 8782 4236 8782 4239 8780
+      4248 8780
+TIME...MOT...LOC 2350Z 022DEG 23KT 4277 8789
+
+HAIL...0.00IN
+WIND...40KTS
+
+$$
+
+Donofrio
+",LOT,10,NEW,2020-05-03 18:52:00-05,Donofrio,,LMZ741,MA,W,,-1,2020-05-03 20:15:00-05,2020-05-03 18:52:00-05,f,f
+2020-05-03 18:52:00-05,2020-05-03 20:15:00-05,"
+334
+WHUS53 KLOT 032352
+SMWLOT
+LMZ740-741-777-040115-
+/O.NEW.KLOT.MA.W.0010.200503T2352Z-200504T0115Z/
+
+BULLETIN - IMMEDIATE BROADCAST REQUESTED
+Special Marine Warning
+National Weather Service Chicago/Romeoville
+652 PM CDT Sun May 3 2020
+
+The National Weather Service in Chicago has issued a
+
+* Special Marine Warning for...
+
+  Nearshore Waters from Winthrop Harbor to Northerly Island...
+
+  Open Waters from Winthrop Harbor to Wilmette Harbor out to Mid
+Lake...
+
+* Until 815 PM CDT.
+
+* At 650 PM CDT, a strong cold front was located near Racine, moving
+  southwest at 25 knots. A quick surge in strong northeasterly winds
+  will accompany this front.
+
+  HAZARD...Wind gusts to 40 knots.
+
+  SOURCE...Land observation stations.
+
+  IMPACT...Small craft could be damaged in briefly higher winds and
+           suddenly higher waves.
+
+* Locations impacted include...
+  Waukegan Harbor, Wilmette Harbor and Winthrop Harbor.
+
+PRECAUTIONARY/PREPAREDNESS ACTIONS...
+
+Move to safe harbor immediately as gusty winds and high waves are
+expected.
+
+&&
+
+LAT...LON 4247 8754 4211 8756 4211 8760 4201 8757
+      4201 8766 4208 8768 4211 8773 4223 8781
+      4230 8783 4231 8782 4233 8782 4233 8783
+      4237 8783 4237 8782 4236 8782 4239 8780
+      4248 8780
+TIME...MOT...LOC 2350Z 022DEG 23KT 4277 8789
+
+HAIL...0.00IN
+WIND...40KTS
+
+$$
+
+Donofrio
+",LOT,10,NEW,2020-05-03 18:52:00-05,Donofrio,,LMZ777,MA,W,,-1,2020-05-03 20:15:00-05,2020-05-03 18:52:00-05,f,f
 2020-05-03 18:31:00-05,2020-05-03 18:54:00-05,"
 128
 WUUS54 KMRX 032331
@@ -66607,6 +67597,1158 @@ $$
 
 DJ
 __",KYC203,SV,W,,-1,2020-05-03 19:45:00-05,2020-05-03 18:40:00-05,f,f
+2020-05-03 17:26:00-05,2020-05-03 19:30:00-05,"
+867
+WHUS53 KMKX 032226
+SMWMKX
+LMZ643>646-669-671-673-675-040030-
+/O.NEW.KMKX.MA.W.0008.200503T2226Z-200504T0030Z/
+
+BULLETIN - IMMEDIATE BROADCAST REQUESTED
+SPECIAL MARINE WARNING
+NATIONAL WEATHER SERVICE MILWAUKEE/SULLIVAN WI
+526 PM CDT SUN MAY 3 2020
+
+THE NATIONAL WEATHER SERVICE IN MILWAUKEE/SULLIVAN HAS ISSUED A
+
+* SPECIAL MARINE WARNING FOR...
+  LAKE MICHIGAN NEARSHORE AND OPEN WATERS TO MID LAKE FROM SHEBOYGAN
+  WI TO WINTHROP HARBOR IL...
+
+* UNTIL 730 PM CDT.
+
+* AT 524 PM CDT...A STRONG COLD FRONT WAS LOCATED NEAR CEDAR
+  GROVE...OR 7 NM NORTHEAST OF PORT WASHINGTON...MOVING SOUTH AT 25
+  KNOTS.
+
+  HAZARD...NORTHEAST WIND GUSTS 34 KNOTS OR GREATER.
+
+  SOURCE...RADAR AND SURFACE OBSERVATIONS.
+
+  IMPACT...SMALL CRAFT COULD BE DAMAGED IN BRIEFLY HIGHER WINDS AND
+           SUDDENLY HIGHER WAVES.
+
+* LOCATIONS IMPACTED INCLUDE...
+  PORT WASHINGTON.
+
+PRECAUTIONARY/PREPAREDNESS ACTIONS...
+
+MOVE TO SAFE HARBOR IMMEDIATELY AS WINDS ABRUPTLY SHIFT TO THE
+NORTHEAST AND GUST TO 35 KNOTS.
+
+&&
+
+LAT...LON 4339 8787 4349 8779 4358 8778 4365 8772
+      4363 8750 4247 8753 4248 8780 4261 8782
+      4278 8775 4286 8784 4297 8785 4301 8789
+      4307 8786 4313 8790 4318 8788 4326 8791
+TIME...MOT...LOC 2224Z 012DEG 25KT 4349 8780
+
+HAIL...0.00IN
+WIND...>34KTS
+
+$$
+
+GEHRING
+",MKX,8,CON,2020-05-03 19:22:00-05,GEHRING,"__
+530
+FZUS73 KMKX 032257
+MWSMKX
+
+Marine Weather Statement
+National Weather Service Milwaukee/Sullivan WI
+557 PM CDT Sun May 3 2020
+
+LMZ643>646-669-671-673-675-040030-
+/O.CON.KMKX.MA.W.0008.000000T0000Z-200504T0030Z/
+557 PM CDT Sun May 3 2020
+
+...A SPECIAL MARINE WARNING REMAINS IN EFFECT UNTIL 730 PM CDT...
+
+For the following areas...
+Lake Michigan nearshore and open waters to mid lake from Sheboygan WI
+to Winthrop Harbor IL...
+
+At 555 PM CDT, a strong cold front was located near Bayside, moving
+south at 30 knots.
+
+HAZARD...Northeast wind gusts around 35 knots.
+
+SOURCE...Radar indicated and surface observations.
+
+IMPACT...Small craft could be damaged in briefly higher winds and
+         suddenly higher waves.
+
+Locations impacted include...
+Port Washington
+North Point Lighthouse
+Wind Point
+
+PRECAUTIONARY/PREPAREDNESS ACTIONS...
+
+Move to safe harbor immediately as gusty northeast winds and high
+waves are expected.
+
+&&
+
+LAT...LON 4339 8787 4349 8779 4358 8778 4365 8772
+      4363 8750 4247 8753 4248 8780 4261 8782
+      4278 8775 4286 8784 4297 8785 4301 8789
+      4307 8786 4310 8788 4318 8788 4326 8791
+TIME...MOT...LOC 2255Z 014DEG 32KT 4319 8789
+
+HAIL...0.00IN
+WIND...>34KTS
+
+$$
+
+GEHRING
+__
+447
+FZUS73 KMKX 032333
+MWSMKX
+
+Marine Weather Statement
+National Weather Service Milwaukee/Sullivan WI
+633 PM CDT Sun May 3 2020
+
+LMZ643-669-032339-
+/O.CAN.KMKX.MA.W.0008.000000T0000Z-200504T0030Z/
+633 PM CDT Sun May 3 2020
+
+...THE SPECIAL MARINE WARNING IS CANCELLED...
+
+The affected areas were...
+Lake Michigan nearshore and open waters to mid lake from Sheboygan WI
+to Port Washington WI...
+
+The cold front has passed and the northeast winds are weakening.
+However, a Small Craft Advisory remains in effect for brisk
+northeast winds and building waves into Monday morning.
+
+LAT...LON 4338 8787 4336 8778 4337 8751 4247 8753
+      4248 8780 4261 8782 4278 8775 4286 8784
+      4297 8785 4301 8789 4307 8786 4326 8791
+TIME...MOT...LOC 2329Z 357DEG 31KT 4288 8785
+
+$$
+
+LMZ644>646-671-673-675-040030-
+/O.CON.KMKX.MA.W.0008.000000T0000Z-200504T0030Z/
+633 PM CDT Sun May 3 2020
+
+...A SPECIAL MARINE WARNING REMAINS IN EFFECT UNTIL 730 PM CDT...
+
+For the following areas...
+Lake Michigan nearshore and open waters to mid lake from Port
+Washington WI to Winthrop Harbor IL...
+
+At 629 PM CDT, a front was located over Oak Creek, moving south at 30
+knots.
+
+HAZARD...Northeast wind gusts around 35 knots.
+
+SOURCE...Radar indicated and surface observations.
+
+IMPACT...Small craft could be damaged in briefly higher winds and
+         suddenly higher waves.
+
+The front will reach Wind Point around 6:35 PM and Kenosha
+around 6:55 PM.
+
+LAT...LON 4338 8787 4336 8778 4337 8751 4247 8753
+      4248 8780 4261 8782 4278 8775 4286 8784
+      4297 8785 4301 8789 4307 8786 4326 8791
+TIME...MOT...LOC 2329Z 357DEG 31KT 4288 8785
+
+HAIL...0.00IN
+WIND...>34KTS
+
+$$
+
+GEHRING
+__
+683
+FZUS73 KMKX 032350
+MWSMKX
+
+Marine Weather Statement
+National Weather Service Milwaukee/Sullivan WI
+650 PM CDT Sun May 3 2020
+
+LMZ644-671-032357-
+/O.CAN.KMKX.MA.W.0008.000000T0000Z-200504T0030Z/
+650 PM CDT Sun May 3 2020
+
+...THE SPECIAL MARINE WARNING IS CANCELLED...
+
+The affected areas were...
+Nearshore waters from Port Washington WI to North Point Light WI...
+Lake Michigan from Port Washington WI to North Point Light WI 5 nm
+off shore to mid lake...
+
+The cold front has passed and the northeast winds are weakening.
+However, a Small Craft Advisory remains in effect for brisk
+northeast winds and building waves into Monday morning.
+
+LAT...LON 4248 8780 4261 8782 4271 8777 4278 8775
+      4286 8784 4297 8785 4301 8789 4305 8787
+      4305 8752 4247 8753
+TIME...MOT...LOC 2347Z 007DEG 29KT 4269 8777
+
+$$
+
+LMZ645-646-673-675-040030-
+/O.CON.KMKX.MA.W.0008.000000T0000Z-200504T0030Z/
+650 PM CDT Sun May 3 2020
+
+...A SPECIAL MARINE WARNING REMAINS IN EFFECT UNTIL 730 PM CDT...
+
+For the following areas...
+Lake Michigan nearshore and open waters to mid lake from North Point
+Light WI to Winthrop Harbor IL...
+
+At 647 PM CDT, a strong cold front was located over Racine, moving
+south at 30 knots.
+
+HAZARD...Northeast wind gusts around 35 knots.
+
+SOURCE...Radar indicated and surface observations.
+
+IMPACT...Small craft could be damaged in briefly higher winds and
+         suddenly higher waves.
+
+The front will reached Kenosha Harbor around 7 PM.
+
+
+
+LAT...LON 4248 8780 4261 8782 4271 8777 4278 8775
+      4286 8784 4297 8785 4301 8789 4305 8787
+      4305 8752 4247 8753
+TIME...MOT...LOC 2347Z 007DEG 29KT 4269 8777
+
+HAIL...0.00IN
+WIND...>34KTS
+
+$$
+
+GEHRING
+__
+092
+FZUS73 KMKX 040022
+MWSMKX
+
+Marine Weather Statement
+National Weather Service Milwaukee/Sullivan WI
+722 PM CDT Sun May 3 2020
+
+LMZ645-646-673-675-040030-
+/O.CON.KMKX.MA.W.0008.000000T0000Z-200504T0030Z/
+722 PM CDT Sun May 3 2020
+
+...A SPECIAL MARINE WARNING REMAINS IN EFFECT UNTIL 730 PM CDT...
+
+For the following areas...
+Lake Michigan nearshore and open waters to mid lake from North Point
+Light WI to Winthrop Harbor IL...
+
+At 720 PM CDT, a strong front was located over Winthrop Harbor,
+moving south at 25 knots.
+
+HAZARD...Northeast wind gusts around 34 knots from Kenosha to
+         Winthrop Harbor
+
+SOURCE...Radar indicated and surface observations.
+
+IMPACT...Small craft could be damaged in briefly higher winds and
+         suddenly higher waves.
+
+The northeast wind gusts around 34 knots will decrease to 20 to 25
+knots this evening.
+
+PRECAUTIONARY/PREPAREDNESS ACTIONS...
+
+Move to safe harbor immediately as gusty winds and high waves are
+expected.
+
+&&
+
+LAT...LON 4248 8780 4261 8782 4271 8777 4278 8775
+      4286 8784 4297 8785 4301 8789 4305 8787
+      4305 8752 4247 8753
+TIME...MOT...LOC 0020Z 012DEG 25KT 4246 8783
+
+HAIL...0.00IN
+WIND...>34KTS
+
+$$
+
+GEHRING
+__",LMZ673,MA,W,,-1,2020-05-03 19:30:00-05,2020-05-03 17:26:00-05,f,f
+2020-05-03 17:26:00-05,2020-05-03 19:30:00-05,"
+867
+WHUS53 KMKX 032226
+SMWMKX
+LMZ643>646-669-671-673-675-040030-
+/O.NEW.KMKX.MA.W.0008.200503T2226Z-200504T0030Z/
+
+BULLETIN - IMMEDIATE BROADCAST REQUESTED
+SPECIAL MARINE WARNING
+NATIONAL WEATHER SERVICE MILWAUKEE/SULLIVAN WI
+526 PM CDT SUN MAY 3 2020
+
+THE NATIONAL WEATHER SERVICE IN MILWAUKEE/SULLIVAN HAS ISSUED A
+
+* SPECIAL MARINE WARNING FOR...
+  LAKE MICHIGAN NEARSHORE AND OPEN WATERS TO MID LAKE FROM SHEBOYGAN
+  WI TO WINTHROP HARBOR IL...
+
+* UNTIL 730 PM CDT.
+
+* AT 524 PM CDT...A STRONG COLD FRONT WAS LOCATED NEAR CEDAR
+  GROVE...OR 7 NM NORTHEAST OF PORT WASHINGTON...MOVING SOUTH AT 25
+  KNOTS.
+
+  HAZARD...NORTHEAST WIND GUSTS 34 KNOTS OR GREATER.
+
+  SOURCE...RADAR AND SURFACE OBSERVATIONS.
+
+  IMPACT...SMALL CRAFT COULD BE DAMAGED IN BRIEFLY HIGHER WINDS AND
+           SUDDENLY HIGHER WAVES.
+
+* LOCATIONS IMPACTED INCLUDE...
+  PORT WASHINGTON.
+
+PRECAUTIONARY/PREPAREDNESS ACTIONS...
+
+MOVE TO SAFE HARBOR IMMEDIATELY AS WINDS ABRUPTLY SHIFT TO THE
+NORTHEAST AND GUST TO 35 KNOTS.
+
+&&
+
+LAT...LON 4339 8787 4349 8779 4358 8778 4365 8772
+      4363 8750 4247 8753 4248 8780 4261 8782
+      4278 8775 4286 8784 4297 8785 4301 8789
+      4307 8786 4313 8790 4318 8788 4326 8791
+TIME...MOT...LOC 2224Z 012DEG 25KT 4349 8780
+
+HAIL...0.00IN
+WIND...>34KTS
+
+$$
+
+GEHRING
+",MKX,8,CON,2020-05-03 19:22:00-05,GEHRING,"__
+530
+FZUS73 KMKX 032257
+MWSMKX
+
+Marine Weather Statement
+National Weather Service Milwaukee/Sullivan WI
+557 PM CDT Sun May 3 2020
+
+LMZ643>646-669-671-673-675-040030-
+/O.CON.KMKX.MA.W.0008.000000T0000Z-200504T0030Z/
+557 PM CDT Sun May 3 2020
+
+...A SPECIAL MARINE WARNING REMAINS IN EFFECT UNTIL 730 PM CDT...
+
+For the following areas...
+Lake Michigan nearshore and open waters to mid lake from Sheboygan WI
+to Winthrop Harbor IL...
+
+At 555 PM CDT, a strong cold front was located near Bayside, moving
+south at 30 knots.
+
+HAZARD...Northeast wind gusts around 35 knots.
+
+SOURCE...Radar indicated and surface observations.
+
+IMPACT...Small craft could be damaged in briefly higher winds and
+         suddenly higher waves.
+
+Locations impacted include...
+Port Washington
+North Point Lighthouse
+Wind Point
+
+PRECAUTIONARY/PREPAREDNESS ACTIONS...
+
+Move to safe harbor immediately as gusty northeast winds and high
+waves are expected.
+
+&&
+
+LAT...LON 4339 8787 4349 8779 4358 8778 4365 8772
+      4363 8750 4247 8753 4248 8780 4261 8782
+      4278 8775 4286 8784 4297 8785 4301 8789
+      4307 8786 4310 8788 4318 8788 4326 8791
+TIME...MOT...LOC 2255Z 014DEG 32KT 4319 8789
+
+HAIL...0.00IN
+WIND...>34KTS
+
+$$
+
+GEHRING
+__
+447
+FZUS73 KMKX 032333
+MWSMKX
+
+Marine Weather Statement
+National Weather Service Milwaukee/Sullivan WI
+633 PM CDT Sun May 3 2020
+
+LMZ643-669-032339-
+/O.CAN.KMKX.MA.W.0008.000000T0000Z-200504T0030Z/
+633 PM CDT Sun May 3 2020
+
+...THE SPECIAL MARINE WARNING IS CANCELLED...
+
+The affected areas were...
+Lake Michigan nearshore and open waters to mid lake from Sheboygan WI
+to Port Washington WI...
+
+The cold front has passed and the northeast winds are weakening.
+However, a Small Craft Advisory remains in effect for brisk
+northeast winds and building waves into Monday morning.
+
+LAT...LON 4338 8787 4336 8778 4337 8751 4247 8753
+      4248 8780 4261 8782 4278 8775 4286 8784
+      4297 8785 4301 8789 4307 8786 4326 8791
+TIME...MOT...LOC 2329Z 357DEG 31KT 4288 8785
+
+$$
+
+LMZ644>646-671-673-675-040030-
+/O.CON.KMKX.MA.W.0008.000000T0000Z-200504T0030Z/
+633 PM CDT Sun May 3 2020
+
+...A SPECIAL MARINE WARNING REMAINS IN EFFECT UNTIL 730 PM CDT...
+
+For the following areas...
+Lake Michigan nearshore and open waters to mid lake from Port
+Washington WI to Winthrop Harbor IL...
+
+At 629 PM CDT, a front was located over Oak Creek, moving south at 30
+knots.
+
+HAZARD...Northeast wind gusts around 35 knots.
+
+SOURCE...Radar indicated and surface observations.
+
+IMPACT...Small craft could be damaged in briefly higher winds and
+         suddenly higher waves.
+
+The front will reach Wind Point around 6:35 PM and Kenosha
+around 6:55 PM.
+
+LAT...LON 4338 8787 4336 8778 4337 8751 4247 8753
+      4248 8780 4261 8782 4278 8775 4286 8784
+      4297 8785 4301 8789 4307 8786 4326 8791
+TIME...MOT...LOC 2329Z 357DEG 31KT 4288 8785
+
+HAIL...0.00IN
+WIND...>34KTS
+
+$$
+
+GEHRING
+__
+683
+FZUS73 KMKX 032350
+MWSMKX
+
+Marine Weather Statement
+National Weather Service Milwaukee/Sullivan WI
+650 PM CDT Sun May 3 2020
+
+LMZ644-671-032357-
+/O.CAN.KMKX.MA.W.0008.000000T0000Z-200504T0030Z/
+650 PM CDT Sun May 3 2020
+
+...THE SPECIAL MARINE WARNING IS CANCELLED...
+
+The affected areas were...
+Nearshore waters from Port Washington WI to North Point Light WI...
+Lake Michigan from Port Washington WI to North Point Light WI 5 nm
+off shore to mid lake...
+
+The cold front has passed and the northeast winds are weakening.
+However, a Small Craft Advisory remains in effect for brisk
+northeast winds and building waves into Monday morning.
+
+LAT...LON 4248 8780 4261 8782 4271 8777 4278 8775
+      4286 8784 4297 8785 4301 8789 4305 8787
+      4305 8752 4247 8753
+TIME...MOT...LOC 2347Z 007DEG 29KT 4269 8777
+
+$$
+
+LMZ645-646-673-675-040030-
+/O.CON.KMKX.MA.W.0008.000000T0000Z-200504T0030Z/
+650 PM CDT Sun May 3 2020
+
+...A SPECIAL MARINE WARNING REMAINS IN EFFECT UNTIL 730 PM CDT...
+
+For the following areas...
+Lake Michigan nearshore and open waters to mid lake from North Point
+Light WI to Winthrop Harbor IL...
+
+At 647 PM CDT, a strong cold front was located over Racine, moving
+south at 30 knots.
+
+HAZARD...Northeast wind gusts around 35 knots.
+
+SOURCE...Radar indicated and surface observations.
+
+IMPACT...Small craft could be damaged in briefly higher winds and
+         suddenly higher waves.
+
+The front will reached Kenosha Harbor around 7 PM.
+
+
+
+LAT...LON 4248 8780 4261 8782 4271 8777 4278 8775
+      4286 8784 4297 8785 4301 8789 4305 8787
+      4305 8752 4247 8753
+TIME...MOT...LOC 2347Z 007DEG 29KT 4269 8777
+
+HAIL...0.00IN
+WIND...>34KTS
+
+$$
+
+GEHRING
+__
+092
+FZUS73 KMKX 040022
+MWSMKX
+
+Marine Weather Statement
+National Weather Service Milwaukee/Sullivan WI
+722 PM CDT Sun May 3 2020
+
+LMZ645-646-673-675-040030-
+/O.CON.KMKX.MA.W.0008.000000T0000Z-200504T0030Z/
+722 PM CDT Sun May 3 2020
+
+...A SPECIAL MARINE WARNING REMAINS IN EFFECT UNTIL 730 PM CDT...
+
+For the following areas...
+Lake Michigan nearshore and open waters to mid lake from North Point
+Light WI to Winthrop Harbor IL...
+
+At 720 PM CDT, a strong front was located over Winthrop Harbor,
+moving south at 25 knots.
+
+HAZARD...Northeast wind gusts around 34 knots from Kenosha to
+         Winthrop Harbor
+
+SOURCE...Radar indicated and surface observations.
+
+IMPACT...Small craft could be damaged in briefly higher winds and
+         suddenly higher waves.
+
+The northeast wind gusts around 34 knots will decrease to 20 to 25
+knots this evening.
+
+PRECAUTIONARY/PREPAREDNESS ACTIONS...
+
+Move to safe harbor immediately as gusty winds and high waves are
+expected.
+
+&&
+
+LAT...LON 4248 8780 4261 8782 4271 8777 4278 8775
+      4286 8784 4297 8785 4301 8789 4305 8787
+      4305 8752 4247 8753
+TIME...MOT...LOC 0020Z 012DEG 25KT 4246 8783
+
+HAIL...0.00IN
+WIND...>34KTS
+
+$$
+
+GEHRING
+__",LMZ675,MA,W,,-1,2020-05-03 19:30:00-05,2020-05-03 17:26:00-05,f,f
+2020-05-03 17:26:00-05,2020-05-03 19:30:00-05,"
+867
+WHUS53 KMKX 032226
+SMWMKX
+LMZ643>646-669-671-673-675-040030-
+/O.NEW.KMKX.MA.W.0008.200503T2226Z-200504T0030Z/
+
+BULLETIN - IMMEDIATE BROADCAST REQUESTED
+SPECIAL MARINE WARNING
+NATIONAL WEATHER SERVICE MILWAUKEE/SULLIVAN WI
+526 PM CDT SUN MAY 3 2020
+
+THE NATIONAL WEATHER SERVICE IN MILWAUKEE/SULLIVAN HAS ISSUED A
+
+* SPECIAL MARINE WARNING FOR...
+  LAKE MICHIGAN NEARSHORE AND OPEN WATERS TO MID LAKE FROM SHEBOYGAN
+  WI TO WINTHROP HARBOR IL...
+
+* UNTIL 730 PM CDT.
+
+* AT 524 PM CDT...A STRONG COLD FRONT WAS LOCATED NEAR CEDAR
+  GROVE...OR 7 NM NORTHEAST OF PORT WASHINGTON...MOVING SOUTH AT 25
+  KNOTS.
+
+  HAZARD...NORTHEAST WIND GUSTS 34 KNOTS OR GREATER.
+
+  SOURCE...RADAR AND SURFACE OBSERVATIONS.
+
+  IMPACT...SMALL CRAFT COULD BE DAMAGED IN BRIEFLY HIGHER WINDS AND
+           SUDDENLY HIGHER WAVES.
+
+* LOCATIONS IMPACTED INCLUDE...
+  PORT WASHINGTON.
+
+PRECAUTIONARY/PREPAREDNESS ACTIONS...
+
+MOVE TO SAFE HARBOR IMMEDIATELY AS WINDS ABRUPTLY SHIFT TO THE
+NORTHEAST AND GUST TO 35 KNOTS.
+
+&&
+
+LAT...LON 4339 8787 4349 8779 4358 8778 4365 8772
+      4363 8750 4247 8753 4248 8780 4261 8782
+      4278 8775 4286 8784 4297 8785 4301 8789
+      4307 8786 4313 8790 4318 8788 4326 8791
+TIME...MOT...LOC 2224Z 012DEG 25KT 4349 8780
+
+HAIL...0.00IN
+WIND...>34KTS
+
+$$
+
+GEHRING
+",MKX,8,CON,2020-05-03 19:22:00-05,GEHRING,"__
+530
+FZUS73 KMKX 032257
+MWSMKX
+
+Marine Weather Statement
+National Weather Service Milwaukee/Sullivan WI
+557 PM CDT Sun May 3 2020
+
+LMZ643>646-669-671-673-675-040030-
+/O.CON.KMKX.MA.W.0008.000000T0000Z-200504T0030Z/
+557 PM CDT Sun May 3 2020
+
+...A SPECIAL MARINE WARNING REMAINS IN EFFECT UNTIL 730 PM CDT...
+
+For the following areas...
+Lake Michigan nearshore and open waters to mid lake from Sheboygan WI
+to Winthrop Harbor IL...
+
+At 555 PM CDT, a strong cold front was located near Bayside, moving
+south at 30 knots.
+
+HAZARD...Northeast wind gusts around 35 knots.
+
+SOURCE...Radar indicated and surface observations.
+
+IMPACT...Small craft could be damaged in briefly higher winds and
+         suddenly higher waves.
+
+Locations impacted include...
+Port Washington
+North Point Lighthouse
+Wind Point
+
+PRECAUTIONARY/PREPAREDNESS ACTIONS...
+
+Move to safe harbor immediately as gusty northeast winds and high
+waves are expected.
+
+&&
+
+LAT...LON 4339 8787 4349 8779 4358 8778 4365 8772
+      4363 8750 4247 8753 4248 8780 4261 8782
+      4278 8775 4286 8784 4297 8785 4301 8789
+      4307 8786 4310 8788 4318 8788 4326 8791
+TIME...MOT...LOC 2255Z 014DEG 32KT 4319 8789
+
+HAIL...0.00IN
+WIND...>34KTS
+
+$$
+
+GEHRING
+__
+447
+FZUS73 KMKX 032333
+MWSMKX
+
+Marine Weather Statement
+National Weather Service Milwaukee/Sullivan WI
+633 PM CDT Sun May 3 2020
+
+LMZ643-669-032339-
+/O.CAN.KMKX.MA.W.0008.000000T0000Z-200504T0030Z/
+633 PM CDT Sun May 3 2020
+
+...THE SPECIAL MARINE WARNING IS CANCELLED...
+
+The affected areas were...
+Lake Michigan nearshore and open waters to mid lake from Sheboygan WI
+to Port Washington WI...
+
+The cold front has passed and the northeast winds are weakening.
+However, a Small Craft Advisory remains in effect for brisk
+northeast winds and building waves into Monday morning.
+
+LAT...LON 4338 8787 4336 8778 4337 8751 4247 8753
+      4248 8780 4261 8782 4278 8775 4286 8784
+      4297 8785 4301 8789 4307 8786 4326 8791
+TIME...MOT...LOC 2329Z 357DEG 31KT 4288 8785
+
+$$
+
+LMZ644>646-671-673-675-040030-
+/O.CON.KMKX.MA.W.0008.000000T0000Z-200504T0030Z/
+633 PM CDT Sun May 3 2020
+
+...A SPECIAL MARINE WARNING REMAINS IN EFFECT UNTIL 730 PM CDT...
+
+For the following areas...
+Lake Michigan nearshore and open waters to mid lake from Port
+Washington WI to Winthrop Harbor IL...
+
+At 629 PM CDT, a front was located over Oak Creek, moving south at 30
+knots.
+
+HAZARD...Northeast wind gusts around 35 knots.
+
+SOURCE...Radar indicated and surface observations.
+
+IMPACT...Small craft could be damaged in briefly higher winds and
+         suddenly higher waves.
+
+The front will reach Wind Point around 6:35 PM and Kenosha
+around 6:55 PM.
+
+LAT...LON 4338 8787 4336 8778 4337 8751 4247 8753
+      4248 8780 4261 8782 4278 8775 4286 8784
+      4297 8785 4301 8789 4307 8786 4326 8791
+TIME...MOT...LOC 2329Z 357DEG 31KT 4288 8785
+
+HAIL...0.00IN
+WIND...>34KTS
+
+$$
+
+GEHRING
+__
+683
+FZUS73 KMKX 032350
+MWSMKX
+
+Marine Weather Statement
+National Weather Service Milwaukee/Sullivan WI
+650 PM CDT Sun May 3 2020
+
+LMZ644-671-032357-
+/O.CAN.KMKX.MA.W.0008.000000T0000Z-200504T0030Z/
+650 PM CDT Sun May 3 2020
+
+...THE SPECIAL MARINE WARNING IS CANCELLED...
+
+The affected areas were...
+Nearshore waters from Port Washington WI to North Point Light WI...
+Lake Michigan from Port Washington WI to North Point Light WI 5 nm
+off shore to mid lake...
+
+The cold front has passed and the northeast winds are weakening.
+However, a Small Craft Advisory remains in effect for brisk
+northeast winds and building waves into Monday morning.
+
+LAT...LON 4248 8780 4261 8782 4271 8777 4278 8775
+      4286 8784 4297 8785 4301 8789 4305 8787
+      4305 8752 4247 8753
+TIME...MOT...LOC 2347Z 007DEG 29KT 4269 8777
+
+$$
+
+LMZ645-646-673-675-040030-
+/O.CON.KMKX.MA.W.0008.000000T0000Z-200504T0030Z/
+650 PM CDT Sun May 3 2020
+
+...A SPECIAL MARINE WARNING REMAINS IN EFFECT UNTIL 730 PM CDT...
+
+For the following areas...
+Lake Michigan nearshore and open waters to mid lake from North Point
+Light WI to Winthrop Harbor IL...
+
+At 647 PM CDT, a strong cold front was located over Racine, moving
+south at 30 knots.
+
+HAZARD...Northeast wind gusts around 35 knots.
+
+SOURCE...Radar indicated and surface observations.
+
+IMPACT...Small craft could be damaged in briefly higher winds and
+         suddenly higher waves.
+
+The front will reached Kenosha Harbor around 7 PM.
+
+
+
+LAT...LON 4248 8780 4261 8782 4271 8777 4278 8775
+      4286 8784 4297 8785 4301 8789 4305 8787
+      4305 8752 4247 8753
+TIME...MOT...LOC 2347Z 007DEG 29KT 4269 8777
+
+HAIL...0.00IN
+WIND...>34KTS
+
+$$
+
+GEHRING
+__
+092
+FZUS73 KMKX 040022
+MWSMKX
+
+Marine Weather Statement
+National Weather Service Milwaukee/Sullivan WI
+722 PM CDT Sun May 3 2020
+
+LMZ645-646-673-675-040030-
+/O.CON.KMKX.MA.W.0008.000000T0000Z-200504T0030Z/
+722 PM CDT Sun May 3 2020
+
+...A SPECIAL MARINE WARNING REMAINS IN EFFECT UNTIL 730 PM CDT...
+
+For the following areas...
+Lake Michigan nearshore and open waters to mid lake from North Point
+Light WI to Winthrop Harbor IL...
+
+At 720 PM CDT, a strong front was located over Winthrop Harbor,
+moving south at 25 knots.
+
+HAZARD...Northeast wind gusts around 34 knots from Kenosha to
+         Winthrop Harbor
+
+SOURCE...Radar indicated and surface observations.
+
+IMPACT...Small craft could be damaged in briefly higher winds and
+         suddenly higher waves.
+
+The northeast wind gusts around 34 knots will decrease to 20 to 25
+knots this evening.
+
+PRECAUTIONARY/PREPAREDNESS ACTIONS...
+
+Move to safe harbor immediately as gusty winds and high waves are
+expected.
+
+&&
+
+LAT...LON 4248 8780 4261 8782 4271 8777 4278 8775
+      4286 8784 4297 8785 4301 8789 4305 8787
+      4305 8752 4247 8753
+TIME...MOT...LOC 0020Z 012DEG 25KT 4246 8783
+
+HAIL...0.00IN
+WIND...>34KTS
+
+$$
+
+GEHRING
+__",LMZ645,MA,W,,-1,2020-05-03 19:30:00-05,2020-05-03 17:26:00-05,f,f
+2020-05-03 17:26:00-05,2020-05-03 19:30:00-05,"
+867
+WHUS53 KMKX 032226
+SMWMKX
+LMZ643>646-669-671-673-675-040030-
+/O.NEW.KMKX.MA.W.0008.200503T2226Z-200504T0030Z/
+
+BULLETIN - IMMEDIATE BROADCAST REQUESTED
+SPECIAL MARINE WARNING
+NATIONAL WEATHER SERVICE MILWAUKEE/SULLIVAN WI
+526 PM CDT SUN MAY 3 2020
+
+THE NATIONAL WEATHER SERVICE IN MILWAUKEE/SULLIVAN HAS ISSUED A
+
+* SPECIAL MARINE WARNING FOR...
+  LAKE MICHIGAN NEARSHORE AND OPEN WATERS TO MID LAKE FROM SHEBOYGAN
+  WI TO WINTHROP HARBOR IL...
+
+* UNTIL 730 PM CDT.
+
+* AT 524 PM CDT...A STRONG COLD FRONT WAS LOCATED NEAR CEDAR
+  GROVE...OR 7 NM NORTHEAST OF PORT WASHINGTON...MOVING SOUTH AT 25
+  KNOTS.
+
+  HAZARD...NORTHEAST WIND GUSTS 34 KNOTS OR GREATER.
+
+  SOURCE...RADAR AND SURFACE OBSERVATIONS.
+
+  IMPACT...SMALL CRAFT COULD BE DAMAGED IN BRIEFLY HIGHER WINDS AND
+           SUDDENLY HIGHER WAVES.
+
+* LOCATIONS IMPACTED INCLUDE...
+  PORT WASHINGTON.
+
+PRECAUTIONARY/PREPAREDNESS ACTIONS...
+
+MOVE TO SAFE HARBOR IMMEDIATELY AS WINDS ABRUPTLY SHIFT TO THE
+NORTHEAST AND GUST TO 35 KNOTS.
+
+&&
+
+LAT...LON 4339 8787 4349 8779 4358 8778 4365 8772
+      4363 8750 4247 8753 4248 8780 4261 8782
+      4278 8775 4286 8784 4297 8785 4301 8789
+      4307 8786 4313 8790 4318 8788 4326 8791
+TIME...MOT...LOC 2224Z 012DEG 25KT 4349 8780
+
+HAIL...0.00IN
+WIND...>34KTS
+
+$$
+
+GEHRING
+",MKX,8,CON,2020-05-03 19:22:00-05,GEHRING,"__
+530
+FZUS73 KMKX 032257
+MWSMKX
+
+Marine Weather Statement
+National Weather Service Milwaukee/Sullivan WI
+557 PM CDT Sun May 3 2020
+
+LMZ643>646-669-671-673-675-040030-
+/O.CON.KMKX.MA.W.0008.000000T0000Z-200504T0030Z/
+557 PM CDT Sun May 3 2020
+
+...A SPECIAL MARINE WARNING REMAINS IN EFFECT UNTIL 730 PM CDT...
+
+For the following areas...
+Lake Michigan nearshore and open waters to mid lake from Sheboygan WI
+to Winthrop Harbor IL...
+
+At 555 PM CDT, a strong cold front was located near Bayside, moving
+south at 30 knots.
+
+HAZARD...Northeast wind gusts around 35 knots.
+
+SOURCE...Radar indicated and surface observations.
+
+IMPACT...Small craft could be damaged in briefly higher winds and
+         suddenly higher waves.
+
+Locations impacted include...
+Port Washington
+North Point Lighthouse
+Wind Point
+
+PRECAUTIONARY/PREPAREDNESS ACTIONS...
+
+Move to safe harbor immediately as gusty northeast winds and high
+waves are expected.
+
+&&
+
+LAT...LON 4339 8787 4349 8779 4358 8778 4365 8772
+      4363 8750 4247 8753 4248 8780 4261 8782
+      4278 8775 4286 8784 4297 8785 4301 8789
+      4307 8786 4310 8788 4318 8788 4326 8791
+TIME...MOT...LOC 2255Z 014DEG 32KT 4319 8789
+
+HAIL...0.00IN
+WIND...>34KTS
+
+$$
+
+GEHRING
+__
+447
+FZUS73 KMKX 032333
+MWSMKX
+
+Marine Weather Statement
+National Weather Service Milwaukee/Sullivan WI
+633 PM CDT Sun May 3 2020
+
+LMZ643-669-032339-
+/O.CAN.KMKX.MA.W.0008.000000T0000Z-200504T0030Z/
+633 PM CDT Sun May 3 2020
+
+...THE SPECIAL MARINE WARNING IS CANCELLED...
+
+The affected areas were...
+Lake Michigan nearshore and open waters to mid lake from Sheboygan WI
+to Port Washington WI...
+
+The cold front has passed and the northeast winds are weakening.
+However, a Small Craft Advisory remains in effect for brisk
+northeast winds and building waves into Monday morning.
+
+LAT...LON 4338 8787 4336 8778 4337 8751 4247 8753
+      4248 8780 4261 8782 4278 8775 4286 8784
+      4297 8785 4301 8789 4307 8786 4326 8791
+TIME...MOT...LOC 2329Z 357DEG 31KT 4288 8785
+
+$$
+
+LMZ644>646-671-673-675-040030-
+/O.CON.KMKX.MA.W.0008.000000T0000Z-200504T0030Z/
+633 PM CDT Sun May 3 2020
+
+...A SPECIAL MARINE WARNING REMAINS IN EFFECT UNTIL 730 PM CDT...
+
+For the following areas...
+Lake Michigan nearshore and open waters to mid lake from Port
+Washington WI to Winthrop Harbor IL...
+
+At 629 PM CDT, a front was located over Oak Creek, moving south at 30
+knots.
+
+HAZARD...Northeast wind gusts around 35 knots.
+
+SOURCE...Radar indicated and surface observations.
+
+IMPACT...Small craft could be damaged in briefly higher winds and
+         suddenly higher waves.
+
+The front will reach Wind Point around 6:35 PM and Kenosha
+around 6:55 PM.
+
+LAT...LON 4338 8787 4336 8778 4337 8751 4247 8753
+      4248 8780 4261 8782 4278 8775 4286 8784
+      4297 8785 4301 8789 4307 8786 4326 8791
+TIME...MOT...LOC 2329Z 357DEG 31KT 4288 8785
+
+HAIL...0.00IN
+WIND...>34KTS
+
+$$
+
+GEHRING
+__
+683
+FZUS73 KMKX 032350
+MWSMKX
+
+Marine Weather Statement
+National Weather Service Milwaukee/Sullivan WI
+650 PM CDT Sun May 3 2020
+
+LMZ644-671-032357-
+/O.CAN.KMKX.MA.W.0008.000000T0000Z-200504T0030Z/
+650 PM CDT Sun May 3 2020
+
+...THE SPECIAL MARINE WARNING IS CANCELLED...
+
+The affected areas were...
+Nearshore waters from Port Washington WI to North Point Light WI...
+Lake Michigan from Port Washington WI to North Point Light WI 5 nm
+off shore to mid lake...
+
+The cold front has passed and the northeast winds are weakening.
+However, a Small Craft Advisory remains in effect for brisk
+northeast winds and building waves into Monday morning.
+
+LAT...LON 4248 8780 4261 8782 4271 8777 4278 8775
+      4286 8784 4297 8785 4301 8789 4305 8787
+      4305 8752 4247 8753
+TIME...MOT...LOC 2347Z 007DEG 29KT 4269 8777
+
+$$
+
+LMZ645-646-673-675-040030-
+/O.CON.KMKX.MA.W.0008.000000T0000Z-200504T0030Z/
+650 PM CDT Sun May 3 2020
+
+...A SPECIAL MARINE WARNING REMAINS IN EFFECT UNTIL 730 PM CDT...
+
+For the following areas...
+Lake Michigan nearshore and open waters to mid lake from North Point
+Light WI to Winthrop Harbor IL...
+
+At 647 PM CDT, a strong cold front was located over Racine, moving
+south at 30 knots.
+
+HAZARD...Northeast wind gusts around 35 knots.
+
+SOURCE...Radar indicated and surface observations.
+
+IMPACT...Small craft could be damaged in briefly higher winds and
+         suddenly higher waves.
+
+The front will reached Kenosha Harbor around 7 PM.
+
+
+
+LAT...LON 4248 8780 4261 8782 4271 8777 4278 8775
+      4286 8784 4297 8785 4301 8789 4305 8787
+      4305 8752 4247 8753
+TIME...MOT...LOC 2347Z 007DEG 29KT 4269 8777
+
+HAIL...0.00IN
+WIND...>34KTS
+
+$$
+
+GEHRING
+__
+092
+FZUS73 KMKX 040022
+MWSMKX
+
+Marine Weather Statement
+National Weather Service Milwaukee/Sullivan WI
+722 PM CDT Sun May 3 2020
+
+LMZ645-646-673-675-040030-
+/O.CON.KMKX.MA.W.0008.000000T0000Z-200504T0030Z/
+722 PM CDT Sun May 3 2020
+
+...A SPECIAL MARINE WARNING REMAINS IN EFFECT UNTIL 730 PM CDT...
+
+For the following areas...
+Lake Michigan nearshore and open waters to mid lake from North Point
+Light WI to Winthrop Harbor IL...
+
+At 720 PM CDT, a strong front was located over Winthrop Harbor,
+moving south at 25 knots.
+
+HAZARD...Northeast wind gusts around 34 knots from Kenosha to
+         Winthrop Harbor
+
+SOURCE...Radar indicated and surface observations.
+
+IMPACT...Small craft could be damaged in briefly higher winds and
+         suddenly higher waves.
+
+The northeast wind gusts around 34 knots will decrease to 20 to 25
+knots this evening.
+
+PRECAUTIONARY/PREPAREDNESS ACTIONS...
+
+Move to safe harbor immediately as gusty winds and high waves are
+expected.
+
+&&
+
+LAT...LON 4248 8780 4261 8782 4271 8777 4278 8775
+      4286 8784 4297 8785 4301 8789 4305 8787
+      4305 8752 4247 8753
+TIME...MOT...LOC 0020Z 012DEG 25KT 4246 8783
+
+HAIL...0.00IN
+WIND...>34KTS
+
+$$
+
+GEHRING
+__",LMZ646,MA,W,,-1,2020-05-03 19:30:00-05,2020-05-03 17:26:00-05,f,f
 2020-05-03 19:04:00-05,2020-05-03 19:26:00-05,"
 722
 WUUS55 KGGW 040004
@@ -69593,6 +71735,93 @@ $$
 
 Sherburn
 __",SDC007,SV,W,,-1,2020-05-03 21:00:00-05,2020-05-03 20:05:00-05,f,f
+2020-05-03 20:06:00-05,2020-05-03 21:30:00-05,"
+392
+WHUS53 KLOT 040106
+SMWLOT
+LMZ741>743-779-040230-
+/O.NEW.KLOT.MA.W.0011.200504T0106Z-200504T0230Z/
+
+BULLETIN - IMMEDIATE BROADCAST REQUESTED
+Special Marine Warning
+National Weather Service Chicago/Romeoville
+806 PM CDT Sun May 3 2020
+
+The National Weather Service in Chicago has issued a
+
+* Special Marine Warning for...
+
+  Nearshore Waters from Wilmette Harbor to Calumet Harbor...
+  Nearshore Waters from Calumet Harbor to Gary...
+  Open Waters from Wilmette Harbor to Michigan City out to Mid
+Lake...
+
+* Until 930 PM CDT.
+
+* At 806 PM CDT, a strong thunderstorm was located near Wilmette
+  Harbor, moving south at 25 knots.
+
+  HAZARD...Wind gusts 34 knots or greater.
+
+  SOURCE...Radar and observations indicated.
+
+  IMPACT...Small craft could be damaged in briefly higher winds and
+           suddenly higher waves.
+
+* Locations impacted include...
+  Calumet Harbor, Burnham Harbor, Jackson Park Harbor, 31st Street
+  Harbor, Montrose Harbor and Monroe Harbor.
+
+LAT...LON 4165 8743 4167 8742 4168 8743 4169 8750
+      4175 8753 4179 8758 4178 8758 4188 8762
+      4189 8760 4190 8762 4196 8764 4196 8763
+      4201 8766 4202 8758 4211 8760 4211 8753
+      4171 8731 4163 8736
+TIME...MOT...LOC 0106Z 013DEG 26KT 4211 8779
+
+HAIL...0.00IN
+WIND...>34KTS
+
+$$
+
+Donofrio
+",LOT,11,EXP,2020-05-03 21:29:00-05,Donofrio,"__
+565
+FZUS73 KLOT 040229
+MWSLOT
+
+Marine Weather Statement
+National Weather Service Chicago/Romeoville
+929 PM CDT Sun May 3 2020
+
+LMZ741>743-779-040238-
+/O.EXP.KLOT.MA.W.0011.000000T0000Z-200504T0230Z/
+929 PM CDT Sun May 3 2020
+
+...THE SPECIAL MARINE WARNING WILL EXPIRE AT 930 PM CDT...
+
+The affected areas were...
+
+  Nearshore Waters from Wilmette Harbor to Calumet Harbor...
+  Nearshore Waters from Calumet Harbor to Gary...
+  Open Waters from Wilmette Harbor to Michigan City out to Mid
+Lake...
+
+Winds will still gust to 30 kt for a time behind the cold front, so
+while a small craft advisory remains in effect, the front and no
+longer poses an additional significant threat to boaters.
+
+LAT...LON 4165 8743 4167 8742 4168 8743 4169 8750
+      4175 8753 4179 8758 4178 8758 4188 8762
+      4189 8760 4190 8762 4196 8764 4196 8763
+      4201 8766 4202 8758 4211 8760 4211 8753
+      4171 8731 4163 8736
+TIME...MOT...LOC 0228Z 013DEG 26KT 4157 8796
+
+$$
+
+Donofrio
+__",LMZ741,MA,W,,-1,2020-05-03 21:30:00-05,2020-05-03 20:06:00-05,f,f
 2020-05-03 19:44:00-05,2020-05-03 20:13:00-05,"
 015
 WUUS53 KUNR 040044
@@ -71589,6 +73818,267 @@ $$
 
 Carstens
 __",SDC071,SV,W,,-1,2020-05-03 22:00:00-05,2020-05-03 20:57:00-05,f,f
+2020-05-03 20:06:00-05,2020-05-03 21:30:00-05,"
+392
+WHUS53 KLOT 040106
+SMWLOT
+LMZ741>743-779-040230-
+/O.NEW.KLOT.MA.W.0011.200504T0106Z-200504T0230Z/
+
+BULLETIN - IMMEDIATE BROADCAST REQUESTED
+Special Marine Warning
+National Weather Service Chicago/Romeoville
+806 PM CDT Sun May 3 2020
+
+The National Weather Service in Chicago has issued a
+
+* Special Marine Warning for...
+
+  Nearshore Waters from Wilmette Harbor to Calumet Harbor...
+  Nearshore Waters from Calumet Harbor to Gary...
+  Open Waters from Wilmette Harbor to Michigan City out to Mid
+Lake...
+
+* Until 930 PM CDT.
+
+* At 806 PM CDT, a strong thunderstorm was located near Wilmette
+  Harbor, moving south at 25 knots.
+
+  HAZARD...Wind gusts 34 knots or greater.
+
+  SOURCE...Radar and observations indicated.
+
+  IMPACT...Small craft could be damaged in briefly higher winds and
+           suddenly higher waves.
+
+* Locations impacted include...
+  Calumet Harbor, Burnham Harbor, Jackson Park Harbor, 31st Street
+  Harbor, Montrose Harbor and Monroe Harbor.
+
+LAT...LON 4165 8743 4167 8742 4168 8743 4169 8750
+      4175 8753 4179 8758 4178 8758 4188 8762
+      4189 8760 4190 8762 4196 8764 4196 8763
+      4201 8766 4202 8758 4211 8760 4211 8753
+      4171 8731 4163 8736
+TIME...MOT...LOC 0106Z 013DEG 26KT 4211 8779
+
+HAIL...0.00IN
+WIND...>34KTS
+
+$$
+
+Donofrio
+",LOT,11,EXP,2020-05-03 21:29:00-05,Donofrio,"__
+565
+FZUS73 KLOT 040229
+MWSLOT
+
+Marine Weather Statement
+National Weather Service Chicago/Romeoville
+929 PM CDT Sun May 3 2020
+
+LMZ741>743-779-040238-
+/O.EXP.KLOT.MA.W.0011.000000T0000Z-200504T0230Z/
+929 PM CDT Sun May 3 2020
+
+...THE SPECIAL MARINE WARNING WILL EXPIRE AT 930 PM CDT...
+
+The affected areas were...
+
+  Nearshore Waters from Wilmette Harbor to Calumet Harbor...
+  Nearshore Waters from Calumet Harbor to Gary...
+  Open Waters from Wilmette Harbor to Michigan City out to Mid
+Lake...
+
+Winds will still gust to 30 kt for a time behind the cold front, so
+while a small craft advisory remains in effect, the front and no
+longer poses an additional significant threat to boaters.
+
+LAT...LON 4165 8743 4167 8742 4168 8743 4169 8750
+      4175 8753 4179 8758 4178 8758 4188 8762
+      4189 8760 4190 8762 4196 8764 4196 8763
+      4201 8766 4202 8758 4211 8760 4211 8753
+      4171 8731 4163 8736
+TIME...MOT...LOC 0228Z 013DEG 26KT 4157 8796
+
+$$
+
+Donofrio
+__",LMZ742,MA,W,,-1,2020-05-03 21:30:00-05,2020-05-03 20:06:00-05,f,f
+2020-05-03 20:06:00-05,2020-05-03 21:30:00-05,"
+392
+WHUS53 KLOT 040106
+SMWLOT
+LMZ741>743-779-040230-
+/O.NEW.KLOT.MA.W.0011.200504T0106Z-200504T0230Z/
+
+BULLETIN - IMMEDIATE BROADCAST REQUESTED
+Special Marine Warning
+National Weather Service Chicago/Romeoville
+806 PM CDT Sun May 3 2020
+
+The National Weather Service in Chicago has issued a
+
+* Special Marine Warning for...
+
+  Nearshore Waters from Wilmette Harbor to Calumet Harbor...
+  Nearshore Waters from Calumet Harbor to Gary...
+  Open Waters from Wilmette Harbor to Michigan City out to Mid
+Lake...
+
+* Until 930 PM CDT.
+
+* At 806 PM CDT, a strong thunderstorm was located near Wilmette
+  Harbor, moving south at 25 knots.
+
+  HAZARD...Wind gusts 34 knots or greater.
+
+  SOURCE...Radar and observations indicated.
+
+  IMPACT...Small craft could be damaged in briefly higher winds and
+           suddenly higher waves.
+
+* Locations impacted include...
+  Calumet Harbor, Burnham Harbor, Jackson Park Harbor, 31st Street
+  Harbor, Montrose Harbor and Monroe Harbor.
+
+LAT...LON 4165 8743 4167 8742 4168 8743 4169 8750
+      4175 8753 4179 8758 4178 8758 4188 8762
+      4189 8760 4190 8762 4196 8764 4196 8763
+      4201 8766 4202 8758 4211 8760 4211 8753
+      4171 8731 4163 8736
+TIME...MOT...LOC 0106Z 013DEG 26KT 4211 8779
+
+HAIL...0.00IN
+WIND...>34KTS
+
+$$
+
+Donofrio
+",LOT,11,EXP,2020-05-03 21:29:00-05,Donofrio,"__
+565
+FZUS73 KLOT 040229
+MWSLOT
+
+Marine Weather Statement
+National Weather Service Chicago/Romeoville
+929 PM CDT Sun May 3 2020
+
+LMZ741>743-779-040238-
+/O.EXP.KLOT.MA.W.0011.000000T0000Z-200504T0230Z/
+929 PM CDT Sun May 3 2020
+
+...THE SPECIAL MARINE WARNING WILL EXPIRE AT 930 PM CDT...
+
+The affected areas were...
+
+  Nearshore Waters from Wilmette Harbor to Calumet Harbor...
+  Nearshore Waters from Calumet Harbor to Gary...
+  Open Waters from Wilmette Harbor to Michigan City out to Mid
+Lake...
+
+Winds will still gust to 30 kt for a time behind the cold front, so
+while a small craft advisory remains in effect, the front and no
+longer poses an additional significant threat to boaters.
+
+LAT...LON 4165 8743 4167 8742 4168 8743 4169 8750
+      4175 8753 4179 8758 4178 8758 4188 8762
+      4189 8760 4190 8762 4196 8764 4196 8763
+      4201 8766 4202 8758 4211 8760 4211 8753
+      4171 8731 4163 8736
+TIME...MOT...LOC 0228Z 013DEG 26KT 4157 8796
+
+$$
+
+Donofrio
+__",LMZ743,MA,W,,-1,2020-05-03 21:30:00-05,2020-05-03 20:06:00-05,f,f
+2020-05-03 20:06:00-05,2020-05-03 21:30:00-05,"
+392
+WHUS53 KLOT 040106
+SMWLOT
+LMZ741>743-779-040230-
+/O.NEW.KLOT.MA.W.0011.200504T0106Z-200504T0230Z/
+
+BULLETIN - IMMEDIATE BROADCAST REQUESTED
+Special Marine Warning
+National Weather Service Chicago/Romeoville
+806 PM CDT Sun May 3 2020
+
+The National Weather Service in Chicago has issued a
+
+* Special Marine Warning for...
+
+  Nearshore Waters from Wilmette Harbor to Calumet Harbor...
+  Nearshore Waters from Calumet Harbor to Gary...
+  Open Waters from Wilmette Harbor to Michigan City out to Mid
+Lake...
+
+* Until 930 PM CDT.
+
+* At 806 PM CDT, a strong thunderstorm was located near Wilmette
+  Harbor, moving south at 25 knots.
+
+  HAZARD...Wind gusts 34 knots or greater.
+
+  SOURCE...Radar and observations indicated.
+
+  IMPACT...Small craft could be damaged in briefly higher winds and
+           suddenly higher waves.
+
+* Locations impacted include...
+  Calumet Harbor, Burnham Harbor, Jackson Park Harbor, 31st Street
+  Harbor, Montrose Harbor and Monroe Harbor.
+
+LAT...LON 4165 8743 4167 8742 4168 8743 4169 8750
+      4175 8753 4179 8758 4178 8758 4188 8762
+      4189 8760 4190 8762 4196 8764 4196 8763
+      4201 8766 4202 8758 4211 8760 4211 8753
+      4171 8731 4163 8736
+TIME...MOT...LOC 0106Z 013DEG 26KT 4211 8779
+
+HAIL...0.00IN
+WIND...>34KTS
+
+$$
+
+Donofrio
+",LOT,11,EXP,2020-05-03 21:29:00-05,Donofrio,"__
+565
+FZUS73 KLOT 040229
+MWSLOT
+
+Marine Weather Statement
+National Weather Service Chicago/Romeoville
+929 PM CDT Sun May 3 2020
+
+LMZ741>743-779-040238-
+/O.EXP.KLOT.MA.W.0011.000000T0000Z-200504T0230Z/
+929 PM CDT Sun May 3 2020
+
+...THE SPECIAL MARINE WARNING WILL EXPIRE AT 930 PM CDT...
+
+The affected areas were...
+
+  Nearshore Waters from Wilmette Harbor to Calumet Harbor...
+  Nearshore Waters from Calumet Harbor to Gary...
+  Open Waters from Wilmette Harbor to Michigan City out to Mid
+Lake...
+
+Winds will still gust to 30 kt for a time behind the cold front, so
+while a small craft advisory remains in effect, the front and no
+longer poses an additional significant threat to boaters.
+
+LAT...LON 4165 8743 4167 8742 4168 8743 4169 8750
+      4175 8753 4179 8758 4178 8758 4188 8762
+      4189 8760 4190 8762 4196 8764 4196 8763
+      4201 8766 4202 8758 4211 8760 4211 8753
+      4171 8731 4163 8736
+TIME...MOT...LOC 0228Z 013DEG 26KT 4157 8796
+
+$$
+
+Donofrio
+__",LMZ779,MA,W,,-1,2020-05-03 21:30:00-05,2020-05-03 20:06:00-05,f,f
 2020-05-03 20:57:00-05,2020-05-03 21:32:00-05,"
 207
 WUUS53 KUNR 040157
@@ -73441,6 +75931,525 @@ $$
 
 DHOF
 __",MDC037,SV,W,,-1,2020-05-03 23:00:00-05,2020-05-03 22:17:00-05,f,f
+2020-05-03 22:02:00-05,2020-05-03 23:05:00-05,"
+404
+WHUS51 KLWX 040302
+SMWLWX
+ANZ536-537-040430-
+/O.NEW.KLWX.MA.W.0062.200504T0302Z-200504T0430Z/
+
+BULLETIN - IMMEDIATE BROADCAST REQUESTED
+Special Marine Warning
+National Weather Service Baltimore MD/Washington DC
+1102 PM EDT Sun May 3 2020
+
+The National Weather Service in Sterling Virginia has issued a
+
+* Special Marine Warning for...
+  Tidal Potomac from Cobb Island MD to Smith Point VA...
+  Tidal Potomac from Indian Head to Cobb Island MD...
+
+* Until 1230 AM EDT.
+
+* At 1102 PM EDT, strong thunderstorms were located along a line
+  extending from Quantico to 16 nm southwest of Aquia Creek, moving
+  east at 40 knots.
+
+  HAZARD...Wind gusts 34 knots or greater.
+
+  SOURCE...Radar indicated.
+
+  IMPACT...Boaters in small craft could be thrown overboard by
+           suddenly higher winds and waves capsizing their vessel.
+
+* Locations impacted include...
+  Yeocomico River, Breton Bay, Nanjemoy Creek, Swan Point, Coltons
+  Point, Coles Point, Saint George Island, Popes Creek, Saint
+  Clements Bay, Piney Point, Mouth Of The Potomac River, Maryland
+  Point, Port Tobacco River, Colonial Beach, Leesylvania State Park,
+  Cobb Island, Point Lookout, Tall Timbers, Nomini Bay and Mathias
+  Point.
+
+PRECAUTIONARY/PREPAREDNESS ACTIONS...
+
+Move to safe harbor until hazardous weather passes.
+
+&&
+
+LAT...LON 3802 7651 3807 7654 3811 7660 3815 7661
+      3817 7686 3821 7695 3838 7706 3833 7729
+      3861 7727 3860 7712 3851 7725 3839 7723
+      3846 7701 3835 7696 3827 7684 3823 7659
+      3811 7647 3805 7633 3801 7629 3791 7627
+TIME...MOT...LOC 0302Z 271DEG 40KT 3852 7729 3826 7764
+
+HAIL...0.00IN
+WIND...>34KTS
+
+$$
+
+DHOF
+",LWX,62,CAN,2020-05-03 23:05:00-05,DHOF,"__
+665
+FZUS71 KLWX 040333
+MWSLWX
+
+Marine Weather Statement
+National Weather Service Baltimore MD/Washington DC
+1133 PM EDT Sun May 3 2020
+
+ANZ536-537-040430-
+/O.CON.KLWX.MA.W.0062.000000T0000Z-200504T0430Z/
+1133 PM EDT Sun May 3 2020
+
+...A SPECIAL MARINE WARNING REMAINS IN EFFECT UNTIL 1230 AM EDT...
+
+For the following areas...
+Tidal Potomac from Cobb Island MD to Smith Point VA...
+Tidal Potomac from Indian Head to Cobb Island MD...
+
+At 1133 PM EDT, severe thunderstorms were located along a line
+extending from 8 nm northeast of Port Tobacco River to near Colonial
+Beach, moving east at 45 knots.
+
+HAZARD...Wind gusts in excess of 50 knots.
+
+SOURCE...Radar indicated.
+
+IMPACT...Boaters could easily be thrown overboard by suddenly higher
+         wind and waves capsizing their vessel. Boats could suffer
+         significant damage in high winds.
+
+Locations impacted include...
+Yeocomico River, Breton Bay, Saint Clements Bay, Piney Point, Mouth
+Of The Potomac River, Maryland Point, Nanjemoy Creek, Port Tobacco
+River, Cobb Island, Point Lookout, Tall Timbers, Swan Point, Coltons
+Point, Nomini Bay, Mathias Point, Coles Point, U.S. 301 Nice Memorial
+Bridge, Saint George Island, Wicomico River and White Point Beach.
+
+PRECAUTIONARY/PREPAREDNESS ACTIONS...
+
+Move to safe harbor until hazardous weather passes.
+
+&&
+
+LAT...LON 3802 7651 3807 7654 3811 7660 3815 7661
+      3817 7686 3821 7695 3826 7696 3838 7706
+      3833 7729 3839 7723 3846 7701 3835 7696
+      3827 7684 3823 7659 3811 7647 3805 7633
+      3801 7629 3791 7627
+TIME...MOT...LOC 0333Z 271DEG 44KT 3852 7687 3820 7699
+
+HAIL...0.00IN
+WIND...50KTS
+
+$$
+
+DHOF
+__
+325
+FZUS71 KLWX 040340
+MWSLWX
+
+Marine Weather Statement
+National Weather Service Baltimore MD/Washington DC
+1140 PM EDT Sun May 3 2020
+
+ANZ536-537-040430-
+/O.CON.KLWX.MA.W.0062.000000T0000Z-200504T0430Z/
+1140 PM EDT Sun May 3 2020
+
+...A SPECIAL MARINE WARNING REMAINS IN EFFECT UNTIL 1230 AM EDT...
+
+For the following areas...
+Tidal Potomac from Cobb Island MD to Smith Point VA...
+Tidal Potomac from Indian Head to Cobb Island MD...
+
+At 1140 PM EDT, severe thunderstorms were located along a line
+extending from 12 nm northwest of Broomes Island to near Westmoreland
+State Park, moving east at 40 knots.
+
+HAZARD...Wind gusts in excess of 50 knots.
+
+SOURCE...Radar indicated and observed wind. Wind gusts to 41 knots
+         were reported at Cuckold Creek.
+
+IMPACT...Boaters could easily be thrown overboard by suddenly higher
+         wind and waves capsizing their vessel. Boats could suffer
+         significant damage in high winds.
+
+Locations impacted include...
+Yeocomico River, Breton Bay, Saint Clements Bay, Piney Point, Mouth
+Of The Potomac River, Cobb Island, Point Lookout, Tall Timbers, Swan
+Point, Coltons Point, Nomini Bay, Mathias Point, Coles Point, U.S.
+301 Nice Memorial Bridge, Saint George Island, Wicomico River, White
+Point Beach, Popes Creek and Westmoreland State Park.
+
+PRECAUTIONARY/PREPAREDNESS ACTIONS...
+
+Move to safe harbor until hazardous weather passes.
+
+&&
+
+LAT...LON 3802 7651 3807 7654 3811 7660 3815 7661
+      3817 7686 3821 7695 3826 7696 3838 7706
+      3846 7701 3835 7696 3827 7684 3823 7659
+      3811 7647 3805 7633 3801 7629 3791 7627
+TIME...MOT...LOC 0340Z 271DEG 40KT 3852 7678 3820 7690
+
+HAIL...0.00IN
+WIND...50KTS
+
+$$
+
+DHOF
+__
+978
+FZUS71 KLWX 040405
+MWSLWX
+
+Marine Weather Statement
+National Weather Service Baltimore MD/Washington DC
+1205 AM EDT Mon May 4 2020
+
+ANZ536-040415-
+/O.CAN.KLWX.MA.W.0062.000000T0000Z-200504T0430Z/
+1205 AM EDT Mon May 4 2020
+
+...THE SPECIAL MARINE WARNING IS CANCELLED...
+
+The affected areas were...
+Tidal Potomac from Indian Head to Cobb Island MD...
+
+The front has moved out of the warned area and no longer poses a
+significant threat to boaters.
+
+LAT...LON 3799 7644 3801 7647 3802 7651 3805 7652
+      3806 7654 3807 7654 3811 7660 3815 7661
+      3816 7673 3824 7668 3823 7659 3815 7652
+      3811 7647 3805 7633 3801 7629 3791 7627
+TIME...MOT...LOC 0405Z 271DEG 40KT 3851 7645 3820 7657
+
+$$
+
+ANZ537-040430-
+/O.CON.KLWX.MA.W.0062.000000T0000Z-200504T0430Z/
+1205 AM EDT Mon May 4 2020
+
+...A SPECIAL MARINE WARNING REMAINS IN EFFECT UNTIL 1230 AM EDT...
+
+For the following areas...
+Tidal Potomac from Cobb Island MD to Smith Point VA...
+
+At 1205 AM EDT, a front was located along a line extending from near
+Flag Harbor to near Tall Timbers, moving east at 40 knots.
+
+HAZARD...Wind gusts 34 knots or greater.
+
+SOURCE...Radar Indicated.
+
+IMPACT...Boaters in small craft could be thrown overboard by
+         suddenly higher winds and waves capsizing their vessel.
+
+Locations impacted include...
+Yeocomico River, Point Lookout, Tall Timbers, Nomini Bay, Coles
+Point, Piney Point, Mouth Of The Potomac River, Saint George Island
+and White Point Beach.
+
+PRECAUTIONARY/PREPAREDNESS ACTIONS...
+
+Move to safe harbor until hazardous weather passes.
+
+&&
+
+LAT...LON 3799 7644 3801 7647 3802 7651 3805 7652
+      3806 7654 3807 7654 3811 7660 3815 7661
+      3816 7673 3824 7668 3823 7659 3815 7652
+      3811 7647 3805 7633 3801 7629 3791 7627
+TIME...MOT...LOC 0405Z 271DEG 40KT 3851 7645 3820 7657
+
+HAIL...0.00IN
+WIND...>34KTS
+
+$$
+
+DHOF
+__",ANZ536,MA,W,,-1,2020-05-03 23:30:00-05,2020-05-03 22:02:00-05,f,f
+2020-05-03 22:02:00-05,2020-05-03 23:30:00-05,"
+404
+WHUS51 KLWX 040302
+SMWLWX
+ANZ536-537-040430-
+/O.NEW.KLWX.MA.W.0062.200504T0302Z-200504T0430Z/
+
+BULLETIN - IMMEDIATE BROADCAST REQUESTED
+Special Marine Warning
+National Weather Service Baltimore MD/Washington DC
+1102 PM EDT Sun May 3 2020
+
+The National Weather Service in Sterling Virginia has issued a
+
+* Special Marine Warning for...
+  Tidal Potomac from Cobb Island MD to Smith Point VA...
+  Tidal Potomac from Indian Head to Cobb Island MD...
+
+* Until 1230 AM EDT.
+
+* At 1102 PM EDT, strong thunderstorms were located along a line
+  extending from Quantico to 16 nm southwest of Aquia Creek, moving
+  east at 40 knots.
+
+  HAZARD...Wind gusts 34 knots or greater.
+
+  SOURCE...Radar indicated.
+
+  IMPACT...Boaters in small craft could be thrown overboard by
+           suddenly higher winds and waves capsizing their vessel.
+
+* Locations impacted include...
+  Yeocomico River, Breton Bay, Nanjemoy Creek, Swan Point, Coltons
+  Point, Coles Point, Saint George Island, Popes Creek, Saint
+  Clements Bay, Piney Point, Mouth Of The Potomac River, Maryland
+  Point, Port Tobacco River, Colonial Beach, Leesylvania State Park,
+  Cobb Island, Point Lookout, Tall Timbers, Nomini Bay and Mathias
+  Point.
+
+PRECAUTIONARY/PREPAREDNESS ACTIONS...
+
+Move to safe harbor until hazardous weather passes.
+
+&&
+
+LAT...LON 3802 7651 3807 7654 3811 7660 3815 7661
+      3817 7686 3821 7695 3838 7706 3833 7729
+      3861 7727 3860 7712 3851 7725 3839 7723
+      3846 7701 3835 7696 3827 7684 3823 7659
+      3811 7647 3805 7633 3801 7629 3791 7627
+TIME...MOT...LOC 0302Z 271DEG 40KT 3852 7729 3826 7764
+
+HAIL...0.00IN
+WIND...>34KTS
+
+$$
+
+DHOF
+",LWX,62,EXP,2020-05-03 23:23:00-05,DHOF,"__
+665
+FZUS71 KLWX 040333
+MWSLWX
+
+Marine Weather Statement
+National Weather Service Baltimore MD/Washington DC
+1133 PM EDT Sun May 3 2020
+
+ANZ536-537-040430-
+/O.CON.KLWX.MA.W.0062.000000T0000Z-200504T0430Z/
+1133 PM EDT Sun May 3 2020
+
+...A SPECIAL MARINE WARNING REMAINS IN EFFECT UNTIL 1230 AM EDT...
+
+For the following areas...
+Tidal Potomac from Cobb Island MD to Smith Point VA...
+Tidal Potomac from Indian Head to Cobb Island MD...
+
+At 1133 PM EDT, severe thunderstorms were located along a line
+extending from 8 nm northeast of Port Tobacco River to near Colonial
+Beach, moving east at 45 knots.
+
+HAZARD...Wind gusts in excess of 50 knots.
+
+SOURCE...Radar indicated.
+
+IMPACT...Boaters could easily be thrown overboard by suddenly higher
+         wind and waves capsizing their vessel. Boats could suffer
+         significant damage in high winds.
+
+Locations impacted include...
+Yeocomico River, Breton Bay, Saint Clements Bay, Piney Point, Mouth
+Of The Potomac River, Maryland Point, Nanjemoy Creek, Port Tobacco
+River, Cobb Island, Point Lookout, Tall Timbers, Swan Point, Coltons
+Point, Nomini Bay, Mathias Point, Coles Point, U.S. 301 Nice Memorial
+Bridge, Saint George Island, Wicomico River and White Point Beach.
+
+PRECAUTIONARY/PREPAREDNESS ACTIONS...
+
+Move to safe harbor until hazardous weather passes.
+
+&&
+
+LAT...LON 3802 7651 3807 7654 3811 7660 3815 7661
+      3817 7686 3821 7695 3826 7696 3838 7706
+      3833 7729 3839 7723 3846 7701 3835 7696
+      3827 7684 3823 7659 3811 7647 3805 7633
+      3801 7629 3791 7627
+TIME...MOT...LOC 0333Z 271DEG 44KT 3852 7687 3820 7699
+
+HAIL...0.00IN
+WIND...50KTS
+
+$$
+
+DHOF
+__
+325
+FZUS71 KLWX 040340
+MWSLWX
+
+Marine Weather Statement
+National Weather Service Baltimore MD/Washington DC
+1140 PM EDT Sun May 3 2020
+
+ANZ536-537-040430-
+/O.CON.KLWX.MA.W.0062.000000T0000Z-200504T0430Z/
+1140 PM EDT Sun May 3 2020
+
+...A SPECIAL MARINE WARNING REMAINS IN EFFECT UNTIL 1230 AM EDT...
+
+For the following areas...
+Tidal Potomac from Cobb Island MD to Smith Point VA...
+Tidal Potomac from Indian Head to Cobb Island MD...
+
+At 1140 PM EDT, severe thunderstorms were located along a line
+extending from 12 nm northwest of Broomes Island to near Westmoreland
+State Park, moving east at 40 knots.
+
+HAZARD...Wind gusts in excess of 50 knots.
+
+SOURCE...Radar indicated and observed wind. Wind gusts to 41 knots
+         were reported at Cuckold Creek.
+
+IMPACT...Boaters could easily be thrown overboard by suddenly higher
+         wind and waves capsizing their vessel. Boats could suffer
+         significant damage in high winds.
+
+Locations impacted include...
+Yeocomico River, Breton Bay, Saint Clements Bay, Piney Point, Mouth
+Of The Potomac River, Cobb Island, Point Lookout, Tall Timbers, Swan
+Point, Coltons Point, Nomini Bay, Mathias Point, Coles Point, U.S.
+301 Nice Memorial Bridge, Saint George Island, Wicomico River, White
+Point Beach, Popes Creek and Westmoreland State Park.
+
+PRECAUTIONARY/PREPAREDNESS ACTIONS...
+
+Move to safe harbor until hazardous weather passes.
+
+&&
+
+LAT...LON 3802 7651 3807 7654 3811 7660 3815 7661
+      3817 7686 3821 7695 3826 7696 3838 7706
+      3846 7701 3835 7696 3827 7684 3823 7659
+      3811 7647 3805 7633 3801 7629 3791 7627
+TIME...MOT...LOC 0340Z 271DEG 40KT 3852 7678 3820 7690
+
+HAIL...0.00IN
+WIND...50KTS
+
+$$
+
+DHOF
+__
+978
+FZUS71 KLWX 040405
+MWSLWX
+
+Marine Weather Statement
+National Weather Service Baltimore MD/Washington DC
+1205 AM EDT Mon May 4 2020
+
+ANZ536-040415-
+/O.CAN.KLWX.MA.W.0062.000000T0000Z-200504T0430Z/
+1205 AM EDT Mon May 4 2020
+
+...THE SPECIAL MARINE WARNING IS CANCELLED...
+
+The affected areas were...
+Tidal Potomac from Indian Head to Cobb Island MD...
+
+The front has moved out of the warned area and no longer poses a
+significant threat to boaters.
+
+LAT...LON 3799 7644 3801 7647 3802 7651 3805 7652
+      3806 7654 3807 7654 3811 7660 3815 7661
+      3816 7673 3824 7668 3823 7659 3815 7652
+      3811 7647 3805 7633 3801 7629 3791 7627
+TIME...MOT...LOC 0405Z 271DEG 40KT 3851 7645 3820 7657
+
+$$
+
+ANZ537-040430-
+/O.CON.KLWX.MA.W.0062.000000T0000Z-200504T0430Z/
+1205 AM EDT Mon May 4 2020
+
+...A SPECIAL MARINE WARNING REMAINS IN EFFECT UNTIL 1230 AM EDT...
+
+For the following areas...
+Tidal Potomac from Cobb Island MD to Smith Point VA...
+
+At 1205 AM EDT, a front was located along a line extending from near
+Flag Harbor to near Tall Timbers, moving east at 40 knots.
+
+HAZARD...Wind gusts 34 knots or greater.
+
+SOURCE...Radar Indicated.
+
+IMPACT...Boaters in small craft could be thrown overboard by
+         suddenly higher winds and waves capsizing their vessel.
+
+Locations impacted include...
+Yeocomico River, Point Lookout, Tall Timbers, Nomini Bay, Coles
+Point, Piney Point, Mouth Of The Potomac River, Saint George Island
+and White Point Beach.
+
+PRECAUTIONARY/PREPAREDNESS ACTIONS...
+
+Move to safe harbor until hazardous weather passes.
+
+&&
+
+LAT...LON 3799 7644 3801 7647 3802 7651 3805 7652
+      3806 7654 3807 7654 3811 7660 3815 7661
+      3816 7673 3824 7668 3823 7659 3815 7652
+      3811 7647 3805 7633 3801 7629 3791 7627
+TIME...MOT...LOC 0405Z 271DEG 40KT 3851 7645 3820 7657
+
+HAIL...0.00IN
+WIND...>34KTS
+
+$$
+
+DHOF
+__
+784
+FZUS71 KLWX 040423
+MWSLWX
+
+Marine Weather Statement
+National Weather Service Baltimore MD/Washington DC
+1223 AM EDT Mon May 4 2020
+
+ANZ537-040432-
+/O.EXP.KLWX.MA.W.0062.000000T0000Z-200504T0430Z/
+1223 AM EDT Mon May 4 2020
+
+...THE SPECIAL MARINE WARNING WILL EXPIRE AT 1230 AM EDT...
+
+The affected areas were...
+Tidal Potomac from Cobb Island MD to Smith Point VA...
+
+The thunderstorms have moved out of the area and no longer pose a
+significant threat to boaters. Gusty winds to around 30 knots will
+remain possible over the next hour.
+
+LAT...LON 3799 7644 3801 7647 3802 7651 3805 7652
+      3806 7654 3807 7654 3811 7660 3815 7661
+      3816 7673 3824 7668 3823 7659 3815 7652
+      3811 7647 3805 7633 3801 7629 3791 7627
+TIME...MOT...LOC 0422Z 271DEG 40KT 3851 7622 3820 7634
+
+$$
+
+BKF
+__",ANZ537,MA,W,,-1,2020-05-03 23:30:00-05,2020-05-03 22:02:00-05,f,f
 2020-05-03 22:32:00-05,2020-05-03 23:00:00-05,"
 000
 WUUS53 KGLD 040332
@@ -74255,6 +77264,292 @@ $$
 
 DHOF
 __",MDC017,SV,W,,-1,2020-05-03 23:00:00-05,2020-05-03 22:17:00-05,f,f
+2020-05-03 22:45:00-05,2020-05-03 23:09:00-05,"
+758
+WHUS51 KPHI 040345
+SMWPHI
+ANZ431-453>455-473-475-040445-
+/O.NEW.KPHI.MA.W.0023.200504T0345Z-200504T0445Z/
+
+BULLETIN - IMMEDIATE BROADCAST REQUESTED
+Special Marine Warning
+National Weather Service Mount Holly NJ
+1145 PM EDT Sun May 3 2020
+
+The National Weather Service in Mount Holly NJ has issued a
+
+* Special Marine Warning for...
+  Lower Delaware Bay...
+  Coastal and outer waters from Great Egg Inlet NJ to Fenwick Island
+  DE...
+
+* Until 1245 AM EDT.
+
+* At 1145 PM EDT, strong thunderstorms were located along a line
+  extending from near Slaughter Beach to 7 nm southwest of Cape
+  Henlopen to 18 nm west of Indian River Inlet Bridge, moving east at
+  35 knots.
+
+  HAZARD...Wind gusts 34 knots or greater.
+
+  SOURCE...Radar.
+
+  IMPACT...Small craft could be damaged in briefly higher winds and
+           suddenly higher waves.
+
+* Locations impacted include...
+  Five Fathoms Buoy, Buoy 2fb, Brown Shoal Light, Fenwick Island,
+  Buoy 4fb, Buoy 3fb, Cape Henlopen, Rehoboth Beach, Cape May Point,
+  Indian River Inlet Bridge, Wildwood, Overfalls Shoal, 28-
+  Mile Wreck, Cape May Reef, Bethany Beach, Delaware Lightship Buoy
+  44009, Buoy 2ms and Wildwood Reef.
+
+PRECAUTIONARY/PREPAREDNESS ACTIONS...
+
+Protecting yourself from immediate threats to life and safety shall
+take priority.  Whenever possible, as long as it does not cause
+greater harm, all COVID-19 protective action guidance should be
+followed.
+
+Move to safe harbor immediately as gusty winds and high waves are
+expected.
+
+&&
+
+LAT...LON 3843 7496 3846 7504 3845 7510 3851 7511
+      3852 7513 3850 7522 3856 7533 3861 7534
+      3863 7531 3864 7524 3872 7524 3875 7520
+      3876 7530 3896 7526 3910 7425 3876 7427
+      3841 7466
+TIME...MOT...LOC 0345Z 268DEG 36KT 3889 7521 3875 7523 3860 7546
+
+HAIL...0.00IN
+WIND...>34KTS
+
+$$
+
+Robertson
+",PHI,23,CAN,2020-05-03 23:09:00-05,Robertson,"__
+737
+FZUS71 KPHI 040409
+MWSPHI
+
+Marine Weather Statement
+National Weather Service Mount Holly NJ
+1209 AM EDT Mon May 4 2020
+
+ANZ431-453-040418-
+/O.CAN.KPHI.MA.W.0023.000000T0000Z-200504T0445Z/
+1209 AM EDT Mon May 4 2020
+
+...THE SPECIAL MARINE WARNING IS CANCELLED...
+
+The affected areas were...
+Lower Delaware Bay...
+Coastal waters from Great Egg Inlet to Cape May NJ out 20 nm...
+
+The thunderstorms have moved out of the warned area
+and no longer pose a significant threat to boaters.
+
+LAT...LON 3843 7496 3854 7515 3888 7498 3877 7427
+      3876 7427 3841 7466
+TIME...MOT...LOC 0408Z 287DEG 37KT 3879 7493 3865 7495 3850 7518
+
+$$
+
+ANZ454-455-473-475-040445-
+/O.CON.KPHI.MA.W.0023.000000T0000Z-200504T0445Z/
+1209 AM EDT Mon May 4 2020
+
+...A SPECIAL MARINE WARNING REMAINS IN EFFECT UNTIL 1245 AM EDT...
+
+For the following areas...
+Coastal waters from Cape Henlopen to Fenwick Island DE out 20 nm...
+Coastal waters from Cape May NJ to Cape Henlopen DE out 20 nm...
+Waters from Cape May NJ to Fenwick Island DE out 20 to 40 nm...
+Waters from Great Egg Inlet NJ to Cape May NJ out 20 to 40 nm...
+
+At 1208 AM EDT, severe thunderstorms were located along a line
+extending from near Buoy 2ms to near Indian River Inlet Bridge to
+near Bethany Beach, moving east at 35 knots.
+
+HAZARD...Wind gusts in excess of 50 knots.
+
+SOURCE...Radar indicated.
+
+IMPACT...Boats could suffer significant structural damage in high
+         winds. Small craft could capsize in suddenly higher waves.
+
+Locations impacted include...
+Five Fathoms Buoy, Bethany Beach, Delaware Lightship Buoy 44009, Buoy
+2ms, Buoy 4fb and Indian River Inlet Bridge.
+
+PRECAUTIONARY/PREPAREDNESS ACTIONS...
+
+Protecting yourself from immediate threats to life and safety shall
+take priority.  Whenever possible, as long as it does not cause
+greater harm, all COVID-19 protective action guidance should be
+followed.
+
+Move to safe harbor immediately as gusty winds and high waves are
+expected.
+
+&&
+
+LAT...LON 3843 7496 3854 7515 3888 7498 3877 7427
+      3876 7427 3841 7466
+TIME...MOT...LOC 0408Z 287DEG 37KT 3879 7493 3865 7495 3850 7518
+
+HAIL...0.00IN
+WIND...50KTS
+
+$$
+
+Robertson
+__",ANZ431,MA,W,,-1,2020-05-03 23:45:00-05,2020-05-03 22:45:00-05,f,f
+2020-05-03 22:45:00-05,2020-05-03 23:09:00-05,"
+758
+WHUS51 KPHI 040345
+SMWPHI
+ANZ431-453>455-473-475-040445-
+/O.NEW.KPHI.MA.W.0023.200504T0345Z-200504T0445Z/
+
+BULLETIN - IMMEDIATE BROADCAST REQUESTED
+Special Marine Warning
+National Weather Service Mount Holly NJ
+1145 PM EDT Sun May 3 2020
+
+The National Weather Service in Mount Holly NJ has issued a
+
+* Special Marine Warning for...
+  Lower Delaware Bay...
+  Coastal and outer waters from Great Egg Inlet NJ to Fenwick Island
+  DE...
+
+* Until 1245 AM EDT.
+
+* At 1145 PM EDT, strong thunderstorms were located along a line
+  extending from near Slaughter Beach to 7 nm southwest of Cape
+  Henlopen to 18 nm west of Indian River Inlet Bridge, moving east at
+  35 knots.
+
+  HAZARD...Wind gusts 34 knots or greater.
+
+  SOURCE...Radar.
+
+  IMPACT...Small craft could be damaged in briefly higher winds and
+           suddenly higher waves.
+
+* Locations impacted include...
+  Five Fathoms Buoy, Buoy 2fb, Brown Shoal Light, Fenwick Island,
+  Buoy 4fb, Buoy 3fb, Cape Henlopen, Rehoboth Beach, Cape May Point,
+  Indian River Inlet Bridge, Wildwood, Overfalls Shoal, 28-
+  Mile Wreck, Cape May Reef, Bethany Beach, Delaware Lightship Buoy
+  44009, Buoy 2ms and Wildwood Reef.
+
+PRECAUTIONARY/PREPAREDNESS ACTIONS...
+
+Protecting yourself from immediate threats to life and safety shall
+take priority.  Whenever possible, as long as it does not cause
+greater harm, all COVID-19 protective action guidance should be
+followed.
+
+Move to safe harbor immediately as gusty winds and high waves are
+expected.
+
+&&
+
+LAT...LON 3843 7496 3846 7504 3845 7510 3851 7511
+      3852 7513 3850 7522 3856 7533 3861 7534
+      3863 7531 3864 7524 3872 7524 3875 7520
+      3876 7530 3896 7526 3910 7425 3876 7427
+      3841 7466
+TIME...MOT...LOC 0345Z 268DEG 36KT 3889 7521 3875 7523 3860 7546
+
+HAIL...0.00IN
+WIND...>34KTS
+
+$$
+
+Robertson
+",PHI,23,CAN,2020-05-03 23:09:00-05,Robertson,"__
+737
+FZUS71 KPHI 040409
+MWSPHI
+
+Marine Weather Statement
+National Weather Service Mount Holly NJ
+1209 AM EDT Mon May 4 2020
+
+ANZ431-453-040418-
+/O.CAN.KPHI.MA.W.0023.000000T0000Z-200504T0445Z/
+1209 AM EDT Mon May 4 2020
+
+...THE SPECIAL MARINE WARNING IS CANCELLED...
+
+The affected areas were...
+Lower Delaware Bay...
+Coastal waters from Great Egg Inlet to Cape May NJ out 20 nm...
+
+The thunderstorms have moved out of the warned area
+and no longer pose a significant threat to boaters.
+
+LAT...LON 3843 7496 3854 7515 3888 7498 3877 7427
+      3876 7427 3841 7466
+TIME...MOT...LOC 0408Z 287DEG 37KT 3879 7493 3865 7495 3850 7518
+
+$$
+
+ANZ454-455-473-475-040445-
+/O.CON.KPHI.MA.W.0023.000000T0000Z-200504T0445Z/
+1209 AM EDT Mon May 4 2020
+
+...A SPECIAL MARINE WARNING REMAINS IN EFFECT UNTIL 1245 AM EDT...
+
+For the following areas...
+Coastal waters from Cape Henlopen to Fenwick Island DE out 20 nm...
+Coastal waters from Cape May NJ to Cape Henlopen DE out 20 nm...
+Waters from Cape May NJ to Fenwick Island DE out 20 to 40 nm...
+Waters from Great Egg Inlet NJ to Cape May NJ out 20 to 40 nm...
+
+At 1208 AM EDT, severe thunderstorms were located along a line
+extending from near Buoy 2ms to near Indian River Inlet Bridge to
+near Bethany Beach, moving east at 35 knots.
+
+HAZARD...Wind gusts in excess of 50 knots.
+
+SOURCE...Radar indicated.
+
+IMPACT...Boats could suffer significant structural damage in high
+         winds. Small craft could capsize in suddenly higher waves.
+
+Locations impacted include...
+Five Fathoms Buoy, Bethany Beach, Delaware Lightship Buoy 44009, Buoy
+2ms, Buoy 4fb and Indian River Inlet Bridge.
+
+PRECAUTIONARY/PREPAREDNESS ACTIONS...
+
+Protecting yourself from immediate threats to life and safety shall
+take priority.  Whenever possible, as long as it does not cause
+greater harm, all COVID-19 protective action guidance should be
+followed.
+
+Move to safe harbor immediately as gusty winds and high waves are
+expected.
+
+&&
+
+LAT...LON 3843 7496 3854 7515 3888 7498 3877 7427
+      3876 7427 3841 7466
+TIME...MOT...LOC 0408Z 287DEG 37KT 3879 7493 3865 7495 3850 7518
+
+HAIL...0.00IN
+WIND...50KTS
+
+$$
+
+Robertson
+__",ANZ453,MA,W,,-1,2020-05-03 23:45:00-05,2020-05-03 22:45:00-05,f,f
 2020-05-03 22:46:00-05,2020-05-03 23:15:00-05,"
 326
 WUUS55 KBOU 040346
@@ -74333,6 +77628,1115 @@ $$
 
 RPK
 __",COC073,SV,W,,-1,2020-05-03 23:15:00-05,2020-05-03 22:46:00-05,f,f
+2020-05-03 22:45:00-05,2020-05-03 23:45:00-05,"
+758
+WHUS51 KPHI 040345
+SMWPHI
+ANZ431-453>455-473-475-040445-
+/O.NEW.KPHI.MA.W.0023.200504T0345Z-200504T0445Z/
+
+BULLETIN - IMMEDIATE BROADCAST REQUESTED
+Special Marine Warning
+National Weather Service Mount Holly NJ
+1145 PM EDT Sun May 3 2020
+
+The National Weather Service in Mount Holly NJ has issued a
+
+* Special Marine Warning for...
+  Lower Delaware Bay...
+  Coastal and outer waters from Great Egg Inlet NJ to Fenwick Island
+  DE...
+
+* Until 1245 AM EDT.
+
+* At 1145 PM EDT, strong thunderstorms were located along a line
+  extending from near Slaughter Beach to 7 nm southwest of Cape
+  Henlopen to 18 nm west of Indian River Inlet Bridge, moving east at
+  35 knots.
+
+  HAZARD...Wind gusts 34 knots or greater.
+
+  SOURCE...Radar.
+
+  IMPACT...Small craft could be damaged in briefly higher winds and
+           suddenly higher waves.
+
+* Locations impacted include...
+  Five Fathoms Buoy, Buoy 2fb, Brown Shoal Light, Fenwick Island,
+  Buoy 4fb, Buoy 3fb, Cape Henlopen, Rehoboth Beach, Cape May Point,
+  Indian River Inlet Bridge, Wildwood, Overfalls Shoal, 28-
+  Mile Wreck, Cape May Reef, Bethany Beach, Delaware Lightship Buoy
+  44009, Buoy 2ms and Wildwood Reef.
+
+PRECAUTIONARY/PREPAREDNESS ACTIONS...
+
+Protecting yourself from immediate threats to life and safety shall
+take priority.  Whenever possible, as long as it does not cause
+greater harm, all COVID-19 protective action guidance should be
+followed.
+
+Move to safe harbor immediately as gusty winds and high waves are
+expected.
+
+&&
+
+LAT...LON 3843 7496 3846 7504 3845 7510 3851 7511
+      3852 7513 3850 7522 3856 7533 3861 7534
+      3863 7531 3864 7524 3872 7524 3875 7520
+      3876 7530 3896 7526 3910 7425 3876 7427
+      3841 7466
+TIME...MOT...LOC 0345Z 268DEG 36KT 3889 7521 3875 7523 3860 7546
+
+HAIL...0.00IN
+WIND...>34KTS
+
+$$
+
+Robertson
+",PHI,23,CON,2020-05-03 23:24:00-05,Robertson,"__
+737
+FZUS71 KPHI 040409
+MWSPHI
+
+Marine Weather Statement
+National Weather Service Mount Holly NJ
+1209 AM EDT Mon May 4 2020
+
+ANZ431-453-040418-
+/O.CAN.KPHI.MA.W.0023.000000T0000Z-200504T0445Z/
+1209 AM EDT Mon May 4 2020
+
+...THE SPECIAL MARINE WARNING IS CANCELLED...
+
+The affected areas were...
+Lower Delaware Bay...
+Coastal waters from Great Egg Inlet to Cape May NJ out 20 nm...
+
+The thunderstorms have moved out of the warned area
+and no longer pose a significant threat to boaters.
+
+LAT...LON 3843 7496 3854 7515 3888 7498 3877 7427
+      3876 7427 3841 7466
+TIME...MOT...LOC 0408Z 287DEG 37KT 3879 7493 3865 7495 3850 7518
+
+$$
+
+ANZ454-455-473-475-040445-
+/O.CON.KPHI.MA.W.0023.000000T0000Z-200504T0445Z/
+1209 AM EDT Mon May 4 2020
+
+...A SPECIAL MARINE WARNING REMAINS IN EFFECT UNTIL 1245 AM EDT...
+
+For the following areas...
+Coastal waters from Cape Henlopen to Fenwick Island DE out 20 nm...
+Coastal waters from Cape May NJ to Cape Henlopen DE out 20 nm...
+Waters from Cape May NJ to Fenwick Island DE out 20 to 40 nm...
+Waters from Great Egg Inlet NJ to Cape May NJ out 20 to 40 nm...
+
+At 1208 AM EDT, severe thunderstorms were located along a line
+extending from near Buoy 2ms to near Indian River Inlet Bridge to
+near Bethany Beach, moving east at 35 knots.
+
+HAZARD...Wind gusts in excess of 50 knots.
+
+SOURCE...Radar indicated.
+
+IMPACT...Boats could suffer significant structural damage in high
+         winds. Small craft could capsize in suddenly higher waves.
+
+Locations impacted include...
+Five Fathoms Buoy, Bethany Beach, Delaware Lightship Buoy 44009, Buoy
+2ms, Buoy 4fb and Indian River Inlet Bridge.
+
+PRECAUTIONARY/PREPAREDNESS ACTIONS...
+
+Protecting yourself from immediate threats to life and safety shall
+take priority.  Whenever possible, as long as it does not cause
+greater harm, all COVID-19 protective action guidance should be
+followed.
+
+Move to safe harbor immediately as gusty winds and high waves are
+expected.
+
+&&
+
+LAT...LON 3843 7496 3854 7515 3888 7498 3877 7427
+      3876 7427 3841 7466
+TIME...MOT...LOC 0408Z 287DEG 37KT 3879 7493 3865 7495 3850 7518
+
+HAIL...0.00IN
+WIND...50KTS
+
+$$
+
+Robertson
+__
+547
+FZUS71 KPHI 040424
+MWSPHI
+
+Marine Weather Statement
+National Weather Service Mount Holly NJ
+1224 AM EDT Mon May 4 2020
+
+ANZ454-455-473-475-040445-
+/O.CON.KPHI.MA.W.0023.000000T0000Z-200504T0445Z/
+1224 AM EDT Mon May 4 2020
+
+...A SPECIAL MARINE WARNING REMAINS IN EFFECT UNTIL 1245 AM EDT...
+
+For the following areas...
+Coastal waters from Cape Henlopen to Fenwick Island DE out 20 nm...
+Coastal waters from Cape May NJ to Cape Henlopen DE out 20 nm...
+Waters from Cape May NJ to Fenwick Island DE out 20 to 40 nm...
+Waters from Great Egg Inlet NJ to Cape May NJ out 20 to 40 nm...
+
+At 1223 AM EDT, severe thunderstorms were located along a line
+extending from near Buoy 4fb to 9 nm southwest of Five Fathoms Buoy
+to 6 nm northeast of Fenwick Island, moving east at 40 knots.
+
+HAZARD...Wind gusts in excess of 50 knots and large hail.
+
+SOURCE...Radar indicated.
+
+IMPACT...Boats could suffer significant structural damage in high
+         winds and hail. Small craft could capsize in suddenly
+         higher waves.
+
+Locations impacted include...
+Buoy 4fb, Five Fathoms Buoy and Delaware Lightship Buoy 44009.
+
+PRECAUTIONARY/PREPAREDNESS ACTIONS...
+
+Protecting yourself from immediate threats to life and safety shall
+take priority.  Whenever possible, as long as it does not cause
+greater harm, all COVID-19 protective action guidance should be
+followed.
+
+Move to safe harbor immediately as gusty winds and high waves are
+expected.
+
+&&
+
+LAT...LON 3844 7498 3855 7500 3869 7480 3884 7474
+      3877 7427 3876 7427 3841 7466 3843 7496
+TIME...MOT...LOC 0423Z 282DEG 40KT 3879 7468 3865 7471 3850 7494
+
+HAIL...>.75IN
+WIND...50KTS
+
+$$
+
+Robertson
+__",ANZ454,MA,W,,-1,2020-05-03 23:45:00-05,2020-05-03 22:45:00-05,f,f
+2020-05-03 22:45:00-05,2020-05-03 23:45:00-05,"
+758
+WHUS51 KPHI 040345
+SMWPHI
+ANZ431-453>455-473-475-040445-
+/O.NEW.KPHI.MA.W.0023.200504T0345Z-200504T0445Z/
+
+BULLETIN - IMMEDIATE BROADCAST REQUESTED
+Special Marine Warning
+National Weather Service Mount Holly NJ
+1145 PM EDT Sun May 3 2020
+
+The National Weather Service in Mount Holly NJ has issued a
+
+* Special Marine Warning for...
+  Lower Delaware Bay...
+  Coastal and outer waters from Great Egg Inlet NJ to Fenwick Island
+  DE...
+
+* Until 1245 AM EDT.
+
+* At 1145 PM EDT, strong thunderstorms were located along a line
+  extending from near Slaughter Beach to 7 nm southwest of Cape
+  Henlopen to 18 nm west of Indian River Inlet Bridge, moving east at
+  35 knots.
+
+  HAZARD...Wind gusts 34 knots or greater.
+
+  SOURCE...Radar.
+
+  IMPACT...Small craft could be damaged in briefly higher winds and
+           suddenly higher waves.
+
+* Locations impacted include...
+  Five Fathoms Buoy, Buoy 2fb, Brown Shoal Light, Fenwick Island,
+  Buoy 4fb, Buoy 3fb, Cape Henlopen, Rehoboth Beach, Cape May Point,
+  Indian River Inlet Bridge, Wildwood, Overfalls Shoal, 28-
+  Mile Wreck, Cape May Reef, Bethany Beach, Delaware Lightship Buoy
+  44009, Buoy 2ms and Wildwood Reef.
+
+PRECAUTIONARY/PREPAREDNESS ACTIONS...
+
+Protecting yourself from immediate threats to life and safety shall
+take priority.  Whenever possible, as long as it does not cause
+greater harm, all COVID-19 protective action guidance should be
+followed.
+
+Move to safe harbor immediately as gusty winds and high waves are
+expected.
+
+&&
+
+LAT...LON 3843 7496 3846 7504 3845 7510 3851 7511
+      3852 7513 3850 7522 3856 7533 3861 7534
+      3863 7531 3864 7524 3872 7524 3875 7520
+      3876 7530 3896 7526 3910 7425 3876 7427
+      3841 7466
+TIME...MOT...LOC 0345Z 268DEG 36KT 3889 7521 3875 7523 3860 7546
+
+HAIL...0.00IN
+WIND...>34KTS
+
+$$
+
+Robertson
+",PHI,23,CON,2020-05-03 23:24:00-05,Robertson,"__
+737
+FZUS71 KPHI 040409
+MWSPHI
+
+Marine Weather Statement
+National Weather Service Mount Holly NJ
+1209 AM EDT Mon May 4 2020
+
+ANZ431-453-040418-
+/O.CAN.KPHI.MA.W.0023.000000T0000Z-200504T0445Z/
+1209 AM EDT Mon May 4 2020
+
+...THE SPECIAL MARINE WARNING IS CANCELLED...
+
+The affected areas were...
+Lower Delaware Bay...
+Coastal waters from Great Egg Inlet to Cape May NJ out 20 nm...
+
+The thunderstorms have moved out of the warned area
+and no longer pose a significant threat to boaters.
+
+LAT...LON 3843 7496 3854 7515 3888 7498 3877 7427
+      3876 7427 3841 7466
+TIME...MOT...LOC 0408Z 287DEG 37KT 3879 7493 3865 7495 3850 7518
+
+$$
+
+ANZ454-455-473-475-040445-
+/O.CON.KPHI.MA.W.0023.000000T0000Z-200504T0445Z/
+1209 AM EDT Mon May 4 2020
+
+...A SPECIAL MARINE WARNING REMAINS IN EFFECT UNTIL 1245 AM EDT...
+
+For the following areas...
+Coastal waters from Cape Henlopen to Fenwick Island DE out 20 nm...
+Coastal waters from Cape May NJ to Cape Henlopen DE out 20 nm...
+Waters from Cape May NJ to Fenwick Island DE out 20 to 40 nm...
+Waters from Great Egg Inlet NJ to Cape May NJ out 20 to 40 nm...
+
+At 1208 AM EDT, severe thunderstorms were located along a line
+extending from near Buoy 2ms to near Indian River Inlet Bridge to
+near Bethany Beach, moving east at 35 knots.
+
+HAZARD...Wind gusts in excess of 50 knots.
+
+SOURCE...Radar indicated.
+
+IMPACT...Boats could suffer significant structural damage in high
+         winds. Small craft could capsize in suddenly higher waves.
+
+Locations impacted include...
+Five Fathoms Buoy, Bethany Beach, Delaware Lightship Buoy 44009, Buoy
+2ms, Buoy 4fb and Indian River Inlet Bridge.
+
+PRECAUTIONARY/PREPAREDNESS ACTIONS...
+
+Protecting yourself from immediate threats to life and safety shall
+take priority.  Whenever possible, as long as it does not cause
+greater harm, all COVID-19 protective action guidance should be
+followed.
+
+Move to safe harbor immediately as gusty winds and high waves are
+expected.
+
+&&
+
+LAT...LON 3843 7496 3854 7515 3888 7498 3877 7427
+      3876 7427 3841 7466
+TIME...MOT...LOC 0408Z 287DEG 37KT 3879 7493 3865 7495 3850 7518
+
+HAIL...0.00IN
+WIND...50KTS
+
+$$
+
+Robertson
+__
+547
+FZUS71 KPHI 040424
+MWSPHI
+
+Marine Weather Statement
+National Weather Service Mount Holly NJ
+1224 AM EDT Mon May 4 2020
+
+ANZ454-455-473-475-040445-
+/O.CON.KPHI.MA.W.0023.000000T0000Z-200504T0445Z/
+1224 AM EDT Mon May 4 2020
+
+...A SPECIAL MARINE WARNING REMAINS IN EFFECT UNTIL 1245 AM EDT...
+
+For the following areas...
+Coastal waters from Cape Henlopen to Fenwick Island DE out 20 nm...
+Coastal waters from Cape May NJ to Cape Henlopen DE out 20 nm...
+Waters from Cape May NJ to Fenwick Island DE out 20 to 40 nm...
+Waters from Great Egg Inlet NJ to Cape May NJ out 20 to 40 nm...
+
+At 1223 AM EDT, severe thunderstorms were located along a line
+extending from near Buoy 4fb to 9 nm southwest of Five Fathoms Buoy
+to 6 nm northeast of Fenwick Island, moving east at 40 knots.
+
+HAZARD...Wind gusts in excess of 50 knots and large hail.
+
+SOURCE...Radar indicated.
+
+IMPACT...Boats could suffer significant structural damage in high
+         winds and hail. Small craft could capsize in suddenly
+         higher waves.
+
+Locations impacted include...
+Buoy 4fb, Five Fathoms Buoy and Delaware Lightship Buoy 44009.
+
+PRECAUTIONARY/PREPAREDNESS ACTIONS...
+
+Protecting yourself from immediate threats to life and safety shall
+take priority.  Whenever possible, as long as it does not cause
+greater harm, all COVID-19 protective action guidance should be
+followed.
+
+Move to safe harbor immediately as gusty winds and high waves are
+expected.
+
+&&
+
+LAT...LON 3844 7498 3855 7500 3869 7480 3884 7474
+      3877 7427 3876 7427 3841 7466 3843 7496
+TIME...MOT...LOC 0423Z 282DEG 40KT 3879 7468 3865 7471 3850 7494
+
+HAIL...>.75IN
+WIND...50KTS
+
+$$
+
+Robertson
+__",ANZ455,MA,W,,-1,2020-05-03 23:45:00-05,2020-05-03 22:45:00-05,f,f
+2020-05-03 22:45:00-05,2020-05-03 23:45:00-05,"
+758
+WHUS51 KPHI 040345
+SMWPHI
+ANZ431-453>455-473-475-040445-
+/O.NEW.KPHI.MA.W.0023.200504T0345Z-200504T0445Z/
+
+BULLETIN - IMMEDIATE BROADCAST REQUESTED
+Special Marine Warning
+National Weather Service Mount Holly NJ
+1145 PM EDT Sun May 3 2020
+
+The National Weather Service in Mount Holly NJ has issued a
+
+* Special Marine Warning for...
+  Lower Delaware Bay...
+  Coastal and outer waters from Great Egg Inlet NJ to Fenwick Island
+  DE...
+
+* Until 1245 AM EDT.
+
+* At 1145 PM EDT, strong thunderstorms were located along a line
+  extending from near Slaughter Beach to 7 nm southwest of Cape
+  Henlopen to 18 nm west of Indian River Inlet Bridge, moving east at
+  35 knots.
+
+  HAZARD...Wind gusts 34 knots or greater.
+
+  SOURCE...Radar.
+
+  IMPACT...Small craft could be damaged in briefly higher winds and
+           suddenly higher waves.
+
+* Locations impacted include...
+  Five Fathoms Buoy, Buoy 2fb, Brown Shoal Light, Fenwick Island,
+  Buoy 4fb, Buoy 3fb, Cape Henlopen, Rehoboth Beach, Cape May Point,
+  Indian River Inlet Bridge, Wildwood, Overfalls Shoal, 28-
+  Mile Wreck, Cape May Reef, Bethany Beach, Delaware Lightship Buoy
+  44009, Buoy 2ms and Wildwood Reef.
+
+PRECAUTIONARY/PREPAREDNESS ACTIONS...
+
+Protecting yourself from immediate threats to life and safety shall
+take priority.  Whenever possible, as long as it does not cause
+greater harm, all COVID-19 protective action guidance should be
+followed.
+
+Move to safe harbor immediately as gusty winds and high waves are
+expected.
+
+&&
+
+LAT...LON 3843 7496 3846 7504 3845 7510 3851 7511
+      3852 7513 3850 7522 3856 7533 3861 7534
+      3863 7531 3864 7524 3872 7524 3875 7520
+      3876 7530 3896 7526 3910 7425 3876 7427
+      3841 7466
+TIME...MOT...LOC 0345Z 268DEG 36KT 3889 7521 3875 7523 3860 7546
+
+HAIL...0.00IN
+WIND...>34KTS
+
+$$
+
+Robertson
+",PHI,23,CON,2020-05-03 23:24:00-05,Robertson,"__
+737
+FZUS71 KPHI 040409
+MWSPHI
+
+Marine Weather Statement
+National Weather Service Mount Holly NJ
+1209 AM EDT Mon May 4 2020
+
+ANZ431-453-040418-
+/O.CAN.KPHI.MA.W.0023.000000T0000Z-200504T0445Z/
+1209 AM EDT Mon May 4 2020
+
+...THE SPECIAL MARINE WARNING IS CANCELLED...
+
+The affected areas were...
+Lower Delaware Bay...
+Coastal waters from Great Egg Inlet to Cape May NJ out 20 nm...
+
+The thunderstorms have moved out of the warned area
+and no longer pose a significant threat to boaters.
+
+LAT...LON 3843 7496 3854 7515 3888 7498 3877 7427
+      3876 7427 3841 7466
+TIME...MOT...LOC 0408Z 287DEG 37KT 3879 7493 3865 7495 3850 7518
+
+$$
+
+ANZ454-455-473-475-040445-
+/O.CON.KPHI.MA.W.0023.000000T0000Z-200504T0445Z/
+1209 AM EDT Mon May 4 2020
+
+...A SPECIAL MARINE WARNING REMAINS IN EFFECT UNTIL 1245 AM EDT...
+
+For the following areas...
+Coastal waters from Cape Henlopen to Fenwick Island DE out 20 nm...
+Coastal waters from Cape May NJ to Cape Henlopen DE out 20 nm...
+Waters from Cape May NJ to Fenwick Island DE out 20 to 40 nm...
+Waters from Great Egg Inlet NJ to Cape May NJ out 20 to 40 nm...
+
+At 1208 AM EDT, severe thunderstorms were located along a line
+extending from near Buoy 2ms to near Indian River Inlet Bridge to
+near Bethany Beach, moving east at 35 knots.
+
+HAZARD...Wind gusts in excess of 50 knots.
+
+SOURCE...Radar indicated.
+
+IMPACT...Boats could suffer significant structural damage in high
+         winds. Small craft could capsize in suddenly higher waves.
+
+Locations impacted include...
+Five Fathoms Buoy, Bethany Beach, Delaware Lightship Buoy 44009, Buoy
+2ms, Buoy 4fb and Indian River Inlet Bridge.
+
+PRECAUTIONARY/PREPAREDNESS ACTIONS...
+
+Protecting yourself from immediate threats to life and safety shall
+take priority.  Whenever possible, as long as it does not cause
+greater harm, all COVID-19 protective action guidance should be
+followed.
+
+Move to safe harbor immediately as gusty winds and high waves are
+expected.
+
+&&
+
+LAT...LON 3843 7496 3854 7515 3888 7498 3877 7427
+      3876 7427 3841 7466
+TIME...MOT...LOC 0408Z 287DEG 37KT 3879 7493 3865 7495 3850 7518
+
+HAIL...0.00IN
+WIND...50KTS
+
+$$
+
+Robertson
+__
+547
+FZUS71 KPHI 040424
+MWSPHI
+
+Marine Weather Statement
+National Weather Service Mount Holly NJ
+1224 AM EDT Mon May 4 2020
+
+ANZ454-455-473-475-040445-
+/O.CON.KPHI.MA.W.0023.000000T0000Z-200504T0445Z/
+1224 AM EDT Mon May 4 2020
+
+...A SPECIAL MARINE WARNING REMAINS IN EFFECT UNTIL 1245 AM EDT...
+
+For the following areas...
+Coastal waters from Cape Henlopen to Fenwick Island DE out 20 nm...
+Coastal waters from Cape May NJ to Cape Henlopen DE out 20 nm...
+Waters from Cape May NJ to Fenwick Island DE out 20 to 40 nm...
+Waters from Great Egg Inlet NJ to Cape May NJ out 20 to 40 nm...
+
+At 1223 AM EDT, severe thunderstorms were located along a line
+extending from near Buoy 4fb to 9 nm southwest of Five Fathoms Buoy
+to 6 nm northeast of Fenwick Island, moving east at 40 knots.
+
+HAZARD...Wind gusts in excess of 50 knots and large hail.
+
+SOURCE...Radar indicated.
+
+IMPACT...Boats could suffer significant structural damage in high
+         winds and hail. Small craft could capsize in suddenly
+         higher waves.
+
+Locations impacted include...
+Buoy 4fb, Five Fathoms Buoy and Delaware Lightship Buoy 44009.
+
+PRECAUTIONARY/PREPAREDNESS ACTIONS...
+
+Protecting yourself from immediate threats to life and safety shall
+take priority.  Whenever possible, as long as it does not cause
+greater harm, all COVID-19 protective action guidance should be
+followed.
+
+Move to safe harbor immediately as gusty winds and high waves are
+expected.
+
+&&
+
+LAT...LON 3844 7498 3855 7500 3869 7480 3884 7474
+      3877 7427 3876 7427 3841 7466 3843 7496
+TIME...MOT...LOC 0423Z 282DEG 40KT 3879 7468 3865 7471 3850 7494
+
+HAIL...>.75IN
+WIND...50KTS
+
+$$
+
+Robertson
+__",ANZ473,MA,W,,-1,2020-05-03 23:45:00-05,2020-05-03 22:45:00-05,f,f
+2020-05-03 22:45:00-05,2020-05-03 23:45:00-05,"
+758
+WHUS51 KPHI 040345
+SMWPHI
+ANZ431-453>455-473-475-040445-
+/O.NEW.KPHI.MA.W.0023.200504T0345Z-200504T0445Z/
+
+BULLETIN - IMMEDIATE BROADCAST REQUESTED
+Special Marine Warning
+National Weather Service Mount Holly NJ
+1145 PM EDT Sun May 3 2020
+
+The National Weather Service in Mount Holly NJ has issued a
+
+* Special Marine Warning for...
+  Lower Delaware Bay...
+  Coastal and outer waters from Great Egg Inlet NJ to Fenwick Island
+  DE...
+
+* Until 1245 AM EDT.
+
+* At 1145 PM EDT, strong thunderstorms were located along a line
+  extending from near Slaughter Beach to 7 nm southwest of Cape
+  Henlopen to 18 nm west of Indian River Inlet Bridge, moving east at
+  35 knots.
+
+  HAZARD...Wind gusts 34 knots or greater.
+
+  SOURCE...Radar.
+
+  IMPACT...Small craft could be damaged in briefly higher winds and
+           suddenly higher waves.
+
+* Locations impacted include...
+  Five Fathoms Buoy, Buoy 2fb, Brown Shoal Light, Fenwick Island,
+  Buoy 4fb, Buoy 3fb, Cape Henlopen, Rehoboth Beach, Cape May Point,
+  Indian River Inlet Bridge, Wildwood, Overfalls Shoal, 28-
+  Mile Wreck, Cape May Reef, Bethany Beach, Delaware Lightship Buoy
+  44009, Buoy 2ms and Wildwood Reef.
+
+PRECAUTIONARY/PREPAREDNESS ACTIONS...
+
+Protecting yourself from immediate threats to life and safety shall
+take priority.  Whenever possible, as long as it does not cause
+greater harm, all COVID-19 protective action guidance should be
+followed.
+
+Move to safe harbor immediately as gusty winds and high waves are
+expected.
+
+&&
+
+LAT...LON 3843 7496 3846 7504 3845 7510 3851 7511
+      3852 7513 3850 7522 3856 7533 3861 7534
+      3863 7531 3864 7524 3872 7524 3875 7520
+      3876 7530 3896 7526 3910 7425 3876 7427
+      3841 7466
+TIME...MOT...LOC 0345Z 268DEG 36KT 3889 7521 3875 7523 3860 7546
+
+HAIL...0.00IN
+WIND...>34KTS
+
+$$
+
+Robertson
+",PHI,23,CON,2020-05-03 23:24:00-05,Robertson,"__
+737
+FZUS71 KPHI 040409
+MWSPHI
+
+Marine Weather Statement
+National Weather Service Mount Holly NJ
+1209 AM EDT Mon May 4 2020
+
+ANZ431-453-040418-
+/O.CAN.KPHI.MA.W.0023.000000T0000Z-200504T0445Z/
+1209 AM EDT Mon May 4 2020
+
+...THE SPECIAL MARINE WARNING IS CANCELLED...
+
+The affected areas were...
+Lower Delaware Bay...
+Coastal waters from Great Egg Inlet to Cape May NJ out 20 nm...
+
+The thunderstorms have moved out of the warned area
+and no longer pose a significant threat to boaters.
+
+LAT...LON 3843 7496 3854 7515 3888 7498 3877 7427
+      3876 7427 3841 7466
+TIME...MOT...LOC 0408Z 287DEG 37KT 3879 7493 3865 7495 3850 7518
+
+$$
+
+ANZ454-455-473-475-040445-
+/O.CON.KPHI.MA.W.0023.000000T0000Z-200504T0445Z/
+1209 AM EDT Mon May 4 2020
+
+...A SPECIAL MARINE WARNING REMAINS IN EFFECT UNTIL 1245 AM EDT...
+
+For the following areas...
+Coastal waters from Cape Henlopen to Fenwick Island DE out 20 nm...
+Coastal waters from Cape May NJ to Cape Henlopen DE out 20 nm...
+Waters from Cape May NJ to Fenwick Island DE out 20 to 40 nm...
+Waters from Great Egg Inlet NJ to Cape May NJ out 20 to 40 nm...
+
+At 1208 AM EDT, severe thunderstorms were located along a line
+extending from near Buoy 2ms to near Indian River Inlet Bridge to
+near Bethany Beach, moving east at 35 knots.
+
+HAZARD...Wind gusts in excess of 50 knots.
+
+SOURCE...Radar indicated.
+
+IMPACT...Boats could suffer significant structural damage in high
+         winds. Small craft could capsize in suddenly higher waves.
+
+Locations impacted include...
+Five Fathoms Buoy, Bethany Beach, Delaware Lightship Buoy 44009, Buoy
+2ms, Buoy 4fb and Indian River Inlet Bridge.
+
+PRECAUTIONARY/PREPAREDNESS ACTIONS...
+
+Protecting yourself from immediate threats to life and safety shall
+take priority.  Whenever possible, as long as it does not cause
+greater harm, all COVID-19 protective action guidance should be
+followed.
+
+Move to safe harbor immediately as gusty winds and high waves are
+expected.
+
+&&
+
+LAT...LON 3843 7496 3854 7515 3888 7498 3877 7427
+      3876 7427 3841 7466
+TIME...MOT...LOC 0408Z 287DEG 37KT 3879 7493 3865 7495 3850 7518
+
+HAIL...0.00IN
+WIND...50KTS
+
+$$
+
+Robertson
+__
+547
+FZUS71 KPHI 040424
+MWSPHI
+
+Marine Weather Statement
+National Weather Service Mount Holly NJ
+1224 AM EDT Mon May 4 2020
+
+ANZ454-455-473-475-040445-
+/O.CON.KPHI.MA.W.0023.000000T0000Z-200504T0445Z/
+1224 AM EDT Mon May 4 2020
+
+...A SPECIAL MARINE WARNING REMAINS IN EFFECT UNTIL 1245 AM EDT...
+
+For the following areas...
+Coastal waters from Cape Henlopen to Fenwick Island DE out 20 nm...
+Coastal waters from Cape May NJ to Cape Henlopen DE out 20 nm...
+Waters from Cape May NJ to Fenwick Island DE out 20 to 40 nm...
+Waters from Great Egg Inlet NJ to Cape May NJ out 20 to 40 nm...
+
+At 1223 AM EDT, severe thunderstorms were located along a line
+extending from near Buoy 4fb to 9 nm southwest of Five Fathoms Buoy
+to 6 nm northeast of Fenwick Island, moving east at 40 knots.
+
+HAZARD...Wind gusts in excess of 50 knots and large hail.
+
+SOURCE...Radar indicated.
+
+IMPACT...Boats could suffer significant structural damage in high
+         winds and hail. Small craft could capsize in suddenly
+         higher waves.
+
+Locations impacted include...
+Buoy 4fb, Five Fathoms Buoy and Delaware Lightship Buoy 44009.
+
+PRECAUTIONARY/PREPAREDNESS ACTIONS...
+
+Protecting yourself from immediate threats to life and safety shall
+take priority.  Whenever possible, as long as it does not cause
+greater harm, all COVID-19 protective action guidance should be
+followed.
+
+Move to safe harbor immediately as gusty winds and high waves are
+expected.
+
+&&
+
+LAT...LON 3844 7498 3855 7500 3869 7480 3884 7474
+      3877 7427 3876 7427 3841 7466 3843 7496
+TIME...MOT...LOC 0423Z 282DEG 40KT 3879 7468 3865 7471 3850 7494
+
+HAIL...>.75IN
+WIND...50KTS
+
+$$
+
+Robertson
+__",ANZ475,MA,W,,-1,2020-05-03 23:45:00-05,2020-05-03 22:45:00-05,f,f
+2020-05-03 23:36:00-05,2020-05-04 00:15:00-05,"
+731
+WHUS51 KPHI 040436
+SMWPHI
+ANZ453>455-473-475-040515-
+/O.NEW.KPHI.MA.W.0024.200504T0436Z-200504T0515Z/
+
+BULLETIN - IMMEDIATE BROADCAST REQUESTED
+Special Marine Warning
+National Weather Service Mount Holly NJ
+1236 AM EDT Mon May 4 2020
+
+The National Weather Service in Mount Holly NJ has issued a
+
+* Special Marine Warning for...
+
+Coastal and outer waters from Great Egg Inlet NJ to Fenwick Island
+DE...
+
+* Until 115 AM EDT.
+
+* At 1235 AM EDT, severe thunderstorms were located along a line
+  extending from near Five Fathoms Buoy to 12 nm south of Buoy 4fb to
+  near Delaware Lightship Buoy 44009, moving east at 40 knots.
+
+  HAZARD...Wind gusts in excess of 50 knots and large hail.
+
+  SOURCE...Radar.
+
+  IMPACT...Boats could suffer significant structural damage in high
+           winds and hail. Small craft could capsize in suddenly
+           higher waves.
+
+* Locations impacted include...
+  Buoy 4fb, Five Fathoms Buoy and Delaware Lightship Buoy 44009.
+
+PRECAUTIONARY/PREPAREDNESS ACTIONS...
+
+Protecting yourself from immediate threats to life and safety shall
+take priority.  Whenever possible, as long as it does not cause
+greater harm, all COVID-19 protective action guidance should be
+followed.
+
+Boaters should seek safe harbor immediately until these storms pass.
+Wind gusts in excess of 50 knots, large hail, high waves, dangerous
+lightning, and heavy rain are possible with these storms.
+
+&&
+
+LAT...LON 3847 7496 3868 7475 3891 7459 3886 7388
+      3876 7400 3870 7415 3861 7417 3851 7426
+      3830 7428
+TIME...MOT...LOC 0435Z 279DEG 41KT 3882 7449 3862 7454 3847 7479
+
+HAIL...>.75IN
+WIND...50KTS
+
+$$
+
+Robertson
+",PHI,24,NEW,2020-05-03 23:36:00-05,Robertson,,ANZ453,MA,W,,-1,2020-05-04 00:15:00-05,2020-05-03 23:36:00-05,f,f
+2020-05-03 23:36:00-05,2020-05-04 00:15:00-05,"
+731
+WHUS51 KPHI 040436
+SMWPHI
+ANZ453>455-473-475-040515-
+/O.NEW.KPHI.MA.W.0024.200504T0436Z-200504T0515Z/
+
+BULLETIN - IMMEDIATE BROADCAST REQUESTED
+Special Marine Warning
+National Weather Service Mount Holly NJ
+1236 AM EDT Mon May 4 2020
+
+The National Weather Service in Mount Holly NJ has issued a
+
+* Special Marine Warning for...
+
+Coastal and outer waters from Great Egg Inlet NJ to Fenwick Island
+DE...
+
+* Until 115 AM EDT.
+
+* At 1235 AM EDT, severe thunderstorms were located along a line
+  extending from near Five Fathoms Buoy to 12 nm south of Buoy 4fb to
+  near Delaware Lightship Buoy 44009, moving east at 40 knots.
+
+  HAZARD...Wind gusts in excess of 50 knots and large hail.
+
+  SOURCE...Radar.
+
+  IMPACT...Boats could suffer significant structural damage in high
+           winds and hail. Small craft could capsize in suddenly
+           higher waves.
+
+* Locations impacted include...
+  Buoy 4fb, Five Fathoms Buoy and Delaware Lightship Buoy 44009.
+
+PRECAUTIONARY/PREPAREDNESS ACTIONS...
+
+Protecting yourself from immediate threats to life and safety shall
+take priority.  Whenever possible, as long as it does not cause
+greater harm, all COVID-19 protective action guidance should be
+followed.
+
+Boaters should seek safe harbor immediately until these storms pass.
+Wind gusts in excess of 50 knots, large hail, high waves, dangerous
+lightning, and heavy rain are possible with these storms.
+
+&&
+
+LAT...LON 3847 7496 3868 7475 3891 7459 3886 7388
+      3876 7400 3870 7415 3861 7417 3851 7426
+      3830 7428
+TIME...MOT...LOC 0435Z 279DEG 41KT 3882 7449 3862 7454 3847 7479
+
+HAIL...>.75IN
+WIND...50KTS
+
+$$
+
+Robertson
+",PHI,24,NEW,2020-05-03 23:36:00-05,Robertson,,ANZ454,MA,W,,-1,2020-05-04 00:15:00-05,2020-05-03 23:36:00-05,f,f
+2020-05-03 23:36:00-05,2020-05-04 00:15:00-05,"
+731
+WHUS51 KPHI 040436
+SMWPHI
+ANZ453>455-473-475-040515-
+/O.NEW.KPHI.MA.W.0024.200504T0436Z-200504T0515Z/
+
+BULLETIN - IMMEDIATE BROADCAST REQUESTED
+Special Marine Warning
+National Weather Service Mount Holly NJ
+1236 AM EDT Mon May 4 2020
+
+The National Weather Service in Mount Holly NJ has issued a
+
+* Special Marine Warning for...
+
+Coastal and outer waters from Great Egg Inlet NJ to Fenwick Island
+DE...
+
+* Until 115 AM EDT.
+
+* At 1235 AM EDT, severe thunderstorms were located along a line
+  extending from near Five Fathoms Buoy to 12 nm south of Buoy 4fb to
+  near Delaware Lightship Buoy 44009, moving east at 40 knots.
+
+  HAZARD...Wind gusts in excess of 50 knots and large hail.
+
+  SOURCE...Radar.
+
+  IMPACT...Boats could suffer significant structural damage in high
+           winds and hail. Small craft could capsize in suddenly
+           higher waves.
+
+* Locations impacted include...
+  Buoy 4fb, Five Fathoms Buoy and Delaware Lightship Buoy 44009.
+
+PRECAUTIONARY/PREPAREDNESS ACTIONS...
+
+Protecting yourself from immediate threats to life and safety shall
+take priority.  Whenever possible, as long as it does not cause
+greater harm, all COVID-19 protective action guidance should be
+followed.
+
+Boaters should seek safe harbor immediately until these storms pass.
+Wind gusts in excess of 50 knots, large hail, high waves, dangerous
+lightning, and heavy rain are possible with these storms.
+
+&&
+
+LAT...LON 3847 7496 3868 7475 3891 7459 3886 7388
+      3876 7400 3870 7415 3861 7417 3851 7426
+      3830 7428
+TIME...MOT...LOC 0435Z 279DEG 41KT 3882 7449 3862 7454 3847 7479
+
+HAIL...>.75IN
+WIND...50KTS
+
+$$
+
+Robertson
+",PHI,24,NEW,2020-05-03 23:36:00-05,Robertson,,ANZ455,MA,W,,-1,2020-05-04 00:15:00-05,2020-05-03 23:36:00-05,f,f
+2020-05-03 23:36:00-05,2020-05-04 00:15:00-05,"
+731
+WHUS51 KPHI 040436
+SMWPHI
+ANZ453>455-473-475-040515-
+/O.NEW.KPHI.MA.W.0024.200504T0436Z-200504T0515Z/
+
+BULLETIN - IMMEDIATE BROADCAST REQUESTED
+Special Marine Warning
+National Weather Service Mount Holly NJ
+1236 AM EDT Mon May 4 2020
+
+The National Weather Service in Mount Holly NJ has issued a
+
+* Special Marine Warning for...
+
+Coastal and outer waters from Great Egg Inlet NJ to Fenwick Island
+DE...
+
+* Until 115 AM EDT.
+
+* At 1235 AM EDT, severe thunderstorms were located along a line
+  extending from near Five Fathoms Buoy to 12 nm south of Buoy 4fb to
+  near Delaware Lightship Buoy 44009, moving east at 40 knots.
+
+  HAZARD...Wind gusts in excess of 50 knots and large hail.
+
+  SOURCE...Radar.
+
+  IMPACT...Boats could suffer significant structural damage in high
+           winds and hail. Small craft could capsize in suddenly
+           higher waves.
+
+* Locations impacted include...
+  Buoy 4fb, Five Fathoms Buoy and Delaware Lightship Buoy 44009.
+
+PRECAUTIONARY/PREPAREDNESS ACTIONS...
+
+Protecting yourself from immediate threats to life and safety shall
+take priority.  Whenever possible, as long as it does not cause
+greater harm, all COVID-19 protective action guidance should be
+followed.
+
+Boaters should seek safe harbor immediately until these storms pass.
+Wind gusts in excess of 50 knots, large hail, high waves, dangerous
+lightning, and heavy rain are possible with these storms.
+
+&&
+
+LAT...LON 3847 7496 3868 7475 3891 7459 3886 7388
+      3876 7400 3870 7415 3861 7417 3851 7426
+      3830 7428
+TIME...MOT...LOC 0435Z 279DEG 41KT 3882 7449 3862 7454 3847 7479
+
+HAIL...>.75IN
+WIND...50KTS
+
+$$
+
+Robertson
+",PHI,24,NEW,2020-05-03 23:36:00-05,Robertson,,ANZ473,MA,W,,-1,2020-05-04 00:15:00-05,2020-05-03 23:36:00-05,f,f
+2020-05-03 23:36:00-05,2020-05-04 00:15:00-05,"
+731
+WHUS51 KPHI 040436
+SMWPHI
+ANZ453>455-473-475-040515-
+/O.NEW.KPHI.MA.W.0024.200504T0436Z-200504T0515Z/
+
+BULLETIN - IMMEDIATE BROADCAST REQUESTED
+Special Marine Warning
+National Weather Service Mount Holly NJ
+1236 AM EDT Mon May 4 2020
+
+The National Weather Service in Mount Holly NJ has issued a
+
+* Special Marine Warning for...
+
+Coastal and outer waters from Great Egg Inlet NJ to Fenwick Island
+DE...
+
+* Until 115 AM EDT.
+
+* At 1235 AM EDT, severe thunderstorms were located along a line
+  extending from near Five Fathoms Buoy to 12 nm south of Buoy 4fb to
+  near Delaware Lightship Buoy 44009, moving east at 40 knots.
+
+  HAZARD...Wind gusts in excess of 50 knots and large hail.
+
+  SOURCE...Radar.
+
+  IMPACT...Boats could suffer significant structural damage in high
+           winds and hail. Small craft could capsize in suddenly
+           higher waves.
+
+* Locations impacted include...
+  Buoy 4fb, Five Fathoms Buoy and Delaware Lightship Buoy 44009.
+
+PRECAUTIONARY/PREPAREDNESS ACTIONS...
+
+Protecting yourself from immediate threats to life and safety shall
+take priority.  Whenever possible, as long as it does not cause
+greater harm, all COVID-19 protective action guidance should be
+followed.
+
+Boaters should seek safe harbor immediately until these storms pass.
+Wind gusts in excess of 50 knots, large hail, high waves, dangerous
+lightning, and heavy rain are possible with these storms.
+
+&&
+
+LAT...LON 3847 7496 3868 7475 3891 7459 3886 7388
+      3876 7400 3870 7415 3861 7417 3851 7426
+      3830 7428
+TIME...MOT...LOC 0435Z 279DEG 41KT 3882 7449 3862 7454 3847 7479
+
+HAIL...>.75IN
+WIND...50KTS
+
+$$
+
+Robertson
+",PHI,24,NEW,2020-05-03 23:36:00-05,Robertson,,ANZ475,MA,W,,-1,2020-05-04 00:15:00-05,2020-05-03 23:36:00-05,f,f
 2020-05-03 23:28:00-05,2020-05-04 00:00:00-05,"
 739
 WUUS53 KGLD 040428
@@ -74694,6 +79098,602 @@ $$
 
 KTS
 __",COC041,SV,W,,-1,2020-05-03 23:45:00-05,2020-05-03 23:31:00-05,f,f
+2020-05-03 22:43:00-05,2020-05-04 00:02:00-05,"
+279
+WHUS51 KLWX 040343
+SMWLWX
+ANZ533-534-542-543-040515-
+/O.NEW.KLWX.MA.W.0063.200504T0343Z-200504T0515Z/
+
+BULLETIN - IMMEDIATE BROADCAST REQUESTED
+Special Marine Warning
+National Weather Service Baltimore MD/Washington DC
+1143 PM EDT Sun May 3 2020
+
+The National Weather Service in Sterling Virginia has issued a
+
+* Special Marine Warning for...
+  Chesapeake Bay from Drum Point MD to Smith Point VA...
+  Chesapeake Bay from North Beach to Drum Point MD...
+  Patuxent River to Broomes Island MD...
+  Tangier Sound and the inland waters surrounding Bloodsworth
+  Island...
+
+* Until 115 AM EDT.
+
+* At 1143 PM EDT, a strong thunderstorm was located near Saint
+  Clements Bay, moving east at 40 knots.
+
+  HAZARD...Wind gusts 34 knots or greater.
+
+  SOURCE...Radar indicated.
+
+  IMPACT...Boaters in small craft could be thrown overboard by
+           suddenly higher winds and waves capsizing their vessel.
+
+* Locations impacted include...
+  Hooper Island Light, Deep Hole, Solomons Island, Nanticoke River
+  Mouth, Cuckold Creek, Point Lookout, Tangier Sound, Drum Point,
+  Honga River, Fishing Bay, Point No Point, Flag Harbor, Calvert
+  Cliffs, The Targets, Bivalve, Richland Point Buoy and Deal Island.
+
+PRECAUTIONARY/PREPAREDNESS ACTIONS...
+
+Move to safe harbor until hazardous weather passes.
+
+&&
+
+LAT...LON 3807 7578 3802 7630 3812 7647 3807 7633
+      3829 7640 3838 7658 3834 7643 3847 7649
+      3848 7633 3831 7623 3831 7622 3839 7623
+      3822 7604 3836 7601 3835 7601 3831 7602
+      3823 7597 3836 7586 3814 7596
+TIME...MOT...LOC 0343Z 279DEG 42KT 3834 7673
+
+HAIL...0.00IN
+WIND...>34KTS
+
+$$
+
+BJL
+",LWX,63,CAN,2020-05-04 00:02:00-05,BJL,"__
+145
+FZUS71 KLWX 040431
+MWSLWX
+
+Marine Weather Statement
+National Weather Service Baltimore MD/Washington DC
+1231 AM EDT Mon May 4 2020
+
+ANZ533-534-542-543-040515-
+/O.CON.KLWX.MA.W.0063.000000T0000Z-200504T0515Z/
+1231 AM EDT Mon May 4 2020
+
+...A SPECIAL MARINE WARNING REMAINS IN EFFECT UNTIL 115 AM EDT...
+
+For the following areas...
+Chesapeake Bay from Drum Point MD to Smith Point VA...
+Chesapeake Bay from North Beach to Drum Point MD...
+Patuxent River to Broomes Island MD...
+Tangier Sound and the inland waters surrounding Bloodsworth Island...
+
+At 1230 AM EDT, a strong thunderstorm was located near Deal Island,
+moving east at 50 knots.
+
+HAZARD...Wind gusts 34 knots or greater.
+
+SOURCE...Radar indicated.
+
+IMPACT...Boaters in small craft could be thrown overboard by
+         suddenly higher winds and waves capsizing their vessel.
+
+Locations impacted include...
+Hooper Island Light, Deep Hole, Nanticoke River Mouth, Cuckold Creek,
+Point Lookout, Tangier Sound, Drum Point, Honga River, Fishing Bay,
+Point No Point, Flag Harbor, Calvert Cliffs, The Targets, Bivalve,
+Richland Point Buoy, Solomons Island and Deal Island.
+
+PRECAUTIONARY/PREPAREDNESS ACTIONS...
+
+Move to safe harbor until hazardous weather passes.
+
+&&
+
+LAT...LON 3802 7630 3812 7647 3807 7633 3829 7640
+      3838 7657 3834 7643 3847 7649 3848 7633
+      3831 7623 3831 7622 3839 7623 3822 7604
+      3836 7601 3835 7601 3831 7602 3823 7597
+      3836 7586 3814 7596 3807 7578
+TIME...MOT...LOC 0430Z 285DEG 50KT 3814 7601
+
+HAIL...0.00IN
+WIND...>34KTS
+
+$$
+
+BJL
+__
+172
+FZUS71 KLWX 040502
+MWSLWX
+
+Marine Weather Statement
+National Weather Service Baltimore MD/Washington DC
+102 AM EDT Mon May 4 2020
+
+ANZ533-534-542-543-040512-
+/O.CAN.KLWX.MA.W.0063.000000T0000Z-200504T0515Z/
+102 AM EDT Mon May 4 2020
+
+...THE SPECIAL MARINE WARNING IS CANCELLED...
+
+The affected areas were...
+Chesapeake Bay from Drum Point MD to Smith Point VA...
+Chesapeake Bay from North Beach to Drum Point MD...
+Patuxent River to Broomes Island MD...
+Tangier Sound and the inland waters surrounding Bloodsworth Island...
+
+The thunderstorm has moved out of the area and no longer poses a
+significant threat to boaters.
+
+LAT...LON 3802 7630 3812 7647 3807 7633 3829 7640
+      3838 7657 3834 7643 3847 7649 3848 7633
+      3831 7623 3831 7622 3839 7623 3822 7604
+      3836 7601 3835 7601 3831 7602 3823 7597
+      3836 7586 3814 7596 3807 7578
+TIME...MOT...LOC 0501Z 279DEG 42KT 3811 7553
+
+$$
+
+BKF
+__",ANZ543,MA,W,,-1,2020-05-04 00:15:00-05,2020-05-03 22:43:00-05,f,f
+2020-05-03 22:43:00-05,2020-05-04 00:02:00-05,"
+279
+WHUS51 KLWX 040343
+SMWLWX
+ANZ533-534-542-543-040515-
+/O.NEW.KLWX.MA.W.0063.200504T0343Z-200504T0515Z/
+
+BULLETIN - IMMEDIATE BROADCAST REQUESTED
+Special Marine Warning
+National Weather Service Baltimore MD/Washington DC
+1143 PM EDT Sun May 3 2020
+
+The National Weather Service in Sterling Virginia has issued a
+
+* Special Marine Warning for...
+  Chesapeake Bay from Drum Point MD to Smith Point VA...
+  Chesapeake Bay from North Beach to Drum Point MD...
+  Patuxent River to Broomes Island MD...
+  Tangier Sound and the inland waters surrounding Bloodsworth
+  Island...
+
+* Until 115 AM EDT.
+
+* At 1143 PM EDT, a strong thunderstorm was located near Saint
+  Clements Bay, moving east at 40 knots.
+
+  HAZARD...Wind gusts 34 knots or greater.
+
+  SOURCE...Radar indicated.
+
+  IMPACT...Boaters in small craft could be thrown overboard by
+           suddenly higher winds and waves capsizing their vessel.
+
+* Locations impacted include...
+  Hooper Island Light, Deep Hole, Solomons Island, Nanticoke River
+  Mouth, Cuckold Creek, Point Lookout, Tangier Sound, Drum Point,
+  Honga River, Fishing Bay, Point No Point, Flag Harbor, Calvert
+  Cliffs, The Targets, Bivalve, Richland Point Buoy and Deal Island.
+
+PRECAUTIONARY/PREPAREDNESS ACTIONS...
+
+Move to safe harbor until hazardous weather passes.
+
+&&
+
+LAT...LON 3807 7578 3802 7630 3812 7647 3807 7633
+      3829 7640 3838 7658 3834 7643 3847 7649
+      3848 7633 3831 7623 3831 7622 3839 7623
+      3822 7604 3836 7601 3835 7601 3831 7602
+      3823 7597 3836 7586 3814 7596
+TIME...MOT...LOC 0343Z 279DEG 42KT 3834 7673
+
+HAIL...0.00IN
+WIND...>34KTS
+
+$$
+
+BJL
+",LWX,63,CAN,2020-05-04 00:02:00-05,BJL,"__
+145
+FZUS71 KLWX 040431
+MWSLWX
+
+Marine Weather Statement
+National Weather Service Baltimore MD/Washington DC
+1231 AM EDT Mon May 4 2020
+
+ANZ533-534-542-543-040515-
+/O.CON.KLWX.MA.W.0063.000000T0000Z-200504T0515Z/
+1231 AM EDT Mon May 4 2020
+
+...A SPECIAL MARINE WARNING REMAINS IN EFFECT UNTIL 115 AM EDT...
+
+For the following areas...
+Chesapeake Bay from Drum Point MD to Smith Point VA...
+Chesapeake Bay from North Beach to Drum Point MD...
+Patuxent River to Broomes Island MD...
+Tangier Sound and the inland waters surrounding Bloodsworth Island...
+
+At 1230 AM EDT, a strong thunderstorm was located near Deal Island,
+moving east at 50 knots.
+
+HAZARD...Wind gusts 34 knots or greater.
+
+SOURCE...Radar indicated.
+
+IMPACT...Boaters in small craft could be thrown overboard by
+         suddenly higher winds and waves capsizing their vessel.
+
+Locations impacted include...
+Hooper Island Light, Deep Hole, Nanticoke River Mouth, Cuckold Creek,
+Point Lookout, Tangier Sound, Drum Point, Honga River, Fishing Bay,
+Point No Point, Flag Harbor, Calvert Cliffs, The Targets, Bivalve,
+Richland Point Buoy, Solomons Island and Deal Island.
+
+PRECAUTIONARY/PREPAREDNESS ACTIONS...
+
+Move to safe harbor until hazardous weather passes.
+
+&&
+
+LAT...LON 3802 7630 3812 7647 3807 7633 3829 7640
+      3838 7657 3834 7643 3847 7649 3848 7633
+      3831 7623 3831 7622 3839 7623 3822 7604
+      3836 7601 3835 7601 3831 7602 3823 7597
+      3836 7586 3814 7596 3807 7578
+TIME...MOT...LOC 0430Z 285DEG 50KT 3814 7601
+
+HAIL...0.00IN
+WIND...>34KTS
+
+$$
+
+BJL
+__
+172
+FZUS71 KLWX 040502
+MWSLWX
+
+Marine Weather Statement
+National Weather Service Baltimore MD/Washington DC
+102 AM EDT Mon May 4 2020
+
+ANZ533-534-542-543-040512-
+/O.CAN.KLWX.MA.W.0063.000000T0000Z-200504T0515Z/
+102 AM EDT Mon May 4 2020
+
+...THE SPECIAL MARINE WARNING IS CANCELLED...
+
+The affected areas were...
+Chesapeake Bay from Drum Point MD to Smith Point VA...
+Chesapeake Bay from North Beach to Drum Point MD...
+Patuxent River to Broomes Island MD...
+Tangier Sound and the inland waters surrounding Bloodsworth Island...
+
+The thunderstorm has moved out of the area and no longer poses a
+significant threat to boaters.
+
+LAT...LON 3802 7630 3812 7647 3807 7633 3829 7640
+      3838 7657 3834 7643 3847 7649 3848 7633
+      3831 7623 3831 7622 3839 7623 3822 7604
+      3836 7601 3835 7601 3831 7602 3823 7597
+      3836 7586 3814 7596 3807 7578
+TIME...MOT...LOC 0501Z 279DEG 42KT 3811 7553
+
+$$
+
+BKF
+__",ANZ533,MA,W,,-1,2020-05-04 00:15:00-05,2020-05-03 22:43:00-05,f,f
+2020-05-03 22:43:00-05,2020-05-04 00:02:00-05,"
+279
+WHUS51 KLWX 040343
+SMWLWX
+ANZ533-534-542-543-040515-
+/O.NEW.KLWX.MA.W.0063.200504T0343Z-200504T0515Z/
+
+BULLETIN - IMMEDIATE BROADCAST REQUESTED
+Special Marine Warning
+National Weather Service Baltimore MD/Washington DC
+1143 PM EDT Sun May 3 2020
+
+The National Weather Service in Sterling Virginia has issued a
+
+* Special Marine Warning for...
+  Chesapeake Bay from Drum Point MD to Smith Point VA...
+  Chesapeake Bay from North Beach to Drum Point MD...
+  Patuxent River to Broomes Island MD...
+  Tangier Sound and the inland waters surrounding Bloodsworth
+  Island...
+
+* Until 115 AM EDT.
+
+* At 1143 PM EDT, a strong thunderstorm was located near Saint
+  Clements Bay, moving east at 40 knots.
+
+  HAZARD...Wind gusts 34 knots or greater.
+
+  SOURCE...Radar indicated.
+
+  IMPACT...Boaters in small craft could be thrown overboard by
+           suddenly higher winds and waves capsizing their vessel.
+
+* Locations impacted include...
+  Hooper Island Light, Deep Hole, Solomons Island, Nanticoke River
+  Mouth, Cuckold Creek, Point Lookout, Tangier Sound, Drum Point,
+  Honga River, Fishing Bay, Point No Point, Flag Harbor, Calvert
+  Cliffs, The Targets, Bivalve, Richland Point Buoy and Deal Island.
+
+PRECAUTIONARY/PREPAREDNESS ACTIONS...
+
+Move to safe harbor until hazardous weather passes.
+
+&&
+
+LAT...LON 3807 7578 3802 7630 3812 7647 3807 7633
+      3829 7640 3838 7658 3834 7643 3847 7649
+      3848 7633 3831 7623 3831 7622 3839 7623
+      3822 7604 3836 7601 3835 7601 3831 7602
+      3823 7597 3836 7586 3814 7596
+TIME...MOT...LOC 0343Z 279DEG 42KT 3834 7673
+
+HAIL...0.00IN
+WIND...>34KTS
+
+$$
+
+BJL
+",LWX,63,CAN,2020-05-04 00:02:00-05,BJL,"__
+145
+FZUS71 KLWX 040431
+MWSLWX
+
+Marine Weather Statement
+National Weather Service Baltimore MD/Washington DC
+1231 AM EDT Mon May 4 2020
+
+ANZ533-534-542-543-040515-
+/O.CON.KLWX.MA.W.0063.000000T0000Z-200504T0515Z/
+1231 AM EDT Mon May 4 2020
+
+...A SPECIAL MARINE WARNING REMAINS IN EFFECT UNTIL 115 AM EDT...
+
+For the following areas...
+Chesapeake Bay from Drum Point MD to Smith Point VA...
+Chesapeake Bay from North Beach to Drum Point MD...
+Patuxent River to Broomes Island MD...
+Tangier Sound and the inland waters surrounding Bloodsworth Island...
+
+At 1230 AM EDT, a strong thunderstorm was located near Deal Island,
+moving east at 50 knots.
+
+HAZARD...Wind gusts 34 knots or greater.
+
+SOURCE...Radar indicated.
+
+IMPACT...Boaters in small craft could be thrown overboard by
+         suddenly higher winds and waves capsizing their vessel.
+
+Locations impacted include...
+Hooper Island Light, Deep Hole, Nanticoke River Mouth, Cuckold Creek,
+Point Lookout, Tangier Sound, Drum Point, Honga River, Fishing Bay,
+Point No Point, Flag Harbor, Calvert Cliffs, The Targets, Bivalve,
+Richland Point Buoy, Solomons Island and Deal Island.
+
+PRECAUTIONARY/PREPAREDNESS ACTIONS...
+
+Move to safe harbor until hazardous weather passes.
+
+&&
+
+LAT...LON 3802 7630 3812 7647 3807 7633 3829 7640
+      3838 7657 3834 7643 3847 7649 3848 7633
+      3831 7623 3831 7622 3839 7623 3822 7604
+      3836 7601 3835 7601 3831 7602 3823 7597
+      3836 7586 3814 7596 3807 7578
+TIME...MOT...LOC 0430Z 285DEG 50KT 3814 7601
+
+HAIL...0.00IN
+WIND...>34KTS
+
+$$
+
+BJL
+__
+172
+FZUS71 KLWX 040502
+MWSLWX
+
+Marine Weather Statement
+National Weather Service Baltimore MD/Washington DC
+102 AM EDT Mon May 4 2020
+
+ANZ533-534-542-543-040512-
+/O.CAN.KLWX.MA.W.0063.000000T0000Z-200504T0515Z/
+102 AM EDT Mon May 4 2020
+
+...THE SPECIAL MARINE WARNING IS CANCELLED...
+
+The affected areas were...
+Chesapeake Bay from Drum Point MD to Smith Point VA...
+Chesapeake Bay from North Beach to Drum Point MD...
+Patuxent River to Broomes Island MD...
+Tangier Sound and the inland waters surrounding Bloodsworth Island...
+
+The thunderstorm has moved out of the area and no longer poses a
+significant threat to boaters.
+
+LAT...LON 3802 7630 3812 7647 3807 7633 3829 7640
+      3838 7657 3834 7643 3847 7649 3848 7633
+      3831 7623 3831 7622 3839 7623 3822 7604
+      3836 7601 3835 7601 3831 7602 3823 7597
+      3836 7586 3814 7596 3807 7578
+TIME...MOT...LOC 0501Z 279DEG 42KT 3811 7553
+
+$$
+
+BKF
+__",ANZ534,MA,W,,-1,2020-05-04 00:15:00-05,2020-05-03 22:43:00-05,f,f
+2020-05-03 22:43:00-05,2020-05-04 00:02:00-05,"
+279
+WHUS51 KLWX 040343
+SMWLWX
+ANZ533-534-542-543-040515-
+/O.NEW.KLWX.MA.W.0063.200504T0343Z-200504T0515Z/
+
+BULLETIN - IMMEDIATE BROADCAST REQUESTED
+Special Marine Warning
+National Weather Service Baltimore MD/Washington DC
+1143 PM EDT Sun May 3 2020
+
+The National Weather Service in Sterling Virginia has issued a
+
+* Special Marine Warning for...
+  Chesapeake Bay from Drum Point MD to Smith Point VA...
+  Chesapeake Bay from North Beach to Drum Point MD...
+  Patuxent River to Broomes Island MD...
+  Tangier Sound and the inland waters surrounding Bloodsworth
+  Island...
+
+* Until 115 AM EDT.
+
+* At 1143 PM EDT, a strong thunderstorm was located near Saint
+  Clements Bay, moving east at 40 knots.
+
+  HAZARD...Wind gusts 34 knots or greater.
+
+  SOURCE...Radar indicated.
+
+  IMPACT...Boaters in small craft could be thrown overboard by
+           suddenly higher winds and waves capsizing their vessel.
+
+* Locations impacted include...
+  Hooper Island Light, Deep Hole, Solomons Island, Nanticoke River
+  Mouth, Cuckold Creek, Point Lookout, Tangier Sound, Drum Point,
+  Honga River, Fishing Bay, Point No Point, Flag Harbor, Calvert
+  Cliffs, The Targets, Bivalve, Richland Point Buoy and Deal Island.
+
+PRECAUTIONARY/PREPAREDNESS ACTIONS...
+
+Move to safe harbor until hazardous weather passes.
+
+&&
+
+LAT...LON 3807 7578 3802 7630 3812 7647 3807 7633
+      3829 7640 3838 7658 3834 7643 3847 7649
+      3848 7633 3831 7623 3831 7622 3839 7623
+      3822 7604 3836 7601 3835 7601 3831 7602
+      3823 7597 3836 7586 3814 7596
+TIME...MOT...LOC 0343Z 279DEG 42KT 3834 7673
+
+HAIL...0.00IN
+WIND...>34KTS
+
+$$
+
+BJL
+",LWX,63,CAN,2020-05-04 00:02:00-05,BJL,"__
+145
+FZUS71 KLWX 040431
+MWSLWX
+
+Marine Weather Statement
+National Weather Service Baltimore MD/Washington DC
+1231 AM EDT Mon May 4 2020
+
+ANZ533-534-542-543-040515-
+/O.CON.KLWX.MA.W.0063.000000T0000Z-200504T0515Z/
+1231 AM EDT Mon May 4 2020
+
+...A SPECIAL MARINE WARNING REMAINS IN EFFECT UNTIL 115 AM EDT...
+
+For the following areas...
+Chesapeake Bay from Drum Point MD to Smith Point VA...
+Chesapeake Bay from North Beach to Drum Point MD...
+Patuxent River to Broomes Island MD...
+Tangier Sound and the inland waters surrounding Bloodsworth Island...
+
+At 1230 AM EDT, a strong thunderstorm was located near Deal Island,
+moving east at 50 knots.
+
+HAZARD...Wind gusts 34 knots or greater.
+
+SOURCE...Radar indicated.
+
+IMPACT...Boaters in small craft could be thrown overboard by
+         suddenly higher winds and waves capsizing their vessel.
+
+Locations impacted include...
+Hooper Island Light, Deep Hole, Nanticoke River Mouth, Cuckold Creek,
+Point Lookout, Tangier Sound, Drum Point, Honga River, Fishing Bay,
+Point No Point, Flag Harbor, Calvert Cliffs, The Targets, Bivalve,
+Richland Point Buoy, Solomons Island and Deal Island.
+
+PRECAUTIONARY/PREPAREDNESS ACTIONS...
+
+Move to safe harbor until hazardous weather passes.
+
+&&
+
+LAT...LON 3802 7630 3812 7647 3807 7633 3829 7640
+      3838 7657 3834 7643 3847 7649 3848 7633
+      3831 7623 3831 7622 3839 7623 3822 7604
+      3836 7601 3835 7601 3831 7602 3823 7597
+      3836 7586 3814 7596 3807 7578
+TIME...MOT...LOC 0430Z 285DEG 50KT 3814 7601
+
+HAIL...0.00IN
+WIND...>34KTS
+
+$$
+
+BJL
+__
+172
+FZUS71 KLWX 040502
+MWSLWX
+
+Marine Weather Statement
+National Weather Service Baltimore MD/Washington DC
+102 AM EDT Mon May 4 2020
+
+ANZ533-534-542-543-040512-
+/O.CAN.KLWX.MA.W.0063.000000T0000Z-200504T0515Z/
+102 AM EDT Mon May 4 2020
+
+...THE SPECIAL MARINE WARNING IS CANCELLED...
+
+The affected areas were...
+Chesapeake Bay from Drum Point MD to Smith Point VA...
+Chesapeake Bay from North Beach to Drum Point MD...
+Patuxent River to Broomes Island MD...
+Tangier Sound and the inland waters surrounding Bloodsworth Island...
+
+The thunderstorm has moved out of the area and no longer poses a
+significant threat to boaters.
+
+LAT...LON 3802 7630 3812 7647 3807 7633 3829 7640
+      3838 7657 3834 7643 3847 7649 3848 7633
+      3831 7623 3831 7622 3839 7623 3822 7604
+      3836 7601 3835 7601 3831 7602 3823 7597
+      3836 7586 3814 7596 3807 7578
+TIME...MOT...LOC 0501Z 279DEG 42KT 3811 7553
+
+$$
+
+BKF
+__",ANZ542,MA,W,,-1,2020-05-04 00:15:00-05,2020-05-03 22:43:00-05,f,f
 2020-05-03 23:38:00-05,2020-05-04 00:16:00-05,"
 924
 WUUS55 KBOU 040438
@@ -75127,6 +80127,149 @@ $$
 
 RPK
 __",COC039,SV,W,,-1,2020-05-04 00:45:00-05,2020-05-04 00:14:00-05,f,f
+2020-05-04 00:18:00-05,2020-05-04 00:52:00-05,"
+398
+WHUS51 KPHI 040518
+SMWPHI
+ANZ431-453>455-472-473-475-040645-
+/O.NEW.KPHI.MA.W.0025.200504T0518Z-200504T0645Z/
+
+BULLETIN - IMMEDIATE BROADCAST REQUESTED
+Special Marine Warning
+National Weather Service Mount Holly NJ
+118 AM EDT Mon May 4 2020
+
+The National Weather Service in Mount Holly NJ has issued a
+
+* Special Marine Warning for...
+  Lower Delaware Bay...
+  Coastal waters from Great Egg Inlet NJ to Fenwick Island DE out 20
+  nm...
+  Outer waters from Little Egg Inlet NJ to Fenwick Island DE out 20
+  to 40 nm...
+
+* Until 245 AM EDT.
+
+* At 118 AM EDT, strong thunderstorms were located along a line
+  extending from 8 nm west of Rehoboth Beach to near Bethany Beach to
+  7 nm west of Gulf Rambler Wreck, moving east at 50 knots.
+
+  HAZARD...Wind gusts 34 knots or greater.
+
+  SOURCE...Radar.
+
+  IMPACT...Small craft could be damaged in briefly higher winds and
+           suddenly higher waves.
+
+* Locations impacted include...
+  Five Fathoms Buoy, Buoy 2fb, Fenwick Island, Buoy 4fb, Cape
+  Henlopen, Deepwater Reef, Rehoboth Beach, Indian River Inlet
+  Bridge, Overfalls Shoal, 28-
+  Mile Wreck, Cape May Reef, Bethany Beach, Delaware Lightship Buoy
+  44009 and Buoy 2ms.
+
+PRECAUTIONARY/PREPAREDNESS ACTIONS...
+
+Protecting yourself from immediate threats to life and safety shall
+take priority.  Whenever possible, as long as it does not cause
+greater harm, all COVID-19 protective action guidance should be
+followed.
+
+Move to safe harbor until hazardous weather passes.
+
+&&
+
+LAT...LON 3845 7503 3845 7510 3851 7511 3852 7518
+      3881 7514 3922 7368 3912 7363 3900 7372
+      3878 7396 3870 7415 3861 7417 3851 7426
+      3831 7427 3822 7431
+TIME...MOT...LOC 0518Z 256DEG 48KT 3869 7527 3851 7515 3827 7523
+
+HAIL...0.00IN
+WIND...>34KTS
+
+$$
+
+Robertson
+",PHI,25,CAN,2020-05-04 00:52:00-05,Robertson,"__
+047
+FZUS71 KPHI 040552
+MWSPHI
+
+Marine Weather Statement
+National Weather Service Mount Holly NJ
+152 AM EDT Mon May 4 2020
+
+ANZ431-453>455-472-040602-
+/O.CAN.KPHI.MA.W.0025.000000T0000Z-200504T0645Z/
+152 AM EDT Mon May 4 2020
+
+...THE SPECIAL MARINE WARNING IS CANCELLED...
+
+The affected areas were...
+Lower Delaware Bay...
+Coastal waters from Great Egg Inlet NJ to Fenwick Island DE out 20
+nm...
+Outer waters from Little Egg Inlet to Great Egg Inlet NJ out 20 to 40
+nm...
+
+The thunderstorms have moved out of the warned area
+and no longer pose a significant threat to boaters.
+
+LAT...LON 3834 7467 3848 7462 3867 7469 3868 7468
+      3872 7462 3898 7375 3878 7396 3870 7415
+      3861 7417 3851 7426 3834 7427 3822 7431
+TIME...MOT...LOC 0552Z 270DEG 44KT 3867 7468 3849 7456 3825 7464
+
+$$
+
+ANZ473-475-040645-
+/O.CON.KPHI.MA.W.0025.000000T0000Z-200504T0645Z/
+152 AM EDT Mon May 4 2020
+
+...A SPECIAL MARINE WARNING REMAINS IN EFFECT UNTIL 245 AM EDT...
+
+For the following areas...
+Waters from Cape May NJ to Fenwick Island DE out 20 to 40 nm...
+Waters from Great Egg Inlet NJ to Cape May NJ out 20 to 40 nm...
+
+At 152 AM EDT, strong thunderstorms were located along a line
+extending from 8 nm southwest of Five Fathoms Buoy to 6 nm east of
+Delaware Lightship Buoy 44009 to 9 nm west of Chicken Bone, moving
+east at 45 knots.
+
+HAZARD...Wind gusts 34 knots or greater.
+
+SOURCE...Radar indicated.
+
+IMPACT...Small craft could be damaged in briefly higher winds and
+         suddenly higher waves.
+
+The strong thunderstorms will remain over mainly open waters.
+
+PRECAUTIONARY/PREPAREDNESS ACTIONS...
+
+Protecting yourself from immediate threats to life and safety shall
+take priority.  Whenever possible, as long as it does not cause
+greater harm, all COVID-19 protective action guidance should be
+followed.
+
+Move to safe harbor until hazardous weather passes.
+
+&&
+
+LAT...LON 3834 7467 3848 7462 3867 7469 3868 7468
+      3872 7462 3898 7375 3878 7396 3870 7415
+      3861 7417 3851 7426 3834 7427 3822 7431
+TIME...MOT...LOC 0552Z 270DEG 44KT 3867 7468 3849 7456 3825 7464
+
+HAIL...0.00IN
+WIND...>34KTS
+
+$$
+
+Robertson
+__",ANZ431,MA,W,,-1,2020-05-04 01:45:00-05,2020-05-04 00:18:00-05,f,f
 2020-05-03 23:58:00-05,2020-05-04 00:28:00-05,"
 430
 WUUS53 KGLD 040458
@@ -75597,6 +80740,149 @@ $$
 
 RPK
 __",COC075,SV,W,,-1,2020-05-04 01:00:00-05,2020-05-04 00:11:00-05,f,f
+2020-05-04 00:18:00-05,2020-05-04 00:52:00-05,"
+398
+WHUS51 KPHI 040518
+SMWPHI
+ANZ431-453>455-472-473-475-040645-
+/O.NEW.KPHI.MA.W.0025.200504T0518Z-200504T0645Z/
+
+BULLETIN - IMMEDIATE BROADCAST REQUESTED
+Special Marine Warning
+National Weather Service Mount Holly NJ
+118 AM EDT Mon May 4 2020
+
+The National Weather Service in Mount Holly NJ has issued a
+
+* Special Marine Warning for...
+  Lower Delaware Bay...
+  Coastal waters from Great Egg Inlet NJ to Fenwick Island DE out 20
+  nm...
+  Outer waters from Little Egg Inlet NJ to Fenwick Island DE out 20
+  to 40 nm...
+
+* Until 245 AM EDT.
+
+* At 118 AM EDT, strong thunderstorms were located along a line
+  extending from 8 nm west of Rehoboth Beach to near Bethany Beach to
+  7 nm west of Gulf Rambler Wreck, moving east at 50 knots.
+
+  HAZARD...Wind gusts 34 knots or greater.
+
+  SOURCE...Radar.
+
+  IMPACT...Small craft could be damaged in briefly higher winds and
+           suddenly higher waves.
+
+* Locations impacted include...
+  Five Fathoms Buoy, Buoy 2fb, Fenwick Island, Buoy 4fb, Cape
+  Henlopen, Deepwater Reef, Rehoboth Beach, Indian River Inlet
+  Bridge, Overfalls Shoal, 28-
+  Mile Wreck, Cape May Reef, Bethany Beach, Delaware Lightship Buoy
+  44009 and Buoy 2ms.
+
+PRECAUTIONARY/PREPAREDNESS ACTIONS...
+
+Protecting yourself from immediate threats to life and safety shall
+take priority.  Whenever possible, as long as it does not cause
+greater harm, all COVID-19 protective action guidance should be
+followed.
+
+Move to safe harbor until hazardous weather passes.
+
+&&
+
+LAT...LON 3845 7503 3845 7510 3851 7511 3852 7518
+      3881 7514 3922 7368 3912 7363 3900 7372
+      3878 7396 3870 7415 3861 7417 3851 7426
+      3831 7427 3822 7431
+TIME...MOT...LOC 0518Z 256DEG 48KT 3869 7527 3851 7515 3827 7523
+
+HAIL...0.00IN
+WIND...>34KTS
+
+$$
+
+Robertson
+",PHI,25,CAN,2020-05-04 00:52:00-05,Robertson,"__
+047
+FZUS71 KPHI 040552
+MWSPHI
+
+Marine Weather Statement
+National Weather Service Mount Holly NJ
+152 AM EDT Mon May 4 2020
+
+ANZ431-453>455-472-040602-
+/O.CAN.KPHI.MA.W.0025.000000T0000Z-200504T0645Z/
+152 AM EDT Mon May 4 2020
+
+...THE SPECIAL MARINE WARNING IS CANCELLED...
+
+The affected areas were...
+Lower Delaware Bay...
+Coastal waters from Great Egg Inlet NJ to Fenwick Island DE out 20
+nm...
+Outer waters from Little Egg Inlet to Great Egg Inlet NJ out 20 to 40
+nm...
+
+The thunderstorms have moved out of the warned area
+and no longer pose a significant threat to boaters.
+
+LAT...LON 3834 7467 3848 7462 3867 7469 3868 7468
+      3872 7462 3898 7375 3878 7396 3870 7415
+      3861 7417 3851 7426 3834 7427 3822 7431
+TIME...MOT...LOC 0552Z 270DEG 44KT 3867 7468 3849 7456 3825 7464
+
+$$
+
+ANZ473-475-040645-
+/O.CON.KPHI.MA.W.0025.000000T0000Z-200504T0645Z/
+152 AM EDT Mon May 4 2020
+
+...A SPECIAL MARINE WARNING REMAINS IN EFFECT UNTIL 245 AM EDT...
+
+For the following areas...
+Waters from Cape May NJ to Fenwick Island DE out 20 to 40 nm...
+Waters from Great Egg Inlet NJ to Cape May NJ out 20 to 40 nm...
+
+At 152 AM EDT, strong thunderstorms were located along a line
+extending from 8 nm southwest of Five Fathoms Buoy to 6 nm east of
+Delaware Lightship Buoy 44009 to 9 nm west of Chicken Bone, moving
+east at 45 knots.
+
+HAZARD...Wind gusts 34 knots or greater.
+
+SOURCE...Radar indicated.
+
+IMPACT...Small craft could be damaged in briefly higher winds and
+         suddenly higher waves.
+
+The strong thunderstorms will remain over mainly open waters.
+
+PRECAUTIONARY/PREPAREDNESS ACTIONS...
+
+Protecting yourself from immediate threats to life and safety shall
+take priority.  Whenever possible, as long as it does not cause
+greater harm, all COVID-19 protective action guidance should be
+followed.
+
+Move to safe harbor until hazardous weather passes.
+
+&&
+
+LAT...LON 3834 7467 3848 7462 3867 7469 3868 7468
+      3872 7462 3898 7375 3878 7396 3870 7415
+      3861 7417 3851 7426 3834 7427 3822 7431
+TIME...MOT...LOC 0552Z 270DEG 44KT 3867 7468 3849 7456 3825 7464
+
+HAIL...0.00IN
+WIND...>34KTS
+
+$$
+
+Robertson
+__",ANZ453,MA,W,,-1,2020-05-04 01:45:00-05,2020-05-04 00:18:00-05,f,f
 2020-05-03 23:58:00-05,2020-05-04 00:45:00-05,"
 430
 WUUS53 KGLD 040458
@@ -76140,6 +81426,435 @@ $$
 
 Vincent
 __",KSC181,SV,W,,-1,2020-05-04 01:00:00-05,2020-05-04 00:17:00-05,f,f
+2020-05-04 00:18:00-05,2020-05-04 00:52:00-05,"
+398
+WHUS51 KPHI 040518
+SMWPHI
+ANZ431-453>455-472-473-475-040645-
+/O.NEW.KPHI.MA.W.0025.200504T0518Z-200504T0645Z/
+
+BULLETIN - IMMEDIATE BROADCAST REQUESTED
+Special Marine Warning
+National Weather Service Mount Holly NJ
+118 AM EDT Mon May 4 2020
+
+The National Weather Service in Mount Holly NJ has issued a
+
+* Special Marine Warning for...
+  Lower Delaware Bay...
+  Coastal waters from Great Egg Inlet NJ to Fenwick Island DE out 20
+  nm...
+  Outer waters from Little Egg Inlet NJ to Fenwick Island DE out 20
+  to 40 nm...
+
+* Until 245 AM EDT.
+
+* At 118 AM EDT, strong thunderstorms were located along a line
+  extending from 8 nm west of Rehoboth Beach to near Bethany Beach to
+  7 nm west of Gulf Rambler Wreck, moving east at 50 knots.
+
+  HAZARD...Wind gusts 34 knots or greater.
+
+  SOURCE...Radar.
+
+  IMPACT...Small craft could be damaged in briefly higher winds and
+           suddenly higher waves.
+
+* Locations impacted include...
+  Five Fathoms Buoy, Buoy 2fb, Fenwick Island, Buoy 4fb, Cape
+  Henlopen, Deepwater Reef, Rehoboth Beach, Indian River Inlet
+  Bridge, Overfalls Shoal, 28-
+  Mile Wreck, Cape May Reef, Bethany Beach, Delaware Lightship Buoy
+  44009 and Buoy 2ms.
+
+PRECAUTIONARY/PREPAREDNESS ACTIONS...
+
+Protecting yourself from immediate threats to life and safety shall
+take priority.  Whenever possible, as long as it does not cause
+greater harm, all COVID-19 protective action guidance should be
+followed.
+
+Move to safe harbor until hazardous weather passes.
+
+&&
+
+LAT...LON 3845 7503 3845 7510 3851 7511 3852 7518
+      3881 7514 3922 7368 3912 7363 3900 7372
+      3878 7396 3870 7415 3861 7417 3851 7426
+      3831 7427 3822 7431
+TIME...MOT...LOC 0518Z 256DEG 48KT 3869 7527 3851 7515 3827 7523
+
+HAIL...0.00IN
+WIND...>34KTS
+
+$$
+
+Robertson
+",PHI,25,CAN,2020-05-04 00:52:00-05,Robertson,"__
+047
+FZUS71 KPHI 040552
+MWSPHI
+
+Marine Weather Statement
+National Weather Service Mount Holly NJ
+152 AM EDT Mon May 4 2020
+
+ANZ431-453>455-472-040602-
+/O.CAN.KPHI.MA.W.0025.000000T0000Z-200504T0645Z/
+152 AM EDT Mon May 4 2020
+
+...THE SPECIAL MARINE WARNING IS CANCELLED...
+
+The affected areas were...
+Lower Delaware Bay...
+Coastal waters from Great Egg Inlet NJ to Fenwick Island DE out 20
+nm...
+Outer waters from Little Egg Inlet to Great Egg Inlet NJ out 20 to 40
+nm...
+
+The thunderstorms have moved out of the warned area
+and no longer pose a significant threat to boaters.
+
+LAT...LON 3834 7467 3848 7462 3867 7469 3868 7468
+      3872 7462 3898 7375 3878 7396 3870 7415
+      3861 7417 3851 7426 3834 7427 3822 7431
+TIME...MOT...LOC 0552Z 270DEG 44KT 3867 7468 3849 7456 3825 7464
+
+$$
+
+ANZ473-475-040645-
+/O.CON.KPHI.MA.W.0025.000000T0000Z-200504T0645Z/
+152 AM EDT Mon May 4 2020
+
+...A SPECIAL MARINE WARNING REMAINS IN EFFECT UNTIL 245 AM EDT...
+
+For the following areas...
+Waters from Cape May NJ to Fenwick Island DE out 20 to 40 nm...
+Waters from Great Egg Inlet NJ to Cape May NJ out 20 to 40 nm...
+
+At 152 AM EDT, strong thunderstorms were located along a line
+extending from 8 nm southwest of Five Fathoms Buoy to 6 nm east of
+Delaware Lightship Buoy 44009 to 9 nm west of Chicken Bone, moving
+east at 45 knots.
+
+HAZARD...Wind gusts 34 knots or greater.
+
+SOURCE...Radar indicated.
+
+IMPACT...Small craft could be damaged in briefly higher winds and
+         suddenly higher waves.
+
+The strong thunderstorms will remain over mainly open waters.
+
+PRECAUTIONARY/PREPAREDNESS ACTIONS...
+
+Protecting yourself from immediate threats to life and safety shall
+take priority.  Whenever possible, as long as it does not cause
+greater harm, all COVID-19 protective action guidance should be
+followed.
+
+Move to safe harbor until hazardous weather passes.
+
+&&
+
+LAT...LON 3834 7467 3848 7462 3867 7469 3868 7468
+      3872 7462 3898 7375 3878 7396 3870 7415
+      3861 7417 3851 7426 3834 7427 3822 7431
+TIME...MOT...LOC 0552Z 270DEG 44KT 3867 7468 3849 7456 3825 7464
+
+HAIL...0.00IN
+WIND...>34KTS
+
+$$
+
+Robertson
+__",ANZ454,MA,W,,-1,2020-05-04 01:45:00-05,2020-05-04 00:18:00-05,f,f
+2020-05-04 00:18:00-05,2020-05-04 00:52:00-05,"
+398
+WHUS51 KPHI 040518
+SMWPHI
+ANZ431-453>455-472-473-475-040645-
+/O.NEW.KPHI.MA.W.0025.200504T0518Z-200504T0645Z/
+
+BULLETIN - IMMEDIATE BROADCAST REQUESTED
+Special Marine Warning
+National Weather Service Mount Holly NJ
+118 AM EDT Mon May 4 2020
+
+The National Weather Service in Mount Holly NJ has issued a
+
+* Special Marine Warning for...
+  Lower Delaware Bay...
+  Coastal waters from Great Egg Inlet NJ to Fenwick Island DE out 20
+  nm...
+  Outer waters from Little Egg Inlet NJ to Fenwick Island DE out 20
+  to 40 nm...
+
+* Until 245 AM EDT.
+
+* At 118 AM EDT, strong thunderstorms were located along a line
+  extending from 8 nm west of Rehoboth Beach to near Bethany Beach to
+  7 nm west of Gulf Rambler Wreck, moving east at 50 knots.
+
+  HAZARD...Wind gusts 34 knots or greater.
+
+  SOURCE...Radar.
+
+  IMPACT...Small craft could be damaged in briefly higher winds and
+           suddenly higher waves.
+
+* Locations impacted include...
+  Five Fathoms Buoy, Buoy 2fb, Fenwick Island, Buoy 4fb, Cape
+  Henlopen, Deepwater Reef, Rehoboth Beach, Indian River Inlet
+  Bridge, Overfalls Shoal, 28-
+  Mile Wreck, Cape May Reef, Bethany Beach, Delaware Lightship Buoy
+  44009 and Buoy 2ms.
+
+PRECAUTIONARY/PREPAREDNESS ACTIONS...
+
+Protecting yourself from immediate threats to life and safety shall
+take priority.  Whenever possible, as long as it does not cause
+greater harm, all COVID-19 protective action guidance should be
+followed.
+
+Move to safe harbor until hazardous weather passes.
+
+&&
+
+LAT...LON 3845 7503 3845 7510 3851 7511 3852 7518
+      3881 7514 3922 7368 3912 7363 3900 7372
+      3878 7396 3870 7415 3861 7417 3851 7426
+      3831 7427 3822 7431
+TIME...MOT...LOC 0518Z 256DEG 48KT 3869 7527 3851 7515 3827 7523
+
+HAIL...0.00IN
+WIND...>34KTS
+
+$$
+
+Robertson
+",PHI,25,CAN,2020-05-04 00:52:00-05,Robertson,"__
+047
+FZUS71 KPHI 040552
+MWSPHI
+
+Marine Weather Statement
+National Weather Service Mount Holly NJ
+152 AM EDT Mon May 4 2020
+
+ANZ431-453>455-472-040602-
+/O.CAN.KPHI.MA.W.0025.000000T0000Z-200504T0645Z/
+152 AM EDT Mon May 4 2020
+
+...THE SPECIAL MARINE WARNING IS CANCELLED...
+
+The affected areas were...
+Lower Delaware Bay...
+Coastal waters from Great Egg Inlet NJ to Fenwick Island DE out 20
+nm...
+Outer waters from Little Egg Inlet to Great Egg Inlet NJ out 20 to 40
+nm...
+
+The thunderstorms have moved out of the warned area
+and no longer pose a significant threat to boaters.
+
+LAT...LON 3834 7467 3848 7462 3867 7469 3868 7468
+      3872 7462 3898 7375 3878 7396 3870 7415
+      3861 7417 3851 7426 3834 7427 3822 7431
+TIME...MOT...LOC 0552Z 270DEG 44KT 3867 7468 3849 7456 3825 7464
+
+$$
+
+ANZ473-475-040645-
+/O.CON.KPHI.MA.W.0025.000000T0000Z-200504T0645Z/
+152 AM EDT Mon May 4 2020
+
+...A SPECIAL MARINE WARNING REMAINS IN EFFECT UNTIL 245 AM EDT...
+
+For the following areas...
+Waters from Cape May NJ to Fenwick Island DE out 20 to 40 nm...
+Waters from Great Egg Inlet NJ to Cape May NJ out 20 to 40 nm...
+
+At 152 AM EDT, strong thunderstorms were located along a line
+extending from 8 nm southwest of Five Fathoms Buoy to 6 nm east of
+Delaware Lightship Buoy 44009 to 9 nm west of Chicken Bone, moving
+east at 45 knots.
+
+HAZARD...Wind gusts 34 knots or greater.
+
+SOURCE...Radar indicated.
+
+IMPACT...Small craft could be damaged in briefly higher winds and
+         suddenly higher waves.
+
+The strong thunderstorms will remain over mainly open waters.
+
+PRECAUTIONARY/PREPAREDNESS ACTIONS...
+
+Protecting yourself from immediate threats to life and safety shall
+take priority.  Whenever possible, as long as it does not cause
+greater harm, all COVID-19 protective action guidance should be
+followed.
+
+Move to safe harbor until hazardous weather passes.
+
+&&
+
+LAT...LON 3834 7467 3848 7462 3867 7469 3868 7468
+      3872 7462 3898 7375 3878 7396 3870 7415
+      3861 7417 3851 7426 3834 7427 3822 7431
+TIME...MOT...LOC 0552Z 270DEG 44KT 3867 7468 3849 7456 3825 7464
+
+HAIL...0.00IN
+WIND...>34KTS
+
+$$
+
+Robertson
+__",ANZ455,MA,W,,-1,2020-05-04 01:45:00-05,2020-05-04 00:18:00-05,f,f
+2020-05-04 00:18:00-05,2020-05-04 00:52:00-05,"
+398
+WHUS51 KPHI 040518
+SMWPHI
+ANZ431-453>455-472-473-475-040645-
+/O.NEW.KPHI.MA.W.0025.200504T0518Z-200504T0645Z/
+
+BULLETIN - IMMEDIATE BROADCAST REQUESTED
+Special Marine Warning
+National Weather Service Mount Holly NJ
+118 AM EDT Mon May 4 2020
+
+The National Weather Service in Mount Holly NJ has issued a
+
+* Special Marine Warning for...
+  Lower Delaware Bay...
+  Coastal waters from Great Egg Inlet NJ to Fenwick Island DE out 20
+  nm...
+  Outer waters from Little Egg Inlet NJ to Fenwick Island DE out 20
+  to 40 nm...
+
+* Until 245 AM EDT.
+
+* At 118 AM EDT, strong thunderstorms were located along a line
+  extending from 8 nm west of Rehoboth Beach to near Bethany Beach to
+  7 nm west of Gulf Rambler Wreck, moving east at 50 knots.
+
+  HAZARD...Wind gusts 34 knots or greater.
+
+  SOURCE...Radar.
+
+  IMPACT...Small craft could be damaged in briefly higher winds and
+           suddenly higher waves.
+
+* Locations impacted include...
+  Five Fathoms Buoy, Buoy 2fb, Fenwick Island, Buoy 4fb, Cape
+  Henlopen, Deepwater Reef, Rehoboth Beach, Indian River Inlet
+  Bridge, Overfalls Shoal, 28-
+  Mile Wreck, Cape May Reef, Bethany Beach, Delaware Lightship Buoy
+  44009 and Buoy 2ms.
+
+PRECAUTIONARY/PREPAREDNESS ACTIONS...
+
+Protecting yourself from immediate threats to life and safety shall
+take priority.  Whenever possible, as long as it does not cause
+greater harm, all COVID-19 protective action guidance should be
+followed.
+
+Move to safe harbor until hazardous weather passes.
+
+&&
+
+LAT...LON 3845 7503 3845 7510 3851 7511 3852 7518
+      3881 7514 3922 7368 3912 7363 3900 7372
+      3878 7396 3870 7415 3861 7417 3851 7426
+      3831 7427 3822 7431
+TIME...MOT...LOC 0518Z 256DEG 48KT 3869 7527 3851 7515 3827 7523
+
+HAIL...0.00IN
+WIND...>34KTS
+
+$$
+
+Robertson
+",PHI,25,CAN,2020-05-04 00:52:00-05,Robertson,"__
+047
+FZUS71 KPHI 040552
+MWSPHI
+
+Marine Weather Statement
+National Weather Service Mount Holly NJ
+152 AM EDT Mon May 4 2020
+
+ANZ431-453>455-472-040602-
+/O.CAN.KPHI.MA.W.0025.000000T0000Z-200504T0645Z/
+152 AM EDT Mon May 4 2020
+
+...THE SPECIAL MARINE WARNING IS CANCELLED...
+
+The affected areas were...
+Lower Delaware Bay...
+Coastal waters from Great Egg Inlet NJ to Fenwick Island DE out 20
+nm...
+Outer waters from Little Egg Inlet to Great Egg Inlet NJ out 20 to 40
+nm...
+
+The thunderstorms have moved out of the warned area
+and no longer pose a significant threat to boaters.
+
+LAT...LON 3834 7467 3848 7462 3867 7469 3868 7468
+      3872 7462 3898 7375 3878 7396 3870 7415
+      3861 7417 3851 7426 3834 7427 3822 7431
+TIME...MOT...LOC 0552Z 270DEG 44KT 3867 7468 3849 7456 3825 7464
+
+$$
+
+ANZ473-475-040645-
+/O.CON.KPHI.MA.W.0025.000000T0000Z-200504T0645Z/
+152 AM EDT Mon May 4 2020
+
+...A SPECIAL MARINE WARNING REMAINS IN EFFECT UNTIL 245 AM EDT...
+
+For the following areas...
+Waters from Cape May NJ to Fenwick Island DE out 20 to 40 nm...
+Waters from Great Egg Inlet NJ to Cape May NJ out 20 to 40 nm...
+
+At 152 AM EDT, strong thunderstorms were located along a line
+extending from 8 nm southwest of Five Fathoms Buoy to 6 nm east of
+Delaware Lightship Buoy 44009 to 9 nm west of Chicken Bone, moving
+east at 45 knots.
+
+HAZARD...Wind gusts 34 knots or greater.
+
+SOURCE...Radar indicated.
+
+IMPACT...Small craft could be damaged in briefly higher winds and
+         suddenly higher waves.
+
+The strong thunderstorms will remain over mainly open waters.
+
+PRECAUTIONARY/PREPAREDNESS ACTIONS...
+
+Protecting yourself from immediate threats to life and safety shall
+take priority.  Whenever possible, as long as it does not cause
+greater harm, all COVID-19 protective action guidance should be
+followed.
+
+Move to safe harbor until hazardous weather passes.
+
+&&
+
+LAT...LON 3834 7467 3848 7462 3867 7469 3868 7468
+      3872 7462 3898 7375 3878 7396 3870 7415
+      3861 7417 3851 7426 3834 7427 3822 7431
+TIME...MOT...LOC 0552Z 270DEG 44KT 3867 7468 3849 7456 3825 7464
+
+HAIL...0.00IN
+WIND...>34KTS
+
+$$
+
+Robertson
+__",ANZ472,MA,W,,-1,2020-05-04 01:45:00-05,2020-05-04 00:18:00-05,f,f
 2020-05-04 00:48:00-05,2020-05-04 01:15:00-05,"
 553
 WUUS55 KBOU 040548
@@ -76604,6 +82319,354 @@ $$
 
 Vincent
 __",COC125,SV,W,,-1,2020-05-04 01:45:00-05,2020-05-04 01:04:00-05,f,f
+2020-05-04 00:18:00-05,2020-05-04 01:13:00-05,"
+398
+WHUS51 KPHI 040518
+SMWPHI
+ANZ431-453>455-472-473-475-040645-
+/O.NEW.KPHI.MA.W.0025.200504T0518Z-200504T0645Z/
+
+BULLETIN - IMMEDIATE BROADCAST REQUESTED
+Special Marine Warning
+National Weather Service Mount Holly NJ
+118 AM EDT Mon May 4 2020
+
+The National Weather Service in Mount Holly NJ has issued a
+
+* Special Marine Warning for...
+  Lower Delaware Bay...
+  Coastal waters from Great Egg Inlet NJ to Fenwick Island DE out 20
+  nm...
+  Outer waters from Little Egg Inlet NJ to Fenwick Island DE out 20
+  to 40 nm...
+
+* Until 245 AM EDT.
+
+* At 118 AM EDT, strong thunderstorms were located along a line
+  extending from 8 nm west of Rehoboth Beach to near Bethany Beach to
+  7 nm west of Gulf Rambler Wreck, moving east at 50 knots.
+
+  HAZARD...Wind gusts 34 knots or greater.
+
+  SOURCE...Radar.
+
+  IMPACT...Small craft could be damaged in briefly higher winds and
+           suddenly higher waves.
+
+* Locations impacted include...
+  Five Fathoms Buoy, Buoy 2fb, Fenwick Island, Buoy 4fb, Cape
+  Henlopen, Deepwater Reef, Rehoboth Beach, Indian River Inlet
+  Bridge, Overfalls Shoal, 28-
+  Mile Wreck, Cape May Reef, Bethany Beach, Delaware Lightship Buoy
+  44009 and Buoy 2ms.
+
+PRECAUTIONARY/PREPAREDNESS ACTIONS...
+
+Protecting yourself from immediate threats to life and safety shall
+take priority.  Whenever possible, as long as it does not cause
+greater harm, all COVID-19 protective action guidance should be
+followed.
+
+Move to safe harbor until hazardous weather passes.
+
+&&
+
+LAT...LON 3845 7503 3845 7510 3851 7511 3852 7518
+      3881 7514 3922 7368 3912 7363 3900 7372
+      3878 7396 3870 7415 3861 7417 3851 7426
+      3831 7427 3822 7431
+TIME...MOT...LOC 0518Z 256DEG 48KT 3869 7527 3851 7515 3827 7523
+
+HAIL...0.00IN
+WIND...>34KTS
+
+$$
+
+Robertson
+",PHI,25,CAN,2020-05-04 01:13:00-05,Robertson,"__
+047
+FZUS71 KPHI 040552
+MWSPHI
+
+Marine Weather Statement
+National Weather Service Mount Holly NJ
+152 AM EDT Mon May 4 2020
+
+ANZ431-453>455-472-040602-
+/O.CAN.KPHI.MA.W.0025.000000T0000Z-200504T0645Z/
+152 AM EDT Mon May 4 2020
+
+...THE SPECIAL MARINE WARNING IS CANCELLED...
+
+The affected areas were...
+Lower Delaware Bay...
+Coastal waters from Great Egg Inlet NJ to Fenwick Island DE out 20
+nm...
+Outer waters from Little Egg Inlet to Great Egg Inlet NJ out 20 to 40
+nm...
+
+The thunderstorms have moved out of the warned area
+and no longer pose a significant threat to boaters.
+
+LAT...LON 3834 7467 3848 7462 3867 7469 3868 7468
+      3872 7462 3898 7375 3878 7396 3870 7415
+      3861 7417 3851 7426 3834 7427 3822 7431
+TIME...MOT...LOC 0552Z 270DEG 44KT 3867 7468 3849 7456 3825 7464
+
+$$
+
+ANZ473-475-040645-
+/O.CON.KPHI.MA.W.0025.000000T0000Z-200504T0645Z/
+152 AM EDT Mon May 4 2020
+
+...A SPECIAL MARINE WARNING REMAINS IN EFFECT UNTIL 245 AM EDT...
+
+For the following areas...
+Waters from Cape May NJ to Fenwick Island DE out 20 to 40 nm...
+Waters from Great Egg Inlet NJ to Cape May NJ out 20 to 40 nm...
+
+At 152 AM EDT, strong thunderstorms were located along a line
+extending from 8 nm southwest of Five Fathoms Buoy to 6 nm east of
+Delaware Lightship Buoy 44009 to 9 nm west of Chicken Bone, moving
+east at 45 knots.
+
+HAZARD...Wind gusts 34 knots or greater.
+
+SOURCE...Radar indicated.
+
+IMPACT...Small craft could be damaged in briefly higher winds and
+         suddenly higher waves.
+
+The strong thunderstorms will remain over mainly open waters.
+
+PRECAUTIONARY/PREPAREDNESS ACTIONS...
+
+Protecting yourself from immediate threats to life and safety shall
+take priority.  Whenever possible, as long as it does not cause
+greater harm, all COVID-19 protective action guidance should be
+followed.
+
+Move to safe harbor until hazardous weather passes.
+
+&&
+
+LAT...LON 3834 7467 3848 7462 3867 7469 3868 7468
+      3872 7462 3898 7375 3878 7396 3870 7415
+      3861 7417 3851 7426 3834 7427 3822 7431
+TIME...MOT...LOC 0552Z 270DEG 44KT 3867 7468 3849 7456 3825 7464
+
+HAIL...0.00IN
+WIND...>34KTS
+
+$$
+
+Robertson
+__
+257
+FZUS71 KPHI 040613
+MWSPHI
+
+Marine Weather Statement
+National Weather Service Mount Holly NJ
+213 AM EDT Mon May 4 2020
+
+ANZ473-475-040623-
+/O.CAN.KPHI.MA.W.0025.000000T0000Z-200504T0645Z/
+213 AM EDT Mon May 4 2020
+
+...THE SPECIAL MARINE WARNING IS CANCELLED...
+
+The affected areas were...
+
+Outer waters from Great Egg Inlet NJ to Fenwick Island DE out 20 to
+40 nm...
+
+The thunderstorms have weakened and moved out of the area and no
+longer pose a significant threat to boaters.
+
+LAT...LON 3834 7467 3848 7462 3867 7469 3868 7468
+      3872 7462 3898 7375 3878 7396 3870 7415
+      3861 7417 3851 7426 3834 7427 3822 7431
+TIME...MOT...LOC 0613Z 256DEG 48KT 3874 7433 3856 7421 3832 7429
+
+$$
+
+Robertson
+__",ANZ473,MA,W,,-1,2020-05-04 01:45:00-05,2020-05-04 00:18:00-05,f,f
+2020-05-04 00:18:00-05,2020-05-04 01:13:00-05,"
+398
+WHUS51 KPHI 040518
+SMWPHI
+ANZ431-453>455-472-473-475-040645-
+/O.NEW.KPHI.MA.W.0025.200504T0518Z-200504T0645Z/
+
+BULLETIN - IMMEDIATE BROADCAST REQUESTED
+Special Marine Warning
+National Weather Service Mount Holly NJ
+118 AM EDT Mon May 4 2020
+
+The National Weather Service in Mount Holly NJ has issued a
+
+* Special Marine Warning for...
+  Lower Delaware Bay...
+  Coastal waters from Great Egg Inlet NJ to Fenwick Island DE out 20
+  nm...
+  Outer waters from Little Egg Inlet NJ to Fenwick Island DE out 20
+  to 40 nm...
+
+* Until 245 AM EDT.
+
+* At 118 AM EDT, strong thunderstorms were located along a line
+  extending from 8 nm west of Rehoboth Beach to near Bethany Beach to
+  7 nm west of Gulf Rambler Wreck, moving east at 50 knots.
+
+  HAZARD...Wind gusts 34 knots or greater.
+
+  SOURCE...Radar.
+
+  IMPACT...Small craft could be damaged in briefly higher winds and
+           suddenly higher waves.
+
+* Locations impacted include...
+  Five Fathoms Buoy, Buoy 2fb, Fenwick Island, Buoy 4fb, Cape
+  Henlopen, Deepwater Reef, Rehoboth Beach, Indian River Inlet
+  Bridge, Overfalls Shoal, 28-
+  Mile Wreck, Cape May Reef, Bethany Beach, Delaware Lightship Buoy
+  44009 and Buoy 2ms.
+
+PRECAUTIONARY/PREPAREDNESS ACTIONS...
+
+Protecting yourself from immediate threats to life and safety shall
+take priority.  Whenever possible, as long as it does not cause
+greater harm, all COVID-19 protective action guidance should be
+followed.
+
+Move to safe harbor until hazardous weather passes.
+
+&&
+
+LAT...LON 3845 7503 3845 7510 3851 7511 3852 7518
+      3881 7514 3922 7368 3912 7363 3900 7372
+      3878 7396 3870 7415 3861 7417 3851 7426
+      3831 7427 3822 7431
+TIME...MOT...LOC 0518Z 256DEG 48KT 3869 7527 3851 7515 3827 7523
+
+HAIL...0.00IN
+WIND...>34KTS
+
+$$
+
+Robertson
+",PHI,25,CAN,2020-05-04 01:13:00-05,Robertson,"__
+047
+FZUS71 KPHI 040552
+MWSPHI
+
+Marine Weather Statement
+National Weather Service Mount Holly NJ
+152 AM EDT Mon May 4 2020
+
+ANZ431-453>455-472-040602-
+/O.CAN.KPHI.MA.W.0025.000000T0000Z-200504T0645Z/
+152 AM EDT Mon May 4 2020
+
+...THE SPECIAL MARINE WARNING IS CANCELLED...
+
+The affected areas were...
+Lower Delaware Bay...
+Coastal waters from Great Egg Inlet NJ to Fenwick Island DE out 20
+nm...
+Outer waters from Little Egg Inlet to Great Egg Inlet NJ out 20 to 40
+nm...
+
+The thunderstorms have moved out of the warned area
+and no longer pose a significant threat to boaters.
+
+LAT...LON 3834 7467 3848 7462 3867 7469 3868 7468
+      3872 7462 3898 7375 3878 7396 3870 7415
+      3861 7417 3851 7426 3834 7427 3822 7431
+TIME...MOT...LOC 0552Z 270DEG 44KT 3867 7468 3849 7456 3825 7464
+
+$$
+
+ANZ473-475-040645-
+/O.CON.KPHI.MA.W.0025.000000T0000Z-200504T0645Z/
+152 AM EDT Mon May 4 2020
+
+...A SPECIAL MARINE WARNING REMAINS IN EFFECT UNTIL 245 AM EDT...
+
+For the following areas...
+Waters from Cape May NJ to Fenwick Island DE out 20 to 40 nm...
+Waters from Great Egg Inlet NJ to Cape May NJ out 20 to 40 nm...
+
+At 152 AM EDT, strong thunderstorms were located along a line
+extending from 8 nm southwest of Five Fathoms Buoy to 6 nm east of
+Delaware Lightship Buoy 44009 to 9 nm west of Chicken Bone, moving
+east at 45 knots.
+
+HAZARD...Wind gusts 34 knots or greater.
+
+SOURCE...Radar indicated.
+
+IMPACT...Small craft could be damaged in briefly higher winds and
+         suddenly higher waves.
+
+The strong thunderstorms will remain over mainly open waters.
+
+PRECAUTIONARY/PREPAREDNESS ACTIONS...
+
+Protecting yourself from immediate threats to life and safety shall
+take priority.  Whenever possible, as long as it does not cause
+greater harm, all COVID-19 protective action guidance should be
+followed.
+
+Move to safe harbor until hazardous weather passes.
+
+&&
+
+LAT...LON 3834 7467 3848 7462 3867 7469 3868 7468
+      3872 7462 3898 7375 3878 7396 3870 7415
+      3861 7417 3851 7426 3834 7427 3822 7431
+TIME...MOT...LOC 0552Z 270DEG 44KT 3867 7468 3849 7456 3825 7464
+
+HAIL...0.00IN
+WIND...>34KTS
+
+$$
+
+Robertson
+__
+257
+FZUS71 KPHI 040613
+MWSPHI
+
+Marine Weather Statement
+National Weather Service Mount Holly NJ
+213 AM EDT Mon May 4 2020
+
+ANZ473-475-040623-
+/O.CAN.KPHI.MA.W.0025.000000T0000Z-200504T0645Z/
+213 AM EDT Mon May 4 2020
+
+...THE SPECIAL MARINE WARNING IS CANCELLED...
+
+The affected areas were...
+
+Outer waters from Great Egg Inlet NJ to Fenwick Island DE out 20 to
+40 nm...
+
+The thunderstorms have weakened and moved out of the area and no
+longer pose a significant threat to boaters.
+
+LAT...LON 3834 7467 3848 7462 3867 7469 3868 7468
+      3872 7462 3898 7375 3878 7396 3870 7415
+      3861 7417 3851 7426 3834 7427 3822 7431
+TIME...MOT...LOC 0613Z 256DEG 48KT 3874 7433 3856 7421 3832 7429
+
+$$
+
+Robertson
+__",ANZ475,MA,W,,-1,2020-05-04 01:45:00-05,2020-05-04 00:18:00-05,f,f
 2020-05-04 01:12:00-05,2020-05-04 01:44:00-05,"
 648
 WUUS55 KBOU 040612

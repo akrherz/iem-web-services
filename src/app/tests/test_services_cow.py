@@ -81,5 +81,5 @@ def test_180620():
     assert cow["stats"]["events_total"] == 18
     assert cow["stats"]["events_verified"] == 4
     assert abs(cow["stats"]["area_verify[%]"] - 17.0) < 0.1
-    _ev = cow.events.iloc[0]
+    _ev = cow["events"]["features"][0]["properties"]
     assert abs(_ev["parea"] - 919.0) < 1
