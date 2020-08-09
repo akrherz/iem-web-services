@@ -238,7 +238,9 @@ class COWSession(object):
         c.mexpire as expire, c.statuses, c.fcster,
         s.significance, s.hailtag, s.windtag, c.carea, c.ar_ugc,
         s.lat0, s.lon0, s.perimeter, s.parea, c.ar_ugcname,
-        s.year || s.wfo || s.eventid || s.phenomena || s.significance as key
+        s.year || s.wfo || s.eventid || s.phenomena || s.significance ||
+        row_number() OVER (PARTITION by s.year, s.wfo, s.eventid, s.phenomena,
+        s.significance ORDER by c.missue ASC) as key
         from stormbased s JOIN countybased c on
         (c.eventid = s.eventid and c.wfo = s.wfo and c.year = s.year
         and c.phenomena = s.phenomena and c.significance = s.significance)
@@ -435,9 +437,7 @@ class COWSession(object):
                     self.stormreports.at[sidx, "leadtime"] = leadtime
                 if not _ev["stormreports"]:
                     self.events.at[eidx, "lead0"] = leadtime
-                # Tricky business here, could have event duplicates :(
-                for a in self.events.at[eidx, "stormreports"]:
-                    a.append(sidx)
+                self.events.at[eidx, "stormreports"].append(sidx)
                 self.stormreports.at[sidx, "events"].append(eidx)
 
     def area_verify(self):
