@@ -3,7 +3,7 @@ import datetime
 import os
 
 import numpy as np
-from metpy.units import units
+from metpy.units import units, masked_array
 from metpy.calc import relative_humidity_from_dewpoint
 from pandas.io.sql import read_sql
 from fastapi import Query, HTTPException
@@ -38,12 +38,12 @@ def append_cfs(res, lon, lat):
             return
     nc = ncopen(testfn)
     high = (
-        (nc.variables["high_tmpk"][:, gridy, gridx] * units.degK)
+        masked_array(nc.variables["high_tmpk"][:, gridy, gridx], units.degK)
         .to(units.degF)
         .m
     )
     low = (
-        (nc.variables["low_tmpk"][:, gridy, gridx] * units.degK)
+        masked_array(nc.variables["low_tmpk"][:, gridy, gridx], units.degK)
         .to(units.degF)
         .m
     )
