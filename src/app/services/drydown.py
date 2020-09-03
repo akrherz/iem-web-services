@@ -50,7 +50,9 @@ def append_cfs(res, lon, lat):
     # RH hack
     # found ~20% bias with this value, so arb addition for now
     rh = (
-        relative_humidity_from_dewpoint(high * units.degF, low * units.degF).m
+        relative_humidity_from_dewpoint(
+            masked_array(high, units.degF), masked_array(low, units.degF)
+        ).m
         * 100.0
         + 20.0
     )
