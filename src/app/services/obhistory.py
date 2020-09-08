@@ -35,7 +35,7 @@ from ..reference import MEDIATYPES
 
 def get_df(network, station, date):
     """Figure out how to get the data being requested."""
-    if date == datetime.date.today():
+    if date == datetime.date.today() and network not in ["ISUSM"]:
         # Use IEM Access
         pgconn = get_dbconn("iem")
         return read_sql(
@@ -93,7 +93,7 @@ def get_df(network, station, date):
         # Use ISUAG
         pgconn = get_dbconn("isuag")
         df = read_sql(
-            "SELECT valid at time zone 'UTC' as utc_valid, "
+            "SELECT valid at time zone 'UTC' as utc_valid, phour, "
             "valid at time zone %s as local_valid, tmpf, relh, sknt, drct "
             "from alldata WHERE station = %s and "
             "valid >= %s and valid < %s ORDER by valid ASC",
