@@ -16,6 +16,7 @@ from .services import (
     mos,
     nwstext,
     obhistory,
+    raobs_by_year,
     shef_currents,
     usdm_bypoint,
     servertime,
@@ -56,6 +57,9 @@ cow.factory(app)
 
 # /currents.{fmt}
 currents.factory(app)
+
+# /raobs_by_year.json
+raobs_by_year.factory(app)
 
 # /spc_watch_outline.geojson
 spc_watch_outline.factory(app)
