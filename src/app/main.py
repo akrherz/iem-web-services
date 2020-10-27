@@ -19,6 +19,7 @@ from .services import (
     raobs_by_year,
     shef_currents,
     usdm_bypoint,
+    scp,
     servertime,
     spc_watch_outline,
 )
@@ -60,6 +61,9 @@ currents.factory(app)
 
 # /raobs_by_year.json
 raobs_by_year.factory(app)
+
+# /scp.json
+scp.factory(app)
 
 # /spc_watch_outline.geojson
 spc_watch_outline.factory(app)
