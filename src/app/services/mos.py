@@ -32,7 +32,7 @@ COLUMNS = (
     "station,model,runtime,ftime,n_x,tmp,dpt,cld,wdr,wsp,p06,p12,"
     "q06,q12,t06,t12,snw,cig,vis,obv,poz,pos,typ,sky,swh,lcb,"
     "i06,slv,s06,pra,ppl,psn,pzr,t03,gst,q24,p24,t24,ccg,ppo,pco,lp1,lc1,cp1,"
-    "cc1,s12,i12,s24,pzp,prs"
+    "cc1,s12,i12,s24,pzp,prs,txn"
 ).split(",")
 
 
