@@ -82,8 +82,8 @@ def get_df(network, station, date):
         pgconn = get_dbconn("rwis")
         return read_sql(
             "SELECT valid at time zone 'UTC' as utc_valid, "
-            "valid at time zone %s as local_valid, tmpf, dwpf, sknt, drct "
-            "from alldata WHERE station = %s and "
+            "valid at time zone %s as local_valid, tmpf, dwpf, sknt, drct, "
+            "gust from alldata WHERE station = %s and "
             "valid >= %s and valid < %s ORDER by valid ASC",
             pgconn,
             params=(tzname, station, sts, ets),
