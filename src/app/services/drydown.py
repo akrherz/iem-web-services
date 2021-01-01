@@ -12,6 +12,13 @@ from pyiem.iemre import get_gid, find_ij, daily_offset
 from ..util import get_dbconn
 
 
+def _i(val):
+    """Safe conversion to int."""
+    if np.ma.is_masked(val):
+        return None
+    return int(val)
+
+
 def append_cfs(res, lon, lat):
     """Append on needed CFS data."""
     gridx, gridy = find_ij(lon, lat)
@@ -65,9 +72,9 @@ def append_cfs(res, lon, lat):
         lts = datetime.date(thisyear, 1, 1) + datetime.timedelta(days=i)
         if lts.month in [9, 10, 11]:
             entry["dates"].append(lts.strftime("%Y-%m-%d"))
-            entry["high"].append(int(high[i]))
-            entry["low"].append(int(low[i]))
-            entry["rh"].append(int(rh[i]))
+            entry["high"].append(_i(high[i]))
+            entry["low"].append(_i(low[i]))
+            entry["rh"].append(_i(rh[i]))
 
 
 def handler(lon, lat):
