@@ -188,6 +188,7 @@ def get_df(network, station, date):
             .dt.tz_convert(tz)
         )
         return df
+    return None
 
 
 def compute(df, full):
@@ -212,6 +213,8 @@ def handler(network, station, date, full, fmt):
     if date is None:
         date = datetime.date.today()
     df = get_df(network, station, date)
+    if df is None:
+        raise HTTPException(500, "No Data For Station.")
     # Run any addition calculations, if necessary
     df = compute(df, full)
     if fmt == SupportedFormatsNoGeoJSON.txt:
