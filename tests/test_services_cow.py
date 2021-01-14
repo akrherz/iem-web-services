@@ -3,11 +3,12 @@ import os
 
 from fastapi.testclient import TestClient
 import pytest
-from ..main import app
+from iemws.main import app
 
 client = TestClient(app)
 
 
+@pytest.mark.skipif(os.environ.get("HAS_IEMDATABASE") == "0", reason="NODB")
 def test_issue10_nowfo():
     """Test that we need not provide a WFO."""
     res = client.get(
@@ -68,6 +69,7 @@ def test_190806():
     assert cow["stats"]["warned_reports"] == 46
 
 
+@pytest.mark.skipif(os.environ.get("HAS_IEMDATABASE") == "0", reason="NODB")
 def test_180620():
     """Compare with what we have from legacy PHP based Cow"""
     params = {
