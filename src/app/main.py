@@ -12,6 +12,7 @@ from .services import (
     cow,
     drydown,
     ffg_bypoint,
+    idot_dashcam,
     meteobridge,
     mos,
     nwstext,
@@ -31,6 +32,9 @@ servertime.factory(app)
 
 # /ffg_bypoint.geojson
 ffg_bypoint.factory(app)
+
+# /idot_dashcam.{fmt}
+idot_dashcam.factory(app)
 
 # /usdm_bypoint.json
 usdm_bypoint.factory(app)
