@@ -1,14 +1,14 @@
 """Test idot_dashcam."""
-import os
 
+# third party
 from fastapi.testclient import TestClient
-import pytest
+
+# Local
 from iemws.main import app
 
 client = TestClient(app)
 
 
-@pytest.mark.skipif(os.environ.get("HAS_IEMDATABASE") == "0", reason="NODB")
 def test_first():
     """Test we can do things."""
     res = client.get(
@@ -18,7 +18,6 @@ def test_first():
     assert "features" in j
 
 
-@pytest.mark.skipif(os.environ.get("HAS_IEMDATABASE") == "0", reason="NODB")
 def test_json():
     """Test we can do things."""
     res = client.get(
