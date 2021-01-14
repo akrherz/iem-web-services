@@ -2,7 +2,7 @@
 
 from fastapi.testclient import TestClient
 
-from ..main import app
+from iemws.main import app
 
 client = TestClient(app)
 

@@ -7,4 +7,4 @@ export PYTHONPATH=$(pwd)/src
 # --reload does not seem to work, shrug
 
 gunicorn -w 4 -k uvicorn.workers.UvicornWorker -b 0.0.0.0:8000 \
- --max-requests 500 --preload --reload app.main:app &
+ --max-requests 500 --preload --reload iemws.main:app &
