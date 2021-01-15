@@ -9,14 +9,14 @@ from iemws.main import app
 client = TestClient(app)
 
 
-def test_issue10_nowfo(prodtest):
+def test_issue10_nowfo():
     """Test that we need not provide a WFO."""
     res = client.get(
         "/cow.json",
         params={"begints": "2020-05-03T12:00Z", "endts": "2020-05-04T12:00Z"},
     )
     cow = res.json()
-    assert cow["stats"]["events_total"] == (180 if prodtest else 0)
+    assert cow["stats"]["events_total"] == 180
 
 
 def test_iemissue163_slowlix(prodtest):
@@ -53,8 +53,8 @@ def test_190806(prodtest):
 
     params = {
         "wfo": "DMX",
-        "begints": "2018-06-20T12:00Z",
-        "endts": "2018-06-30T12:00Z",
+        "begints": "2012-06-20T12:00Z",
+        "endts": "2012-06-30T12:00Z",
         "hailsize": 1.0,
     }
     res = client.get("/cow.json", params=params)
