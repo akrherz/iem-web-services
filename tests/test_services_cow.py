@@ -1,14 +1,14 @@
 """These are slower tests, so they go here."""
-import os
 
+# third party
 from fastapi.testclient import TestClient
-import pytest
+
+# local
 from iemws.main import app
 
 client = TestClient(app)
 
 
-@pytest.mark.skipif(os.environ.get("HAS_IEMDATABASE") == "0", reason="NODB")
 def test_issue10_nowfo():
     """Test that we need not provide a WFO."""
     res = client.get(
@@ -19,8 +19,7 @@ def test_issue10_nowfo():
     assert cow["stats"]["events_total"] == 180
 
 
-@pytest.mark.skipif(os.environ.get("HAS_IEMDATABASE") == "0", reason="NODB")
-def test_iemissue163_slowlix():
+def test_iemissue163_slowlix(prodtest):
     """See why this query is so slow!"""
     res = client.get(
         "/cow.json",
@@ -31,11 +30,10 @@ def test_iemissue163_slowlix():
         },
     )
     cow = res.json()
-    assert cow["stats"]["events_total"] == 395
+    assert cow["stats"]["events_total"] == (395 if prodtest else 0)
 
 
-@pytest.mark.skipif(os.environ.get("HAS_IEMDATABASE") == "0", reason="NODB")
-def test_dsw():
+def test_dsw(prodtest):
     """Dust Storm Warnings"""
     params = {
         "wfo": "PSR",
@@ -47,30 +45,28 @@ def test_dsw():
     }
     res = client.get("/cow.json", params=params)
     cow = res.json()
-    assert cow["stats"]["events_total"] == 18
+    assert cow["stats"]["events_total"] == (18 if prodtest else 0)
 
 
-@pytest.mark.skipif(os.environ.get("HAS_IEMDATABASE") == "0", reason="NODB")
-def test_190806():
+def test_190806(prodtest):
     """Test that we can limit verification to tags."""
 
     params = {
         "wfo": "DMX",
-        "begints": "2018-06-20T12:00Z",
-        "endts": "2018-06-30T12:00Z",
+        "begints": "2012-06-20T12:00Z",
+        "endts": "2012-06-30T12:00Z",
         "hailsize": 1.0,
     }
     res = client.get("/cow.json", params=params)
     cow = res.json()
-    assert cow["stats"]["warned_reports"] == 56
+    assert cow["stats"]["warned_reports"] == (56 if prodtest else 0)
     params["windhailtag"] = "Y"
     res = client.get("/cow.json", params=params)
     cow = res.json()
-    assert cow["stats"]["warned_reports"] == 46
+    assert cow["stats"]["warned_reports"] == (46 if prodtest else 0)
 
 
-@pytest.mark.skipif(os.environ.get("HAS_IEMDATABASE") == "0", reason="NODB")
-def test_180620():
+def test_180620(prodtest):
     """Compare with what we have from legacy PHP based Cow"""
     params = {
         "wfo": "DMX",
@@ -80,6 +76,8 @@ def test_180620():
     }
     res = client.get("/cow.json", params=params)
     cow = res.json()
+    if not prodtest:
+        return
     assert cow["stats"]["events_total"] == 18
     assert cow["stats"]["events_verified"] == 4
     assert abs(cow["stats"]["area_verify[%]"] - 17.0) < 0.1
