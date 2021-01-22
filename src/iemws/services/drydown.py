@@ -7,9 +7,12 @@ from metpy.units import units, masked_array
 from metpy.calc import relative_humidity_from_dewpoint
 from pandas.io.sql import read_sql
 from fastapi import Query, HTTPException
-from pyiem.util import ncopen
+from pyiem.util import ncopen, logger
 from pyiem.iemre import get_gid, find_ij, daily_offset
 from ..util import get_dbconn
+
+LOG = logger()
+NCOPEN_TIMEOUT = 20  # seconds
 
 
 def _i(val):
@@ -42,8 +45,15 @@ def append_cfs(res, lon, lat):
         valid -= datetime.timedelta(hours=24)
         attempt += 1
         if attempt > 9:
-            return
-    nc = ncopen(testfn)
+            return None
+    try:
+        nc = ncopen(testfn, timeout=NCOPEN_TIMEOUT)
+    except Exception as exp:
+        LOG.error(exp)
+        return None
+    if nc is None:
+        LOG.debug("Failing %s as nc is None", testfn)
+        return None
     high = (
         masked_array(nc.variables["high_tmpk"][:, gridy, gridx], units.degK)
         .to(units.degF)
@@ -75,6 +85,7 @@ def append_cfs(res, lon, lat):
             entry["high"].append(_i(high[i]))
             entry["low"].append(_i(low[i]))
             entry["rh"].append(_i(rh[i]))
+    return res
 
 
 def handler(lon, lat):
