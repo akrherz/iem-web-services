@@ -17,6 +17,11 @@ jobs:
       run: |
         cat .github/workflows/etchosts.txt | sudo tee -a /etc/hosts
 
+    - name: Setup Directory Structure
+      run: |
+        sudo mkdir -p /mesonet/data/iemre
+        sudo chown -R runner /mesonet
+
     - name: Setup CI from ci-tooling
       run: |
         git clone --depth 1 https://github.com/akrherz/iem-database.git database
