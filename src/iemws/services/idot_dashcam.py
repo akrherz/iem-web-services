@@ -79,7 +79,7 @@ def factory(app):
     ):
         """Replaced Below."""
         if valid is None:
-            valid = utc() - timedelta(minutes=window)
+            valid = utc() - timedelta(minutes=window * 2)
         if valid.tzinfo is None:
             valid = valid.replace(tzinfo=timezone.utc)
         return Response(
