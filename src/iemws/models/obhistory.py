@@ -36,6 +36,8 @@ class DataItem(BaseModel):
     p06i: float = Field(..., title="ASOS 6 Hour Precipitation Accum [inch]")
     p24i: float = Field(..., title="ASOS 24 Hour Precipitation Accum [inch]")
     raw: str = Field(..., title="METAR or SHEF information")
+    max_tmpf_6hr: float = Field(..., title="METAR 6 Hour Max Temp [F]")
+    min_tmpf_6hr: float = Field(..., title="METAR 6 Hour Min Temp [F]")
     wxcodes: str = Field(..., title="Present Weather METAR Codes")
 
 
