@@ -13,6 +13,7 @@ from .services import (
     drydown,
     ffg_bypoint,
     idot_dashcam,
+    iowa_winter_roadcond,
     meteobridge,
     mos,
     nwstext,
@@ -35,6 +36,9 @@ ffg_bypoint.factory(app)
 
 # /idot_dashcam.{fmt}
 idot_dashcam.factory(app)
+
+# /iowa_winter_roadcond.{fmt}
+iowa_winter_roadcond.factory(app)
 
 # /usdm_bypoint.json
 usdm_bypoint.factory(app)
