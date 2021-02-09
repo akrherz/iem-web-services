@@ -25,12 +25,15 @@ def handler(valid, fmt):
             from roads_base b, roads_log c WHERE b.segid = c.segid
             and c.valid > %s and c.valid < %s),
         agg as (
-            select * from data where row_number = 1)
-        select valid at time zone 'UTC' as utc_valid,
-        b.type as rtype, b.int1, b.st1, b.us1,
-        ST_Transform(b.geom, 4326) as geom,
-        coalesce(d.cond_code, 0) as cond_code from
-        roads_base b JOIN agg d on (b.segid = d.segid)
+            select * from data where row_number = 1),
+        agg2 as (
+            select valid at time zone 'UTC' as utc_valid,
+            b.type as rtype, b.int1, b.st1, b.us1,
+            ST_Transform(b.geom, 4326) as geom,
+            coalesce(d.cond_code, 0) as cond_code from
+            roads_base b JOIN agg d on (b.segid = d.segid))
+        select a2.*, c.color, c.label from agg2 a2 JOIN roads_conditions c
+        on (a2.cond_code = c.code)
         """,
         pgconn,
         params=(valid - timedelta(days=30), valid),
