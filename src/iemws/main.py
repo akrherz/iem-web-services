@@ -16,6 +16,8 @@ from .services import (
     iowa_winter_roadcond,
     meteobridge,
     mos,
+    network,
+    networks,
     nwstext,
     obhistory,
     raobs_by_year,
@@ -51,6 +53,12 @@ obhistory.factory(app)
 
 # /mos.{fmt}
 mos.factory(app)
+
+# /network/{network}.{fmt}
+network.factory(app)
+
+# /networks.{fmt}
+networks.factory(app)
 
 # /nwstext/{product_id}
 nwstext.factory(app)
