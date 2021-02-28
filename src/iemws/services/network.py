@@ -7,7 +7,7 @@ import tempfile
 
 import pandas as pd
 from geopandas import read_postgis
-from fastapi import Query, Response
+from fastapi import Query, Response, HTTPException
 from ..models import SupportedFormats
 from ..reference import MEDIATYPES
 from ..util import get_dbconn
@@ -36,6 +36,11 @@ def handler(network_id, fmt):
             params=(network_id,),
             geom_col="geom",
             index_col=None,
+        )
+    if df.empty:
+        raise HTTPException(
+            status_code=404,
+            detail="No stations found for provided network.",
         )
     if fmt != "geojson":
         df = df.drop("geom", axis=1)
