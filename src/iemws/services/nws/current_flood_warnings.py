@@ -39,7 +39,8 @@ def handler(fmt, state, wfo):
             SELECT wfo, eventid, hvtec_nwsli, s.geom, h.name, h.river_name,
             st_x(h.geom) as longitude, st_y(h.geom) as latitude
             from sbw s JOIN hvtec_nwsli h on (s.hvtec_nwsli = h.nwsli)
-            where phenomena = 'FL' and significance = 'W' and
+            where expire > now() and phenomena = 'FL' and
+            significance = 'W' and
             polygon_end > now() and status not in ('EXP', 'CAN') and
             hvtec_nwsli is not null {wfo_limiter}),
         counties as (
