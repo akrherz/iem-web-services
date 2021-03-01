@@ -31,14 +31,14 @@ def handler(fmt, state, wfo):
         state_limiter = f" and substr(w.ugc, 1, 2) = '{state}' "
     wfo_limiter = ""
     if wfo is not None:
-        wfo_limiter = f" and wfo = '{wfo}' "
+        wfo_limiter = f" and w.wfo = '{wfo}' "
 
     df = read_postgis(
         f"""
         WITH polys as (
-            SELECT wfo, eventid, hvtec_nwsli, s.geom, h.name, h.river_name,
+            SELECT wfo, eventid, hvtec_nwsli, w.geom, h.name, h.river_name,
             st_x(h.geom) as longitude, st_y(h.geom) as latitude
-            from sbw s JOIN hvtec_nwsli h on (s.hvtec_nwsli = h.nwsli)
+            from sbw w JOIN hvtec_nwsli h on (w.hvtec_nwsli = h.nwsli)
             where expire > now() and phenomena = 'FL' and
             significance = 'W' and
             polygon_end > now() and status not in ('EXP', 'CAN') and
