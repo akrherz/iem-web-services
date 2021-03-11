@@ -21,6 +21,8 @@ jobs:
       run: |
         sudo mkdir -p /mesonet/data/iemre
         sudo chown -R runner /mesonet
+        sudo mkdir /opt/bufkit
+        sudo git clone https://github.com/ckarstens/bufkit.git /opt/bufkit
 
     - name: Setup CI from ci-tooling
       run: |
