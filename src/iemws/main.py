@@ -27,7 +27,7 @@ from .services import (
     servertime,
     spc_watch_outline,
 )
-from .services.nws import current_flood_warnings
+from .services.nws import current_flood_warnings, bufkit
 
 app = FastAPI(root_path="/api/1", description=__doc__, title="IEM API v1")
 
@@ -42,6 +42,9 @@ idot_dashcam.factory(app)
 
 # /iowa_winter_roadcond.{fmt}
 iowa_winter_roadcond.factory(app)
+
+# /nws/bufkit.{fmt}
+bufkit.factory(app)
 
 # /nws/current_flood_warnings.{fmt}
 current_flood_warnings.factory(app)
