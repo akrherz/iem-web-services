@@ -46,3 +46,11 @@ def test_nam4km():
         "/nws/bufkit.json?time=2021-01-01T01:00&station=KDSM&model=NAM4KM"
     )
     assert res.status_code == 200
+
+
+def test_gr():
+    """Test the GR flag."""
+    res = client.get(
+        "/nws/bufkit.json?time=2021-01-01T01:00&station=KDSM&gr=1"
+    )
+    assert res.status_code == 200
