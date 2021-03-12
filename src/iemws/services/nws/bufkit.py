@@ -52,7 +52,7 @@ from ...reference import MEDIATYPES
 def load_stations():
     """Need station details."""
     rows = []
-    for name in ["gfs", "hrrr", "nam", "rap"]:
+    for name in ["gfs", "hrrr", "nam", "rap", "nam4km"]:
         tablefn = f"/opt/bufkit/bufrgruven/stations/{name}_bufrstations.txt"
         if not os.path.isfile(tablefn):
             continue
