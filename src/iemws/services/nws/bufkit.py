@@ -256,6 +256,8 @@ def handler(ctx):
             and runtime.hour in [6, 18]
         ):
             prefix = "namm"
+        if model == "GFS":
+            prefix = "gfs3"
         url = runtime.strftime(
             f"{BASEURL}/%Y/%m/%d/bufkit/%H/{model.lower()}/{prefix}_"
             f"{station.lower()}.buf"

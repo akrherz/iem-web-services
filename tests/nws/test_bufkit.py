@@ -54,3 +54,12 @@ def test_gr():
         "/nws/bufkit.json?time=2021-01-01T01:00&station=KDSM&gr=1"
     )
     assert res.status_code == 200
+
+
+def test_210311_gfs():
+    """Test a failure seen with GFS."""
+    res = client.get(
+        "/nws/bufkit.json?runtime=2021-03-11T00:00&station=KDEN&fall=1&"
+        "model=GFS"
+    )
+    assert res.status_code == 200
