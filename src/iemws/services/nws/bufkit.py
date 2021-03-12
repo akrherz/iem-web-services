@@ -179,8 +179,6 @@ def do_gr(ctx):
         "source": {
             "type": "model",
             "model": ctx["model"],
-            "row": None,
-            "col": None,
             "run_time": ctx["runtime"].strftime(ISO9660),
             "forecast_hour": ctx["fhour"],
         },
