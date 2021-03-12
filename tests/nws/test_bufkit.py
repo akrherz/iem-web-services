@@ -38,3 +38,19 @@ def test_setting_runtime_but_no_runtime():
     """Test this combo."""
     res = client.get("/nws/bufkit.json?runtime=2021-01-01T00:00&station=KDSM")
     assert res.status_code == 500
+
+
+def test_nam4km():
+    """Test that the NAM4KM returns content."""
+    res = client.get(
+        "/nws/bufkit.json?time=2021-01-01T01:00&station=KDSM&model=NAM4KM"
+    )
+    assert res.status_code == 200
+
+
+def test_gr():
+    """Test the GR flag."""
+    res = client.get(
+        "/nws/bufkit.json?time=2021-01-01T01:00&station=KDSM&gr=1"
+    )
+    assert res.status_code == 200

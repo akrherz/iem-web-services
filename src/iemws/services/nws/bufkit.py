@@ -41,6 +41,7 @@ import os
 import requests
 import pandas as pd
 from fastapi import Response, Query, HTTPException
+from metpy.units import units
 from pyiem.util import utc
 from pyiem.nws.bufkit import read_bufkit
 
@@ -52,7 +53,7 @@ from ...reference import MEDIATYPES
 def load_stations():
     """Need station details."""
     rows = []
-    for name in ["gfs", "hrrr", "nam", "rap"]:
+    for name in ["gfs", "hrrr", "nam", "rap", "nam4km"]:
         tablefn = f"/opt/bufkit/bufrgruven/stations/{name}_bufrstations.txt"
         if not os.path.isfile(tablefn):
             continue
@@ -148,6 +149,55 @@ UNITS = {
 }
 
 
+def do_gr(ctx):
+    """Custom schema."""
+    s = ctx["sndf"]["STIM PRES HGHT TMPC DWPC DRCT SKNT OMEG".split()]
+    levels = s[s["STIM"] == ctx["fhour"]].drop("STIM", axis=1)
+    levels = levels.rename(
+        {
+            "PRES": "pressure",
+            "HGHT": "height",
+            "TMPC": "temperature",
+            "DWPC": "dewpoint",
+            "DRCT": "wind_from",
+            "SKNT": "wind_speed",
+            "OMEG": "uvv",
+        },
+        axis=1,
+    )
+    levels["wind_speed"] = (
+        (levels["wind_speed"].values * units("knot"))
+        .to(units("meter / second"))
+        .m
+    )
+    levels["wind_speed"] = levels["wind_speed"].round(2)
+    records = levels.to_dict(orient="records")
+    res = {
+        "time": ctx["valid"].strftime(ISO9660),
+        "lat": ctx["lat"],
+        "lon": ctx["lon"],
+        "source": {
+            "type": "model",
+            "model": ctx["model"],
+            "row": None,
+            "col": None,
+            "run_time": ctx["runtime"].strftime(ISO9660),
+            "forecast_hour": ctx["fhour"],
+        },
+        "levels": records,
+        "units": {
+            "pressure": ["MB", "millibars", "hPa", "hectopascals"],
+            "height": ["M", "meters"],
+            "temperature": ["C", "celsius"],
+            "dewpoint": ["C", "celsius"],
+            "wind_from": ["DEG", "degrees"],
+            "wind_speed": ["MPS", "meters per second"],
+            "uvv": ["UBS", "microbars per second"],
+        },
+    }
+    return res
+
+
 def handler(ctx):
     """Handle the request, return dict"""
     begin = utc()
@@ -223,6 +273,11 @@ def handler(ctx):
         return sio.getvalue()
 
     sndf, stndf = read_bufkit(sio)
+    fhour = int((valid - runtime).total_seconds() / 3600)
+    fhours = [fhour]
+    if ctx["gr"]:
+        res = do_gr(vars())
+        return json.dumps(res)
     stndf = stndf.drop("utc_valid", axis=1)
     res = {
         "server_time": utc().strftime(ISO9660),
@@ -237,8 +292,6 @@ def handler(ctx):
             "run_time": runtime.strftime(ISO9660),
         },
     }
-    fhour = int((valid - runtime).total_seconds() / 3600)
-    fhours = [fhour]
     if ctx["fall"]:
         fhours = stndf.index.values
     for fhour in fhours:
@@ -279,6 +332,7 @@ def factory(app):
         runtime: datetime = Query(None, description="Model Init Time UTC"),
         station: str = Query(None, description="bufkit site identifier"),
         fall: bool = Query(False, description="Include all forecast hours"),
+        gr: bool = Query(False, description="Use Gibson Ridge JSON Schema"),
     ):
         """Replaced above."""
         if model not in ["GFS", "HRRR", "NAM", "NAM4KM", "RAP"]:
