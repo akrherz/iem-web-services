@@ -103,14 +103,17 @@ def get_df(network, station, date):
         )
         # Compute dew point
         if not df.empty:
-            df["dwpf"] = (
-                dewpoint_from_relative_humidity(
-                    masked_array(df["tmpf"].values, units("degF")),
-                    masked_array(df["relh"].values, units("percent")),
+            try:
+                df["dwpf"] = (
+                    dewpoint_from_relative_humidity(
+                        masked_array(df["tmpf"].values, units("degF")),
+                        masked_array(df["relh"].values, units("percent")),
+                    )
+                    .to(units("degF"))
+                    .m
                 )
-                .to(units("degF"))
-                .m
-            )
+            except TypeError:
+                df["dwpf"] = np.nan
         return df
     if network == "OT":
         # Use ISUAG
