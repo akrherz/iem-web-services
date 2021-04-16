@@ -31,7 +31,7 @@ jobs:
         . .ci_tooling/postgres.sh
         . .ci_tooling/miniconda.sh
         pip install codecov
-        export PATH="/usr/lib/postgresql/11/bin:$PATH"
+        export PATH="/usr/lib/postgresql/12/bin:$PATH"
         psql -c 'CREATE ROLE runner SUPERUSER LOGIN CREATEDB;' -U postgres || true
         cd database; sh bootstrap.sh
         python schema_manager.py
