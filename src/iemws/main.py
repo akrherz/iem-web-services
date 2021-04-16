@@ -27,7 +27,7 @@ from .services import (
     servertime,
     spc_watch_outline,
 )
-from .services.nws import current_flood_warnings, bufkit
+from .services.nws import current_flood_warnings, bufkit, taf, taf_overview
 
 app = FastAPI(root_path="/api/1", description=__doc__, title="IEM API v1")
 
@@ -48,6 +48,12 @@ bufkit.factory(app)
 
 # /nws/current_flood_warnings.{fmt}
 current_flood_warnings.factory(app)
+
+# /nws/taf.{fmt}
+taf.factory(app)
+
+# /nws/taf_overview.{fmt}
+taf_overview.factory(app)
 
 # /usdm_bypoint.json
 usdm_bypoint.factory(app)
