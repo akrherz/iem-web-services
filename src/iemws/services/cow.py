@@ -146,7 +146,7 @@ class COWSession(object):
         else:
             far = 0
         self.stats["FAR[1]"] = far
-        if far > 0 and pod > 0:
+        if pod > 0:
             self.stats["CSI[1]"] = (((pod) ** -1 + (1 - far) ** -1) - 1) ** -1
         else:
             self.stats["CSI[1]"] = 0.0
