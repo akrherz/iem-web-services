@@ -3,6 +3,7 @@
 You can approach this API via the following ways:
  - `/currents.json?network=IA_ASOS` :: A single "network" worth of currents.
  - `/currents.json?networkclass=COOP&wfo=DMX` :: All COOP sites for WFO DMX
+ - `/currents.json?networkclass=ASOS&country=US` :: All ASOS sites for US
  - `/currents.json?state=IA` :: Everything the IEM has for Iowa
  - `/currents.json?wfo=DMX` :: Everything the IEM has for WFO DMX
  - `/currents.json?station=DSM&station=AMW` :: Explicit listing of stations
@@ -85,7 +86,9 @@ def compute(df):
     # df.dropna(how='all', axis=1, inplace=True)
 
 
-def handler(network, networkclass, wfo, state, station, event, minutes, fmt):
+def handler(
+    network, networkclass, wfo, country, state, station, event, minutes, fmt
+):
     """Handle the request, return dict"""
     pgconn = get_dbconn("iem")
     if station is not None:
@@ -94,6 +97,11 @@ def handler(network, networkclass, wfo, state, station, event, minutes, fmt):
     elif networkclass is not None and wfo is not None:
         params = [wfo, networkclass]
         sql = SQL.replace("REPLACEME", "t.wfo = %s and t.network ~* %s and")
+    elif networkclass is not None and country is not None:
+        params = [country, networkclass]
+        sql = SQL.replace(
+            "REPLACEME", "t.country = %s and t.network ~* %s and"
+        )
     elif wfo is not None:
         params = [wfo]
         sql = SQL.replace("REPLACEME", "t.wfo = %s and")
@@ -144,6 +152,7 @@ def factory(app):
         network: str = Query(None, description="IEM Network Identifier"),
         networkclass: str = Query(None),
         wfo: str = Query(None, max_length=4),
+        country: str = Query(None, max_length=2),
         state: str = Query(None, max_length=2),
         station: List[str] = Query(None),
         event: str = Query(None),
@@ -153,7 +162,15 @@ def factory(app):
 
         return Response(
             handler(
-                network, networkclass, wfo, state, station, event, minutes, fmt
+                network,
+                networkclass,
+                wfo,
+                country,
+                state,
+                station,
+                event,
+                minutes,
+                fmt,
             ),
             media_type=MEDIATYPES[fmt],
         )
