@@ -12,3 +12,9 @@ def test_basic():
     req = client.get("/currents.json")
     res = req.json()
     assert res is not None
+
+
+def test_issue61_uscurrents():
+    """Test that we can query by networkclass and country."""
+    req = client.get("/currents.txt?networkclass=ASOS&country=US")
+    assert req.text is not None
