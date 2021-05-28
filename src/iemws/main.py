@@ -27,6 +27,7 @@ from .services import (
     servertime,
     spc_watch_outline,
 )
+from .services.isusm import daily
 from .services.nws import current_flood_warnings, bufkit, taf, taf_overview
 
 app = FastAPI(root_path="/api/1", description=__doc__, title="IEM API v1")
@@ -42,6 +43,9 @@ idot_dashcam.factory(app)
 
 # /iowa_winter_roadcond.{fmt}
 iowa_winter_roadcond.factory(app)
+
+# /isusm/daily.{fmt}
+daily.factory(app)
 
 # /nws/bufkit.{fmt}
 bufkit.factory(app)
