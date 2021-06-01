@@ -37,7 +37,8 @@ def handler(fmt, state, wfo):
         f"""
         WITH polys as (
             SELECT wfo, eventid, hvtec_nwsli, w.geom, h.name, h.river_name,
-            st_x(h.geom) as longitude, st_y(h.geom) as latitude
+            st_x(h.geom) as longitude, st_y(h.geom) as latitude,
+            phenomena, significance
             from sbw w JOIN hvtec_nwsli h on (w.hvtec_nwsli = h.nwsli)
             where expire > now() and phenomena = 'FL' and
             significance = 'W' and
