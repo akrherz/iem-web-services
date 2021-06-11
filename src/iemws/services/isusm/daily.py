@@ -94,7 +94,8 @@ def get_df_isuag(sdate, edate, gddbase, gddceil):
             select d.*, h.sgdd from
             daily_agg d JOIN hourly_agg h on (d.station = h.station)
         )
-        select a.*, st_x(geom) as lon, st_y(geom) as lat, geom, name from
+        select a.*, st_x(geom) as lon, st_y(geom) as lat, geom, name,
+        plot_name as city from
         agg a JOIN stations t on (a.station = t.id) WHERE t.network = 'ISUAG'
         """,
         pgconn,
@@ -134,7 +135,8 @@ def get_df_isusm(sdate, edate, gddbase, gddceil):
             select d.*, h.sgdd from
             daily_agg d JOIN hourly_agg h on (d.station = h.station)
         )
-        select a.*, st_x(geom) as lon, st_y(geom) as lat, geom, name from
+        select a.*, st_x(geom) as lon, st_y(geom) as lat, geom, name,
+        plot_name as city from
         agg a JOIN stations t on (a.station = t.id) WHERE t.network = 'ISUSM'
         """,
         pgconn,
