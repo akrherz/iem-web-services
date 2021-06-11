@@ -113,8 +113,8 @@ def get_df_isusm(sdate, edate, gddbase, gddceil):
         """
         WITH hourly_daily as (
             SELECT station, date(valid),
-            c2f(max(tsoil_c_avg_qc)) as tsoil_high,
-            c2f(min(tsoil_c_avg_qc)) as tsoil_low
+            c2f(max(t4_c_avg_qc)) as tsoil_high,
+            c2f(min(t4_c_avg_qc)) as tsoil_low
             from sm_hourly WHERE valid >= %s and valid < %s
             GROUP by station, date
         ), hourly_agg as (
@@ -126,8 +126,8 @@ def get_df_isusm(sdate, edate, gddbase, gddceil):
             sum(dailyet_qc / 25.4) as et,
             sum(gddxx(
                 %s, %s, c2f(tair_c_max_qc), c2f(tair_c_min_qc))) as gdd,
-            sum(slrmj_tot_qc) as srad,
-            sum(rain_mm_tot_qc / 25.4) as precip
+            sum(slrkj_tot_qc) / 1000. as srad,
+            sum(rain_in_tot_qc) as precip
             from sm_daily WHERE valid >= %s and valid <= %s
             GROUP by station
         ), agg as (
