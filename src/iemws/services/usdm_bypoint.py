@@ -1,4 +1,8 @@
-"""US Drought Monitor by lat/lon point"""
+"""US Drought Monitor (USDM) by lat/lon point.
+
+The case of no-drought for the given USDM date is presented by a `null` value
+in the JSON.
+"""
 import json
 from datetime import date
 
@@ -14,14 +18,27 @@ def run(sdate, edate, lon, lat):
     pgconn = get_dbconn("postgis")
 
     df = read_sql(
-        "SELECT to_char(valid, 'YYYY-MM-DD') as valid, "
-        "max(dm) as category from usdm WHERE "
-        "ST_Contains(geom, ST_SetSRID(ST_GeomFromEWKT('POINT(%s %s)'),4326)) "
-        "and valid >= %s and valid <= %s GROUP by valid ORDER by valid ASC",
+        """
+        with timedomain as (
+            select distinct valid from usdm WHERE valid >= %s and
+            valid <= %s
+        ),
+        hits as (
+            SELECT valid, max(dm) as category from usdm WHERE
+            ST_Contains(
+                geom, ST_SetSRID(ST_GeomFromEWKT('POINT(%s %s)'),4326))
+            and valid >= %s and valid <= %s
+            GROUP by valid
+        )
+        select to_char(t.valid, 'YYYY-mm-dd') as valid, category
+        from timedomain t LEFT JOIN hits h on (t.valid = h.valid)
+        ORDER by t.valid ASC
+        """,
         pgconn,
-        params=(lon, lat, sdate, edate),
+        params=(sdate, edate, lon, lat, sdate, edate),
         index_col=None,
     )
+    df["category"] = df["category"].astype("Int64")
 
     return json.loads(df.to_json(orient="table", default_handler=str))
 
