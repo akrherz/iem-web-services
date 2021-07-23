@@ -50,6 +50,7 @@ def get_df(network, station, date, month, year, fmt):
             null as min_feel, null as avg_feel, null as max_feel,
             null as max_gust_localts, null as max_drct,
             null as avg_sknt, null as vector_avg_drct,
+            null as min_rstage, null as max_rstage,
             temp_hour, geom, id, name
             from alldata_{network[:2]} s JOIN stations t on (s.station = t.id)
             WHERE t.network = %s {sl} {dl}
@@ -86,6 +87,7 @@ def get_df(network, station, date, month, year, fmt):
             max_gust_ts at time zone t.tzname as max_gust_localts,
             to_char(coop_valid at time zone t.tzname, 'HH24') as temp_hour,
             avg_sknt, vector_avg_drct,
+            min_rstage, max_rstage,
             geom, id, name
             from {table} s JOIN stations t on (s.iemid = t.iemid)
             WHERE t.network = %s {sl} {dl}
