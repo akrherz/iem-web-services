@@ -46,16 +46,25 @@ def handler(station, date):
     # Figure out how many unique sources we have
     df = None
     for source in scp["source"].unique():
-        df2 = scp[scp["source"] == source].copy().set_index("utc_scp_valid")
-        df2 = df2.drop("source", axis=1)
+        df2 = (
+            scp[scp["source"] == source]
+            .copy()
+            .set_index("utc_scp_valid")
+            .drop("source", axis=1)
+        )
         df2.columns = [f"{s}_{source}" for s in df2.columns]
         if df is None:
             df = df2
             continue
         # Join
         df = df.join(df2)
-    if df is None:
+    # Case 1, we have scp, but no obs
+    if obs.empty and df is not None:
+        pass
+    # Case 2, we have obs, but no scp
+    elif df is None:
         df = obs
+    # Case 3, we have both, hopefully
     else:
         df = df.reset_index()
         # Reindex scp to match obs
