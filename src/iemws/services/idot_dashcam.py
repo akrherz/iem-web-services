@@ -6,13 +6,15 @@ import tempfile
 from pyiem.util import utc
 import pandas as pd
 from geopandas import read_postgis
-from fastapi import Response, Query
+from fastapi import Response, Query, APIRouter
 
 # Local
 from ..util import get_dbconn
 from ..models import SupportedFormats
 from ..models.idot_dashcam import RootSchema
 from ..reference import MEDIATYPES
+
+router = APIRouter()
 
 
 def make_url(row):
@@ -61,29 +63,25 @@ def handler(valid, window, fmt):
     return res
 
 
-def factory(app):
-    """Generate."""
+@router.get(
+    "/idot_dashcam.{fmt}", response_model=RootSchema, description=__doc__
+)
+def idot_dashcam_service(
+    fmt: SupportedFormats,
+    valid: datetime = Query(
+        None, description="UTC timestamp to look for imagery."
+    ),
+    window: int = Query(
+        15,
+        description=("Number of minutes to look around the given valid."),
+    ),
+):
+    """Replaced Below."""
+    if valid is None:
+        valid = utc() - timedelta(minutes=window * 2)
+    if valid.tzinfo is None:
+        valid = valid.replace(tzinfo=timezone.utc)
+    return Response(handler(valid, window, fmt), media_type=MEDIATYPES[fmt])
 
-    @app.get(
-        "/idot_dashcam.{fmt}", response_model=RootSchema, description=__doc__
-    )
-    def idot_dashcam_service(
-        fmt: SupportedFormats,
-        valid: datetime = Query(
-            None, description="UTC timestamp to look for imagery."
-        ),
-        window: int = Query(
-            15,
-            description=("Number of minutes to look around the given valid."),
-        ),
-    ):
-        """Replaced Below."""
-        if valid is None:
-            valid = utc() - timedelta(minutes=window * 2)
-        if valid.tzinfo is None:
-            valid = valid.replace(tzinfo=timezone.utc)
-        return Response(
-            handler(valid, window, fmt), media_type=MEDIATYPES[fmt]
-        )
 
-    idot_dashcam_service.__doc__ = __doc__
+idot_dashcam_service.__doc__ = __doc__

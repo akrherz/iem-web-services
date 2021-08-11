@@ -10,7 +10,7 @@ import tempfile
 import pandas as pd
 from pandas.io.sql import read_sql
 from geopandas import read_postgis
-from fastapi import Response, Query
+from fastapi import Response, Query, APIRouter
 import numpy as np
 from pyiem.tracker import loadqc
 
@@ -18,6 +18,8 @@ from pyiem.tracker import loadqc
 from ...models import SupportedFormats
 from ...reference import MEDIATYPES
 from ...util import get_dbconn
+
+router = APIRouter()
 
 
 def iemtracker(df, edate):
@@ -176,21 +178,19 @@ def handler(fmt, sdate, edate, gddbase, gddceil):
     return res
 
 
-def factory(app):
-    """Generate."""
+@router.get("/isusm/daily.{fmt}", description=__doc__)
+def service(
+    fmt: SupportedFormats,
+    sdate: date = Query(...),
+    edate: date = Query(None),
+    gddbase: int = Query(50),
+    gddceil: int = Query(86),
+):
+    """Replaced above."""
+    return Response(
+        handler(fmt, sdate, edate, gddbase, gddceil),
+        media_type=MEDIATYPES[fmt],
+    )
 
-    @app.get("/isusm/daily.{fmt}", description=__doc__)
-    def service(
-        fmt: SupportedFormats,
-        sdate: date = Query(...),
-        edate: date = Query(None),
-        gddbase: int = Query(50),
-        gddceil: int = Query(86),
-    ):
-        """Replaced above."""
-        return Response(
-            handler(fmt, sdate, edate, gddbase, gddceil),
-            media_type=MEDIATYPES[fmt],
-        )
 
-    service.__doc__ = __doc__
+service.__doc__ = __doc__

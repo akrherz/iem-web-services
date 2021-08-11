@@ -17,10 +17,12 @@ import tempfile
 
 import pandas as pd
 from geopandas import read_postgis
-from fastapi import Response, Query
+from fastapi import Response, Query, APIRouter
 from ...models import SupportedFormats
 from ...reference import MEDIATYPES
 from ...util import get_dbconn
+
+router = APIRouter()
 
 
 def handler(fmt, state, wfo):
@@ -79,16 +81,14 @@ def handler(fmt, state, wfo):
     return res
 
 
-def factory(app):
-    """Generate."""
+@router.get("/nws/current_flood_warnings.{fmt}", description=__doc__)
+def service(
+    fmt: SupportedFormats,
+    state: str = Query(None, length=2),
+    wfo: str = Query(None, length=3),
+):
+    """Replaced above."""
+    return Response(handler(fmt, state, wfo), media_type=MEDIATYPES[fmt])
 
-    @app.get("/nws/current_flood_warnings.{fmt}", description=__doc__)
-    def service(
-        fmt: SupportedFormats,
-        state: str = Query(None, length=2),
-        wfo: str = Query(None, length=3),
-    ):
-        """Replaced above."""
-        return Response(handler(fmt, state, wfo), media_type=MEDIATYPES[fmt])
 
-    service.__doc__ = __doc__
+service.__doc__ = __doc__

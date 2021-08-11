@@ -25,12 +25,14 @@ import numpy as np
 from metpy.units import masked_array, units
 from metpy.calc import dewpoint_from_relative_humidity
 from pandas.io.sql import read_sql
-from fastapi import Query, Response, HTTPException
+from fastapi import Query, Response, HTTPException, APIRouter
 from pyiem.network import Table as NetworkTable
 from ..models.obhistory import RootSchema, DataItem
 from ..models import SupportedFormatsNoGeoJSON
 from ..util import get_dbconn
 from ..reference import MEDIATYPES
+
+router = APIRouter()
 
 
 def get_df(network, station, date):
@@ -226,31 +228,27 @@ def handler(network, station, date, full, fmt):
     return df.to_json(orient="table", default_handler=str, index=False)
 
 
-def factory(app):
-    """Generate the app."""
+@router.get("/obhistory.{fmt}", response_model=RootSchema, description=__doc__)
+def service(
+    fmt: SupportedFormatsNoGeoJSON,
+    network: str = Query(
+        ..., description="IEM Network Identifier", max_length=20
+    ),
+    station: str = Query(
+        ..., description="IEM Station Identifier", max_length=20
+    ),
+    date: datetime.date = Query(
+        None, description="Local station calendar date"
+    ),
+    full: bool = Query(False, description="Include all variables?"),
+):
+    """Replaced above with module __doc__"""
 
-    @app.get(
-        "/obhistory.{fmt}", response_model=RootSchema, description=__doc__
+    return Response(
+        handler(network.upper(), station.upper(), date, full, fmt),
+        media_type=MEDIATYPES[fmt],
     )
-    def service(
-        fmt: SupportedFormatsNoGeoJSON,
-        network: str = Query(
-            ..., description="IEM Network Identifier", max_length=20
-        ),
-        station: str = Query(
-            ..., description="IEM Station Identifier", max_length=20
-        ),
-        date: datetime.date = Query(
-            None, description="Local station calendar date"
-        ),
-        full: bool = Query(False, description="Include all variables?"),
-    ):
-        """Replaced above with module __doc__"""
 
-        return Response(
-            handler(network.upper(), station.upper(), date, full, fmt),
-            media_type=MEDIATYPES[fmt],
-        )
 
-    # Not really used
-    service.__doc__ = __doc__
+# Not really used
+service.__doc__ = __doc__

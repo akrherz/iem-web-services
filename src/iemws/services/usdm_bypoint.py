@@ -7,10 +7,11 @@ import json
 from datetime import date
 
 from pandas.io.sql import read_sql
-from fastapi import Query
+from fastapi import Query, APIRouter
 from ..util import get_dbconn
 
 ISO = "%Y-%m-%dT%H:%M:%SZ"
+router = APIRouter()
 
 
 def run(sdate, edate, lon, lat):
@@ -49,17 +50,15 @@ def handler(sdate, edate, lon, lat):
     return run(sdate, edate, lon, lat)
 
 
-def factory(app):
-    """Generate."""
+@router.get("/usdm_bypoint.json", description=__doc__)
+def usdm_bypoint_service(
+    sdate: date = Query(...),
+    edate: date = Query(...),
+    lon: float = Query(...),
+    lat: float = Query(...),
+):
+    """Replaced above."""
+    return handler(sdate, edate, lon, lat)
 
-    @app.get("/usdm_bypoint.json", description=__doc__)
-    def usdm_bypoint_service(
-        sdate: date = Query(...),
-        edate: date = Query(...),
-        lon: float = Query(...),
-        lat: float = Query(...),
-    ):
-        """Replaced above."""
-        return handler(sdate, edate, lon, lat)
 
-    usdm_bypoint_service.__doc__ = __doc__
+usdm_bypoint_service.__doc__ = __doc__

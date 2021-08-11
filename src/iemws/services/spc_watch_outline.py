@@ -9,11 +9,13 @@ import tempfile
 import json
 
 import pytz
-from fastapi import Response, Query
+from fastapi import Response, Query, APIRouter
 from geopandas import read_postgis
 from pyiem.util import utc
 from ..util import get_dbconn
 from ..reference import MEDIATYPES
+
+router = APIRouter()
 
 
 def run(valid):
@@ -48,12 +50,12 @@ def run(valid):
     return res
 
 
-def factory(app):
-    """Generate."""
+@router.get("/spc_watch_outline.geojson", description=__doc__)
+def service(
+    valid: datetime = Query(None),
+):
+    """Replaced above."""
+    return Response(run(valid), media_type=MEDIATYPES["geojson"])
 
-    @app.get("/spc_watch_outline.geojson", description=__doc__)
-    def service(valid: datetime = Query(None),):
-        """Replaced above."""
-        return Response(run(valid), media_type=MEDIATYPES["geojson"])
 
-    service.__doc__ = __doc__
+service.__doc__ = __doc__

@@ -10,10 +10,12 @@ import tempfile
 
 import pandas as pd
 from geopandas import read_postgis
-from fastapi import Response
+from fastapi import Response, APIRouter
 from ..models import SupportedFormats
 from ..reference import MEDIATYPES
 from ..util import get_dbconn
+
+router = APIRouter()
 
 
 def handler(fmt):
@@ -40,12 +42,12 @@ def handler(fmt):
     return res
 
 
-def factory(app):
-    """Generate."""
+@router.get("/networks.{fmt}", description=__doc__)
+def usdm_bypoint_service(
+    fmt: SupportedFormats,
+):
+    """Replaced above."""
+    return Response(handler(fmt), media_type=MEDIATYPES[fmt])
 
-    @app.get("/networks.{fmt}", description=__doc__)
-    def usdm_bypoint_service(fmt: SupportedFormats,):
-        """Replaced above."""
-        return Response(handler(fmt), media_type=MEDIATYPES[fmt])
 
-    usdm_bypoint_service.__doc__ = __doc__
+usdm_bypoint_service.__doc__ = __doc__

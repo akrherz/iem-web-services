@@ -6,13 +6,14 @@ import numpy as np
 from metpy.units import units, masked_array
 from metpy.calc import relative_humidity_from_dewpoint
 from pandas.io.sql import read_sql
-from fastapi import Query, HTTPException
+from fastapi import Query, HTTPException, APIRouter
 from pyiem.util import ncopen, logger
 from pyiem.iemre import get_gid, find_ij, daily_offset
 from ..util import get_dbconn
 
 LOG = logger()
 NCOPEN_TIMEOUT = 20  # seconds
+router = APIRouter()
 
 
 def _i(val):
@@ -125,12 +126,10 @@ def handler(lon, lat):
     return res
 
 
-def factory(app):
-    """Generate."""
+@router.get("/drydown.json")
+def drydown_service(lat: float = Query(...), lon: float = Query(...)):
+    """Babysteps."""
+    return handler(lon, lat)
 
-    @app.get("/drydown.json")
-    def drydown_service(lat: float = Query(...), lon: float = Query(...)):
-        """Babysteps."""
-        return handler(lon, lat)
 
-    drydown_service.__doc__ = __doc__
+drydown_service.__doc__ = __doc__

@@ -10,10 +10,12 @@ import tempfile
 
 import pandas as pd
 from geopandas import read_postgis
-from fastapi import Response
+from fastapi import Response, APIRouter
 from ...models import SupportedFormats
 from ...reference import MEDIATYPES
 from ...util import get_dbconn
+
+router = APIRouter()
 
 
 def handler(fmt):
@@ -72,14 +74,12 @@ def handler(fmt):
     return res
 
 
-def factory(app):
-    """Generate."""
+@router.get("/nws/taf_overview.{fmt}", description=__doc__)
+def service(
+    fmt: SupportedFormats,
+):
+    """Replaced above."""
+    return Response(handler(fmt), media_type=MEDIATYPES[fmt])
 
-    @app.get("/nws/taf_overview.{fmt}", description=__doc__)
-    def service(
-        fmt: SupportedFormats,
-    ):
-        """Replaced above."""
-        return Response(handler(fmt), media_type=MEDIATYPES[fmt])
 
-    service.__doc__ = __doc__
+service.__doc__ = __doc__
