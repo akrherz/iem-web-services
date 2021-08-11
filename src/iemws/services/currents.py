@@ -20,12 +20,13 @@ import tempfile
 import numpy as np
 from pandas.io.sql import read_sql
 from geopandas import read_postgis
-from fastapi import Query, Response
+from fastapi import Query, Response, APIRouter
 from ..models.currents import RootSchema
 from ..models import SupportedFormats
 from ..util import get_dbconn
 from ..reference import MEDIATYPES
 
+router = APIRouter()
 
 # Avoid three table aggregate by initial window join
 SQL = """
@@ -143,37 +144,35 @@ def handler(
     return res
 
 
-def factory(app):
-    """Generate the app."""
+@router.get("/currents.{fmt}", response_model=RootSchema, description=__doc__)
+def currents_service(
+    fmt: SupportedFormats,
+    network: str = Query(None, description="IEM Network Identifier"),
+    networkclass: str = Query(None),
+    wfo: str = Query(None, max_length=4),
+    country: str = Query(None, max_length=2),
+    state: str = Query(None, max_length=2),
+    station: List[str] = Query(None),
+    event: str = Query(None),
+    minutes: int = Query(1440 * 10),
+):
+    """Replaced above with module __doc__"""
 
-    @app.get("/currents.{fmt}", response_model=RootSchema, description=__doc__)
-    def currents_service(
-        fmt: SupportedFormats,
-        network: str = Query(None, description="IEM Network Identifier"),
-        networkclass: str = Query(None),
-        wfo: str = Query(None, max_length=4),
-        country: str = Query(None, max_length=2),
-        state: str = Query(None, max_length=2),
-        station: List[str] = Query(None),
-        event: str = Query(None),
-        minutes: int = Query(1440 * 10),
-    ):
-        """Replaced above with module __doc__"""
+    return Response(
+        handler(
+            network,
+            networkclass,
+            wfo,
+            country,
+            state,
+            station,
+            event,
+            minutes,
+            fmt,
+        ),
+        media_type=MEDIATYPES[fmt],
+    )
 
-        return Response(
-            handler(
-                network,
-                networkclass,
-                wfo,
-                country,
-                state,
-                station,
-                event,
-                minutes,
-                fmt,
-            ),
-            media_type=MEDIATYPES[fmt],
-        )
 
-    # Not really used
-    currents_service.__doc__ = __doc__
+# Not really used
+currents_service.__doc__ = __doc__

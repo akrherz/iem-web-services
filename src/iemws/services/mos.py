@@ -21,7 +21,7 @@ from typing import List
 
 import pytz
 from pandas.io.sql import read_sql
-from fastapi import Query, Response, HTTPException
+from fastapi import Query, Response, HTTPException, APIRouter
 from ..models.currents import RootSchema
 from ..models import SupportedFormatsNoGeoJSON
 from ..util import get_dbconn
@@ -34,6 +34,7 @@ COLUMNS = (
     "i06,slv,s06,pra,ppl,psn,pzr,t03,gst,q24,p24,t24,ccg,ppo,pco,lp1,lc1,cp1,"
     "cc1,s12,i12,s24,pzp,prs,txn"
 ).split(",")
+router = APIRouter()
 
 
 def find_runtime(pgconn, station, model):
@@ -80,25 +81,23 @@ def handler(station, model, runtime, fmt):
     return df.to_json(orient="table", default_handler=str)
 
 
-def factory(app):
-    """Generate the app."""
+@router.get("/mos.{fmt}", response_model=RootSchema, description=__doc__)
+def service(
+    fmt: SupportedFormatsNoGeoJSON,
+    station: List[str] = Query(
+        ..., description="Full MOS Station Identifier", max_length=6
+    ),
+    model: str = Query(..., description="MOS Model ID"),
+    runtime: datetime = Query(None, description="MOS Model Cycle Time"),
+):
+    """Replaced above with module __doc__"""
+    if runtime is not None and runtime.tzinfo is None:
+        runtime = runtime.replace(tzinfo=pytz.UTC)
 
-    @app.get("/mos.{fmt}", response_model=RootSchema, description=__doc__)
-    def service(
-        fmt: SupportedFormatsNoGeoJSON,
-        station: List[str] = Query(
-            ..., description="Full MOS Station Identifier", max_length=6
-        ),
-        model: str = Query(..., description="MOS Model ID"),
-        runtime: datetime = Query(None, description="MOS Model Cycle Time"),
-    ):
-        """Replaced above with module __doc__"""
-        if runtime is not None and runtime.tzinfo is None:
-            runtime = runtime.replace(tzinfo=pytz.UTC)
+    return Response(
+        handler(station, model, runtime, fmt), media_type=MEDIATYPES[fmt]
+    )
 
-        return Response(
-            handler(station, model, runtime, fmt), media_type=MEDIATYPES[fmt]
-        )
 
-    # Not really used
-    service.__doc__ = __doc__
+# Not really used
+service.__doc__ = __doc__

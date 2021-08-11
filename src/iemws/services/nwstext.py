@@ -5,8 +5,10 @@ This service emits a text file for a given IEM defined product ID. For example:
 import datetime
 
 import pytz
-from fastapi import Query, Response, HTTPException
+from fastapi import Query, Response, HTTPException, APIRouter
 from ..util import get_dbconn
+
+router = APIRouter()
 
 
 def handler(product_id):
@@ -33,14 +35,12 @@ def handler(product_id):
     return row[0].replace("\r\r\n", "\n")
 
 
-def factory(app):
-    """Generate."""
+@router.get("/nwstext/{product_id}", description=__doc__)
+def nwstext_service(
+    product_id: str = Query(..., max_length=31, min_length=31),
+):
+    """Replaced above by __doc__."""
+    return Response(handler(product_id), media_type="text/plain")
 
-    @app.get("/nwstext/{product_id}", description=__doc__)
-    def nwstext_service(
-        product_id: str = Query(..., max_length=31, min_length=31),
-    ):
-        """Replaced above by __doc__."""
-        return Response(handler(product_id), media_type="text/plain")
 
-    nwstext_service.__doc__ = __doc__
+nwstext_service.__doc__ = __doc__

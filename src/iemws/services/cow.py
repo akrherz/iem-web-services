@@ -14,7 +14,7 @@ import sys
 import geopandas as gpd
 import pandas as pd
 from pandas.io.sql import read_sql
-from fastapi import Query
+from fastapi import Query, APIRouter
 from shapely.ops import cascaded_union
 from ..util import get_dbconn
 
@@ -30,6 +30,7 @@ LSRTYPE2PHENOM = {
     "W": "MA",
     "2": "DS",
 }
+router = APIRouter()
 
 
 def printt(msg):
@@ -536,40 +537,38 @@ def handler(
     return res
 
 
-def factory(app):
-    """Generate."""
+@router.get("/cow.json", description=__doc__)
+def cow_service(
+    wfo: List[str] = Query(
+        [], min_length=3, max_length=4, title="WFO Identifiers"
+    ),
+    begints: datetime = Query(...),
+    endts: datetime = Query(...),
+    phenomena: List[str] = Query(None, max_length=2),
+    lsrtype: List[str] = Query(None, max_length=2),
+    hailsize: float = Query(1),
+    lsrbuffer: float = Query(15),
+    warningbuffer: float = Query(1),
+    wind: float = Query(58),
+    windhailtag: str = Query("N"),
+    limitwarns: str = Query("N"),
+    fcster: str = None,
+):
+    """Replaced by __doc__."""
+    return handler(
+        wfo,
+        begints,
+        endts,
+        phenomena,
+        lsrtype,
+        hailsize,
+        lsrbuffer,
+        warningbuffer,
+        wind,
+        windhailtag,
+        limitwarns,
+        fcster,
+    )
 
-    @app.get("/cow.json", description=__doc__)
-    def cow_service(
-        wfo: List[str] = Query(
-            [], min_length=3, max_length=4, title="WFO Identifiers"
-        ),
-        begints: datetime = Query(...),
-        endts: datetime = Query(...),
-        phenomena: List[str] = Query(None, max_length=2),
-        lsrtype: List[str] = Query(None, max_length=2),
-        hailsize: float = Query(1),
-        lsrbuffer: float = Query(15),
-        warningbuffer: float = Query(1),
-        wind: float = Query(58),
-        windhailtag: str = Query("N"),
-        limitwarns: str = Query("N"),
-        fcster: str = None,
-    ):
-        """Replaced by __doc__."""
-        return handler(
-            wfo,
-            begints,
-            endts,
-            phenomena,
-            lsrtype,
-            hailsize,
-            lsrbuffer,
-            warningbuffer,
-            wind,
-            windhailtag,
-            limitwarns,
-            fcster,
-        )
 
-    cow_service.__doc__ = __doc__
+cow_service.__doc__ = __doc__

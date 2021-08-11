@@ -16,7 +16,7 @@ from datetime import datetime, timezone
 
 # Third Party
 from pandas.io.sql import read_sql
-from fastapi import Response, Query
+from fastapi import Response, Query, APIRouter
 from pyiem.util import utc
 
 # Local
@@ -25,6 +25,7 @@ from ...reference import MEDIATYPES
 from ...util import get_dbconn
 
 ISO = "YYYY-MM-DDThh24:MI:SSZ"
+router = APIRouter()
 
 
 def handler(fmt, station, issued):
@@ -72,18 +73,14 @@ def handler(fmt, station, issued):
         return df.to_json(orient="table", index=False)
 
 
-def factory(app):
-    """Generate."""
+@router.get("/nws/taf.{fmt}", description=__doc__)
+def service(
+    fmt: SupportedFormatsNoGeoJSON,
+    station: str = Query(..., length=4),
+    issued: datetime = Query(None),
+):
+    """Replaced above."""
+    return Response(handler(fmt, station, issued), media_type=MEDIATYPES[fmt])
 
-    @app.get("/nws/taf.{fmt}", description=__doc__)
-    def service(
-        fmt: SupportedFormatsNoGeoJSON,
-        station: str = Query(..., length=4),
-        issued: datetime = Query(None),
-    ):
-        """Replaced above."""
-        return Response(
-            handler(fmt, station, issued), media_type=MEDIATYPES[fmt]
-        )
 
-    service.__doc__ = __doc__
+service.__doc__ = __doc__

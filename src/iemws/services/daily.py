@@ -21,11 +21,13 @@ import tempfile
 # third party
 import pandas as pd
 from geopandas import read_postgis
-from fastapi import Query, Response, HTTPException
+from fastapi import Query, Response, HTTPException, APIRouter
 from ..models.daily import RootSchema
 from ..models import SupportedFormats
 from ..util import get_dbconn
 from ..reference import MEDIATYPES
+
+router = APIRouter()
 
 
 def get_df(network, station, date, month, year, fmt):
@@ -100,46 +102,44 @@ def get_df(network, station, date, month, year, fmt):
     return df
 
 
-def factory(app):
-    """Generate the app."""
+@router.get("/daily.{fmt}", response_model=RootSchema, description=__doc__)
+def service(
+    fmt: SupportedFormats,
+    network: str = Query(
+        ..., description="IEM Network Identifier", max_length=20
+    ),
+    station: str = Query(
+        None, description="IEM Station Identifier", max_length=20
+    ),
+    date: datetime.date = Query(
+        None, description="Local station calendar date"
+    ),
+    month: int = Query(None, description="Local station month"),
+    year: int = Query(None, description="Local station day"),
+):
+    """Replaced above with module __doc__"""
+    if all([x is None for x in [station, date, month, year]]):
+        raise HTTPException(500, detail="Not enough arguments provided.")
 
-    @app.get("/daily.{fmt}", response_model=RootSchema, description=__doc__)
-    def service(
-        fmt: SupportedFormats,
-        network: str = Query(
-            ..., description="IEM Network Identifier", max_length=20
-        ),
-        station: str = Query(
-            None, description="IEM Station Identifier", max_length=20
-        ),
-        date: datetime.date = Query(
-            None, description="Local station calendar date"
-        ),
-        month: int = Query(None, description="Local station month"),
-        year: int = Query(None, description="Local station day"),
-    ):
-        """Replaced above with module __doc__"""
-        if all([x is None for x in [station, date, month, year]]):
-            raise HTTPException(500, detail="Not enough arguments provided.")
+    df = get_df(network, station, date, month, year, fmt)
 
-        df = get_df(network, station, date, month, year, fmt)
+    if fmt != "geojson":
+        df = pd.DataFrame(df.drop("geom", axis=1))
+    if fmt == "txt":
+        res = df.to_csv(index=False)
+    elif fmt == "json":
+        res = df.to_json(orient="table", index=False)
+    else:
+        with tempfile.NamedTemporaryFile("w", delete=True) as tmp:
+            if df.empty:
+                return """{"type": "FeatureCollection", "features": []}"""
 
-        if fmt != "geojson":
-            df = pd.DataFrame(df.drop("geom", axis=1))
-        if fmt == "txt":
-            res = df.to_csv(index=False)
-        elif fmt == "json":
-            res = df.to_json(orient="table", index=False)
-        else:
-            with tempfile.NamedTemporaryFile("w", delete=True) as tmp:
-                if df.empty:
-                    return """{"type": "FeatureCollection", "features": []}"""
+            df.to_file(tmp.name, driver="GeoJSON")
+            with open(tmp.name) as fh:
+                res = fh.read()
 
-                df.to_file(tmp.name, driver="GeoJSON")
-                with open(tmp.name) as fh:
-                    res = fh.read()
+    return Response(res, media_type=MEDIATYPES[fmt])
 
-        return Response(res, media_type=MEDIATYPES[fmt])
 
-    # Not really used
-    service.__doc__ = __doc__
+# Not really used
+service.__doc__ = __doc__

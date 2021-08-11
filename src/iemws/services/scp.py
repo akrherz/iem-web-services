@@ -9,11 +9,13 @@ the field ``mid_1`` represents the mid value from the Goes East Sounder. The
 given site may have 1 or more of those 3 potential options."""
 import datetime
 
-from fastapi import Query, Response
+from fastapi import Query, Response, APIRouter
 from pandas.io.sql import read_sql
 import pandas as pd
 from pyiem.util import utc
 from ..util import get_dbconn
+
+router = APIRouter()
 
 
 def handler(station, date):
@@ -78,15 +80,13 @@ def handler(station, date):
     return df.to_json(orient="table", index=False, default_handler=str)
 
 
-def factory(app):
-    """Generate."""
+@router.get("/scp.json", description=__doc__)
+def service(
+    station: str = Query(..., max_length=5, min_length=3),
+    date: datetime.date = Query(..., description="UTC date of interest"),
+):
+    """Replaced above by __doc__."""
+    return Response(handler(station, date), media_type="application/json")
 
-    @app.get("/scp.json", description=__doc__)
-    def service(
-        station: str = Query(..., max_length=5, min_length=3),
-        date: datetime.date = Query(..., description="UTC date of interest"),
-    ):
-        """Replaced above by __doc__."""
-        return Response(handler(station, date), media_type="application/json")
 
-    service.__doc__ = __doc__
+service.__doc__ = __doc__

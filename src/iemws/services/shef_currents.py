@@ -1,12 +1,14 @@
 """Provide SHEF Currents for a given pe and duration."""
 import tempfile
 
-from fastapi import Response, Query
+from fastapi import Response, Query, APIRouter
 from pandas.io.sql import read_sql
 from geopandas import read_postgis
 from ..util import get_dbconn
 from ..models import SupportedFormats
 from ..reference import MEDIATYPES
+
+router = APIRouter()
 
 
 def handler(fmt, pe, duration, days):
@@ -45,20 +47,18 @@ def handler(fmt, pe, duration, days):
     return res
 
 
-def factory(app):
-    """Generate."""
+@router.get("/shef_currents.{fmt}", description=__doc__)
+def shef_currents_service(
+    fmt: SupportedFormats,
+    pe: str = Query(..., max_length=2),
+    duration: str = Query(..., max_length=1),
+    days: int = Query(1),
+):
+    """Replaced above with __doc__."""
 
-    @app.get("/shef_currents.{fmt}", description=__doc__)
-    def shef_currents_service(
-        fmt: SupportedFormats,
-        pe: str = Query(..., max_length=2),
-        duration: str = Query(..., max_length=1),
-        days: int = Query(1),
-    ):
-        """Replaced above with __doc__."""
+    return Response(
+        handler(fmt, pe, duration, days), media_type=MEDIATYPES[fmt]
+    )
 
-        return Response(
-            handler(fmt, pe, duration, days), media_type=MEDIATYPES[fmt]
-        )
 
-    shef_currents_service.__doc__ = __doc__
+shef_currents_service.__doc__ = __doc__

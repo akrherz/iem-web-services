@@ -40,7 +40,7 @@ import os
 # Third Party
 import requests
 import pandas as pd
-from fastapi import Response, Query, HTTPException
+from fastapi import Response, Query, HTTPException, APIRouter
 from metpy.units import units
 from pyiem.util import utc
 from pyiem.nws.bufkit import read_bufkit
@@ -48,6 +48,8 @@ from pyiem.nws.bufkit import read_bufkit
 # local
 from ...models import SupportedFormatsNoGeoJSON
 from ...reference import MEDIATYPES
+
+router = APIRouter()
 
 
 def load_stations():
@@ -315,29 +317,27 @@ def get_bufkit_file(ctx):
     """Figure out which file we need to use."""
 
 
-def factory(app):
-    """Generate."""
+@router.get("/nws/bufkit.{fmt}", description=__doc__)
+def service(
+    fmt: SupportedFormatsNoGeoJSON,
+    lon: float = Query(None, min=-180, max=180, description="degrees E"),
+    lat: float = Query(None, min=-90, max=90, description="degrees N"),
+    model: str = Query(
+        "RAP",
+        description="Model in 'GFS', 'HRRR', 'NAM', 'NAM4KM', 'RAP'",
+        max_length=6,
+    ),
+    time: datetime = Query(None, description="Profile Valid Time in UTC"),
+    runtime: datetime = Query(None, description="Model Init Time UTC"),
+    station: str = Query(None, description="bufkit site identifier"),
+    fall: bool = Query(False, description="Include all forecast hours"),
+    gr: bool = Query(False, description="Use Gibson Ridge JSON Schema"),
+):
+    """Replaced above."""
+    if model not in ["GFS", "HRRR", "NAM", "NAM4KM", "RAP"]:
+        raise HTTPException(500, "Invalid model parameter provided.")
 
-    @app.get("/nws/bufkit.{fmt}", description=__doc__)
-    def service(
-        fmt: SupportedFormatsNoGeoJSON,
-        lon: float = Query(None, min=-180, max=180, description="degrees E"),
-        lat: float = Query(None, min=-90, max=90, description="degrees N"),
-        model: str = Query(
-            "RAP",
-            description="Model in 'GFS', 'HRRR', 'NAM', 'NAM4KM', 'RAP'",
-            max_length=6,
-        ),
-        time: datetime = Query(None, description="Profile Valid Time in UTC"),
-        runtime: datetime = Query(None, description="Model Init Time UTC"),
-        station: str = Query(None, description="bufkit site identifier"),
-        fall: bool = Query(False, description="Include all forecast hours"),
-        gr: bool = Query(False, description="Use Gibson Ridge JSON Schema"),
-    ):
-        """Replaced above."""
-        if model not in ["GFS", "HRRR", "NAM", "NAM4KM", "RAP"]:
-            raise HTTPException(500, "Invalid model parameter provided.")
+    return Response(handler(vars()), media_type=MEDIATYPES[fmt])
 
-        return Response(handler(vars()), media_type=MEDIATYPES[fmt])
 
-    service.__doc__ = __doc__
+service.__doc__ = __doc__

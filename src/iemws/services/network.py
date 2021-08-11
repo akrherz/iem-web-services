@@ -7,10 +7,12 @@ import tempfile
 
 import pandas as pd
 from geopandas import read_postgis
-from fastapi import Query, Response, HTTPException
+from fastapi import Query, Response, HTTPException, APIRouter
 from ..models import SupportedFormats
 from ..reference import MEDIATYPES
 from ..util import get_dbconn
+
+router = APIRouter()
 
 
 def handler(network_id, fmt):
@@ -56,15 +58,13 @@ def handler(network_id, fmt):
     return res
 
 
-def factory(app):
-    """Generate."""
+@router.get("/network/{network_id}.{fmt}", description=__doc__)
+def usdm_bypoint_service(
+    fmt: SupportedFormats,
+    network_id: str = Query(..., description="IEM Network Identifier."),
+):
+    """Replaced above."""
+    return Response(handler(network_id, fmt), media_type=MEDIATYPES[fmt])
 
-    @app.get("/network/{network_id}.{fmt}", description=__doc__)
-    def usdm_bypoint_service(
-        fmt: SupportedFormats,
-        network_id: str = Query(..., description="IEM Network Identifier."),
-    ):
-        """Replaced above."""
-        return Response(handler(network_id, fmt), media_type=MEDIATYPES[fmt])
 
-    usdm_bypoint_service.__doc__ = __doc__
+usdm_bypoint_service.__doc__ = __doc__

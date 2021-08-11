@@ -9,7 +9,7 @@ the provided time.
 import os
 from datetime import datetime, timedelta
 
-from fastapi import Query, HTTPException
+from fastapi import Query, HTTPException, APIRouter
 import pygrib
 import pyproj
 import numpy as np
@@ -17,6 +17,7 @@ from pyiem.util import utc
 
 ISO = "%Y-%m-%dT%H:%M:%SZ"
 URL = "https://mesonet.agron.iastate.edu"
+router = APIRouter()
 
 
 def get_grib_filename(valid):
@@ -71,18 +72,16 @@ def handler(valid, lon, lat):
     return res
 
 
-def factory(app):
-    """Generate."""
+@router.get("/ffg_bypoint.json", description=__doc__)
+def ffg_bypoint_service(
+    valid: datetime = Query(None),
+    lon: float = Query(...),
+    lat: float = Query(...),
+):
+    """Replaced above."""
+    if valid is None:
+        valid = utc()
+    return handler(valid, lon, lat)
 
-    @app.get("/ffg_bypoint.json", description=__doc__)
-    def ffg_bypoint_service(
-        valid: datetime = Query(None),
-        lon: float = Query(...),
-        lat: float = Query(...),
-    ):
-        """Replaced above."""
-        if valid is None:
-            valid = utc()
-        return handler(valid, lon, lat)
 
-    ffg_bypoint_service.__doc__ = __doc__
+ffg_bypoint_service.__doc__ = __doc__

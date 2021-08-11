@@ -6,12 +6,14 @@ import tempfile
 from pyiem.util import utc
 import pandas as pd
 from geopandas import read_postgis
-from fastapi import Response, Query
+from fastapi import Response, Query, APIRouter
 
 # Local
 from ..util import get_dbconn
 from ..models import SupportedFormats
 from ..reference import MEDIATYPES
+
+router = APIRouter()
 
 
 def handler(valid, fmt):
@@ -59,21 +61,19 @@ def handler(valid, fmt):
     return res
 
 
-def factory(app):
-    """Generate."""
+@router.get("/iowa_winter_roadcond.{fmt}", description=__doc__)
+def service(
+    fmt: SupportedFormats,
+    valid: datetime = Query(
+        None, description="UTC timestamp to look for conditions."
+    ),
+):
+    """Replaced Below."""
+    if valid is None:
+        valid = utc()
+    if valid.tzinfo is None:
+        valid = valid.replace(tzinfo=timezone.utc)
+    return Response(handler(valid, fmt), media_type=MEDIATYPES[fmt])
 
-    @app.get("/iowa_winter_roadcond.{fmt}", description=__doc__)
-    def service(
-        fmt: SupportedFormats,
-        valid: datetime = Query(
-            None, description="UTC timestamp to look for conditions."
-        ),
-    ):
-        """Replaced Below."""
-        if valid is None:
-            valid = utc()
-        if valid.tzinfo is None:
-            valid = valid.replace(tzinfo=timezone.utc)
-        return Response(handler(valid, fmt), media_type=MEDIATYPES[fmt])
 
-    service.__doc__ = __doc__
+service.__doc__ = __doc__

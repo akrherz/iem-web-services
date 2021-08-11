@@ -4,12 +4,14 @@ This service provides IEM computed sounding parameters for a given site
 and year."""
 import datetime
 
-from fastapi import Query, Response
+from fastapi import Query, Response, APIRouter
 from pandas.io.sql import read_sql
 from pyiem.network import Table as NetworkTable
 from pyiem.util import utc
 from ..reference import MEDIATYPES
 from ..util import get_dbconn
+
+router = APIRouter()
 
 
 def handler(station, year):
@@ -33,15 +35,13 @@ def handler(station, year):
     return df.to_json(orient="table", default_handler=str)
 
 
-def factory(app):
-    """Generate."""
+@router.get("/raobs_by_year.json", description=__doc__)
+def nwstext_service(
+    station: str = Query(..., max_length=4, min_length=4),
+    year: int = Query(..., min=1947, max=datetime.date.today().year),
+):
+    """Replaced above by __doc__."""
+    return Response(handler(station, year), media_type=MEDIATYPES["json"])
 
-    @app.get("/raobs_by_year.json", description=__doc__)
-    def nwstext_service(
-        station: str = Query(..., max_length=4, min_length=4),
-        year: int = Query(..., min=1947, max=datetime.date.today().year),
-    ):
-        """Replaced above by __doc__."""
-        return Response(handler(station, year), media_type=MEDIATYPES["json"])
 
-    nwstext_service.__doc__ = __doc__
+nwstext_service.__doc__ = __doc__
