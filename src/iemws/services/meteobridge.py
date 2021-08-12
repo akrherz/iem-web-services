@@ -3,7 +3,6 @@
 Unuseful for you all :)
 """
 # pylint: disable=unused-argument
-import sys
 import datetime
 
 import pytz
@@ -22,7 +21,6 @@ def handler(
     """Handle the request, return dict"""
     # sys.stderr.write(repr(fields))
     if not PROPS:
-        sys.stderr.write("Loading properties()...\n")
         PROPS.update(get_properties())
     lookup = {}
     for sid in ["OT0013", "OT0014", "OT0015", "OT0016"]:

@@ -16,13 +16,9 @@ if [ "$#" -eq  "0" ]
 
 gunicorn \
  -w $WORKERS \
- --capture-output \
- --log-syslog \
- --log-syslog-prefix iemws \
- --log-syslog-facility local1 \
  --graceful-timeout 0 \
  -k iemws.worker.RestartableUvicornWorker \
  -b 0.0.0.0:8000 \
  --max-requests 500 \
  --reload \
- iemws.main:app &
+ iemws.main:app 2>&1 | logger -p local1.notice --tag iemws &
