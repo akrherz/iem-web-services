@@ -9,7 +9,6 @@ providing the storm reports and warnings.
 from typing import List
 from datetime import datetime
 import json
-import sys
 
 import geopandas as gpd
 import pandas as pd
@@ -31,12 +30,6 @@ LSRTYPE2PHENOM = {
     "2": "DS",
 }
 router = APIRouter()
-
-
-def printt(msg):
-    """Print a message with a timestamp included"""
-    if sys.stdout.isatty():
-        print(("%s %s") % (datetime.now().strftime("%H:%M:%S.%f"), msg))
 
 
 class COWSession(object):
@@ -86,18 +79,15 @@ class COWSession(object):
 
     def milk(self):
         """Milk the Cow and see what happens"""
-        printt("milk() is called")
         self.load_events()
         self.load_stormreports()
         self.compute_shared_border()
         self.sbw_verify()
         self.area_verify()
         self.compute_stats()
-        printt("milk() is done")
 
     def compute_stats(self):
         """Fill out the stats attribute"""
-        printt("compute_stats called...")
         _ev = self.events
         _sr = self.stormreports
         self.stats["area_verify[%]"] = (
@@ -202,7 +192,6 @@ class COWSession(object):
 
     def load_events(self):
         """Build out the listing of events based on the request"""
-        printt("load_events called...")
         self.events = gpd.read_postgis(
             f"""
         WITH stormbased as (
@@ -275,7 +264,6 @@ class COWSession(object):
 
     def load_stormreports(self):
         """Build out the listing of storm reports based on the request"""
-        printt("load_stormreports called...")
         self.stormreports = gpd.read_postgis(
             f"""
         SELECT distinct valid at time zone 'UTC' as valid,
@@ -310,7 +298,6 @@ class COWSession(object):
 
     def compute_shared_border(self):
         """Compute a stat"""
-        printt("compute_shared_border called...")
         # re ST_Buffer(simple_geom) see akrherz/iem#163
         df = read_sql(
             f"""
@@ -367,7 +354,6 @@ class COWSession(object):
 
     def sbw_verify(self):
         """Verify the events"""
-        printt("sbw_verify called...")
         if self.stormreports_buffered is None or self.events_buffered is None:
             return
         centroids = self.stormreports_buffered.centroid
@@ -443,7 +429,6 @@ class COWSession(object):
 
     def area_verify(self):
         """Do Areal verification"""
-        printt("area_verify called...")
         if self.events_buffered is None:
             return
         e2163 = self.events.to_crs(epsg=2163)
