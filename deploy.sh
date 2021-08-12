@@ -1,6 +1,13 @@
 # Fire up our server
 export PYTHONPATH=$(pwd)/src
 
+if [ "$#" -eq  "0" ]
+   then
+     WORKERS=16
+ else
+     WORKERS=$1
+ fi
+
 # https://www.uvicorn.org/deployment/
 # Something (likely pygrib) leaks memory, so we don't let an individual worker
 # run for too long
@@ -8,7 +15,7 @@ export PYTHONPATH=$(pwd)/src
 # Shutdown with just kill <PID>, no core dumps?
 
 gunicorn \
- -w 16 \
+ -w $WORKERS \
  --capture-output \
  --log-syslog \
  --log-syslog-prefix iemws \
