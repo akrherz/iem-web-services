@@ -16,7 +16,7 @@ router = APIRouter()
 
 def handler(station, year):
     """Handle the request, return dict"""
-    pgconn = get_dbconn("postgis")
+    pgconn = get_dbconn("raob")
     stations = [station]
     if station.startswith("_"):
         nt = NetworkTable("RAOB", only_online=False)
