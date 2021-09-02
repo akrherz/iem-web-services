@@ -5,6 +5,9 @@ frontend to this API and for more discussion about what this does.
 
 While this service only emits JSON, the JSON response embeds to GeoJSON objects
 providing the storm reports and warnings.
+
+Changed on 2 Sep 2021 to count LSRs valid at warning expiration time as
+verifying as per NWS Verification Branch guidance.
 """
 from typing import List
 from datetime import datetime
@@ -270,7 +273,7 @@ class COWSession(object):
         type, magnitude, city, county, state,
         source, remark, wfo, typetext, ST_x(geom) as lon0, ST_y(geom) as lat0,
         geom
-        from lsrs w WHERE valid >= %s and valid < %s
+        from lsrs w WHERE valid >= %s and valid <= %s
         {self.sql_wfo_limiter()} {self.sql_lsr_limiter()}
         and ((type = 'M' and magnitude >= 34) or type = '2' or
         (type = 'H' and magnitude >= %s) or type = 'W' or
@@ -363,7 +366,7 @@ class COWSession(object):
             if isinstance(_ev, pd.DataFrame):
                 _ev = _ev.iloc[0]
             indicies = (self.stormreports["valid"] >= _ev["issue"]) & (
-                self.stormreports["valid"] < _ev["expire"]
+                self.stormreports["valid"] <= _ev["expire"]
             )
             # NB the within operation returns a boolean series sometimes false
             for sidx, isinside in (
