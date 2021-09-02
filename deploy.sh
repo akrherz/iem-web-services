@@ -13,6 +13,7 @@ if [ "$#" -eq  "0" ]
 # run for too long
 # --preload can not be used with --reload
 # Shutdown with just kill <PID>, no core dumps?
+# jitter tries to keep all workers restarting at the same time
 
 gunicorn \
  -w $WORKERS \
@@ -20,5 +21,6 @@ gunicorn \
  -k iemws.worker.RestartableUvicornWorker \
  -b 0.0.0.0:8000 \
  --max-requests 500 \
+ --max-requests-jitter 50 \
  --reload \
  iemws.main:app 2>&1 | logger -p local1.notice --tag iemws &
