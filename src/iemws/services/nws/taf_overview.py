@@ -56,7 +56,7 @@ def handler(fmt):
         + "&issued="
         + df["utc_issued"]
     )
-    df["text_href"] = "/api/1/nwstext/" + df["product_id"].str.strip()
+    df["text_href"] = f"/api/1/nwstext/{df['product_id'].str.strip()}"
 
     if fmt != "geojson":
         df = pd.DataFrame(df.drop("geom", axis=1))
