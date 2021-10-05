@@ -15,17 +15,30 @@ def handler(product_id):
     """Handle the request, return dict"""
     pgconn = get_dbconn("afos")
     cursor = pgconn.cursor()
+    tokens = product_id.split("-")
+    bbb = None
+    if len(tokens) == 4:
+        (tstamp, source, ttaaii, pil) = tokens
+    elif len(tokens) == 5:
+        (tstamp, source, ttaaii, pil, bbb) = tokens
+    else:
+        raise HTTPException(
+            status_code=404,
+            detail="Invalid product_id format provided",
+        )
 
-    ts = datetime.datetime.strptime(product_id[:12], "%Y%m%d%H%M")
+    ts = datetime.datetime.strptime(tstamp, "%Y%m%d%H%M")
     ts = ts.replace(tzinfo=pytz.UTC)
 
-    source = product_id[13:17]
-    pil = product_id[25:]
-
+    args = [source, pil, ts]
+    extra = ""
+    if bbb:
+        extra = " and bbb = %s"
+        args.append(bbb)
     cursor.execute(
         "SELECT data from products where source = %s "
-        "and pil = %s and entered = %s",
-        (source, pil, ts),
+        f"and pil = %s and entered = %s {extra}",
+        args,
     )
 
     if cursor.rowcount == 0:
@@ -37,7 +50,7 @@ def handler(product_id):
 
 @router.get("/nwstext/{product_id}", description=__doc__)
 def nwstext_service(
-    product_id: str = Query(..., max_length=31, min_length=31),
+    product_id: str = Query(..., max_length=35, min_length=28),
 ):
     """Replaced above by __doc__."""
     return Response(handler(product_id), media_type="text/plain")
