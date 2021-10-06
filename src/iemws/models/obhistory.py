@@ -39,6 +39,7 @@ class DataItem(BaseModel):
     max_tmpf_6hr: float = Field(..., title="METAR 6 Hour Max Temp [F]")
     min_tmpf_6hr: float = Field(..., title="METAR 6 Hour Min Temp [F]")
     wxcodes: str = Field(..., title="Present Weather METAR Codes")
+    snowdepth: str = Field(..., title="Snow Depth [inch]")
 
 
 class RootSchema(BaseModel):
