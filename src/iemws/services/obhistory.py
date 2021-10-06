@@ -46,7 +46,7 @@ def get_df(network, station, date):
             "drct, vsby, skyc1, skyl1, skyc2, skyl2, skyc3, skyl3, skyc4, "
             "skyl4, relh, feel, alti, mslp, phour, p03i, p24i, "
             "phour as p01i, raw, gust, max_tmpf_6hr, min_tmpf_6hr, "
-            "array_to_string(wxcodes, ' ') as wxcodes "
+            "array_to_string(wxcodes, ' ') as wxcodes, snowdepth "
             "from current_log c JOIN stations t on (c.iemid = t.iemid) "
             "WHERE t.id = %s and t.network = %s and "
             "date(valid at time zone t.tzname) = %s ORDER by utc_valid ASC",
@@ -72,7 +72,7 @@ def get_df(network, station, date):
             "vsby, skyc1, skyl1, skyc2, skyl2, skyc3, skyl3, skyc4, skyl4, "
             "relh, feel, alti, mslp, p01i, p03i, p24i, metar as raw, "
             "p03i, p06i, p24i, max_tmpf_6hr, min_tmpf_6hr, gust, "
-            "array_to_string(wxcodes, ' ') as wxcodes "
+            "array_to_string(wxcodes, ' ') as wxcodes, snowdepth "
             "from alldata WHERE station = %s and "
             "valid >= %s and valid < %s ORDER by valid ASC",
             pgconn,
