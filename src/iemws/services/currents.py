@@ -13,6 +13,7 @@ For better or worse, the ".json" in the URI path above controls the output
 format that the service emits.  This service supports ".json", ".geojson",
 and ".txt" (comma delimited) formats.
 """
+from datetime import date
 from typing import List
 import os
 import tempfile
@@ -113,7 +114,11 @@ def handler(
         sql = SQL.replace("REPLACEME", "t.network = %s and")
         params = [network]
     else:
-        sql = SQL.replace("REPLACEME", "")
+        # This is expensive, throttle things back some
+        sql = SQL.replace("REPLACEME", "").replace(
+            " summary ", f" summary_{date.today().year} "
+        )
+        minutes = min([minutes, 600])
         params = []
 
     params.append(minutes)
