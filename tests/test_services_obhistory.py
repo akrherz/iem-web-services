@@ -14,6 +14,16 @@ def test_basic():
     assert res is not None
 
 
+def test_dcp():
+    """Test a DCP station request."""
+    req = client.get(
+        "/obhistory.json",
+        params={"network": "IA_DCP", "station": "DNKI4", "date": "2020-08-08"},
+    )
+    res = req.json()
+    assert not res["data"]
+
+
 def test_uscrn_has_data():
     """Test USCRN request for historical data."""
     req = client.get(

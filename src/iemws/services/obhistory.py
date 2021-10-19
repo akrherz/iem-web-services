@@ -172,7 +172,9 @@ def get_df(network, station, date):
         )
         if df.empty:
             return df
-        df = df.pivot(index="utc_valid", columns="key", values="value")
+        df = df.pivot_table(
+            index="utc_valid", columns="key", values="value", aggfunc="first"
+        )
         df = df.reset_index()
         # Query alldata too as it has the variable conversions done
         df2 = read_sql(
