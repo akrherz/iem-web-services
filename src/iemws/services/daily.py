@@ -30,7 +30,7 @@ from ..reference import MEDIATYPES
 router = APIRouter()
 
 
-def get_df(network, station, date, month, year, fmt):
+def get_df(network, station, date, month, year):
     """Handle the request, return dict"""
     if network.endswith("CLIMATE"):
         sl = ""
@@ -121,7 +121,7 @@ def service(
     if all([x is None for x in [station, date, month, year]]):
         raise HTTPException(500, detail="Not enough arguments provided.")
 
-    df = get_df(network, station, date, month, year, fmt)
+    df = get_df(network, station, date, month, year)
 
     if fmt != "geojson":
         df = pd.DataFrame(df.drop("geom", axis=1))
@@ -135,7 +135,7 @@ def service(
                 return """{"type": "FeatureCollection", "features": []}"""
 
             df.to_file(tmp.name, driver="GeoJSON")
-            with open(tmp.name) as fh:
+            with open(tmp.name, encoding="utf8") as fh:
                 res = fh.read()
 
     return Response(res, media_type=MEDIATYPES[fmt])
