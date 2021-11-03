@@ -56,7 +56,7 @@ def handler(valid, fmt):
         return '{"type": "FeatureCollection", "features": []}'
     with tempfile.NamedTemporaryFile("w", delete=True) as tmp:
         df.to_file(tmp.name, driver="GeoJSON")
-        with open(tmp.name) as fh:
+        with open(tmp.name, encoding="utf8") as fh:
             res = fh.read()
     return res
 

@@ -18,9 +18,9 @@ def handler(product_id):
     tokens = product_id.split("-")
     bbb = None
     if len(tokens) == 4:
-        (tstamp, source, ttaaii, pil) = tokens
+        (tstamp, source, _ttaaii, pil) = tokens
     elif len(tokens) == 5:
-        (tstamp, source, ttaaii, pil, bbb) = tokens
+        (tstamp, source, _ttaaii, pil, bbb) = tokens
     else:
         raise HTTPException(
             status_code=404,

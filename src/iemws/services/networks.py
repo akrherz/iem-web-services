@@ -37,7 +37,7 @@ def handler(fmt):
         return df.to_json(orient="table", index=False)
     with tempfile.NamedTemporaryFile("w", delete=True) as tmp:
         df.to_file(tmp.name, driver="GeoJSON")
-        with open(tmp.name) as fh:
+        with open(tmp.name, encoding="utf8") as fh:
             res = fh.read()
     return res
 

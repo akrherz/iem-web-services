@@ -144,7 +144,7 @@ def handler(
         os.close(tmpfd)
         df.to_file(tmpfn, driver="GeoJSON")
 
-    res = open(tmpfn).read()
+    res = open(tmpfn, encoding="utf8").read()
     os.unlink(tmpfn)
     return res
 

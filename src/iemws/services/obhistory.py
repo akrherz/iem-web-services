@@ -16,7 +16,7 @@ variables from this service even if the station does not report it.
 import datetime
 
 try:
-    from zoneinfo import ZoneInfo
+    from zoneinfo import ZoneInfo  # type: ignore
 except ImportError:
     from backports.zoneinfo import ZoneInfo
 
