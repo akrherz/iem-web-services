@@ -17,7 +17,7 @@ import geopandas as gpd
 import pandas as pd
 from pandas.io.sql import read_sql
 from fastapi import Query, APIRouter
-from shapely.ops import cascaded_union
+from shapely.ops import unary_union
 from ..util import get_dbconn
 
 ISO9660 = "%Y-%m-%dT%H:%M:%SZ"
@@ -35,7 +35,7 @@ LSRTYPE2PHENOM = {
 router = APIRouter()
 
 
-class COWSession(object):
+class COWSession:
     """Things that we could do while generating Cow stats"""
 
     def __init__(
@@ -62,7 +62,7 @@ class COWSession(object):
         self.events_buffered = None
         self.stormreports = gpd.GeoDataFrame()
         self.stormreports_buffered = None
-        self.stats = dict()
+        self.stats = {}
         # query parameters
         self.phenomena = phenomena
         if not self.phenomena:
@@ -149,8 +149,8 @@ class COWSession(object):
             0 if _ev.empty else _ev["parea"].sum() / _ev["carea"].sum() * 100.0
         )
         # Prevent NaN values from above
-        for key in self.stats:
-            if pd.isnull(self.stats[key]):
+        for key, stat in self.stats.items():
+            if pd.isnull(stat):
                 self.stats[key] = None
 
     def sql_lsr_limiter(self):
@@ -167,31 +167,32 @@ class COWSession(object):
         if "DS" in self.lsrtype:
             ltypes.append("2")
         if len(ltypes) == 1:
-            return " and type = '%s'" % (ltypes[0],)
-        return " and type in %s " % (tuple(ltypes),)
+            return f" and type = '{ltypes[0]}'"
+        return f" and type in {tuple(ltypes)} "
 
     def sql_fcster_limiter(self):
         """Should we limit the fcster column?"""
         if self.fcster is None:
             return " "
-        return " and fcster ILIKE '%s' " % (self.fcster,)
+        return f" and fcster ILIKE '{self.fcster}' "
 
     def sql_wfo_limiter(self):
         """get the SQL for how we limit WFOs"""
         if "_ALL" in self.wfo or not self.wfo:
             return " "
         if len(self.wfo) == 1:
-            return " and w.wfo = '%s' " % (self.wfo[0],)
-        return " and w.wfo in %s " % (tuple(self.wfo),)
+            return f" and w.wfo = '{self.wfo[0]}' "
+        return f" and w.wfo in {tuple(self.wfo)} "
 
     def sql_tag_limiter(self):
         """Do we need to limit the events based on tags"""
         if not self.limitwarns:
             return " "
         return (
-            " and ((s.windtag >= %s or s.hailtag >= %s) or "
-            " (s.windtag is null and s.hailtag is null)) "
-        ) % (self.wind, self.hailsize)
+            f" and ((w.windtag >= {self.wind} or "
+            f"w.hailtag >= {self.hailsize}) or "
+            " (w.windtag is null and w.hailtag is null)) "
+        )
 
     def load_events(self):
         """Build out the listing of events based on the request"""
@@ -222,7 +223,7 @@ class COWSession(object):
             w.gid is not null {self.sql_wfo_limiter()} and
             issue >= %s and issue < %s and expire < %s
             and significance = 'W'
-            and phenomena in %s {self.sql_tag_limiter()}
+            and phenomena in %s
             {self.sql_fcster_limiter()}
             GROUP by w.wfo, phenomena, eventid, significance, year, fcster
         )
@@ -319,7 +320,7 @@ class COWSession(object):
                 w.gid is not null {self.sql_wfo_limiter()} and
                 issue >= %s and issue < %s and expire < %s
                 and significance = 'W'
-                and phenomena in %s {self.sql_tag_limiter()}
+                and phenomena in %s
                 {self.sql_fcster_limiter()}
                 GROUP by w.wfo, phenomena, eventid, significance, year,
                 fcster),
@@ -439,9 +440,7 @@ class COWSession(object):
             if not _ev["stormreports"]:
                 continue
             # Union all the LSRs into one shape
-            lsrs = cascaded_union(
-                self.stormreports_buffered[_ev["stormreports"]]
-            )
+            lsrs = unary_union(self.stormreports_buffered[_ev["stormreports"]])
             # Intersect with this warning geometry to find overlap
             overlap = _ev["geom"].buffer(0).intersection(lsrs)
             self.events.loc[eidx, "areaverify"] = overlap.area / 1000000.0

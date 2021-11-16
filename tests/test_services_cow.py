@@ -9,6 +9,38 @@ from iemws.main import app
 client = TestClient(app)
 
 
+def test_fcster():
+    """Test calling with the fcster tag."""
+    params = {
+        "begints": "2020-05-03T12:00Z",
+        "endts": "2020-05-04T12:00Z",
+        "fcster": "BOGUS",
+    }
+    res = client.get(
+        "/cow.json",
+        params=params,
+    )
+    cow = res.json()
+    assert cow["stats"]["events_total"] == 0
+
+
+def test_limitwarns():
+    """Test calling with the fcster tag."""
+    params = {
+        "limitwarns": "Y",
+        "wind": "200",
+        "hailsize": "10",
+        "begints": "2020-05-03T12:00Z",
+        "endts": "2020-05-04T12:00Z",
+    }
+    res = client.get(
+        "/cow.json",
+        params=params,
+    )
+    cow = res.json()
+    assert cow["stats"]["events_total"] == 0
+
+
 def test_issue10_nowfo():
     """Test that we need not provide a WFO."""
     res = client.get(
@@ -69,7 +101,7 @@ def test_190806(prodtest):
 def test_180620(prodtest):
     """Compare with what we have from legacy PHP based Cow"""
     params = {
-        "wfo": "DMX",
+        "wfo": ["DMX", "XXX"],
         "begints": "2018-06-20T12:00Z",
         "endts": "2018-06-21T12:00Z",
         "hailsize": 1.0,
