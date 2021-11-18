@@ -11,6 +11,7 @@ def test_basic():
     """Test basic calls."""
     req = client.get("/network/IA_ASOS.json")
     res = req.json()
+    assert req.status_code == 200
     assert res is not None
 
 
