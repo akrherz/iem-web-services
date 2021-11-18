@@ -6,48 +6,34 @@ types.  One noticable one-off is the Iowa ASOS/AWOS data.  There is a
 dedicated network called ``AWOS`` which represents the airport weather stations
 within the state that are not maintained by the NWS+FAA.
 """
-import tempfile
 
-import pandas as pd
 from geopandas import read_postgis
-from fastapi import Response, APIRouter
+from fastapi import APIRouter
 from ..models import SupportedFormats
-from ..reference import MEDIATYPES
-from ..util import get_dbconn
+from ..util import get_dbconn, deliver_df
 
 router = APIRouter()
 
 
-def handler(fmt):
+def handler():
     """Handle the request, return dict"""
     pgconn = get_dbconn("mesosite")
 
     df = read_postgis(
-        "SELECT * from networks ORDER by id ASC",
+        "SELECT *, extent as geom from networks ORDER by id ASC",
         pgconn,
-        geom_col="extent",
+        geom_col="geom",
         index_col=None,
     )
-    if fmt != "geojson":
-        df = df.drop("extent", axis=1)
-        df = pd.DataFrame(df)
-    if fmt == "txt":
-        return df.to_csv(index=False)
-    if fmt == "json":
-        return df.to_json(orient="table", index=False)
-    with tempfile.NamedTemporaryFile("w", delete=True) as tmp:
-        df.to_file(tmp.name, driver="GeoJSON")
-        with open(tmp.name, encoding="utf8") as fh:
-            res = fh.read()
-    return res
+    return df
 
 
 @router.get("/networks.{fmt}", description=__doc__)
-def usdm_bypoint_service(
+def networks_service(
     fmt: SupportedFormats,
 ):
     """Replaced above."""
-    return Response(handler(fmt), media_type=MEDIATYPES[fmt])
+    return deliver_df(handler(), fmt)
 
 
-usdm_bypoint_service.__doc__ = __doc__
+networks_service.__doc__ = __doc__

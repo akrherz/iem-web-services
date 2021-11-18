@@ -13,19 +13,16 @@ The forecast warning point is included as an attribute ``latitude`` and
 ``longitude``, the actual geometries here are the polygons associated with
 the warnings.
 """
-import tempfile
 
-import pandas as pd
 from geopandas import read_postgis
-from fastapi import Response, Query, APIRouter
+from fastapi import Query, APIRouter
 from ...models import SupportedFormats
-from ...reference import MEDIATYPES
-from ...util import get_dbconn
+from ...util import get_dbconn, deliver_df
 
 router = APIRouter()
 
 
-def handler(fmt, state, wfo):
+def handler(state, wfo):
     """Handle the request, return dict"""
     pgconn = get_dbconn("postgis")
     state_limiter = ""
@@ -63,22 +60,7 @@ def handler(fmt, state, wfo):
         geom_col="geom",
         index_col=None,
     )
-
-    if fmt != "geojson":
-        df = df.drop("geom", axis=1)
-        df = pd.DataFrame(df)
-    if fmt == "txt":
-        return df.to_csv(index=False)
-    if fmt == "json":
-        return df.to_json(orient="table", index=False)
-    with tempfile.NamedTemporaryFile("w", delete=True) as tmp:
-        if df.empty:
-            return """{"type": "FeatureCollection", "features": []}"""
-
-        df.to_file(tmp.name, driver="GeoJSON")
-        with open(tmp.name) as fh:
-            res = fh.read()
-    return res
+    return df
 
 
 @router.get("/nws/current_flood_warnings.{fmt}", description=__doc__)
@@ -88,7 +70,8 @@ def service(
     wfo: str = Query(None, length=3),
 ):
     """Replaced above."""
-    return Response(handler(fmt, state, wfo), media_type=MEDIATYPES[fmt])
+    df = handler(state, wfo)
+    return deliver_df(df, fmt)
 
 
 service.__doc__ = __doc__

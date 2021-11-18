@@ -1,22 +1,19 @@
 """Exposes Iowa DOT Winter Road Conditions."""
 from datetime import datetime, timedelta, timezone
-import tempfile
 
 # third party
 from pyiem.util import utc
-import pandas as pd
 from geopandas import read_postgis
-from fastapi import Response, Query, APIRouter
+from fastapi import Query, APIRouter
 
 # Local
-from ..util import get_dbconn
+from ..util import get_dbconn, deliver_df
 from ..models import SupportedFormats
-from ..reference import MEDIATYPES
 
 router = APIRouter()
 
 
-def handler(valid, fmt):
+def handler(valid):
     """Do the requested work."""
     pgconn = get_dbconn("postgis")
     df = read_postgis(
@@ -44,21 +41,7 @@ def handler(valid, fmt):
     )
     if not df.empty:
         df["utc_valid"] = df["utc_valid"].dt.strftime("%Y-%m-%dT%H:%MZ")
-    if fmt != "geojson":
-        df = df.drop("geom", axis=1)
-        df = pd.DataFrame(df)
-    if fmt == "txt":
-        return df.to_csv(index=False)
-    if fmt == "json":
-        # Implement our 'table-schema' option
-        return df.to_json(orient="table", index=False)
-    if df.empty:
-        return '{"type": "FeatureCollection", "features": []}'
-    with tempfile.NamedTemporaryFile("w", delete=True) as tmp:
-        df.to_file(tmp.name, driver="GeoJSON")
-        with open(tmp.name, encoding="utf8") as fh:
-            res = fh.read()
-    return res
+    return df
 
 
 @router.get("/iowa_winter_roadcond.{fmt}", description=__doc__)
@@ -73,7 +56,8 @@ def service(
         valid = utc()
     if valid.tzinfo is None:
         valid = valid.replace(tzinfo=timezone.utc)
-    return Response(handler(valid, fmt), media_type=MEDIATYPES[fmt])
+    df = handler(valid)
+    return deliver_df(df, fmt)
 
 
 service.__doc__ = __doc__

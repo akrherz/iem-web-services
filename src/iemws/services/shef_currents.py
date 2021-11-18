@@ -1,17 +1,14 @@
 """Provide SHEF Currents for a given pe and duration."""
-import tempfile
 
-from fastapi import Response, Query, APIRouter
-from pandas.io.sql import read_sql
+from fastapi import Query, APIRouter
 from geopandas import read_postgis
-from ..util import get_dbconn
+from ..util import deliver_df, get_dbconn
 from ..models import SupportedFormats
-from ..reference import MEDIATYPES
 
 router = APIRouter()
 
 
-def handler(fmt, pe, duration, days):
+def handler(pe, duration, days):
     """Handle the request, return dict"""
     pgconn = get_dbconn("iem")
     sql = f"""
@@ -28,23 +25,8 @@ def handler(fmt, pe, duration, days):
     value, lon, lat, geom from data
     where row_number = 1
     """
-
-    if fmt == "geojson":
-        df = read_postgis(sql, pgconn, geom_col="geom")
-    else:
-        df = read_sql(sql, pgconn)
-        df.drop("geom", axis=1, inplace=True)
-    if fmt == "txt":
-        return df.to_csv(index=False)
-    if fmt == "json":
-        # Implement our 'table-schema' option
-        return df.to_json(orient="table", default_handler=str)
-    if df.empty:
-        return {"type": "FeatureCollection", "features": []}
-    with tempfile.NamedTemporaryFile("w", delete=True) as tmp:
-        df.to_file(tmp.name, driver="GeoJSON")
-        res = open(tmp.name).read()
-    return res
+    df = read_postgis(sql, pgconn, geom_col="geom")
+    return df
 
 
 @router.get("/shef_currents.{fmt}", description=__doc__)
@@ -56,9 +38,7 @@ def shef_currents_service(
 ):
     """Replaced above with __doc__."""
 
-    return Response(
-        handler(fmt, pe, duration, days), media_type=MEDIATYPES[fmt]
-    )
+    return deliver_df(handler(pe, duration, days), fmt)
 
 
 shef_currents_service.__doc__ = __doc__

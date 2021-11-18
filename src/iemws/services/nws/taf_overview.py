@@ -6,19 +6,16 @@ forecast include references to API endpoints providing either the raw
 text (`text_href`) or JSON representation (`data_href`).  Additionally a
 forecast aggregate of `min_visibility` (miles) is provided.
 """
-import tempfile
 
-import pandas as pd
 from geopandas import read_postgis
-from fastapi import Response, APIRouter
+from fastapi import APIRouter
 from ...models import SupportedFormats
-from ...reference import MEDIATYPES
-from ...util import get_dbconn
+from ...util import get_dbconn, deliver_df
 
 router = APIRouter()
 
 
-def handler(fmt):
+def handler():
     """Handle the request."""
     pgconn = get_dbconn("asos")
     df = read_postgis(
@@ -57,21 +54,7 @@ def handler(fmt):
         + df["utc_issued"]
     )
     df["text_href"] = f"/api/1/nwstext/{df['product_id'].str.strip()}"
-
-    if fmt != "geojson":
-        df = pd.DataFrame(df.drop("geom", axis=1))
-    if fmt == "txt":
-        return df.to_csv(index=False)
-    if fmt == "json":
-        return df.to_json(orient="table", index=False)
-    with tempfile.NamedTemporaryFile("w", delete=True) as tmp:
-        if df.empty:
-            return """{"type": "FeatureCollection", "features": []}"""
-
-        df.to_file(tmp.name, driver="GeoJSON")
-        with open(tmp.name) as fh:
-            res = fh.read()
-    return res
+    return df
 
 
 @router.get("/nws/taf_overview.{fmt}", description=__doc__)
@@ -79,7 +62,8 @@ def service(
     fmt: SupportedFormats,
 ):
     """Replaced above."""
-    return Response(handler(fmt), media_type=MEDIATYPES[fmt])
+    df = handler()
+    return deliver_df(df, fmt)
 
 
 service.__doc__ = __doc__

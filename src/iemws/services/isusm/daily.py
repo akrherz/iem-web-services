@@ -4,20 +4,17 @@ Returns Iowa State University Soil Moisture Network daily or multi daily
 summary information.  Please note that the end date is inclusive.
 """
 from datetime import date, datetime
-import tempfile
 
 # Third Party
-import pandas as pd
 from pandas.io.sql import read_sql
 from geopandas import read_postgis
-from fastapi import Response, Query, APIRouter
+from fastapi import Query, APIRouter
 import numpy as np
 from pyiem.tracker import loadqc
 
 # Local
 from ...models import SupportedFormats
-from ...reference import MEDIATYPES
-from ...util import get_dbconn
+from ...util import get_dbconn, deliver_df
 
 router = APIRouter()
 
@@ -149,7 +146,7 @@ def get_df_isusm(sdate, edate, gddbase, gddceil):
     return df
 
 
-def handler(fmt, sdate, edate, gddbase, gddceil):
+def handler(sdate, edate, gddbase, gddceil):
     """Handle the request, return dict"""
     if edate is None:
         edate = sdate
@@ -161,21 +158,7 @@ def handler(fmt, sdate, edate, gddbase, gddceil):
         df = get_df_isuag(sdate, edate, gddbase, gddceil)
     df = df.merge(climo, how="left", on="station")
     df = iemtracker(df, edate)
-
-    if fmt != "geojson":
-        df = pd.DataFrame(df.drop("geom", axis=1))
-    if fmt == "txt":
-        return df.to_csv(index=False)
-    if fmt == "json":
-        return df.to_json(orient="table", index=False)
-    with tempfile.NamedTemporaryFile("w", delete=True) as tmp:
-        if df.empty:
-            return """{"type": "FeatureCollection", "features": []}"""
-
-        df.to_file(tmp.name, driver="GeoJSON")
-        with open(tmp.name) as fh:
-            res = fh.read()
-    return res
+    return df
 
 
 @router.get("/isusm/daily.{fmt}", description=__doc__)
@@ -187,10 +170,8 @@ def service(
     gddceil: int = Query(86),
 ):
     """Replaced above."""
-    return Response(
-        handler(fmt, sdate, edate, gddbase, gddceil),
-        media_type=MEDIATYPES[fmt],
-    )
+    df = handler(sdate, edate, gddbase, gddceil)
+    return deliver_df(df, fmt)
 
 
 service.__doc__ = __doc__

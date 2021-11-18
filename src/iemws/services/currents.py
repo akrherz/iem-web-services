@@ -15,17 +15,13 @@ and ".txt" (comma delimited) formats.
 """
 from datetime import date
 from typing import List
-import os
-import tempfile
 
 import numpy as np
-from pandas.io.sql import read_sql
 from geopandas import read_postgis
-from fastapi import Query, Response, APIRouter
+from fastapi import Query, APIRouter
 from ..models.currents import RootSchema
 from ..models import SupportedFormats
-from ..util import get_dbconn
-from ..reference import MEDIATYPES
+from ..util import get_dbconn, deliver_df
 
 router = APIRouter()
 
@@ -89,7 +85,14 @@ def compute(df):
 
 
 def handler(
-    network, networkclass, wfo, country, state, station, event, minutes, fmt
+    network,
+    networkclass,
+    wfo,
+    country,
+    state,
+    station,
+    event,
+    minutes,
 ):
     """Handle the request, return dict"""
     pgconn = get_dbconn("iem")
@@ -122,31 +125,13 @@ def handler(
         params = []
 
     params.append(minutes)
-    if fmt == SupportedFormats.geojson:
-        df = read_postgis(
-            sql, pgconn, params=params, index_col="station", geom_col="geom"
-        )
-    else:
-        df = read_sql(sql, pgconn, params=params, index_col="station")
-        df.drop("geom", axis=1, inplace=True)
+    df = read_postgis(
+        sql, pgconn, params=params, index_col="station", geom_col="geom"
+    )
     if event is not None and event in df.columns:
         df = df[df[event].notna()]
     df = compute(df)
-    if fmt == SupportedFormats.txt:
-        (tmpfd, tmpfn) = tempfile.mkstemp(text=True)
-        os.close(tmpfd)
-        df.to_csv(tmpfn, index=True)
-    elif fmt == SupportedFormats.json:
-        # Implement our 'table-schema' option
-        return df.to_json(orient="table", default_handler=str)
-    elif fmt == SupportedFormats.geojson:
-        (tmpfd, tmpfn) = tempfile.mkstemp(text=True)
-        os.close(tmpfd)
-        df.to_file(tmpfn, driver="GeoJSON")
-
-    res = open(tmpfn, encoding="utf8").read()
-    os.unlink(tmpfn)
-    return res
+    return df
 
 
 @router.get("/currents.{fmt}", response_model=RootSchema, description=__doc__)
@@ -163,20 +148,17 @@ def currents_service(
 ):
     """Replaced above with module __doc__"""
 
-    return Response(
-        handler(
-            network,
-            networkclass,
-            wfo,
-            country,
-            state,
-            station,
-            event,
-            minutes,
-            fmt,
-        ),
-        media_type=MEDIATYPES[fmt],
+    df = handler(
+        network,
+        networkclass,
+        wfo,
+        country,
+        state,
+        station,
+        event,
+        minutes,
     )
+    return deliver_df(df, fmt)
 
 
 # Not really used

@@ -1,18 +1,15 @@
 """Exposes Iowa DOT 'Dashcam' imagery from its snowplows."""
 from datetime import datetime, timedelta, timezone
-import tempfile
 
 # third party
 from pyiem.util import utc
-import pandas as pd
 from geopandas import read_postgis
-from fastapi import Response, Query, APIRouter
+from fastapi import Query, APIRouter
 
 # Local
-from ..util import get_dbconn
+from ..util import deliver_df, get_dbconn
 from ..models import SupportedFormats
 from ..models.idot_dashcam import RootSchema
-from ..reference import MEDIATYPES
 
 router = APIRouter()
 
@@ -25,7 +22,7 @@ def make_url(row):
     )
 
 
-def handler(valid, window, fmt):
+def handler(valid, window):
     """Do the requested work."""
     pgconn = get_dbconn("postgis")
     df = read_postgis(
@@ -46,21 +43,7 @@ def handler(valid, window, fmt):
         df["utc_valid"] = df["utc_valid"].dt.strftime("%Y-%m-%dT%H:%MZ")
     else:
         df["imgurl"] = ""
-    if fmt != "geojson":
-        df = df.drop("geom", axis=1)
-        df = pd.DataFrame(df)
-    if fmt == "txt":
-        return df.to_csv(index=False)
-    if fmt == "json":
-        # Implement our 'table-schema' option
-        return df[["utc_valid"]].to_json(orient="table", index=False)
-    if df.empty:
-        return '{"type": "FeatureCollection", "features": []}'
-    with tempfile.NamedTemporaryFile("w", delete=True) as tmp:
-        df.to_file(tmp.name, driver="GeoJSON")
-        with open(tmp.name, encoding="utf8") as fh:
-            res = fh.read()
-    return res
+    return df
 
 
 @router.get(
@@ -81,7 +64,8 @@ def idot_dashcam_service(
         valid = utc() - timedelta(minutes=window * 2)
     if valid.tzinfo is None:
         valid = valid.replace(tzinfo=timezone.utc)
-    return Response(handler(valid, window, fmt), media_type=MEDIATYPES[fmt])
+    df = handler(valid, window)
+    return deliver_df(df, fmt)
 
 
 idot_dashcam_service.__doc__ = __doc__
