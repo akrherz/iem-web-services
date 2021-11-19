@@ -3,19 +3,16 @@
 The IEM organizes stations into networks.  This service returns station
 metadata for a given network.
 """
-import tempfile
 
-import pandas as pd
 from geopandas import read_postgis
-from fastapi import Query, Response, HTTPException, APIRouter
+from fastapi import Query, HTTPException, APIRouter
 from ..models import SupportedFormats
-from ..reference import MEDIATYPES
-from ..util import get_dbconn
+from ..util import get_dbconn, deliver_df
 
 router = APIRouter()
 
 
-def handler(network_id, fmt):
+def handler(network_id):
     """Handle the request, return dict"""
     pgconn = get_dbconn("mesosite")
 
@@ -44,18 +41,7 @@ def handler(network_id, fmt):
             status_code=404,
             detail="No stations found for provided network.",
         )
-    if fmt != "geojson":
-        df = df.drop("geom", axis=1)
-        df = pd.DataFrame(df)
-    if fmt == "txt":
-        return df.to_csv(index=False)
-    if fmt == "json":
-        return df.to_json(orient="table", index=False)
-    with tempfile.NamedTemporaryFile("w", delete=True) as tmp:
-        df.to_file(tmp.name, driver="GeoJSON")
-        with open(tmp.name, encoding="utf8") as fh:
-            res = fh.read()
-    return res
+    return df
 
 
 @router.get("/network/{network_id}.{fmt}", description=__doc__)
@@ -64,7 +50,8 @@ def usdm_bypoint_service(
     network_id: str = Query(..., description="IEM Network Identifier."),
 ):
     """Replaced above."""
-    return Response(handler(network_id, fmt), media_type=MEDIATYPES[fmt])
+    df = handler(network_id)
+    return deliver_df(df, fmt)
 
 
 usdm_bypoint_service.__doc__ = __doc__

@@ -16,16 +16,13 @@ make much sense, for example when requesting just one station's worth of data.
 """
 # stdlib
 import datetime
-import tempfile
 
 # third party
-import pandas as pd
 from geopandas import read_postgis
-from fastapi import Query, Response, HTTPException, APIRouter
+from fastapi import Query, HTTPException, APIRouter
 from ..models.daily import RootSchema
 from ..models import SupportedFormats
-from ..util import get_dbconn
-from ..reference import MEDIATYPES
+from ..util import get_dbconn, deliver_df
 
 router = APIRouter()
 
@@ -118,27 +115,11 @@ def service(
     year: int = Query(None, description="Local station day"),
 ):
     """Replaced above with module __doc__"""
-    if all([x is None for x in [station, date, month, year]]):
+    if all(x is None for x in [station, date, month, year]):
         raise HTTPException(500, detail="Not enough arguments provided.")
 
     df = get_df(network, station, date, month, year)
-
-    if fmt != "geojson":
-        df = pd.DataFrame(df.drop("geom", axis=1))
-    if fmt == "txt":
-        res = df.to_csv(index=False)
-    elif fmt == "json":
-        res = df.to_json(orient="table", index=False)
-    else:
-        with tempfile.NamedTemporaryFile("w", delete=True) as tmp:
-            if df.empty:
-                return """{"type": "FeatureCollection", "features": []}"""
-
-            df.to_file(tmp.name, driver="GeoJSON")
-            with open(tmp.name, encoding="utf8") as fh:
-                res = fh.read()
-
-    return Response(res, media_type=MEDIATYPES[fmt])
+    return deliver_df(df, fmt)
 
 
 # Not really used

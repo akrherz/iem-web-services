@@ -25,12 +25,11 @@ import numpy as np
 from metpy.units import masked_array, units
 from metpy.calc import dewpoint_from_relative_humidity
 from pandas.io.sql import read_sql
-from fastapi import Query, Response, HTTPException, APIRouter
+from fastapi import Query, HTTPException, APIRouter
 from pyiem.network import Table as NetworkTable
 from ..models.obhistory import RootSchema, DataItem
 from ..models import SupportedFormatsNoGeoJSON
-from ..util import get_dbconn
-from ..reference import MEDIATYPES
+from ..util import get_dbconn, deliver_df
 
 router = APIRouter()
 
@@ -215,7 +214,7 @@ def compute(df, full):
     # df.dropna(how='all', axis=1, inplace=True)
 
 
-def handler(network, station, date, full, fmt):
+def handler(network, station, date, full):
     """Handle the request, return dict"""
     if date is None:
         date = datetime.date.today()
@@ -223,11 +222,7 @@ def handler(network, station, date, full, fmt):
     if df is None:
         raise HTTPException(500, "No Data For Station.")
     # Run any addition calculations, if necessary
-    df = compute(df, full)
-    if fmt == SupportedFormatsNoGeoJSON.txt:
-        return df.to_csv(index=False)
-    # Implement our 'table-schema' option
-    return df.to_json(orient="table", default_handler=str, index=False)
+    return compute(df, full)
 
 
 @router.get("/obhistory.{fmt}", response_model=RootSchema, description=__doc__)
@@ -245,11 +240,8 @@ def service(
     full: bool = Query(False, description="Include all variables?"),
 ):
     """Replaced above with module __doc__"""
-
-    return Response(
-        handler(network.upper(), station.upper(), date, full, fmt),
-        media_type=MEDIATYPES[fmt],
-    )
+    df = handler(network.upper(), station.upper(), date, full)
+    return deliver_df(df, fmt)
 
 
 # Not really used

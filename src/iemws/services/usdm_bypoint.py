@@ -3,12 +3,11 @@
 The case of no-drought for the given USDM date is presented by a `null` value
 in the JSON.
 """
-import json
 from datetime import date
 
 from pandas.io.sql import read_sql
 from fastapi import Query, APIRouter
-from ..util import get_dbconn
+from ..util import get_dbconn, deliver_df
 
 ISO = "%Y-%m-%dT%H:%M:%SZ"
 router = APIRouter()
@@ -40,14 +39,7 @@ def run(sdate, edate, lon, lat):
         index_col=None,
     )
     df["category"] = df["category"].astype("Int64")
-
-    return json.loads(df.to_json(orient="table", default_handler=str))
-
-
-def handler(sdate, edate, lon, lat):
-    """Handle the request, return dict"""
-
-    return run(sdate, edate, lon, lat)
+    return df
 
 
 @router.get("/usdm_bypoint.json", description=__doc__)
@@ -58,7 +50,8 @@ def usdm_bypoint_service(
     lat: float = Query(...),
 ):
     """Replaced above."""
-    return handler(sdate, edate, lon, lat)
+    df = run(sdate, edate, lon, lat)
+    return deliver_df(df, "json")
 
 
 usdm_bypoint_service.__doc__ = __doc__
