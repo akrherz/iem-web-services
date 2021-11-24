@@ -28,6 +28,9 @@ from .services import (
     servertime,
     spc_watch_outline,
 )
+from .services.iemre import daily as iemre_daily
+from .services.iemre import hourly as iemre_hourly
+from .services.iemre import multiday as iemre_multiday
 from .services.isusm import daily as isusm_daily
 from .services.nws import current_flood_warnings, bufkit, taf, taf_overview
 
@@ -37,6 +40,11 @@ app = FastAPI(root_path="/api/1", description=__doc__, title="IEM API v1")
 app.include_router(currents.router)
 app.include_router(servertime.router)
 app.include_router(ffg_bypoint.router)
+
+app.include_router(iemre_daily.router)
+app.include_router(iemre_hourly.router)
+app.include_router(iemre_multiday.router)
+
 app.include_router(idot_dashcam.router)
 app.include_router(iowa_winter_roadcond.router)
 app.include_router(isusm_daily.router)
