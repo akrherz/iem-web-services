@@ -38,6 +38,7 @@ from .services.nws import (
     spc_mcd,
     taf,
     taf_overview,
+    wpc_mpd,
 )
 
 app = FastAPI(root_path="/api/1", description=__doc__, title="IEM API v1")
@@ -69,6 +70,7 @@ app.include_router(nwstext.router)
 app.include_router(meteobridge.router)
 app.include_router(drydown.router)
 app.include_router(spc_mcd.router)
+app.include_router(wpc_mpd.router)
 app.include_router(cow.router)
 app.include_router(currents.router)
 app.include_router(raobs_by_year.router)
