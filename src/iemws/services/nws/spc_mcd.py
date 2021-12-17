@@ -50,7 +50,7 @@ def handler(valid, hours):
     return df
 
 
-@router.get("/nws/current_flood_warnings.{fmt}", description=__doc__)
+@router.get("/nws/spc_mcd.{fmt}", description=__doc__)
 def service(
     fmt: SupportedFormats,
     valid: datetime = Query(
