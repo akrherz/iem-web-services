@@ -15,6 +15,7 @@ from .services import (
     ffg_bypoint,
     idot_dashcam,
     iowa_winter_roadcond,
+    last_shef,
     meteobridge,
     mos,
     network,
@@ -63,6 +64,7 @@ app.include_router(taf_overview.router)
 app.include_router(usdm_bypoint.router)
 app.include_router(shef_currents.router)
 app.include_router(obhistory.router)
+app.include_router(last_shef.router)
 app.include_router(mos.router)
 app.include_router(network.router)
 app.include_router(networks.router)
