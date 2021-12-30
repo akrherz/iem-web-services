@@ -24,7 +24,7 @@ def handler(station):
         "'YYYY-MM-DDThh24:MI:SSZ') as utc_valid, "
         "physical_code, duration, source, type, extremum, probability, "
         "depth, dv_interval, depth, qualifier, unit_convention, "
-        "product_id from current_shef where station = %s "
+        "product_id, value from current_shef where station = %s "
         "ORDER by physical_code ASC",
         pgconn,
         params=(station,),
