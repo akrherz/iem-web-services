@@ -28,14 +28,16 @@ def append_cfs(res, lon, lat):
     gridx, gridy = find_ij(lon, lat)
     lastyear = max(res["data"].keys())
     thisyear = datetime.date.today().year
+    lastdate = datetime.date(thisyear, 8, 31)
     if lastyear != thisyear:
         # We don't have any data yet for this year, so we add some
         res["data"][thisyear] = {"dates": [], "high": [], "low": [], "rh": []}
-        lastdate = datetime.date(thisyear, 8, 31)
     else:
-        lastdate = datetime.datetime.strptime(
-            res["data"][thisyear]["dates"][-1], "%Y-%m-%d"
-        ).date()
+        # shrug
+        if res["data"][lastyear]["dates"]:
+            lastdate = datetime.datetime.strptime(
+                res["data"][thisyear]["dates"][-1], "%Y-%m-%d"
+            ).date()
     # go find the most recent CFS 0z file
     valid = datetime.date.today()
     attempt = 0
