@@ -5,7 +5,7 @@ from typing import List
 from pydantic import BaseModel, Field
 
 
-class DataItem(BaseModel):
+class ObHistoryDataItem(BaseModel):
     """Data Schema."""
 
     utc_valid: str = Field(..., title="UTC Timestamp")
@@ -42,7 +42,7 @@ class DataItem(BaseModel):
     snowdepth: str = Field(..., title="Snow Depth [inch]")
 
 
-class RootSchema(BaseModel):
+class ObHistorySchema(BaseModel):
     """The schema used by this service."""
 
-    data: List[DataItem]
+    data: List[ObHistoryDataItem]

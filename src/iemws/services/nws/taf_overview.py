@@ -57,7 +57,13 @@ def handler():
     return df
 
 
-@router.get("/nws/taf_overview.{fmt}", description=__doc__)
+@router.get(
+    "/nws/taf_overview.{fmt}",
+    description=__doc__,
+    tags=[
+        "nws",
+    ],
+)
 def service(
     fmt: SupportedFormats,
 ):

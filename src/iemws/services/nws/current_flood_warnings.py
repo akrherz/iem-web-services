@@ -63,7 +63,13 @@ def handler(state, wfo):
     return df
 
 
-@router.get("/nws/current_flood_warnings.{fmt}", description=__doc__)
+@router.get(
+    "/nws/current_flood_warnings.{fmt}",
+    description=__doc__,
+    tags=[
+        "vtec",
+    ],
+)
 def service(
     fmt: SupportedFormats,
     state: str = Query(None, length=2),

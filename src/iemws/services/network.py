@@ -44,7 +44,13 @@ def handler(network_id):
     return df
 
 
-@router.get("/network/{network_id}.{fmt}", description=__doc__)
+@router.get(
+    "/network/{network_id}.{fmt}",
+    description=__doc__,
+    tags=[
+        "iem",
+    ],
+)
 def usdm_bypoint_service(
     fmt: SupportedFormats,
     network_id: str = Query(..., description="IEM Network Identifier."),

@@ -317,7 +317,7 @@ def get_bufkit_file(ctx):
     """Figure out which file we need to use."""
 
 
-@router.get("/nws/bufkit.{fmt}", description=__doc__)
+@router.get("/nws/bufkit.{fmt}", description=__doc__, tags=["nws"])
 def service(
     fmt: SupportedFormatsNoGeoJSON,
     lon: float = Query(None, min=-180, max=180, description="degrees E"),

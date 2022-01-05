@@ -19,7 +19,7 @@ from typing import List
 import numpy as np
 from geopandas import read_postgis
 from fastapi import Query, APIRouter
-from ..models.currents import RootSchema
+from ..models.currents import CurrentsSchema
 from ..models import SupportedFormats
 from ..util import get_dbconn, deliver_df
 
@@ -134,7 +134,14 @@ def handler(
     return df
 
 
-@router.get("/currents.{fmt}", response_model=RootSchema, description=__doc__)
+@router.get(
+    "/currents.{fmt}",
+    response_model=CurrentsSchema,
+    description=__doc__,
+    tags=[
+        "iem",
+    ],
+)
 def currents_service(
     fmt: SupportedFormats,
     network: str = Query(None, description="IEM Network Identifier"),

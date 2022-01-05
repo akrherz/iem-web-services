@@ -22,7 +22,6 @@ from typing import List
 import pytz
 from pandas.io.sql import read_sql
 from fastapi import Query, Response, HTTPException, APIRouter
-from ..models.currents import RootSchema
 from ..models import SupportedFormatsNoGeoJSON
 from ..util import get_dbconn
 from ..reference import MEDIATYPES
@@ -81,7 +80,13 @@ def handler(station, model, runtime, fmt):
     return df.to_json(orient="table", default_handler=str)
 
 
-@router.get("/mos.{fmt}", response_model=RootSchema, description=__doc__)
+@router.get(
+    "/mos.{fmt}",
+    description=__doc__,
+    tags=[
+        "nws",
+    ],
+)
 def service(
     fmt: SupportedFormatsNoGeoJSON,
     station: List[str] = Query(

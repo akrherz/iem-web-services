@@ -72,7 +72,13 @@ def handler(valid, lon, lat):
     return res
 
 
-@router.get("/ffg_bypoint.json", description=__doc__)
+@router.get(
+    "/ffg_bypoint.json",
+    description=__doc__,
+    tags=[
+        "nws",
+    ],
+)
 def ffg_bypoint_service(
     valid: datetime = Query(None),
     lon: float = Query(...),

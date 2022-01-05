@@ -28,7 +28,13 @@ def handler():
     return df
 
 
-@router.get("/networks.{fmt}", description=__doc__)
+@router.get(
+    "/networks.{fmt}",
+    description=__doc__,
+    tags=[
+        "iem",
+    ],
+)
 def networks_service(
     fmt: SupportedFormats,
 ):

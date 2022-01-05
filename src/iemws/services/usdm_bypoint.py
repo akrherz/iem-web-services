@@ -42,7 +42,13 @@ def run(sdate, edate, lon, lat):
     return df
 
 
-@router.get("/usdm_bypoint.json", description=__doc__)
+@router.get(
+    "/usdm_bypoint.json",
+    description=__doc__,
+    tags=[
+        "iem",
+    ],
+)
 def usdm_bypoint_service(
     sdate: date = Query(...),
     edate: date = Query(...),

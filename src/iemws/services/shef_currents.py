@@ -29,7 +29,13 @@ def handler(pe, duration, days):
     return df
 
 
-@router.get("/shef_currents.{fmt}", description=__doc__)
+@router.get(
+    "/shef_currents.{fmt}",
+    description=__doc__,
+    tags=[
+        "nws",
+    ],
+)
 def shef_currents_service(
     fmt: SupportedFormats,
     pe: str = Query(..., max_length=2),

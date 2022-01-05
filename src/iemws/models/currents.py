@@ -5,7 +5,7 @@ from typing import List
 from pydantic import BaseModel, Field
 
 
-class DataItem(BaseModel):
+class CurrentsDataItem(BaseModel):
     """Data Schema."""
 
     station: str = Field(..., title="Title")
@@ -80,7 +80,7 @@ class DataItem(BaseModel):
     pday: str = Field(..., title="Title")
 
 
-class RootSchema(BaseModel):
+class CurrentsSchema(BaseModel):
     """The schema used by this service."""
 
-    data: List[DataItem]
+    data: List[CurrentsDataItem]

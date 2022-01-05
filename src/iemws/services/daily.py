@@ -20,7 +20,7 @@ import datetime
 # third party
 from geopandas import read_postgis
 from fastapi import Query, HTTPException, APIRouter
-from ..models.daily import RootSchema
+from ..models.daily import DailySchema
 from ..models import SupportedFormats
 from ..util import get_dbconn, deliver_df
 
@@ -99,7 +99,14 @@ def get_df(network, station, date, month, year):
     return df
 
 
-@router.get("/daily.{fmt}", response_model=RootSchema, description=__doc__)
+@router.get(
+    "/daily.{fmt}",
+    response_model=DailySchema,
+    description=__doc__,
+    tags=[
+        "iem",
+    ],
+)
 def service(
     fmt: SupportedFormats,
     network: str = Query(
