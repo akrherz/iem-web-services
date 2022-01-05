@@ -86,7 +86,13 @@ def workflow(sts, ets, i, j):
     return pd.DataFrame(res)
 
 
-@router.get("/iemre/hourly.{fmt}", response_model=HourlySchema)
+@router.get(
+    "/iemre/hourly.{fmt}",
+    response_model=HourlySchema,
+    tags=[
+        "iem",
+    ],
+)
 def service(
     fmt: SupportedFormatsNoGeoJSON,
     date: datetime.date = Query(

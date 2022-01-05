@@ -99,7 +99,14 @@ def get_df(network, station, date, month, year):
     return df
 
 
-@router.get("/daily.{fmt}", response_model=RootSchema, description=__doc__)
+@router.get(
+    "/daily.{fmt}",
+    response_model=RootSchema,
+    description=__doc__,
+    tags=[
+        "iem",
+    ],
+)
 def service(
     fmt: SupportedFormats,
     network: str = Query(

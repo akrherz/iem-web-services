@@ -81,7 +81,14 @@ def handler(station, model, runtime, fmt):
     return df.to_json(orient="table", default_handler=str)
 
 
-@router.get("/mos.{fmt}", response_model=RootSchema, description=__doc__)
+@router.get(
+    "/mos.{fmt}",
+    response_model=RootSchema,
+    description=__doc__,
+    tags=[
+        "nws",
+    ],
+)
 def service(
     fmt: SupportedFormatsNoGeoJSON,
     station: List[str] = Query(

@@ -524,7 +524,13 @@ def handler(
     return res
 
 
-@router.get("/cow.json", description=__doc__)
+@router.get(
+    "/cow.json",
+    description=__doc__,
+    tags=[
+        "vtec",
+    ],
+)
 def cow_service(
     wfo: List[str] = Query(
         [], min_length=3, max_length=4, title="WFO Identifiers"

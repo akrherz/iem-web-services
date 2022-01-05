@@ -48,7 +48,13 @@ def handler(product_id):
     return row[0].replace("\r\r\n", "\n")
 
 
-@router.get("/nwstext/{product_id}", description=__doc__)
+@router.get(
+    "/nwstext/{product_id}",
+    description=__doc__,
+    tags=[
+        "nws",
+    ],
+)
 def nwstext_service(
     product_id: str = Query(..., max_length=35, min_length=28),
 ):

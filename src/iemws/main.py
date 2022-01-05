@@ -3,7 +3,6 @@ Return to [IEM API Homepage](https://mesonet.agron.iastate.edu/api/).
 
 This answers `/api/1/` versioned requests against the IEM.  This service is
 driven by the awesome [FastAPI](https://fastapi.tiangolo.com/) Python library.
-
 """
 
 from fastapi import FastAPI
@@ -43,11 +42,37 @@ from .services.nws import (
 )
 from .services.vtec import county_zone
 
-app = FastAPI(root_path="/api/1", description=__doc__, title="IEM API v1")
+# Order here controls the order of the API documentation
+tags_metadata = [
+    {
+        "name": "iem",
+        "description": "IEM Centric APIs",
+    },
+    {
+        "name": "nws",
+        "description": "National Weather Service (NWS) APIs by IEM",
+    },
+    {
+        "name": "vtec",
+        "description": (
+            "National Weather Service (NWS) VTEC Watch Warning Advisory APIs"
+        ),
+    },
+    {
+        "name": "debug",
+        "description": "Test and Debugging APIs",
+    },
+]
+
+app = FastAPI(
+    root_path="/api/1",
+    description=__doc__,
+    title="IEM API v1",
+    openapi_tags=tags_metadata,
+)
 
 # The order here impacts the docs order
 app.include_router(currents.router)
-app.include_router(servertime.router)
 app.include_router(ffg_bypoint.router)
 
 app.include_router(iemre_daily.router)
@@ -81,3 +106,5 @@ app.include_router(scp.router)
 app.include_router(spc_watch_outline.router)
 
 app.include_router(county_zone.router)
+
+app.include_router(servertime.router)

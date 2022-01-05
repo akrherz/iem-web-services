@@ -20,7 +20,13 @@ def clean(val):
     return float(val)
 
 
-@router.get("/iemre/multiday.{fmt}", description=__doc__)
+@router.get(
+    "/iemre/multiday.{fmt}",
+    description=__doc__,
+    tags=[
+        "iem",
+    ],
+)
 def service(
     fmt: SupportedFormatsNoGeoJSON,
     sdate: datetime.date = Query(..., description="Start Date."),

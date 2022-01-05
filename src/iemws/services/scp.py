@@ -80,7 +80,13 @@ def handler(station, date):
     return df
 
 
-@router.get("/scp.json", description=__doc__)
+@router.get(
+    "/scp.json",
+    description=__doc__,
+    tags=[
+        "nws",
+    ],
+)
 def service(
     station: str = Query(..., max_length=5, min_length=3),
     date: datetime.date = Query(..., description="UTC date of interest"),

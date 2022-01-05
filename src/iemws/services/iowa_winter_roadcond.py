@@ -44,7 +44,13 @@ def handler(valid):
     return df
 
 
-@router.get("/iowa_winter_roadcond.{fmt}", description=__doc__)
+@router.get(
+    "/iowa_winter_roadcond.{fmt}",
+    description=__doc__,
+    tags=[
+        "iem",
+    ],
+)
 def service(
     fmt: SupportedFormats,
     valid: datetime = Query(

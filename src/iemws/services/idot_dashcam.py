@@ -47,7 +47,12 @@ def handler(valid, window):
 
 
 @router.get(
-    "/idot_dashcam.{fmt}", response_model=RootSchema, description=__doc__
+    "/idot_dashcam.{fmt}",
+    response_model=RootSchema,
+    description=__doc__,
+    tags=[
+        "iem",
+    ],
 )
 def idot_dashcam_service(
     fmt: SupportedFormats,

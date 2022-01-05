@@ -134,7 +134,14 @@ def handler(
     return df
 
 
-@router.get("/currents.{fmt}", response_model=RootSchema, description=__doc__)
+@router.get(
+    "/currents.{fmt}",
+    response_model=RootSchema,
+    description=__doc__,
+    tags=[
+        "iem",
+    ],
+)
 def currents_service(
     fmt: SupportedFormats,
     network: str = Query(None, description="IEM Network Identifier"),

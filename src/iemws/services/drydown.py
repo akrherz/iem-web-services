@@ -128,7 +128,12 @@ def handler(lon, lat):
     return res
 
 
-@router.get("/drydown.json")
+@router.get(
+    "/drydown.json",
+    tags=[
+        "iem",
+    ],
+)
 def drydown_service(lat: float = Query(...), lon: float = Query(...)):
     """Babysteps."""
     return handler(lon, lat)

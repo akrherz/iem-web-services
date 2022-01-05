@@ -33,7 +33,14 @@ def handler(station):
     return df
 
 
-@router.get("/last_shef.{fmt}", response_model=Schema, description=__doc__)
+@router.get(
+    "/last_shef.{fmt}",
+    response_model=Schema,
+    description=__doc__,
+    tags=[
+        "nws",
+    ],
+)
 def shef_currents_service(
     fmt: SupportedFormatsNoGeoJSON,
     station: str = Query(..., max_length=8),

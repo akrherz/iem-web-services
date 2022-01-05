@@ -161,7 +161,13 @@ def handler(sdate, edate, gddbase, gddceil):
     return df
 
 
-@router.get("/isusm/daily.{fmt}", description=__doc__)
+@router.get(
+    "/isusm/daily.{fmt}",
+    description=__doc__,
+    tags=[
+        "iem",
+    ],
+)
 def service(
     fmt: SupportedFormats,
     sdate: date = Query(...),

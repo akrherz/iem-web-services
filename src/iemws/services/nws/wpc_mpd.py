@@ -50,7 +50,13 @@ def handler(valid, hours):
     return df
 
 
-@router.get("/nws/wpc_mpd.{fmt}", description=__doc__)
+@router.get(
+    "/nws/wpc_mpd.{fmt}",
+    description=__doc__,
+    tags=[
+        "nws",
+    ],
+)
 def service(
     fmt: SupportedFormats,
     valid: datetime = Query(

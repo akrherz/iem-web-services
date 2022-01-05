@@ -21,7 +21,13 @@ def myrounder(val, precision):
     return round(val, precision)
 
 
-@router.get("/iemre/daily.{fmt}", description=__doc__)
+@router.get(
+    "/iemre/daily.{fmt}",
+    description=__doc__,
+    tags=[
+        "iem",
+    ],
+)
 def service(
     fmt: SupportedFormatsNoGeoJSON,
     date: datetime.date = Query(..., description="The date of interest."),

@@ -34,7 +34,13 @@ def handler(station, year):
     return df
 
 
-@router.get("/raobs_by_year.json", description=__doc__)
+@router.get(
+    "/raobs_by_year.json",
+    description=__doc__,
+    tags=[
+        "nws",
+    ],
+)
 def nwstext_service(
     station: str = Query(..., max_length=4, min_length=4),
     year: int = Query(..., min=1947, max=datetime.date.today().year),

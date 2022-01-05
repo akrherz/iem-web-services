@@ -59,6 +59,9 @@ def handler(valid):
     "/vtec/county_zone.{fmt}",
     description=__doc__,
     response_model=RootSchema,
+    tags=[
+        "vtec",
+    ],
 )
 def service(
     fmt: SupportedFormats,

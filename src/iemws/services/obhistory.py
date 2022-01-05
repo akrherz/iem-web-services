@@ -225,7 +225,14 @@ def handler(network, station, date, full):
     return compute(df, full)
 
 
-@router.get("/obhistory.{fmt}", response_model=RootSchema, description=__doc__)
+@router.get(
+    "/obhistory.{fmt}",
+    response_model=RootSchema,
+    description=__doc__,
+    tags=[
+        "iem",
+    ],
+)
 def service(
     fmt: SupportedFormatsNoGeoJSON,
     network: str = Query(

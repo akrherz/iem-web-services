@@ -64,7 +64,13 @@ def handler(
     return "OK"
 
 
-@router.get("/meteobridge.json", description=__doc__)
+@router.get(
+    "/meteobridge.json",
+    description=__doc__,
+    tags=[
+        "debug",
+    ],
+)
 def meteobridge_service(
     key: str = Query(...),
     time: str = Query(...),

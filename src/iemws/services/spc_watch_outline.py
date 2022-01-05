@@ -42,7 +42,13 @@ def run(valid):
     return df
 
 
-@router.get("/spc_watch_outline.geojson", description=__doc__)
+@router.get(
+    "/spc_watch_outline.geojson",
+    description=__doc__,
+    tags=[
+        "nws",
+    ],
+)
 def service(
     valid: datetime = Query(None),
 ):
