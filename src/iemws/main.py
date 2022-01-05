@@ -3,6 +3,30 @@ Return to [IEM API Homepage](https://mesonet.agron.iastate.edu/api/).
 
 This answers `/api/1/` versioned requests against the IEM.  This service is
 driven by the awesome [FastAPI](https://fastapi.tiangolo.com/) Python library.
+
+**Philosophy** - I am not the sharpest tool in the shed, but I am trying things
+as I figure things out.  API design is hard and I tend to want to move quickly,
+so this is what you get.  Whilst REST principles are interesting, I find that
+they are difficult for folks to use that are more scientists than programmers.
+The URI endpoints do encapsulate the return data format by the suffix on
+the last path segment.  When you see the ``{fmt}`` suffix, that means the
+service supports various return formats.  Otherwise, only the shown option
+is available.  I am always interested in learning things and if you are
+greatly offended by this, please let me know!
+daryl herzmann [akrherz@iastate.edu](mailto:akrherz@iastate.edu)
+
+**Scalability** - These services and the backend server answering the
+requests have finite capacity.  I would suggest not using these on a highly
+trafficked website, nor launch a AWS region of EC2 instances against me.
+
+**Tracking Status/Outages** - I usually alert folks to server issues via my
+[twitter account](https://github.com/akrherz).  Subscribing to the IEM's
+[RSS feed](https://mesonet.agron.iastate.edu/rss.php) is also a good
+place to see what I am up to.
+
+**Terms of Usage** - This service is free to use for most any legal purpose.
+Please don't sue Iowa State University when daryl herzmann gets hit by a bus
+someday and then entire IEM goes away!
 """
 
 from fastapi import FastAPI
