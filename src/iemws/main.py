@@ -41,6 +41,7 @@ from .services.nws import (
     taf_overview,
     wpc_mpd,
 )
+from .services.vtec import county_zone
 
 app = FastAPI(root_path="/api/1", description=__doc__, title="IEM API v1")
 
@@ -78,3 +79,5 @@ app.include_router(currents.router)
 app.include_router(raobs_by_year.router)
 app.include_router(scp.router)
 app.include_router(spc_watch_outline.router)
+
+app.include_router(county_zone.router)
