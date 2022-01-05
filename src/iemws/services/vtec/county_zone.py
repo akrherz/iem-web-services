@@ -15,7 +15,7 @@ from fastapi import Query, APIRouter
 from pyiem.util import utc
 from pyiem.nws.vtec import NWS_COLORS, get_ps_string
 from ...models import SupportedFormats
-from ...models.county_zone import RootSchema
+from ...models.county_zone import CountyZoneSchema
 from ...util import get_dbconn, deliver_df
 
 router = APIRouter()
@@ -58,7 +58,7 @@ def handler(valid):
 @router.get(
     "/vtec/county_zone.{fmt}",
     description=__doc__,
-    response_model=RootSchema,
+    response_model=CountyZoneSchema,
     tags=[
         "vtec",
     ],

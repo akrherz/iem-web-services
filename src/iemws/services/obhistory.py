@@ -27,7 +27,7 @@ from metpy.calc import dewpoint_from_relative_humidity
 from pandas.io.sql import read_sql
 from fastapi import Query, HTTPException, APIRouter
 from pyiem.network import Table as NetworkTable
-from ..models.obhistory import RootSchema, DataItem
+from ..models.obhistory import ObHistorySchema, ObHistoryDataItem
 from ..models import SupportedFormatsNoGeoJSON
 from ..util import get_dbconn, deliver_df
 
@@ -205,7 +205,7 @@ def compute(df, full):
         df["local_valid"] = df["local_valid"].dt.strftime("%Y-%m-%dT%H:%M")
     # Make sure we have all columns
     if full:
-        for item in DataItem.__fields__:
+        for item in ObHistoryDataItem.__fields__:
             if item not in df.columns:
                 df[item] = np.nan
     # replace any None values with np.nan
@@ -227,7 +227,7 @@ def handler(network, station, date, full):
 
 @router.get(
     "/obhistory.{fmt}",
-    response_model=RootSchema,
+    response_model=ObHistorySchema,
     description=__doc__,
     tags=[
         "iem",

@@ -1,11 +1,11 @@
-"""Models for idot_dashma API."""
+"""Models for idot_dashcam API."""
 # pylint: disable=no-name-in-module
 from typing import List
 
 from pydantic import BaseModel, Field
 
 
-class DataItem(BaseModel):
+class IDOTDashcamDataItem(BaseModel):
     """Data Schema."""
 
     index: int = Field(..., title="Unique Key")
@@ -16,7 +16,7 @@ class DataItem(BaseModel):
     imgurl: str = Field(..., title="URI to fetch this webcam image from.")
 
 
-class RootSchema(BaseModel):
+class IDOTDashcamSchema(BaseModel):
     """The schema used by this service."""
 
-    data: List[DataItem]
+    data: List[IDOTDashcamDataItem]

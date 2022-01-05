@@ -5,7 +5,7 @@ from typing import List
 from pydantic import BaseModel, Field
 
 
-class DataItem(BaseModel):
+class DailyDataItem(BaseModel):
     """Data Schema."""
 
     station: str = Field(..., title="Station Idenfifier")
@@ -29,7 +29,7 @@ class DataItem(BaseModel):
     max_drct: int = Field(..., title="Wind Direction of Max Wind Gust")
 
 
-class RootSchema(BaseModel):
+class DailySchema(BaseModel):
     """The schema used by this service."""
 
-    data: List[DataItem]
+    data: List[DailyDataItem]

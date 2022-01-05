@@ -11,7 +11,7 @@ from fastapi import Query, APIRouter
 from pandas.io.sql import read_sql
 from ..util import deliver_df, get_dbconn
 from ..models import SupportedFormatsNoGeoJSON
-from ..models.last_shef import Schema
+from ..models.last_shef import LastSHEFSchema
 
 router = APIRouter()
 
@@ -35,7 +35,7 @@ def handler(station):
 
 @router.get(
     "/last_shef.{fmt}",
-    response_model=Schema,
+    response_model=LastSHEFSchema,
     description=__doc__,
     tags=[
         "nws",

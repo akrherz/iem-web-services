@@ -19,7 +19,7 @@ from typing import List
 import numpy as np
 from geopandas import read_postgis
 from fastapi import Query, APIRouter
-from ..models.currents import RootSchema
+from ..models.currents import CurrentsSchema
 from ..models import SupportedFormats
 from ..util import get_dbconn, deliver_df
 
@@ -136,7 +136,7 @@ def handler(
 
 @router.get(
     "/currents.{fmt}",
-    response_model=RootSchema,
+    response_model=CurrentsSchema,
     description=__doc__,
     tags=[
         "iem",

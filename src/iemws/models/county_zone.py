@@ -5,7 +5,7 @@ from typing import List
 from pydantic import BaseModel, Field
 
 
-class DataItem(BaseModel):
+class CountyZoneDataItem(BaseModel):
     """Data Schema."""
 
     utc_product_issue: str = Field(..., title="UTC Timestamp of Text Product")
@@ -24,7 +24,7 @@ class DataItem(BaseModel):
     event_label: str = Field(..., title="English Name of Event")
 
 
-class RootSchema(BaseModel):
+class CountyZoneSchema(BaseModel):
     """The schema used by this service."""
 
-    data: List[DataItem]
+    data: List[CountyZoneDataItem]

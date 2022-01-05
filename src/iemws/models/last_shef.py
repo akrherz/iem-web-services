@@ -5,7 +5,7 @@ from typing import List
 from pydantic import BaseModel, Field
 
 
-class Item(BaseModel):
+class LastSHEFItem(BaseModel):
     """Data Schema."""
 
     station: str = Field(..., title="Station Identifier")
@@ -24,7 +24,7 @@ class Item(BaseModel):
     product_id: str = Field(..., title="NWS Product Source Identifier")
 
 
-class Schema(BaseModel):
+class LastSHEFSchema(BaseModel):
     """The schema used by this service."""
 
-    data: List[Item]
+    data: List[LastSHEFItem]
