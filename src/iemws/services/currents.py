@@ -97,8 +97,14 @@ def handler(
     """Handle the request, return dict"""
     pgconn = get_dbconn("iem")
     if station is not None:
-        params = [tuple(station)]
-        sql = SQL.replace("REPLACEME", "t.id in %s and")
+        # le sqlalchemy sigh
+        rep = []
+        params = []
+        for s in station:
+            params.append(s)
+            rep.append(" t.id = %s ")
+        rep = " or ".join(rep)
+        sql = SQL.replace("REPLACEME", f"{rep} and")
     elif networkclass is not None and wfo is not None:
         params = [wfo, networkclass]
         sql = SQL.replace("REPLACEME", "t.wfo = %s and t.network ~* %s and")
