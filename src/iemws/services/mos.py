@@ -22,9 +22,11 @@ from typing import List
 import pytz
 from pandas.io.sql import read_sql
 from fastapi import Query, Response, HTTPException, APIRouter
+from pyiem import util
 from ..models import SupportedFormatsNoGeoJSON
-from ..util import get_dbconn
 from ..reference import MEDIATYPES
+from ..util import get_dbconn
+
 
 MODEL_DOMAIN = ["AVN", "GFS", "ETA", "NAM", "NBS", "NBE", "ECM", "LAV", "MEX"]
 COLUMNS = (
@@ -36,9 +38,9 @@ COLUMNS = (
 router = APIRouter()
 
 
-def find_runtime(pgconn, station, model):
+def find_runtime(station, model):
     """Figure out what our latest runtime is."""
-    cursor = pgconn.cursor()
+    cursor = util.get_dbconn("mos").cursor()
     cursor.execute(
         "SELECT max(runtime) from alldata WHERE model = %s and "
         "station in %s and runtime > now() - '48 hours'::interval",
@@ -53,9 +55,8 @@ def handler(station, model, runtime, fmt):
     """Handle the request."""
     if model not in MODEL_DOMAIN:
         raise HTTPException(503, detail="model= is not in processed domain")
-    pgconn = get_dbconn("mos")
     if runtime is None:
-        runtime = find_runtime(pgconn, station, model)
+        runtime = find_runtime(station, model)
 
     # Ready to get the data!
     df = read_sql(
@@ -64,7 +65,7 @@ def handler(station, model, runtime, fmt):
         "ftime at time zone 'UTC' as ftime_utc "
         "from alldata where model = %s and station in %s and "
         "runtime = %s ORDER by station ASC, ftime ASC",
-        pgconn,
+        get_dbconn("mos"),
         params=(model, tuple(station), runtime),
         index_col=None,
     )

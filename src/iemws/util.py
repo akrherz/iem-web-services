@@ -5,7 +5,7 @@ import tempfile
 from pandas import DataFrame
 from pandas.api.types import is_datetime64_any_dtype as isdt
 from pyiem import util
-from fastapi import HTTPException, Response
+from fastapi import Response
 from .models import SupportedFormats
 from .reference import MEDIATYPES
 
@@ -40,12 +40,8 @@ def deliver_df(df: DataFrame, fmt: str):
 
 
 def get_dbconn(name):
-    """Get a database connection or fail."""
-    try:
-        # Dragons: We set this now so that any subquent database reads will
-        # properly load timestamptz column types into datetime objects
-        os.environ["PGTZ"] = "UTC"
-        return util.get_dbconn(name)
-    except Exception:
-        # pylint: disable=raise-missing-from
-        raise HTTPException(status_code=503, detail="Database unavailable.")
+    """Get a database connection string."""
+    # Dragons: We set this now so that any subquent database reads will
+    # properly load timestamptz column types into datetime objects
+    os.environ["PGTZ"] = "UTC"
+    return util.get_dbconnstr(name)

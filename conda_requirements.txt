@@ -3,7 +3,10 @@ fastapi
 geopandas
 metpy
 pygrib
-pyiem
+# Ensure some discipline
+pyiem >=1.10.0
 pyproj
 pytest
 pytest-runner
+# for pandas
+sqlalchemy
