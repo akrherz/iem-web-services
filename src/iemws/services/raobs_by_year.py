@@ -8,6 +8,7 @@ from fastapi import Query, APIRouter
 from pandas.io.sql import read_sql
 from pyiem.network import Table as NetworkTable
 from pyiem.util import utc
+from sqlalchemy import text
 from ..util import deliver_df, get_dbconn
 
 router = APIRouter()
@@ -25,10 +26,12 @@ def handler(station, year):
     ets = utc(year + 1, 1, 1)
 
     df = read_sql(
-        "SELECT * from raob_flights where station in %s "
-        "and valid >= %s and valid < %s ORDER by valid ASC",
+        text(
+            "SELECT * from raob_flights where station in :ids "
+            "and valid >= :sts and valid < :ets ORDER by valid ASC"
+        ),
         pgconn,
-        params=(tuple(stations), sts, ets),
+        params={"ids": tuple(stations), "sts": sts, "ets": ets},
     )
 
     return df

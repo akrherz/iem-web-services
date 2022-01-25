@@ -18,6 +18,7 @@ import pandas as pd
 from pandas.io.sql import read_sql
 from fastapi import Query, APIRouter
 from shapely.ops import unary_union
+from sqlalchemy import text
 from ..util import get_dbconn
 
 ISO9660 = "%Y-%m-%dT%H:%M:%SZ"
@@ -197,7 +198,8 @@ class COWSession:
     def load_events(self):
         """Build out the listing of events based on the request"""
         self.events = gpd.read_postgis(
-            f"""
+            text(
+                f"""
         WITH stormbased as (
             SELECT wfo, phenomena, eventid, hailtag, windtag,
             geom, significance,
@@ -206,9 +208,9 @@ class COWSession:
             ST_xmax(geom) as lon0, ST_ymax(geom) as lat0,
             extract(year from issue at time zone 'UTC') as year
             from sbw w WHERE status = 'NEW' {self.sql_wfo_limiter()}
-            and issue >= %s and issue < %s and expire < %s
+            and issue >= :begints and issue < :endts and expire < :endts
             and significance = 'W'
-            and phenomena in %s {self.sql_tag_limiter()}
+            and phenomena in :phenomena {self.sql_tag_limiter()}
         ),
         countybased as (
             SELECT w.wfo, phenomena, eventid, significance,
@@ -221,9 +223,9 @@ class COWSession:
             extract(year from issue at time zone 'UTC') as year, w.fcster
             from warnings w JOIN ugcs u on (u.gid = w.gid) WHERE
             w.gid is not null {self.sql_wfo_limiter()} and
-            issue >= %s and issue < %s and expire < %s
+            issue >= :begints and issue < :endts and expire < :endts
             and significance = 'W'
-            and phenomena in %s
+            and phenomena in :phenomena
             {self.sql_fcster_limiter()}
             GROUP by w.wfo, phenomena, eventid, significance, year, fcster
         )
@@ -239,18 +241,14 @@ class COWSession:
         (c.eventid = s.eventid and c.wfo = s.wfo and c.year = s.year
         and c.phenomena = s.phenomena and c.significance = s.significance)
         ORDER by issue ASC
-        """,
-            self.dbconn,
-            params=(
-                self.begints,
-                self.endts,
-                self.endts,
-                tuple(self.phenomena),
-                self.begints,
-                self.endts,
-                self.endts,
-                tuple(self.phenomena),
+        """
             ),
+            self.dbconn,
+            params={
+                "begints": self.begints,
+                "endts": self.endts,
+                "phenomena": tuple(self.phenomena),
+            },
             crs={"init": "epsg:4326"},
             index_col="key",
         )
@@ -304,23 +302,24 @@ class COWSession:
         """Compute a stat"""
         # re ST_Buffer(simple_geom) see akrherz/iem#163
         df = read_sql(
-            f"""
+            text(
+                f"""
             WITH stormbased as (
                 SELECT geom, wfo, eventid, phenomena, significance,
                 extract(year from issue at time zone 'UTC') as year
                 from sbw w WHERE status = 'NEW' {self.sql_wfo_limiter()}
-                and issue >= %s and issue < %s and expire < %s
+                and issue >= :begints and issue < :endts and expire < :endts
                 and significance = 'W'
-                and phenomena in %s {self.sql_tag_limiter()}),
+                and phenomena in :phenomena {self.sql_tag_limiter()}),
             countybased as (
                 SELECT ST_Union(ST_Buffer(u.simple_geom, 0)) as geom,
                 w.wfo, phenomena, eventid, significance,
                 extract(year from issue at time zone 'UTC') as year, w.fcster
                 from warnings w JOIN ugcs u on (u.gid = w.gid) WHERE
                 w.gid is not null {self.sql_wfo_limiter()} and
-                issue >= %s and issue < %s and expire < %s
+                issue >= :begints and issue < :endts and expire < :endts
                 and significance = 'W'
-                and phenomena in %s
+                and phenomena in :phenomena
                 {self.sql_fcster_limiter()}
                 GROUP by w.wfo, phenomena, eventid, significance, year,
                 fcster),
@@ -340,18 +339,14 @@ class COWSession:
             SELECT sum(ST_Length(ST_transform(geo,2163))) as s,
             year || wfo || eventid || phenomena || significance as key
             from agg GROUP by key
-        """,
-            self.dbconn,
-            params=(
-                self.begints,
-                self.endts,
-                self.endts,
-                tuple(self.phenomena),
-                self.begints,
-                self.endts,
-                self.endts,
-                tuple(self.phenomena),
+        """
             ),
+            self.dbconn,
+            params={
+                "begints": self.begints,
+                "endts": self.endts,
+                "phenomena": tuple(self.phenomena),
+            },
             index_col="key",
         )
         self.events["sharedborder"] = df["s"]
