@@ -7,8 +7,9 @@ import datetime
 
 import pytz
 from fastapi import Query, HTTPException, APIRouter
-from pyiem.util import get_properties, utc, get_dbconn
+from pyiem.util import get_properties, utc
 from pyiem.observation import Observation
+from ..util import get_dbconn
 
 PROPS = {}
 router = APIRouter()

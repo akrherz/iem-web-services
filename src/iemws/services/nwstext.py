@@ -6,7 +6,7 @@ import datetime
 
 import pytz
 from fastapi import Query, Response, HTTPException, APIRouter
-from pyiem.util import get_dbconn
+from ..util import get_dbconn
 
 router = APIRouter()
 

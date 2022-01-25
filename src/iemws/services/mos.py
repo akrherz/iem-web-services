@@ -22,7 +22,6 @@ from typing import List
 import pytz
 from pandas.io.sql import read_sql
 from fastapi import Query, Response, HTTPException, APIRouter
-from pyiem import util
 from ..models import SupportedFormatsNoGeoJSON
 from ..reference import MEDIATYPES
 from ..util import get_dbconn
@@ -40,7 +39,7 @@ router = APIRouter()
 
 def find_runtime(station, model):
     """Figure out what our latest runtime is."""
-    cursor = util.get_dbconn("mos").cursor()
+    cursor = get_dbconn("mos").cursor()
     cursor.execute(
         "SELECT max(runtime) from alldata WHERE model = %s and "
         "station in %s and runtime > now() - '48 hours'::interval",
