@@ -22,6 +22,8 @@ from typing import List
 import pytz
 from pandas.io.sql import read_sql
 from fastapi import Query, Response, HTTPException, APIRouter
+from pyiem import util
+from sqlalchemy import text
 from ..models import SupportedFormatsNoGeoJSON
 from ..reference import MEDIATYPES
 from ..util import get_dbconn
@@ -39,7 +41,7 @@ router = APIRouter()
 
 def find_runtime(station, model):
     """Figure out what our latest runtime is."""
-    cursor = get_dbconn("mos").cursor()
+    cursor = util.get_dbconn("mos").cursor()
     cursor.execute(
         "SELECT max(runtime) from alldata WHERE model = %s and "
         "station in %s and runtime > now() - '48 hours'::interval",
@@ -59,13 +61,15 @@ def handler(station, model, runtime, fmt):
 
     # Ready to get the data!
     df = read_sql(
-        "SELECT *, t06_1 ||'/'||t06_2 as t06, t12_1 ||'/'|| t12_2 as t12, "
-        "runtime at time zone 'UTC' as runtime_utc, "
-        "ftime at time zone 'UTC' as ftime_utc "
-        "from alldata where model = %s and station in %s and "
-        "runtime = %s ORDER by station ASC, ftime ASC",
+        text(
+            "SELECT *, t06_1 ||'/'||t06_2 as t06, t12_1 ||'/'|| t12_2 as t12, "
+            "runtime at time zone 'UTC' as runtime_utc, "
+            "ftime at time zone 'UTC' as ftime_utc "
+            "from alldata where model = :model and station in :ids and "
+            "runtime = :runtime ORDER by station ASC, ftime ASC"
+        ),
         get_dbconn("mos"),
-        params=(model, tuple(station), runtime),
+        params={"model": model, "ids": tuple(station), "runtime": runtime},
         index_col=None,
     )
     if df.empty:

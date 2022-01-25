@@ -19,6 +19,7 @@ from typing import List
 import numpy as np
 from geopandas import read_postgis
 from fastapi import Query, APIRouter
+from sqlalchemy import text
 from ..models.currents import CurrentsSchema
 from ..models import SupportedFormats
 from ..util import get_dbconn, deliver_df
@@ -46,7 +47,7 @@ WITH agg as (
     t.geom, ST_x(t.geom) as lon, ST_y(t.geom) as lat
     from current c JOIN stations t on (c.iemid = t.iemid) WHERE
     REPLACEME not t.metasite and t.online
-    and c.valid > (now() - '%s minutes'::interval)
+    and c.valid > (now() - ':minutes minutes'::interval)
 )
     SELECT c.id as station, c.name, c.county, c.state, c.network,
     to_char(s.day, 'YYYY-mm-dd') as local_date, snow, snowd, snoww,
@@ -96,37 +97,41 @@ def handler(
 ):
     """Handle the request, return dict"""
     pgconn = get_dbconn("iem")
+    params = {}
     if station is not None:
-        params = [tuple(station)]
-        sql = SQL.replace("REPLACEME", "t.id in %s and")
+        sql = SQL.replace("REPLACEME", "t.id in :ids and")
+        params["ids"] = tuple(station)
     elif networkclass is not None and wfo is not None:
-        params = [wfo, networkclass]
-        sql = SQL.replace("REPLACEME", "t.wfo = %s and t.network ~* %s and")
-    elif networkclass is not None and country is not None:
-        params = [country, networkclass]
         sql = SQL.replace(
-            "REPLACEME", "t.country = %s and t.network ~* %s and"
+            "REPLACEME", "t.wfo = :wfo and t.network ~* :network and"
         )
+        params["wfo"] = wfo
+        params["network"] = networkclass
+    elif networkclass is not None and country is not None:
+        sql = SQL.replace(
+            "REPLACEME", "t.country = :country and t.network ~* :network and"
+        )
+        params["country"] = country
+        params["network"] = networkclass
     elif wfo is not None:
-        params = [wfo]
-        sql = SQL.replace("REPLACEME", "t.wfo = %s and")
+        sql = SQL.replace("REPLACEME", "t.wfo = :wfo and")
+        params["wfo"] = wfo
     elif state is not None:
-        params = [state]
-        sql = SQL.replace("REPLACEME", "t.state = %s and")
+        sql = SQL.replace("REPLACEME", "t.state = :state and")
+        params["state"] = state
     elif network is not None:
-        sql = SQL.replace("REPLACEME", "t.network = %s and")
-        params = [network]
+        sql = SQL.replace("REPLACEME", "t.network = :network and")
+        params["network"] = network
     else:
         # This is expensive, throttle things back some
         sql = SQL.replace("REPLACEME", "").replace(
             " summary ", f" summary_{date.today().year} "
         )
         minutes = min([minutes, 600])
-        params = []
 
-    params.append(minutes)
+    params["minutes"] = minutes
     df = read_postgis(
-        sql, pgconn, params=params, index_col="station", geom_col="geom"
+        text(sql), pgconn, params=params, index_col="station", geom_col="geom"
     )
     if event is not None and event in df.columns:
         df = df[df[event].notna()]
