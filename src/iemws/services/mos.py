@@ -74,9 +74,9 @@ def handler(station, model, runtime, fmt):
     )
     if df.empty:
         raise HTTPException(404, "No data found for query.")
-    # Hacky
-    df["runtime"] = df["runtime_utc"]
-    df["ftime"] = df["ftime_utc"]
+    # Hacky to work around string formatting issue with pandas 1.4.0
+    df["runtime"] = df["runtime_utc"].dt.strftime("%Y-%m-%d %H:%M")
+    df["ftime"] = df["ftime_utc"].dt.strftime("%Y-%m-%d %H:%M")
 
     if fmt == SupportedFormatsNoGeoJSON.txt:
         return df[COLUMNS].to_csv(index=False)
