@@ -6,6 +6,9 @@ actual text.
 
 The provided `cccc` (WMO Source Code) can be provided as a three character
 identifier.  In that case, a `K` is prepended to rectify it.
+
+This service omits any products with a PIL starting with `LLL` or `WRK`, which
+are generally AWIPS internal products.
 """
 import datetime
 
@@ -27,16 +30,25 @@ def handler(cccc, date):
     """Handle the request, return df."""
     sts = utc(date.year, date.month, date.day)
     ets = sts + datetime.timedelta(days=1)
+    # Cull out "faked" MOS for now
+    plimiter = ""
+    if cccc == "KWNO":
+        plimiter = (
+            "and substr(pil, 1, 3) not in ('NBS', 'NBX', 'NBE', 'NBH', "
+            "'NBP', 'MAV', 'MET', 'MEX', 'LAV', 'LEV')"
+        )
     with get_sqlalchemy_conn("afos") as conn:
+        # We don't auto-list some internal products like WRK LLL
         df = read_sql(
-            """
+            f"""
             select entered at time zone 'UTC' as entered, pil,
             to_char(entered at time zone 'UTC', 'YYYYmmddHH24MI') || '-' ||
             source || '-' || wmo || '-' || trim(pil) ||
             (case when bbb is not null then '-' || bbb else '' end)
             as product_id
             from products where source = %s and entered >= %s
-            and entered < %s ORDER by entered ASC
+            and entered < %s and substr(pil, 1, 3) not in ('WRK', 'LLL')
+            {plimiter} ORDER by entered ASC
             """,
             conn,
             params=(cccc, sts, ets),
