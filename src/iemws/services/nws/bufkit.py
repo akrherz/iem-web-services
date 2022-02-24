@@ -42,13 +42,14 @@ import requests
 import pandas as pd
 from fastapi import Response, Query, HTTPException, APIRouter
 from metpy.units import units
-from pyiem.util import utc
+from pyiem.util import utc, logger
 from pyiem.nws.bufkit import read_bufkit
 
 # local
 from ...models import SupportedFormatsNoGeoJSON
 from ...reference import MEDIATYPES
 
+LOG = logger()
 router = APIRouter()
 
 
@@ -59,18 +60,19 @@ def load_stations():
         tablefn = f"/opt/bufkit/bufrgruven/stations/{name}_bufrstations.txt"
         if not os.path.isfile(tablefn):
             continue
-        for line in open(tablefn):
-            tokens = line.split()
-            if len(tokens) < 5:
-                continue
-            rows.append(
-                {
-                    "model": name.upper(),
-                    "lat": float(tokens[1]),
-                    "lon": float(tokens[2]),
-                    "sid": tokens[3],
-                }
-            )
+        with open(tablefn, encoding="utf-8") as fh:
+            for line in fh:
+                tokens = line.split()
+                if len(tokens) < 5:
+                    continue
+                rows.append(
+                    {
+                        "model": name.upper(),
+                        "lat": float(tokens[1]),
+                        "lon": float(tokens[2]),
+                        "sid": tokens[3],
+                    }
+                )
     return pd.DataFrame(rows)
 
 
@@ -262,7 +264,14 @@ def handler(ctx):
             f"{BASEURL}/%Y/%m/%d/bufkit/%H/{model.lower()}/{prefix}_"
             f"{station.lower()}.buf"
         )
-        req = requests.get(url, timeout=10)
+        try:
+            req = requests.get(url, timeout=20)
+        except Exception as exp:
+            LOG.info("URL %s failed with %s", url, exp)
+            raise HTTPException(
+                503,
+                detail="mtarchive backend failed, try later please.",
+            ) from exp
         if req.status_code == 200:
             sz = sio.write(req.text)
             row = LOCS[(LOCS["model"] == model) & (LOCS["sid"] == station)]
@@ -313,10 +322,6 @@ def handler(ctx):
     return json.dumps(res).replace("NaN", "null")
 
 
-def get_bufkit_file(ctx):
-    """Figure out which file we need to use."""
-
-
 @router.get("/nws/bufkit.{fmt}", description=__doc__, tags=["nws"])
 def service(
     fmt: SupportedFormatsNoGeoJSON,
@@ -336,8 +341,18 @@ def service(
     """Replaced above."""
     if model not in ["GFS", "HRRR", "NAM", "NAM4KM", "RAP"]:
         raise HTTPException(500, "Invalid model parameter provided.")
-
-    return Response(handler(vars()), media_type=MEDIATYPES[fmt])
+    ctx = {
+        "fmt": fmt,
+        "lon": lon,
+        "lat": lat,
+        "model": model,
+        "time": time,
+        "runtime": runtime,
+        "station": station,
+        "fall": fall,
+        "gr": gr,
+    }
+    return Response(handler(ctx), media_type=MEDIATYPES[fmt])
 
 
 service.__doc__ = __doc__
