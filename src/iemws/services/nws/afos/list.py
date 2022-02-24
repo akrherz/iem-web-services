@@ -41,7 +41,7 @@ def handler(cccc, date):
         # We don't auto-list some internal products like WRK LLL
         df = read_sql(
             f"""
-            select entered at time zone 'UTC' as entered, pil,
+            select entered at time zone 'UTC' as entered, trim(pil) as pil,
             to_char(entered at time zone 'UTC', 'YYYYmmddHH24MI') || '-' ||
             source || '-' || wmo || '-' || trim(pil) ||
             (case when bbb is not null then '-' || bbb else '' end)
