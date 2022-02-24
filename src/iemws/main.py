@@ -64,6 +64,7 @@ from .services.nws import (
     taf_overview,
     wpc_mpd,
 )
+from .services.nws.afos import list as nws_afos_list
 from .services.vtec import county_zone
 
 # Order here controls the order of the API documentation
@@ -128,6 +129,7 @@ app.include_router(currents.router)
 app.include_router(raobs_by_year.router)
 app.include_router(scp.router)
 app.include_router(spc_watch_outline.router)
+app.include_router(nws_afos_list.router)
 
 app.include_router(county_zone.router)
 
