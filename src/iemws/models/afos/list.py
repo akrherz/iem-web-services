@@ -9,7 +9,10 @@ class AFOSListItem(BaseModel):
     """Data Schema."""
 
     entered: str = Field(..., title="WMO Text Product Issuance Time (UTC)")
-    pil: str = Field(..., title="Three to Six Letter Product ID")
+    pil: str = Field(
+        ...,
+        title="3-6 letter PIL with trailing whitespace trimmed.",
+    )
     product: str = Field(..., title="IEM Text Product ID.")
 
 
