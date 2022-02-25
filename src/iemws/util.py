@@ -1,13 +1,26 @@
 """Helpers."""
 import os
 import tempfile
+import logging
 
 from pandas import DataFrame
 from pandas.api.types import is_datetime64_any_dtype as isdt
+from fastapi import Response, Request
+from fastapi.responses import JSONResponse
 from pyiem import util
-from fastapi import Response
 from .models import SupportedFormats
 from .reference import MEDIATYPES
+
+LOG = logging.getLogger("iemws")
+
+
+def handle_exception(request: Request, exc):
+    """Handle exceptions."""
+    LOG.exception("Exception for %s", request.url, exc_info=exc)
+    return JSONResponse(
+        status_code=500,
+        content="Unexpected error, email akrherz@iastate.edu if you wish :)",
+    )
 
 
 def deliver_df(df: DataFrame, fmt: str):

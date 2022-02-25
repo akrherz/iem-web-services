@@ -28,8 +28,10 @@ place to see what I am up to.
 Please don't sue Iowa State University when daryl herzmann gets hit by a bus
 someday and then entire IEM goes away!
 """
+from logging.config import dictConfig
 
 from fastapi import FastAPI
+from .config import LogConfig
 from .services import (
     currents,
     cow,
@@ -66,6 +68,7 @@ from .services.nws import (
 )
 from .services.nws.afos import list as nws_afos_list
 from .services.vtec import county_zone
+from .util import handle_exception
 
 # Order here controls the order of the API documentation
 tags_metadata = [
@@ -89,12 +92,17 @@ tags_metadata = [
     },
 ]
 
+dictConfig(LogConfig().dict())
+
 app = FastAPI(
     root_path="/api/1",
     description=__doc__,
     title="IEM API v1",
     openapi_tags=tags_metadata,
 )
+
+# Unexpected Exception Handling, works in gunicorn, but not uvicorn??
+app.add_exception_handler(Exception, handle_exception)
 
 # The order here impacts the docs order
 app.include_router(currents.router)
