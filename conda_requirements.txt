@@ -10,3 +10,5 @@ pytest
 pytest-runner
 # for pandas
 sqlalchemy
+# For logging
+uvicorn
