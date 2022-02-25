@@ -23,4 +23,5 @@ gunicorn \
  --max-requests 500 \
  --max-requests-jitter 50 \
  --reload \
+ --log-level warning \
  iemws.main:app 2>&1 | logger -p local1.notice --tag iemws &
