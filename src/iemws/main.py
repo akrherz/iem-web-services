@@ -29,8 +29,10 @@ Please don't sue Iowa State University when daryl herzmann gets hit by a bus
 someday and then entire IEM goes away!
 """
 from logging.config import dictConfig
+import warnings
 
 from fastapi import FastAPI
+from shapely.errors import ShapelyDeprecationWarning
 from .config import LogConfig
 from .services import (
     currents,
@@ -69,6 +71,9 @@ from .services.nws import (
 from .services.nws.afos import list as nws_afos_list
 from .services.vtec import county_zone
 from .util import handle_exception
+
+# Stop a Shapely deprecation warning until geopandas is updated
+warnings.filterwarnings("ignore", category=ShapelyDeprecationWarning)
 
 # Order here controls the order of the API documentation
 tags_metadata = [
