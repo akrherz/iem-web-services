@@ -69,7 +69,7 @@ from .services.nws import (
     wpc_mpd,
 )
 from .services.nws.afos import list as nws_afos_list
-from .services.vtec import county_zone
+from .services.vtec import county_zone, sbw_interval
 from .util import handle_exception
 
 # Stop a Shapely deprecation warning until geopandas is updated
@@ -145,5 +145,6 @@ app.include_router(spc_watch_outline.router)
 app.include_router(nws_afos_list.router)
 
 app.include_router(county_zone.router)
+app.include_router(sbw_interval.router)
 
 app.include_router(servertime.router)
