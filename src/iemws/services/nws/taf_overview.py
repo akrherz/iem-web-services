@@ -32,7 +32,7 @@ def handler():
             select a.*, t.geom, t.name from agg a JOIN stations t on (
                 (case when substr(a.station, 1, 1) = 'K'
                  then substr(a.station, 2, 3) else a.station end) = t.id)
-            WHERE t.network = 'AWOS' or t.network ~* 'ASOS'),
+            WHERE t.network ~* 'ASOS'),
         agg2 as (
             select a.id, min(visibility) as min_visibility
             from agg a JOIN taf2021 t on (a.id = t.taf_id) GROUP by a.id)

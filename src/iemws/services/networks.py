@@ -2,9 +2,7 @@
 
 For better or worse, the IEM organizes station data into groups called
 "networks".  These networks are often delineate political bounds and station
-types.  One noticable one-off is the Iowa ASOS/AWOS data.  There is a
-dedicated network called ``AWOS`` which represents the airport weather stations
-within the state that are not maintained by the NWS+FAA.
+types.
 """
 
 from geopandas import read_postgis
