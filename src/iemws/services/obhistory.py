@@ -62,7 +62,7 @@ def get_df(network, station, date):
     sts = datetime.datetime(date.year, date.month, date.day, tzinfo=tz)
     ets = sts + datetime.timedelta(hours=24)
     tz = pytz.timezone(tzname)
-    if network.find("_ASOS") > 0 or network == "AWOS":
+    if network.find("_ASOS") > 0:
         # Use ASOS
         pgconn = get_dbconn("asos")
         return read_sql(
