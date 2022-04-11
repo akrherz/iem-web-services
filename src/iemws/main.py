@@ -110,7 +110,6 @@ app = FastAPI(
 app.add_exception_handler(Exception, handle_exception)
 
 # The order here impacts the docs order
-app.include_router(currents.router)
 app.include_router(ffg_bypoint.router)
 
 app.include_router(iemre_daily.router)
