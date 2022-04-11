@@ -41,6 +41,9 @@ def handler(network_id):
             status_code=404,
             detail="No stations found for provided network.",
         )
+    # Hackaround downstream issues
+    df["archive_begin"] = df["archive_begin"].astype("datetime64[ns]")
+    df["archive_end"] = df["archive_end"].astype("datetime64[ns]")
     return df
 
 
@@ -51,7 +54,7 @@ def handler(network_id):
         "iem",
     ],
 )
-def usdm_bypoint_service(
+def service(
     fmt: SupportedFormats,
     network_id: str = Query(..., description="IEM Network Identifier."),
 ):
@@ -60,4 +63,4 @@ def usdm_bypoint_service(
     return deliver_df(df, fmt)
 
 
-usdm_bypoint_service.__doc__ = __doc__
+service.__doc__ = __doc__
