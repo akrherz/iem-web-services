@@ -41,7 +41,7 @@ def handler(station):
         "nws",
     ],
 )
-def shef_currents_service(
+def last_shef_service(
     fmt: SupportedFormatsNoGeoJSON,
     station: str = Query(..., max_length=8),
 ):
@@ -50,4 +50,4 @@ def shef_currents_service(
     return deliver_df(handler(station), fmt)
 
 
-shef_currents_service.__doc__ = __doc__
+last_shef_service.__doc__ = __doc__
