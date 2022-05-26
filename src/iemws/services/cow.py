@@ -113,6 +113,9 @@ class COWSession:
         self.stats["avg_leadtime[min]"] = (
             None if _sr.empty else _sr["leadtime"].mean()
         )
+        self.stats["avg_leadtime_firstreport[min]"] = (
+            None if _ev.empty else _ev["lead0"].mean()
+        )
         self.stats["tdq_stormreports"] = (
             0 if _sr.empty else len(_sr[_sr["tdq"]].index)
         )
@@ -156,7 +159,9 @@ class COWSession:
 
     def sql_lsr_limiter(self):
         """How to limit LSR types"""
-        ltypes = []
+        # This adds in some extra things that the database will ignore
+        ltypes = self.lsrtype.copy()
+        # Handle aliases
         if "TO" in self.lsrtype:
             ltypes.append("T")
         if "SV" in self.lsrtype:
@@ -252,6 +257,9 @@ class COWSession:
             crs={"init": "epsg:4326"},
             index_col="key",
         )
+        self.events = self.events.assign(
+            status=lambda df_: df_["statuses"],  # le sigh
+        )
         self.events["stormreports"] = [
             [] for _ in range(len(self.events.index))
         ]
@@ -337,7 +345,8 @@ class COWSession:
             )
 
             SELECT sum(ST_Length(ST_transform(geo,2163))) as s,
-            year || wfo || eventid || phenomena || significance as key
+            year || wfo || eventid || phenomena || significance ||
+            '1' as key
             from agg GROUP by key
         """
             ),
