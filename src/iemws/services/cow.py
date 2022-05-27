@@ -259,10 +259,9 @@ class COWSession:
         )
         self.events = self.events.assign(
             status=lambda df_: df_["statuses"],  # le sigh
+            stormreports=lambda df_: [[] for _ in range(len(df_.index))],
+            stormreports_all=lambda df_: [[] for _ in range(len(df_.index))],
         )
-        self.events["stormreports"] = [
-            [] for _ in range(len(self.events.index))
-        ]
         self.events["verify"] = False
         self.events["lead0"] = None
         self.events["areaverify"] = 0
@@ -379,9 +378,12 @@ class COWSession:
             ):
                 if not isinside:
                     continue
+                # No matter the below, this storm report is within bounds
+                # so build the cross reference between the two
+                self.events.at[eidx, "stormreports_all"].append(sidx)
+                self.stormreports.at[sidx, "events"].append(eidx)
+
                 _sr = self.stormreports.loc[sidx]
-                if _sr["events"]:
-                    continue
                 verify = False
                 if _ev["phenomena"] == "FF" and _sr["type"] in ["F", "x"]:
                     verify = True
@@ -389,7 +391,9 @@ class COWSession:
                     if _sr["type"] == "T":
                         verify = True
                     else:
-                        self.stormreports.at[sidx, "tdq"] = True
+                        # Only TDQ is not already warned
+                        if not _sr["warned"]:
+                            self.stormreports.at[sidx, "tdq"] = True
                 elif _ev["phenomena"] == "DS":
                     if _sr["type"] == "2":
                         verify = True
@@ -424,6 +428,7 @@ class COWSession:
                 if not verify:
                     continue
                 self.events.at[eidx, "verify"] = True
+                self.stormreports.at[sidx, "tdq"] = False
                 self.stormreports.at[sidx, "warned"] = True
                 leadtime = int(
                     (_sr["valid"] - _ev["issue"]).total_seconds() / 60.0
@@ -433,7 +438,6 @@ class COWSession:
                 if not _ev["stormreports"]:
                     self.events.at[eidx, "lead0"] = leadtime
                 self.events.at[eidx, "stormreports"].append(sidx)
-                self.stormreports.at[sidx, "events"].append(eidx)
 
     def area_verify(self):
         """Do Areal verification"""
@@ -462,9 +466,10 @@ class COWSession:
             return ",".join([str(s) for s in val])
 
         # Convert hacky column of lists to csv
-        self.events["stormreports"] = self.events["stormreports"].apply(
-            _to_csv
-        )
+        for s in ["", "_all"]:
+            self.events[f"stormreports{s}"] = self.events[
+                f"stormreports{s}"
+            ].apply(_to_csv)
         self.stormreports["events"] = self.stormreports["events"].apply(
             _to_csv
         )
