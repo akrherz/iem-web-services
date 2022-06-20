@@ -10,6 +10,8 @@ client = TestClient(app)
 
 def test_basic():
     """Test basic calls."""
-    req = client.get("/nws/spc_outlook.geojson?cycle=13&valid=2019-01-01")
+    req = client.get(
+        "/nws/spc_outlook.geojson?day=1&cycle=13&valid=2019-01-01",
+    )
     res = req.json()
-    assert res is not None
+    assert "features" in res

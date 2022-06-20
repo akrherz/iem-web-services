@@ -35,7 +35,7 @@ from ...util import get_dbconn, deliver_df
 router = APIRouter()
 
 
-def handler(valid, cycle, outlook_type):
+def handler(day, valid, cycle, outlook_type):
     """Handle the request, return dict"""
     pgconn = get_dbconn("postgis")
     # Maybe brittle
@@ -51,7 +51,7 @@ def handler(valid, cycle, outlook_type):
         threshold, category, geom, product_id
         from spc_outlooks
         where outlook_type = :outlook_type and cycle = :cycle
-        and expire = :expire
+        and expire = :expire and day = :day
         """
         ),
         pgconn,
@@ -60,6 +60,7 @@ def handler(valid, cycle, outlook_type):
             "outlook_type": outlook_type,
             "cycle": cycle,
             "expire": expire,
+            "day": day,
         },
         index_col=None,
     )
@@ -75,6 +76,7 @@ def handler(valid, cycle, outlook_type):
 )
 def service(
     fmt: SupportedFormats,
+    day: int = Query(..., description="Day 1-8 Outlook Value"),
     valid: date = Query(..., description="SPC Outlook Date"),
     cycle: int = Query(..., description="SPC Outlook Cycle"),
     outlook_type: str = Query(
@@ -84,7 +86,7 @@ def service(
     ),
 ):
     """Replaced above."""
-    df = handler(valid, cycle, outlook_type)
+    df = handler(day, valid, cycle, outlook_type)
     return deliver_df(df, fmt)
 
 
