@@ -250,13 +250,9 @@ def handler(ctx):
     for (station, runtime) in [(x, y) for x in stations for y in runtimes]:
         runtime = runtime.replace(tzinfo=timezone.utc)
         prefix = model.lower()
-        if (
-            model
-            in [
-                "NAM",
-            ]
-            and runtime.hour in [6, 18]
-        ):
+        if model in [
+            "NAM",
+        ] and runtime.hour in [6, 18]:
             prefix = "namm"
         if model == "GFS":
             prefix = "gfs3"

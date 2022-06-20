@@ -64,6 +64,7 @@ from .services.nws import (
     bufkit,
     current_flood_warnings,
     spc_mcd,
+    spc_outlook,
     taf,
     taf_overview,
     wpc_mpd,
@@ -135,6 +136,7 @@ app.include_router(nwstext.router)
 app.include_router(meteobridge.router)
 app.include_router(drydown.router)
 app.include_router(spc_mcd.router)
+app.include_router(spc_outlook.router)
 app.include_router(wpc_mpd.router)
 app.include_router(cow.router)
 app.include_router(currents.router)
