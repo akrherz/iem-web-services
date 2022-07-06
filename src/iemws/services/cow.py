@@ -120,7 +120,7 @@ class COWSession:
             0 if _sr.empty else len(_sr[_sr["tdq"]].index)
         )
         self.stats["unwarned_reports"] = (
-            0 if _sr.empty else len(_sr[~_sr["warned"]].index)
+            0 if _sr.empty else len(_sr[~_sr["warned"] & ~_sr["tdq"]].index)
         )
         self.stats["warned_reports"] = (
             0 if _sr.empty else len(_sr[_sr["warned"]].index)
