@@ -30,7 +30,7 @@ def handler(station, date):
         "SELECT valid at time zone 'UTC' as utc_valid, metar, skyc1, skyl1, "
         "skyc2, skyl2, skyc3, skyl3, skyc4, skyl4 "
         "from alldata where station = %s and valid >= %s "
-        "and valid < %s and report_type = 2 ORDER by valid ASC",
+        "and valid < %s and report_type != 1 ORDER by valid ASC",
         dbconn,
         index_col=None,
         params=(station3, sts, ets),
