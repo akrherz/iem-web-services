@@ -72,8 +72,8 @@ def handler(state, wfo):
 )
 def service(
     fmt: SupportedFormats,
-    state: str = Query(None, length=2),
-    wfo: str = Query(None, length=3),
+    state: str = Query(None, min_length=2, max_length=2),
+    wfo: str = Query(None, min_length=3, max_length=3),
 ):
     """Replaced above."""
     df = handler(state, wfo)

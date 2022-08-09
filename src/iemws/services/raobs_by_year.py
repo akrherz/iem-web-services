@@ -46,7 +46,7 @@ def handler(station, year):
 )
 def nwstext_service(
     station: str = Query(..., max_length=4, min_length=4),
-    year: int = Query(..., min=1947, max=datetime.date.today().year),
+    year: int = Query(..., ge=1947, le=datetime.date.today().year),
 ):
     """Replaced above by __doc__."""
     df = handler(station, year)

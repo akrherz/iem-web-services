@@ -82,7 +82,7 @@ def handler(fmt, station, issued):
 )
 def service(
     fmt: SupportedFormatsNoGeoJSON,
-    station: str = Query(..., length=4),
+    station: str = Query(..., min_length=4, max_length=4),
     issued: datetime = Query(None),
 ):
     """Replaced above."""
