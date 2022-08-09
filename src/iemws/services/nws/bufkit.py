@@ -321,8 +321,8 @@ def handler(ctx):
 @router.get("/nws/bufkit.{fmt}", description=__doc__, tags=["nws"])
 def service(
     fmt: SupportedFormatsNoGeoJSON,
-    lon: float = Query(None, min=-180, max=180, description="degrees E"),
-    lat: float = Query(None, min=-90, max=90, description="degrees N"),
+    lon: float = Query(None, ge=-180, le=180, description="degrees E"),
+    lat: float = Query(None, ge=-90, le=90, description="degrees N"),
     model: str = Query(
         "RAP",
         description="Model in 'GFS', 'HRRR', 'NAM', 'NAM4KM', 'RAP'",
