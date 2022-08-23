@@ -44,6 +44,7 @@ def get_df(network, station, date, month, year):
             f"""
             SELECT station, to_char(day, 'YYYY-mm-dd') as date,
             high as max_tmpf, low as min_tmpf,
+            temp_estimated as tmpf_est, precip_estimated as precip_est,
             precip, null as max_gust, snow, snowd, null as min_rh,
             null as max_rh, null as max_dwpf, null as min_dwpf,
             null as min_feel, null as avg_feel, null as max_feel,
