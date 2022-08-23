@@ -84,6 +84,7 @@ def get_df(network, station, date, month, year):
             max_tmpf, min_tmpf, pday as precip, max_gust, snow, snowd,
             min_rh, max_rh, max_dwpf, min_dwpf, min_feel, avg_feel,
             max_feel, max_drct,
+            false as precip_est, false as tmpf_est,
             max_gust_ts at time zone t.tzname as max_gust_localts,
             to_char(coop_valid at time zone t.tzname, 'HH24') as temp_hour,
             avg_sknt, vector_avg_drct,
