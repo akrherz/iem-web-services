@@ -18,7 +18,7 @@ import datetime
 try:
     from zoneinfo import ZoneInfo  # type: ignore
 except ImportError:
-    from backports.zoneinfo import ZoneInfo
+    from backports.zoneinfo import ZoneInfo  # type: ignore
 
 import pytz
 import numpy as np
@@ -185,14 +185,15 @@ def get_df(network, station, date):
             params=(station, sts, ets),
             index_col=None,
         )
-        df = df.merge(df2, on="utc_valid")
+        if not df2.empty:
+            df = df.merge(df2, on="utc_valid")
 
-        # Generate the local_valid column
-        df["local_valid"] = (
-            df["utc_valid"]
-            .dt.tz_localize(datetime.timezone.utc)
-            .dt.tz_convert(tz)
-        )
+            # Generate the local_valid column
+            df["local_valid"] = (
+                df["utc_valid"]
+                .dt.tz_localize(datetime.timezone.utc)
+                .dt.tz_convert(tz)
+            )
         return df
     return None
 
