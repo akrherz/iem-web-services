@@ -364,7 +364,7 @@ class COWSession:
         if self.stormreports_buffered is None or self.events_buffered is None:
             return
         centroids = self.stormreports_buffered.centroid
-        for eidx, geometry in self.events_buffered.iteritems():
+        for eidx, geometry in self.events_buffered.items():
             _ev = self.events.loc[eidx]
             # Prevent dups?
             if isinstance(_ev, pd.DataFrame):
@@ -373,9 +373,7 @@ class COWSession:
                 self.stormreports["valid"] <= _ev["expire"]
             )
             # NB the within operation returns a boolean series sometimes false
-            for sidx, isinside in (
-                centroids[indicies].within(geometry).iteritems()
-            ):
+            for sidx, isinside in centroids[indicies].within(geometry).items():
                 if not isinside:
                     continue
                 # No matter the below, this storm report is within bounds
