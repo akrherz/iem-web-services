@@ -14,6 +14,7 @@ class AFOSListItem(BaseModel):
         title="3-6 letter PIL with trailing whitespace trimmed.",
     )
     product: str = Field(..., title="IEM Text Product ID.")
+    cccc: str = Field(..., title="Four character WMO source.")
 
 
 class AFOSListSchema(BaseModel):
