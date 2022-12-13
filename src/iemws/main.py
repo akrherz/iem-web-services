@@ -41,6 +41,7 @@ from .services import (
     drydown,
     ffg_bypoint,
     idot_dashcam,
+    idot_rwiscam,
     iowa_winter_roadcond,
     last_shef,
     meteobridge,
@@ -118,6 +119,7 @@ app.include_router(iemre_hourly.router)
 app.include_router(iemre_multiday.router)
 
 app.include_router(idot_dashcam.router)
+app.include_router(idot_rwiscam.router)
 app.include_router(iowa_winter_roadcond.router)
 app.include_router(isusm_daily.router)
 app.include_router(bufkit.router)
