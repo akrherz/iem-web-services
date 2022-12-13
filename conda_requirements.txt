@@ -1,10 +1,12 @@
 # 
 fastapi
 geopandas
+# for testing
+httpx
 metpy
 pygrib
 # Ensure some discipline
-pyiem >=1.10.0
+pyiem
 pyproj
 pytest
 pytest-runner
