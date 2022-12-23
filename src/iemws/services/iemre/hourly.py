@@ -9,7 +9,7 @@ except ImportError:
 
 import numpy as np
 import pandas as pd
-from fastapi import Query, APIRouter
+from fastapi import Query, APIRouter, HTTPException
 from pyiem import iemre
 from pyiem.util import ncopen, convert_value, mm2inch
 from ...models import SupportedFormatsNoGeoJSON
@@ -106,5 +106,7 @@ def service(
     sts, ets = get_timerange(date)
 
     i, j = iemre.find_ij(lon, lat)
+    if i is None or j is None:
+        raise HTTPException(500, "Request outside IEMRE domain bounds.")
     df = workflow(sts, ets, i, j)
     return deliver_df(df, fmt)

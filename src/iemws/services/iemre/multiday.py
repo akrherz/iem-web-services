@@ -3,7 +3,7 @@ import datetime
 
 import numpy as np
 import pandas as pd
-from fastapi import Query, APIRouter
+from fastapi import Query, APIRouter, HTTPException
 from pyiem import iemre
 from pyiem.util import ncopen, convert_value, mm2inch
 import pyiem.prism as prismutil
@@ -41,6 +41,8 @@ def service(
         edate = datetime.date.today() - datetime.timedelta(days=1)
 
     i, j = iemre.find_ij(lon, lat)
+    if i is None or j is None:
+        raise HTTPException(500, "Request outside IEMRE domain bounds.")
     offset1 = iemre.daily_offset(sdate)
     offset2 = iemre.daily_offset(edate) + 1
     # Get our netCDF vars
