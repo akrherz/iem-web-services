@@ -4,7 +4,7 @@ import datetime
 
 import numpy as np
 import pandas as pd
-from fastapi import APIRouter, Query
+from fastapi import APIRouter, Query, HTTPException
 from pyiem import iemre
 from pyiem.util import ncopen, convert_value, mm2inch
 import pyiem.prism as prismutil
@@ -37,6 +37,8 @@ def service(
     """Do Something Fun!"""
 
     i, j = iemre.find_ij(lon, lat)
+    if i is None or j is None:
+        raise HTTPException(500, "Request outside IEMRE domain bounds.")
     offset = iemre.daily_offset(date)
 
     res = []
