@@ -68,6 +68,7 @@ from .services.nws import (
     spc_outlook,
     taf,
     taf_overview,
+    ugcs,
     wpc_mpd,
 )
 from .services.nws.afos import list as nws_afos_list
@@ -149,5 +150,6 @@ app.include_router(nws_afos_list.router)
 
 app.include_router(county_zone.router)
 app.include_router(sbw_interval.router)
+app.include_router(ugcs.router)
 
 app.include_router(servertime.router)
