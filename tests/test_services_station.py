@@ -9,5 +9,6 @@ client = TestClient(app)
 
 def test_basic():
     """Test basic calls."""
-    req = client.get("/station/AMW.json")
+    # defined from testdata
+    req = client.get("/station/96404.json")
     assert req.status_code == 200
