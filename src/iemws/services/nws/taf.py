@@ -69,8 +69,7 @@ def handler(fmt, station, issued):
         for col in ["presentwx", "skyc", "skyl"]:
             df[col] = [" ".join(map(str, item)) for item in df[col]]
         return df.to_csv(index=False)
-    if fmt == "json":
-        return df.to_json(orient="table", index=False)
+    return df.to_json(orient="table", index=False)
 
 
 @router.get(

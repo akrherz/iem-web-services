@@ -52,6 +52,7 @@ from .services import (
     obhistory,
     raobs_by_year,
     shef_currents,
+    station,
     usdm_bypoint,
     scp,
     servertime,
@@ -137,6 +138,7 @@ app.include_router(last_shef.router)
 app.include_router(mos.router)
 app.include_router(network.router)
 app.include_router(networks.router)
+app.include_router(station.router)
 app.include_router(nwstext.router)
 app.include_router(meteobridge.router)
 app.include_router(drydown.router)
