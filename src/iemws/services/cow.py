@@ -411,11 +411,13 @@ class COWSession:
                     if self.windhailtag:
                         if (
                             _sr["type"] == "H"
+                            and _ev["hailtag"] is not None
                             and _sr["magnitude"] >= _ev["hailtag"]
                         ):
                             verify = True
                         elif (
                             _sr["type"] == "G"
+                            and _ev["windtag"] is not None
                             and _sr["magnitude"] >= _ev["windtag"]
                         ):
                             verify = True
