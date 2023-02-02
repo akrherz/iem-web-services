@@ -72,6 +72,7 @@ from .services.nws import (
     taf_overview,
     ugcs,
     wpc_mpd,
+    wpc_national_hilo,
 )
 from .services.nws.afos import list as nws_afos_list
 from .services.vtec import county_zone, sbw_interval
@@ -145,6 +146,7 @@ app.include_router(drydown.router)
 app.include_router(spc_mcd.router)
 app.include_router(spc_outlook.router)
 app.include_router(wpc_mpd.router)
+app.include_router(wpc_national_hilo.router)
 app.include_router(cow.router)
 app.include_router(currents.router)
 app.include_router(raobs_by_year.router)
