@@ -47,7 +47,7 @@ def handler(state, year):
         text(
             f"""
         select to_char(date, 'YYYY-MM-DD') as date,
-        station, name, n_x, value,
+        station, name, state, n_x, value,
         to_char(sts at time zone 'UTC', 'YYYY-MM-DDThh24:MI:SSZ')
             as period_start,
         to_char(ets at time zone 'UTC', 'YYYY-MM-DDThh24:MI:SSZ')
