@@ -10,7 +10,7 @@ pyiem
 pyproj
 pytest
 pytest-runner
-# for pandas
-sqlalchemy
+# pinned down due to pandas incompat
+sqlalchemy<2
 # For logging
 uvicorn
