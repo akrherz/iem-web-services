@@ -48,6 +48,14 @@ def test_nam4km():
     assert res.status_code == 200
 
 
+def test_nam4km_threechar():
+    """Test that the NAM4KM returns content."""
+    res = client.get(
+        "/nws/bufkit.json?time=2021-01-01T01:00&station=DSM&model=NAM4KM"
+    )
+    assert res.status_code == 200
+
+
 def test_gr():
     """Test the GR flag."""
     res = client.get(
