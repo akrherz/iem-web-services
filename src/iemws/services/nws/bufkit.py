@@ -206,9 +206,6 @@ def handler(ctx):
     model = ctx["model"].upper()
     # compute stations to attempt requests
     station = ctx["station"]
-    stations = [
-        station,
-    ]
     if ctx["station"] is None:
         lon = ctx["lon"]
         lat = ctx["lat"]
@@ -221,13 +218,18 @@ def handler(ctx):
     else:
         row = LOCS[(LOCS["model"] == model) & (LOCS["sid"] == station)]
         if row.empty:
-            raise HTTPException(
-                500,
-                detail=f"Unknown station '{station}' for model '{model}'",
-            )
+            # Workaround quasi bad requests
+            if len(station) == 3:
+                station = f"K{station}"
+                row = LOCS[(LOCS["model"] == model) & (LOCS["sid"] == station)]
+            if row.empty:
+                raise HTTPException(
+                    500,
+                    detail=f"Unknown station '{station}' for model '{model}'",
+                )
         lat = float(row["lat"])
         lon = float(row["lon"])
-
+        stations = [station]
     # compute runtimes to attempt to request model data for
     runtimes = [
         ctx["runtime"],
@@ -242,12 +244,12 @@ def handler(ctx):
             runtimes = [valid, valid - hr1, valid - hr1 * 2, valid - hr1 * 3]
         else:
             hr6 = timedelta(hours=6)
-            runtime = valid - timedelta(hours=(valid.hour % 6))
+            runtime = valid - timedelta(hours=valid.hour % 6)
             runtimes = [runtime, runtime - hr6, runtime - hr6 * 2]
 
     sio = StringIO()
     sz = 0
-    for (station, runtime) in [(x, y) for x in stations for y in runtimes]:
+    for station, runtime in [(x, y) for x in stations for y in runtimes]:
         runtime = runtime.replace(tzinfo=timezone.utc)
         prefix = model.lower()
         if model in [

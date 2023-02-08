@@ -26,7 +26,6 @@ class ReloaderThread(threading.Thread):
 
 
 class RestartableUvicornWorker(UvicornWorker):
-
     CONFIG_KWARGS = {"loop": "auto", "http": "auto"}
 
     def __init__(self, *args: List[Any], **kwargs: Dict[str, Any]):
