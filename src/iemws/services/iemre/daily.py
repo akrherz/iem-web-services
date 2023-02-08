@@ -73,7 +73,6 @@ def service(
 
     with ncopen(fn) as nc:
         with ncopen(iemre.get_dailyc_ncname()) as cnc:
-
             res.append(
                 {
                     "prism_precip_in": myrounder(prism_precip, 2),

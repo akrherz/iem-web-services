@@ -249,7 +249,7 @@ def handler(ctx):
 
     sio = StringIO()
     sz = 0
-    for (station, runtime) in [(x, y) for x in stations for y in runtimes]:
+    for station, runtime in [(x, y) for x in stations for y in runtimes]:
         runtime = runtime.replace(tzinfo=timezone.utc)
         prefix = model.lower()
         if model in [
