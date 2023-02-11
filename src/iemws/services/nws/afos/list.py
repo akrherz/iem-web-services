@@ -14,6 +14,11 @@ examples below for a better explaination.
 This service omits any products with a PIL starting with `LLL` or `WRK`, which
 are generally AWIPS internal products.
 
+Sometimes multiple text products can exist within a single `product_id`.
+Sadly, NWS directives are not always followed for how this is not supposed to
+be an ambiguous situation.  The `count` attribute provides the number of
+products that exist at the given `product_id`.
+
 Examples
 --------
 
@@ -78,10 +83,11 @@ def handler(cccc, pil, date):
             to_char(entered at time zone 'UTC', 'YYYYmmddHH24MI') || '-' ||
             source || '-' || wmo || '-' || trim(pil) ||
             (case when bbb is not null then '-' || bbb else '' end)
-            as product_id, source as cccc
+            as product_id, source as cccc, count(*)
             from products where {' and '.join(fs)} and entered >= :sts
             and entered < :ets and substr(pil, 1, 3) not in ('WRK', 'LLL')
-            {plimiter} ORDER by entered ASC
+            {plimiter} GROUP by entered, pil, product_id, cccc
+            ORDER by entered ASC
             """
             ),
             conn,

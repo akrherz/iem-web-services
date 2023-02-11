@@ -15,6 +15,7 @@ class AFOSListItem(BaseModel):
     )
     product: str = Field(..., title="IEM Text Product ID.")
     cccc: str = Field(..., title="Four character WMO source.")
+    count: int = Field(..., title="Number of text products at this identifier")
 
 
 class AFOSListSchema(BaseModel):
