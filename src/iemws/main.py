@@ -65,6 +65,7 @@ from .services.isusm import daily as isusm_daily
 from .services.nws import (
     bufkit,
     current_flood_warnings,
+    emergencies,
     outlook_by_point,
     spc_mcd,
     spc_outlook,
@@ -128,6 +129,7 @@ app.include_router(iowa_winter_roadcond.router)
 app.include_router(isusm_daily.router)
 app.include_router(bufkit.router)
 app.include_router(current_flood_warnings.router)
+app.include_router(emergencies.router)
 app.include_router(outlook_by_point.router)
 app.include_router(daily.router)
 app.include_router(taf.router)
