@@ -14,6 +14,12 @@ URLS = re.compile(r"`/api/1([^\s]*)`")
 client = TestClient(app)
 
 
+def test_230220_multiple_stations():
+    """Test we don't get a traceback."""
+    req = client.get("nws/bufkit.txt?model=GFS&fall=1&station=KFMH")
+    assert req.status_code == 200
+
+
 def test_basic():
     """Test basic calls."""
     req = client.get("/nws/bufkit.json?lon=-92.5&lat=42.5")
