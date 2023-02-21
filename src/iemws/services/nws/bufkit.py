@@ -227,6 +227,9 @@ def handler(ctx):
                     500,
                     detail=f"Unknown station '{station}' for model '{model}'",
                 )
+        # Possible that row is a DataFrame
+        if isinstance(row, pd.DataFrame):
+            row = row.iloc[0]
         lat = float(row["lat"])
         lon = float(row["lon"])
         stations = [station]
@@ -273,6 +276,8 @@ def handler(ctx):
         if req.status_code == 200:
             sz = sio.write(req.text)
             row = LOCS[(LOCS["model"] == model) & (LOCS["sid"] == station)]
+            if isinstance(row, pd.DataFrame):
+                row = row.iloc[0]
             lat = float(row["lat"])
             lon = float(row["lon"])
             break
