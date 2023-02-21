@@ -144,18 +144,24 @@ def get_df(network, station, date):
         # Do some unit work
         tmpc = masked_array(df["tmpc"].values, units("degC"))
         df["tmpf"] = tmpc.to(units("degF")).m
-        df["dwpf"] = (
-            dewpoint_from_relative_humidity(
-                tmpc, masked_array(df["rh"].values, units("percent"))
+        if df["rh"].isna().all():
+            df["dwpf"] = np.nan
+        else:
+            df["dwpf"] = (
+                dewpoint_from_relative_humidity(
+                    tmpc, masked_array(df["rh"].values, units("percent"))
+                )
+                .to(units("degF"))
+                .m
             )
-            .to(units("degF"))
-            .m
-        )
-        df["sknt"] = (
-            masked_array(df["wind_mps"], units("meters per second"))
-            .to(units("knots"))
-            .m
-        )
+        if df["wind_mps"].isna().all():
+            df["sknt"] = np.nan
+        else:
+            df["sknt"] = (
+                masked_array(df["wind_mps"], units("meters per second"))
+                .to(units("knots"))
+                .m
+            )
         return df
     if network.find("_COOP") > 0 or network.find("_DCP") > 0:
         # Use HADS
