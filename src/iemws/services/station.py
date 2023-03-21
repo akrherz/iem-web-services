@@ -7,7 +7,7 @@ results in some cases.
 """
 
 import geopandas as gpd
-from fastapi import Query, HTTPException, APIRouter
+from fastapi import HTTPException, APIRouter, Path
 from sqlalchemy import text
 
 # Local
@@ -51,7 +51,7 @@ def handler(station_id):
 )
 def service(
     fmt: SupportedFormats,
-    station_id: str = Query(..., description="IEM Station Identifier."),
+    station_id: str = Path(..., description="IEM Station Identifier."),
 ):
     """Replaced above."""
     df = handler(station_id)
