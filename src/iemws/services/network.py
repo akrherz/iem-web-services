@@ -5,7 +5,7 @@ metadata for a given network.
 """
 
 from geopandas import read_postgis
-from fastapi import Query, HTTPException, APIRouter
+from fastapi import HTTPException, APIRouter, Path
 from ..models import SupportedFormats
 from ..util import get_dbconn, deliver_df
 
@@ -56,7 +56,7 @@ def handler(network_id):
 )
 def service(
     fmt: SupportedFormats,
-    network_id: str = Query(..., description="IEM Network Identifier."),
+    network_id: str = Path(..., description="IEM Network Identifier."),
 ):
     """Replaced above."""
     df = handler(network_id)

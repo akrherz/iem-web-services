@@ -5,7 +5,7 @@ This service emits a text file for a given IEM defined product ID. For example:
 import datetime
 
 import pytz
-from fastapi import Query, Response, HTTPException, APIRouter
+from fastapi import Query, Response, HTTPException, APIRouter, Path
 from pyiem.util import get_dbconn
 
 router = APIRouter()
@@ -56,7 +56,7 @@ def handler(product_id):
     ],
 )
 def nwstext_service(
-    product_id: str = Query(..., max_length=35, min_length=28),
+    product_id: str = Path(..., max_length=35, min_length=28),
 ):
     """Replaced above by __doc__."""
     return Response(handler(product_id), media_type="text/plain")

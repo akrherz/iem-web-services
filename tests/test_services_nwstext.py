@@ -10,7 +10,7 @@ client = TestClient(app)
 def test_invalid_request():
     """Test basic things."""
     req = client.get("/nwstext/BAH")
-    assert req.status_code == 404
+    assert req.status_code == 422
 
 
 def test_valid_request():
