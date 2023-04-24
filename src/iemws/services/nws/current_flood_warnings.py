@@ -4,14 +4,15 @@ This service provides a current listing of NWS Flood Warnings for forecast
 points.  These are warnings that contain a HVTEC NWSLI, which is the forecast
 point the NWS uses.  There is no archive support to this app, it is what
 drives the data presentation on
-[IEM Rivers](https://mesonet.agron.iastate.edu/rivers).
+[IEM Rivers](https://mesonet.agron.iastate.edu/rivers/).
 
 This service only provides the warnings for points that the NWS publishes
 metadata for [here](https://www.weather.gov/vtec/Valid-Time-Event-Code).
 
 The forecast warning point is included as an attribute ``latitude`` and
 ``longitude``, the actual geometries here are the polygons associated with
-the warnings.
+the warnings.  The data returned is sorted by river name and then crudely by
+forecast warning point latitude descending (north to south).
 """
 
 from geopandas import read_postgis
@@ -54,7 +55,7 @@ def handler(state, wfo):
             from polys p JOIN counties c on (p.hvtec_nwsli = c.hvtec_nwsli)
         )
         SELECT r.*, a.* from riverpro r JOIN agg a on (r.nwsli = a.hvtec_nwsli)
-        ORDER by a.river_name ASC
+        ORDER by a.river_name ASC, latitude DESC
         """,
         pgconn,
         geom_col="geom",
