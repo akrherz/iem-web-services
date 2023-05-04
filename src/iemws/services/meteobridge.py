@@ -18,7 +18,6 @@ def handler(
     key, time, tmpf, max_tmpf, min_tmpf, dwpf, relh, sknt, pday, alti, drct
 ):
     """Handle the request, return dict"""
-    # sys.stderr.write(repr(fields))
     if not PROPS:
         PROPS.update(get_properties())
     lookup = {}
