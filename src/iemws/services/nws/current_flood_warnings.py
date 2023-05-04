@@ -15,10 +15,11 @@ the warnings.  The data returned is sorted by river name and then crudely by
 forecast warning point latitude descending (north to south).
 """
 
+from fastapi import APIRouter, Query
 from geopandas import read_postgis
-from fastapi import Query, APIRouter
+
 from ...models import SupportedFormats
-from ...util import get_dbconn, deliver_df
+from ...util import deliver_df, get_dbconn
 
 router = APIRouter()
 

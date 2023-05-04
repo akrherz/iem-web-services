@@ -6,7 +6,7 @@ import os
 import signal
 import threading
 import time
-from typing import Any, List, Dict
+from typing import Any, Dict, List
 
 from uvicorn.workers import UvicornWorker
 

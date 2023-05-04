@@ -14,9 +14,10 @@ space seperated strings in TXT output formats.
 """
 from datetime import datetime, timezone
 
+from fastapi import APIRouter, Query, Response
+
 # Third Party
 from pandas.io.sql import read_sql
-from fastapi import Response, Query, APIRouter
 from pyiem.util import utc
 
 # Local

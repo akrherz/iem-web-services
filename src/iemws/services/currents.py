@@ -17,12 +17,13 @@ from datetime import date
 from typing import List
 
 import numpy as np
+from fastapi import APIRouter, Query
 from geopandas import read_postgis
-from fastapi import Query, APIRouter
 from sqlalchemy import text
-from ..models.currents import CurrentsSchema
+
 from ..models import SupportedFormats
-from ..util import get_dbconn, deliver_df
+from ..models.currents import CurrentsSchema
+from ..util import deliver_df, get_dbconn
 
 router = APIRouter()
 

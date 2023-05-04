@@ -7,10 +7,11 @@ some county union.
 from datetime import datetime
 
 import pytz
-from fastapi import Query, APIRouter
+from fastapi import APIRouter, Query
 from geopandas import read_postgis
 from pyiem.util import utc
-from ..util import get_dbconn, deliver_df
+
+from ..util import deliver_df, get_dbconn
 
 router = APIRouter()
 

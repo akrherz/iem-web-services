@@ -5,16 +5,17 @@ summary information.  Please note that the end date is inclusive.
 """
 from datetime import date, datetime
 
+import numpy as np
+from fastapi import APIRouter, Query
+from geopandas import read_postgis
+
 # Third Party
 from pandas.io.sql import read_sql
-from geopandas import read_postgis
-from fastapi import Query, APIRouter
-import numpy as np
 from pyiem.tracker import loadqc
 
 # Local
 from ...models import SupportedFormats
-from ...util import get_dbconn, deliver_df
+from ...util import deliver_df, get_dbconn
 
 router = APIRouter()
 

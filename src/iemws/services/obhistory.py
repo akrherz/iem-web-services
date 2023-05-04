@@ -20,16 +20,17 @@ try:
 except ImportError:
     from backports.zoneinfo import ZoneInfo  # type: ignore
 
-import pytz
 import numpy as np
-from metpy.units import masked_array, units
+import pytz
+from fastapi import APIRouter, HTTPException, Query
 from metpy.calc import dewpoint_from_relative_humidity
+from metpy.units import masked_array, units
 from pandas.io.sql import read_sql
-from fastapi import Query, HTTPException, APIRouter
 from pyiem.network import Table as NetworkTable
-from ..models.obhistory import ObHistorySchema, ObHistoryDataItem
+
 from ..models import SupportedFormatsNoGeoJSON
-from ..util import get_dbconn, deliver_df
+from ..models.obhistory import ObHistoryDataItem, ObHistorySchema
+from ..util import deliver_df, get_dbconn
 
 router = APIRouter()
 

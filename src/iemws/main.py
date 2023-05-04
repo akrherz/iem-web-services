@@ -28,15 +28,16 @@ place to see what I am up to.
 Please don't sue Iowa State University when daryl herzmann gets hit by a bus
 someday and then entire IEM goes away!
 """
-from logging.config import dictConfig
 import warnings
+from logging.config import dictConfig
 
 from fastapi import FastAPI
 from shapely.errors import ShapelyDeprecationWarning
+
 from .config import LogConfig
 from .services import (
-    currents,
     cow,
+    currents,
     daily,
     drydown,
     ffg_bypoint,
@@ -51,12 +52,12 @@ from .services import (
     nwstext,
     obhistory,
     raobs_by_year,
-    shef_currents,
-    station,
-    usdm_bypoint,
     scp,
     servertime,
+    shef_currents,
     spc_watch_outline,
+    station,
+    usdm_bypoint,
 )
 from .services.iemre import daily as iemre_daily
 from .services.iemre import hourly as iemre_hourly

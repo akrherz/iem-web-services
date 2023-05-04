@@ -20,14 +20,14 @@ from datetime import datetime
 from typing import List
 
 import pytz
+from fastapi import APIRouter, HTTPException, Query, Response
 from pandas.io.sql import read_sql
-from fastapi import Query, Response, HTTPException, APIRouter
 from pyiem import util
 from sqlalchemy import text
+
 from ..models import SupportedFormatsNoGeoJSON
 from ..reference import MEDIATYPES
 from ..util import get_dbconn
-
 
 MODEL_DOMAIN = ["AVN", "GFS", "ETA", "NAM", "NBS", "NBE", "ECM", "LAV", "MEX"]
 COLUMNS = (

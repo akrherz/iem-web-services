@@ -21,14 +21,14 @@ returned.
 from datetime import datetime, timedelta, timezone
 
 import geopandas as gpd
-from fastapi import Query, APIRouter
+from fastapi import APIRouter, Query
 from pyiem.util import utc
 from sqlalchemy import text
 
 # Local
 from ...models import SupportedFormats
 from ...models.nws.outlook_by_point import Schema
-from ...util import get_dbconn, deliver_df
+from ...util import deliver_df, get_dbconn
 
 router = APIRouter()
 

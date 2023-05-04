@@ -1,14 +1,16 @@
 """Exposes Iowa DOT Winter Road Conditions."""
 from datetime import datetime, timedelta, timezone
 
+from fastapi import APIRouter, Query
+from geopandas import read_postgis
+
 # third party
 from pyiem.util import utc
-from geopandas import read_postgis
-from fastapi import Query, APIRouter
+
+from ..models import SupportedFormats
 
 # Local
-from ..util import get_dbconn, deliver_df
-from ..models import SupportedFormats
+from ..util import deliver_df, get_dbconn
 
 router = APIRouter()
 

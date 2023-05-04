@@ -7,12 +7,12 @@ results in some cases.
 """
 
 import geopandas as gpd
-from fastapi import HTTPException, APIRouter, Path
+from fastapi import APIRouter, HTTPException, Path
 from sqlalchemy import text
 
 # Local
 from ..models import SupportedFormats
-from ..util import get_dbconn, deliver_df
+from ..util import deliver_df, get_dbconn
 
 router = APIRouter()
 

@@ -16,13 +16,14 @@ dataset is very large.
 """
 from datetime import datetime, timezone
 
+from fastapi import APIRouter, Query
 from geopandas import read_postgis
-from fastapi import Query, APIRouter
-from sqlalchemy import text
 from pyiem.util import utc
+from sqlalchemy import text
+
 from ...models import SupportedFormats
 from ...models.nws.ugcs import UGCSchema
-from ...util import get_dbconn, deliver_df
+from ...util import deliver_df, get_dbconn
 
 router = APIRouter()
 

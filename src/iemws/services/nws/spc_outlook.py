@@ -24,13 +24,13 @@ or `F` for fire weather.
 from datetime import date, timedelta
 
 import geopandas as gpd
-from fastapi import Query, APIRouter
+from fastapi import APIRouter, Query
 from pyiem.util import utc
 from sqlalchemy import text
 
 # Local
 from ...models import SupportedFormats
-from ...util import get_dbconn, deliver_df
+from ...util import deliver_df, get_dbconn
 
 router = APIRouter()
 

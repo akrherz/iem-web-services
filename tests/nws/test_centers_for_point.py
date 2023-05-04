@@ -1,7 +1,6 @@
 """Test the nws/centers_for_point service."""
 
 from fastapi.testclient import TestClient
-
 from iemws.main import app
 
 client = TestClient(app)

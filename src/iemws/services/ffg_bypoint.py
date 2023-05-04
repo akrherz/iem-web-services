@@ -9,10 +9,10 @@ the provided time.
 import os
 from datetime import datetime, timedelta
 
-from fastapi import Query, HTTPException, APIRouter
+import numpy as np
 import pygrib
 import pyproj
-import numpy as np
+from fastapi import APIRouter, HTTPException, Query
 from pyiem.util import utc
 
 ISO = "%Y-%m-%dT%H:%M:%SZ"

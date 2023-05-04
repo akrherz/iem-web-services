@@ -1,7 +1,6 @@
 """Test the nws/current_Flood_warnings service."""
 
 from fastapi.testclient import TestClient
-
 from iemws.main import app
 
 client = TestClient(app)

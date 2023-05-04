@@ -8,13 +8,14 @@ The other option is to provide a number of hours to look back for any
 MPDs issued within that timespan. For example, to get any MPDs issued
 within the past six hours `/api/1/nws/wpc_mpd.geojson?hours=6`.
 """
-from datetime import datetime, timezone, timedelta
+from datetime import datetime, timedelta, timezone
 
+from fastapi import APIRouter, Query
 from geopandas import read_postgis
-from fastapi import Query, APIRouter
 from pyiem.util import utc
+
 from ...models import SupportedFormats
-from ...util import get_dbconn, deliver_df
+from ...util import deliver_df, get_dbconn
 
 router = APIRouter()
 

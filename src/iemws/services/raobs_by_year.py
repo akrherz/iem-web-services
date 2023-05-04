@@ -4,11 +4,12 @@ This service provides IEM computed sounding parameters for a given site
 and year."""
 import datetime
 
-from fastapi import Query, APIRouter
+from fastapi import APIRouter, Query
 from pandas.io.sql import read_sql
 from pyiem.network import Table as NetworkTable
 from pyiem.util import utc
 from sqlalchemy import text
+
 from ..util import deliver_df, get_dbconn
 
 router = APIRouter()

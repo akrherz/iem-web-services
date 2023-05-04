@@ -1,7 +1,6 @@
 """Test the last_shef service."""
 
 from fastapi.testclient import TestClient
-
 from iemws.main import app
 
 client = TestClient(app)

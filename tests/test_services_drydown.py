@@ -1,7 +1,7 @@
 """Test the drydown service."""
 # local
 import os
-from datetime import timedelta, datetime
+from datetime import datetime, timedelta
 
 # third party
 from fastapi.testclient import TestClient

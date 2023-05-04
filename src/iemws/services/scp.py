@@ -9,11 +9,12 @@ the field ``mid_1`` represents the mid value from the Goes East Sounder. The
 given site may have 1 or more of those 3 potential options."""
 import datetime
 
-from fastapi import Query, APIRouter
-from pandas.io.sql import read_sql
 import pandas as pd
+from fastapi import APIRouter, Query
+from pandas.io.sql import read_sql
 from pyiem.util import utc
-from ..util import get_dbconn, deliver_df
+
+from ..util import deliver_df, get_dbconn
 
 router = APIRouter()
 
