@@ -3,12 +3,13 @@ import datetime
 import os
 
 import numpy as np
-from metpy.units import units, masked_array
+from fastapi import APIRouter, HTTPException, Query
 from metpy.calc import relative_humidity_from_dewpoint
+from metpy.units import masked_array, units
 from pandas.io.sql import read_sql
-from fastapi import Query, HTTPException, APIRouter
-from pyiem.util import ncopen, logger
-from pyiem.iemre import get_gid, find_ij, daily_offset
+from pyiem.iemre import daily_offset, find_ij, get_gid
+from pyiem.util import logger, ncopen
+
 from ..util import get_dbconn
 
 LOG = logger()

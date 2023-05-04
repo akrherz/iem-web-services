@@ -7,11 +7,12 @@ is generally in "real-time", so everything returned should be current up until
 the request time.
 """
 
-from fastapi import Query, APIRouter
+from fastapi import APIRouter, Query
 from pandas.io.sql import read_sql
-from ..util import deliver_df, get_dbconn
+
 from ..models import SupportedFormatsNoGeoJSON
 from ..models.last_shef import LastSHEFSchema
+from ..util import deliver_df, get_dbconn
 
 router = APIRouter()
 

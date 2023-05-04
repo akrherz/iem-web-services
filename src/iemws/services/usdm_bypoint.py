@@ -5,9 +5,10 @@ in the JSON.
 """
 from datetime import date
 
+from fastapi import APIRouter, Query
 from pandas.io.sql import read_sql
-from fastapi import Query, APIRouter
-from ..util import get_dbconn, deliver_df
+
+from ..util import deliver_df, get_dbconn
 
 ISO = "%Y-%m-%dT%H:%M:%SZ"
 router = APIRouter()

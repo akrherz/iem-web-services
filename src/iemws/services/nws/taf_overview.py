@@ -7,10 +7,11 @@ text (`text_href`) or JSON representation (`data_href`).  Additionally a
 forecast aggregate of `min_visibility` (miles) is provided.
 """
 
-from geopandas import read_postgis
 from fastapi import APIRouter
+from geopandas import read_postgis
+
 from ...models import SupportedFormats
-from ...util import get_dbconn, deliver_df
+from ...util import deliver_df, get_dbconn
 
 router = APIRouter()
 

@@ -5,10 +5,11 @@ For better or worse, the IEM organizes station data into groups called
 types.
 """
 
-from geopandas import read_postgis
 from fastapi import APIRouter
+from geopandas import read_postgis
+
 from ..models import SupportedFormats
-from ..util import get_dbconn, deliver_df
+from ..util import deliver_df, get_dbconn
 
 router = APIRouter()
 

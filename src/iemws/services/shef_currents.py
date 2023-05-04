@@ -1,9 +1,10 @@
 """Provide SHEF Currents for a given pe and duration."""
 
-from fastapi import Query, APIRouter
+from fastapi import APIRouter, Query
 from geopandas import read_postgis
-from ..util import deliver_df, get_dbconn
+
 from ..models import SupportedFormats
+from ..util import deliver_df, get_dbconn
 
 router = APIRouter()
 

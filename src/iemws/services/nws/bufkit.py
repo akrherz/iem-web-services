@@ -32,18 +32,19 @@ current UTC timestamp to locate a forecast hour.  It is always best to
 specify both or set `fall=1` to get all forecast hours for that `runtime`.
 
 """
-from datetime import datetime, timedelta, timezone
-from io import StringIO
 import json
 import os
+from datetime import datetime, timedelta, timezone
+from io import StringIO
+
+import pandas as pd
 
 # Third Party
 import requests
-import pandas as pd
-from fastapi import Response, Query, HTTPException, APIRouter
+from fastapi import APIRouter, HTTPException, Query, Response
 from metpy.units import units
-from pyiem.util import utc, logger
 from pyiem.nws.bufkit import read_bufkit
+from pyiem.util import logger, utc
 
 # local
 from ...models import SupportedFormatsNoGeoJSON

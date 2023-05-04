@@ -1,13 +1,14 @@
 """Helpers."""
+import logging
 import os
 import tempfile
-import logging
 
+from fastapi import Request, Response
+from fastapi.responses import JSONResponse
 from pandas import DataFrame
 from pandas.api.types import is_datetime64_any_dtype as isdt
-from fastapi import Response, Request
-from fastapi.responses import JSONResponse
 from pyiem import util
+
 from .models import SupportedFormats
 from .reference import MEDIATYPES
 

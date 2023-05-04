@@ -9,16 +9,17 @@ providing the storm reports and warnings.
 Changed on 2 Sep 2021 to count LSRs valid at warning expiration time as
 verifying as per NWS Verification Branch guidance.
 """
-from typing import List
-from datetime import datetime
 import json
+from datetime import datetime
+from typing import List
 
 import geopandas as gpd
 import pandas as pd
+from fastapi import APIRouter, Query
 from pandas.io.sql import read_sql
-from fastapi import Query, APIRouter
 from shapely.ops import unary_union
 from sqlalchemy import text
+
 from ..util import get_dbconn
 
 ISO9660 = "%Y-%m-%dT%H:%M:%SZ"

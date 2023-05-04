@@ -10,13 +10,14 @@ higher resolution dataset may be necessary for your visualization purposes.
 """
 from datetime import datetime, timezone
 
+from fastapi import APIRouter, Query
 from geopandas import read_postgis
-from fastapi import Query, APIRouter
-from pyiem.util import utc
 from pyiem.nws.vtec import NWS_COLORS, get_ps_string
+from pyiem.util import utc
+
 from ...models import SupportedFormats
 from ...models.county_zone import CountyZoneSchema
-from ...util import get_dbconn, deliver_df
+from ...util import deliver_df, get_dbconn
 
 router = APIRouter()
 

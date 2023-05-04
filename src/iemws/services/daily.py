@@ -17,12 +17,14 @@ make much sense, for example when requesting just one station's worth of data.
 # stdlib
 import datetime
 
+from fastapi import APIRouter, HTTPException, Query
+
 # third party
 from geopandas import read_postgis
-from fastapi import Query, HTTPException, APIRouter
-from ..models.daily import DailySchema
+
 from ..models import SupportedFormats
-from ..util import get_dbconn, deliver_df
+from ..models.daily import DailySchema
+from ..util import deliver_df, get_dbconn
 
 router = APIRouter()
 

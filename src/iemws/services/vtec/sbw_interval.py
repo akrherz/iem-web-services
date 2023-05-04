@@ -22,16 +22,17 @@ updates, use the `utc_polygon_{begin,end}` timestamps.
 from datetime import datetime, timezone
 from typing import List
 
+from fastapi import APIRouter, Query
+
 # Third party
 from geopandas import read_postgis
-from fastapi import Query, APIRouter
 from pyiem.nws.vtec import NWS_COLORS, get_ps_string
 from sqlalchemy import text
 
 # Local
 from ...models import SupportedFormats
 from ...models.sbw_interval import SBWIntervalModel
-from ...util import get_dbconn, deliver_df
+from ...util import deliver_df, get_dbconn
 
 router = APIRouter()
 

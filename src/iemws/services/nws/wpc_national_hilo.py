@@ -20,11 +20,12 @@ maximum=X.
 """
 from datetime import date
 
+from fastapi import APIRouter, Query
 from pandas import read_sql
-from fastapi import Query, APIRouter
 from sqlalchemy import text
+
 from ...models import SupportedFormatsNoGeoJSON
-from ...util import get_dbconn, deliver_df
+from ...util import deliver_df, get_dbconn
 
 router = APIRouter()
 

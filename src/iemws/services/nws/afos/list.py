@@ -32,11 +32,12 @@ KDMX text TOR products for the UTC date of 28 Oct 2022.
 """
 import datetime
 
+from fastapi import APIRouter, HTTPException, Query
+
 # Third Party
 from pandas.io.sql import read_sql
-from fastapi import Query, APIRouter, HTTPException
+from pyiem.util import get_sqlalchemy_conn, utc
 from sqlalchemy import text
-from pyiem.util import utc, get_sqlalchemy_conn
 
 # Local
 from ....models import SupportedFormatsNoGeoJSON

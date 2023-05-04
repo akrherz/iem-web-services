@@ -5,7 +5,7 @@ This service emits a text file for a given IEM defined product ID. For example:
 import datetime
 
 import pytz
-from fastapi import Response, HTTPException, APIRouter, Path
+from fastapi import APIRouter, HTTPException, Path, Response
 from pyiem.util import get_dbconn
 
 router = APIRouter()

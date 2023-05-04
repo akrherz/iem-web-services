@@ -1,15 +1,17 @@
 """Exposes Iowa DOT 'Dashcam' imagery from its snowplows."""
 from datetime import datetime, timedelta, timezone
 
+from fastapi import APIRouter, Query
+from geopandas import read_postgis
+
 # third party
 from pyiem.util import utc
-from geopandas import read_postgis
-from fastapi import Query, APIRouter
+
+from ..models import SupportedFormats
+from ..models.idot_dashcam import IDOTDashcamSchema
 
 # Local
 from ..util import deliver_df, get_dbconn
-from ..models import SupportedFormats
-from ..models.idot_dashcam import IDOTDashcamSchema
 
 router = APIRouter()
 
