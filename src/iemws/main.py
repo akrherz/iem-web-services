@@ -64,6 +64,7 @@ from .services.iemre import multiday as iemre_multiday
 from .services.isusm import daily as isusm_daily
 from .services.nws import (
     bufkit,
+    centers_for_point,
     current_flood_warnings,
     emergencies,
     outlook_by_point,
@@ -128,6 +129,7 @@ app.include_router(idot_rwiscam.router)
 app.include_router(iowa_winter_roadcond.router)
 app.include_router(isusm_daily.router)
 app.include_router(bufkit.router)
+app.include_router(centers_for_point.router)
 app.include_router(current_flood_warnings.router)
 app.include_router(emergencies.router)
 app.include_router(outlook_by_point.router)
