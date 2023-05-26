@@ -41,3 +41,13 @@ def test_uscrn_has_nodata():
     )
     res = req.json()
     assert len(res["data"]) == 0
+
+
+def test_snet_has_nodata():
+    """Test SNET request for historical data."""
+    req = client.get(
+        "/obhistory.json",
+        params={"network": "KELO", "station": "SRMS2", "date": "2020-08-01"},
+    )
+    res = req.json()
+    assert len(res["data"]) == 0
