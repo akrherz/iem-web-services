@@ -1,11 +1,7 @@
 """IEM Reanalysis hourly values by point."""
 import datetime
 import os
-
-try:
-    from zoneinfo import ZoneInfo  # type: ignore
-except ImportError:
-    from backports.zoneinfo import ZoneInfo
+from zoneinfo import ZoneInfo
 
 import numpy as np
 import pandas as pd
@@ -45,10 +41,10 @@ def workflow(sts, ets, i, j):
     fn = iemre.get_hourly_ncname(sts.year)
 
     if not os.path.isfile(fn):
-        return res
+        raise HTTPException(500, "No data.")
 
     if i is None or j is None:
-        return {"error": "Coordinates outside of domain"}
+        raise HTTPException(500, "Request outside IEMRE domain bounds.")
 
     UTC = ZoneInfo("UTC")
     with ncopen(fn) as nc:
