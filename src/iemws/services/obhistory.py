@@ -113,20 +113,10 @@ def get_df(network, station, date):
             except TypeError:
                 df["dwpf"] = np.nan
         return df
-    if network == "OT":
-        # Use ISUAG
-        pgconn = get_dbconn("other")
-        return read_sql(
-            "SELECT valid at time zone 'UTC' as utc_valid, "
-            "valid at time zone %s as local_valid, tmpf, dwpf, sknt, drct "
-            "from alldata WHERE station = %s and "
-            "valid >= %s and valid < %s ORDER by valid ASC",
-            pgconn,
-            params=(tzname, station, sts, ets),
-            index_col=None,
-        )
-    if network in ["KCCI", "KELO", "KCRG", "KIMT"]:
-        pgconn = get_dbconn("snet")
+    if network in ["OT", "KCCI", "KELO", "KCRG", "KIMT", "SCAN"]:
+        # lazy
+        providers = {"OT": "other", "SCAN": "scan"}
+        pgconn = get_dbconn(providers.get(network, "snet"))
         return read_sql(
             "SELECT valid at time zone 'UTC' as utc_valid, "
             "valid at time zone %s as local_valid, tmpf, dwpf, sknt, drct "
