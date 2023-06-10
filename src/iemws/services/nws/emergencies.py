@@ -65,6 +65,7 @@ def handler():
         df.groupby(["year", "wfo", "eventid", "phenomena", "significance"])
         .first()
         .reset_index()
+        .sort_values("utc_issue", ascending=True)
     )
     df["uri"] = (
         "/vtec/#"
