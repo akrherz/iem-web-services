@@ -32,6 +32,7 @@ LSRTYPE2PHENOM = {
     "x": "FF",
     "M": "MA",
     "W": "MA",
+    "h": "MA",
     "2": "DS",
 }
 router = APIRouter()
@@ -170,7 +171,7 @@ class COWSession:
         if "FF" in self.lsrtype:
             ltypes.extend(["F", "x"])
         if "MA" in self.lsrtype:
-            ltypes.extend(["M", "W"])
+            ltypes.extend(["M", "W", "h"])
         if "DS" in self.lsrtype:
             ltypes.append("2")
         if len(ltypes) == 1:
@@ -283,7 +284,7 @@ class COWSession:
         from lsrs w WHERE valid >= %s and valid <= %s
         {self.sql_wfo_limiter()} {self.sql_lsr_limiter()}
         and ((type = 'M' and magnitude >= 34) or type = '2' or
-        (type = 'H' and magnitude >= %s) or type = 'W' or
+        (type in ('H', 'h') and magnitude >= %s) or type = 'W' or
          type = 'T' or (type = 'G' and magnitude >= %s) or type = 'D'
          or type = 'F' or type = 'x') ORDER by valid ASC
         """,
@@ -400,6 +401,7 @@ class COWSession:
                     "W",
                     "M",
                     "H",
+                    "h",
                 ]:
                     verify = True
                 elif _ev["phenomena"] == "SV" and _sr["type"] in [
