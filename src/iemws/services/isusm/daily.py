@@ -8,10 +8,9 @@ from datetime import date, datetime
 import numpy as np
 from fastapi import APIRouter, Query
 from geopandas import read_postgis
-
-# Third Party
 from pandas.io.sql import read_sql
 from pyiem.tracker import loadqc
+from sqlalchemy import text
 
 # Local
 from ...models import SupportedFormats
@@ -110,37 +109,37 @@ def get_df_isusm(sdate, edate, gddbase, gddceil):
     """Here we go."""
     pgconn = get_dbconn("isuag")
     ets = datetime(edate.year, edate.month, edate.day, 23, 59)
+    params = {
+        "gddbase": gddbase,
+        "gddceil": gddceil,
+        "sdate": sdate,
+        "ets": ets,
+    }
     df = read_postgis(
-        """
-        WITH hourly_daily as (
-            SELECT station, date(valid),
-            c2f(max(t4_c_avg_qc)) as tsoil_high,
-            c2f(min(t4_c_avg_qc)) as tsoil_low
-            from sm_hourly WHERE valid >= %s and valid < %s
-            GROUP by station, date
-        ), hourly_agg as (
-            select station,
-            sum(gddxx(%s, %s, tsoil_high, tsoil_low)) as sgdd
-            from hourly_daily GROUP by station
-        ), daily_agg as (
+        text(
+            """
+        WITH daily_agg as (
             select station,
             sum(dailyet_qc / 25.4) as et,
             sum(gddxx(
-                %s, %s, c2f(tair_c_max_qc), c2f(tair_c_min_qc))) as gdd,
+                :gddbase, :gddceil, c2f(t4_c_max_qc), c2f(t4_c_min_qc)))
+                as sgdd,
+            sum(gddxx(
+                :gddbase, :gddceil, c2f(tair_c_max_qc), c2f(tair_c_min_qc)))
+                as gdd,
             sum(slrkj_tot_qc) / 1000. as srad,
             sum(rain_in_tot_qc) as precip
-            from sm_daily WHERE valid >= %s and valid <= %s
+            from sm_daily WHERE valid >= :sdate and valid <= :ets
             GROUP by station
-        ), agg as (
-            select d.*, h.sgdd from
-            daily_agg d JOIN hourly_agg h on (d.station = h.station)
         )
-        select a.*, st_x(geom) as lon, st_y(geom) as lat, geom, name,
+        select d.*, st_x(geom) as lon, st_y(geom) as lat, geom, name,
         plot_name as city from
-        agg a JOIN stations t on (a.station = t.id) WHERE t.network = 'ISUSM'
-        """,
+        daily_agg d JOIN stations t on (d.station = t.id)
+        WHERE t.network = 'ISUSM'
+        """
+        ),
         pgconn,
-        params=(sdate, ets, gddbase, gddceil, gddbase, gddceil, sdate, edate),
+        params=params,
         index_col=None,
         geom_col="geom",
     )
