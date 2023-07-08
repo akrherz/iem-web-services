@@ -57,7 +57,7 @@ class COWSession:
         fcster,
     ):
         """Build out our session based on provided fields"""
-        self.wfo = wfo
+        self.wfo = [x[:4] for x in wfo]
         # Figure out the begin and end times
         self.begints, self.endts = begints, endts
         # Storage of data
@@ -67,10 +67,10 @@ class COWSession:
         self.stormreports_buffered = None
         self.stats = {}
         # query parameters
-        self.phenomena = phenomena
+        self.phenomena = [x[:2] for x in phenomena]
         if not self.phenomena:
             self.phenomena = ["TO", "SV", "FF", "MA", "DS"]
-        self.lsrtype = lsrtype
+        self.lsrtype = [x[:2] for x in lsrtype]
         if not self.lsrtype:
             self.lsrtype = ["TO", "SV", "FF", "MA", "DS"]
         self.hailsize = hailsize
@@ -544,13 +544,11 @@ def handler(
     ],
 )
 def cow_service(
-    wfo: List[str] = Query(
-        [], min_length=3, max_length=4, title="WFO Identifiers"
-    ),
+    wfo: List[str] = Query([], title="WFO Identifiers"),
     begints: datetime = Query(...),
     endts: datetime = Query(...),
-    phenomena: List[str] = Query(None, max_length=2),
-    lsrtype: List[str] = Query(None, max_length=2),
+    phenomena: List[str] = Query([]),
+    lsrtype: List[str] = Query([]),
     hailsize: float = Query(1),
     lsrbuffer: float = Query(15),
     warningbuffer: float = Query(1),

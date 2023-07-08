@@ -21,6 +21,7 @@ def test_fcster():
         params=params,
     )
     cow = res.json()
+    print(cow)
     assert cow["stats"]["events_total"] == 0
 
 

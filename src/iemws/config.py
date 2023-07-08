@@ -1,33 +1,24 @@
 """Config"""
 # https://stackoverflow.com/questions/63510041
 
-from pydantic import BaseModel
-
-
-class LogConfig(BaseModel):
-    """Logging configuration to be set for the server"""
-
-    LOGGER_NAME: str = "iemws"
-    LOG_FORMAT: str = "%(levelprefix)s | %(asctime)s | %(message)s"
-    LOG_LEVEL: str = "DEBUG"
-
-    # Logging config
-    version = 1
-    disable_existing_loggers = False
-    formatters = {
+log_config = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
         "default": {
             "()": "uvicorn.logging.DefaultFormatter",
-            "fmt": LOG_FORMAT,
+            "fmt": "%(levelprefix)s %(asctime)s %(message)s",
             "datefmt": "%Y-%m-%d %H:%M:%S",
         },
-    }
-    handlers = {
+    },
+    "handlers": {
         "default": {
             "formatter": "default",
             "class": "logging.StreamHandler",
             "stream": "ext://sys.stderr",
         },
-    }
-    loggers = {
-        "iemws": {"handlers": ["default"], "level": LOG_LEVEL},
-    }
+    },
+    "loggers": {
+        "foo-logger": {"handlers": ["default"], "level": "INFO"},
+    },
+}
