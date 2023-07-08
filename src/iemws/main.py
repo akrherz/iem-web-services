@@ -34,7 +34,7 @@ from logging.config import dictConfig
 from fastapi import FastAPI
 from shapely.errors import ShapelyDeprecationWarning
 
-from .config import LogConfig
+from .config import log_config
 from .services import (
     cow,
     currents,
@@ -106,7 +106,7 @@ tags_metadata = [
     },
 ]
 
-dictConfig(LogConfig().dict())
+dictConfig(log_config)
 
 app = FastAPI(
     root_path="/api/1",
