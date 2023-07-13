@@ -20,7 +20,9 @@ jobs:
     - name: Setup Directory Structure
       run: |
         sudo mkdir -p /mesonet/data/iemre
+        sudo mkdir -p /mesonet/ARCHIVE/data/2023/07/13/model/ffg
         sudo chown -R runner /mesonet
+        wget -O /mesonet/ARCHIVE/data/2023/07/13/model/ffg/5kmffg_2023071300.grib2 https://mesonet.agron.iastate.edu/archive/data/2023/07/13/model/ffg/5kmffg_2023071300.grib2
         sudo mkdir /opt/bufkit
         sudo git clone https://github.com/ckarstens/bufkit.git /opt/bufkit
 
