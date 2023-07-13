@@ -16,7 +16,7 @@ from fastapi import APIRouter, HTTPException, Query
 from pyiem.util import utc
 
 ISO = "%Y-%m-%dT%H:%M:%SZ"
-URL = "https://mesonet.agron.iastate.edu"
+URL = "https://mesonet.agron.iastate.edu/archive/"
 router = APIRouter()
 
 
@@ -44,7 +44,7 @@ def handler(valid, lon, lat):
             detail="unable to find grib file to use for valid time",
         )
     res["forecast_initial_time"] = lvalid.strftime(ISO)
-    res["grib_source"] = gribfn.replace("/mesonet/ARCHIVE", URL)
+    res["grib_source"] = gribfn.replace("/mesonet/ARCHIVE/", URL)
     idxx, idxy = None, None
     with pygrib.open(gribfn) as grbs:
         for grb in grbs:
@@ -61,8 +61,8 @@ def handler(valid, lon, lat):
                 res["gridx"] = idxx
                 res["gridy"] = idxy
 
-            val = float(grb.values[idxy, idxx])
-            if np.isnan(val):
+            val = grb.values[idxy, idxx]
+            if np.ma.is_masked(val) or np.isnan(val):
                 val = None
             hr = int(grb["stepRange"].split("-")[1])
             res["ffg"].append(
