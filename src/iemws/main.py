@@ -68,6 +68,7 @@ from .services.nws import (
     centers_for_point,
     current_flood_warnings,
     emergencies,
+    lsrs_by_point,
     outlook_by_point,
     spc_mcd,
     spc_outlook,
@@ -141,6 +142,7 @@ app.include_router(usdm_bypoint.router)
 app.include_router(shef_currents.router)
 app.include_router(obhistory.router)
 app.include_router(last_shef.router)
+app.include_router(lsrs_by_point.router)
 app.include_router(mos.router)
 app.include_router(network.router)
 app.include_router(networks.router)
