@@ -52,7 +52,8 @@ def handler(lon, lat, radius_degrees, radius_miles, begints, endts):
     df = gpd.read_postgis(
         text(
             f"""
-        select valid, type, magnitude, city, county, l.state, l.source, remark,
+        select to_char(valid at time zone 'UTC', 'YYYY-MM-DDThh24:MI:SSZ')
+           as valid, type, magnitude, city, county, l.state, l.source, remark,
         l.wfo, typetext, l.geom, product_id, unit, qualifier, ugc,
         product_id_summary from lsrs l LEFT JOIN ugcs u on (l.gid = u.gid)
         WHERE {spatial} {temporal}
