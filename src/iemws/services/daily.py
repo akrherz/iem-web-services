@@ -123,7 +123,7 @@ def service(
         None, description="Local station calendar date"
     ),
     month: int = Query(None, description="Local station month"),
-    year: int = Query(None, description="Local station day"),
+    year: int = Query(None, ge=1928, le=2030, description="Local station day"),
 ):
     """Replaced above with module __doc__"""
     if all(x is None for x in [station, date, month, year]):
