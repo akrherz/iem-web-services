@@ -8,7 +8,7 @@ import datetime
 import pytz
 from fastapi import APIRouter, HTTPException, Query
 from pyiem.observation import Observation
-from pyiem.util import get_dbconn, get_properties, utc
+from pyiem.util import get_dbconnc, get_properties, utc
 
 PROPS = {}
 router = APIRouter()
@@ -54,8 +54,7 @@ def handler(
         if vars()[fname] == "M":
             continue
         ob.data[fname] = float(vars()[fname])
-    pgconn = get_dbconn("iem")
-    cursor = pgconn.cursor()
+    pgconn, cursor = get_dbconnc("iem")
     ob.save(cursor)
     cursor.close()
     pgconn.commit()

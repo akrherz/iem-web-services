@@ -6,15 +6,14 @@ import datetime
 
 import pytz
 from fastapi import APIRouter, HTTPException, Path, Response
-from pyiem.util import get_dbconn
+from pyiem.util import get_dbconnc
 
 router = APIRouter()
 
 
 def handler(product_id):
     """Handle the request, return dict"""
-    pgconn = get_dbconn("afos")
-    cursor = pgconn.cursor()
+    pgconn, cursor = get_dbconnc("afos")
     tokens = product_id.split("-")
     bbb = None
     if len(tokens) == 4:
@@ -42,10 +41,12 @@ def handler(product_id):
     )
 
     if cursor.rowcount == 0:
+        pgconn.close()
         raise HTTPException(status_code=404, detail="Product not found.")
 
     row = cursor.fetchone()
-    return row[0].replace("\r\r\n", "\n")
+    pgconn.close()
+    return row["data"].replace("\r\r\n", "\n")
 
 
 @router.get(
