@@ -1,1 +1,2 @@
-# Nothing
+# lazy
+git+https://github.com/akrherz/pyIEM.git

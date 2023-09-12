@@ -5,8 +5,6 @@ geopandas
 httpx
 metpy
 pygrib
-# Ensure some discipline
-pyiem
 pyproj
 pytest
 pytest-runner
