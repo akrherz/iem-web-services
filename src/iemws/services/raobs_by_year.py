@@ -28,11 +28,11 @@ def handler(station, year):
 
     df = read_sql(
         text(
-            "SELECT * from raob_flights where station in :ids "
+            "SELECT * from raob_flights where station = ANY(:ids) "
             "and valid >= :sts and valid < :ets ORDER by valid ASC"
         ),
         pgconn,
-        params={"ids": tuple(stations), "sts": sts, "ets": ets},
+        params={"ids": stations, "sts": sts, "ets": ets},
     )
 
     return df
