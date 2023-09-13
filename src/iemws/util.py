@@ -2,12 +2,14 @@
 import logging
 import os
 import tempfile
+from contextlib import contextmanager
 
 from fastapi import Request, Response
 from fastapi.responses import JSONResponse
 from pandas import DataFrame
 from pandas.api.types import is_datetime64_any_dtype as isdt
 from pyiem import util
+from sqlalchemy import engine
 
 from .models import SupportedFormats
 from .reference import MEDIATYPES
@@ -51,6 +53,14 @@ def deliver_df(df: DataFrame, fmt: str):
                 with open(tmp.name, encoding="utf8") as fh:
                     res = fh.read()
     return Response(res, media_type=MEDIATYPES[fmt])
+
+
+@contextmanager
+def get_sqlalchemy_conn(name):
+    """Return a context managed sqlalchemy connection."""
+    pgconn = engine.create_engine(get_dbconn(name))
+    yield pgconn
+    pgconn.dispose()
 
 
 def get_dbconn(name):
