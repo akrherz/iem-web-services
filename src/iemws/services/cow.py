@@ -266,8 +266,8 @@ class COWSession:
         )
         self.events["verify"] = False
         self.events["lead0"] = None
-        self.events["areaverify"] = 0
-        self.events["sharedborder"] = 0
+        self.events["areaverify"] = 0.0
+        self.events["sharedborder"] = 0.0
         if self.events.empty:
             return
         s2163 = self.events["geom"].to_crs(epsg=2163)
