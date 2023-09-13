@@ -10,7 +10,7 @@ from pandas.io.sql import read_sql
 from pyiem.iemre import daily_offset, find_ij, get_gid
 from pyiem.util import logger, ncopen
 
-from ..util import get_dbconn
+from ..util import get_sqlalchemy_conn
 
 LOG = logger()
 NCOPEN_TIMEOUT = 20  # seconds
@@ -96,20 +96,20 @@ def handler(lon, lat):
     """Handle the request."""
     gid = get_gid(lon, lat)
 
-    pgconn = get_dbconn("iemre")
-    df = read_sql(
-        """
-        SELECT valid, high_tmpk, low_tmpk, (max_rh + min_rh) / 2 as avg_rh
-        from iemre_daily WHERE gid = %s and valid > '1980-01-01' and
-        to_char(valid, 'mmdd') between '0901' and '1201'
-        and high_tmpk is not null and low_tmpk is not null
-        ORDER by valid ASC
-    """,
-        pgconn,
-        params=(int(gid),),
-        parse_dates="valid",
-        index_col=None,
-    )
+    with get_sqlalchemy_conn("iemre") as conn:
+        df = read_sql(
+            """
+            SELECT valid, high_tmpk, low_tmpk, (max_rh + min_rh) / 2 as avg_rh
+            from iemre_daily WHERE gid = %s and valid > '1980-01-01' and
+            to_char(valid, 'mmdd') between '0901' and '1201'
+            and high_tmpk is not null and low_tmpk is not null
+            ORDER by valid ASC
+        """,
+            conn,
+            params=(int(gid),),
+            parse_dates="valid",
+            index_col=None,
+        )
     if df.empty:
         raise HTTPException(status_code=404, detail="No data found.")
     df["max_tmpf"] = (df["high_tmpk"].values * units.degK).to(units.degF).m

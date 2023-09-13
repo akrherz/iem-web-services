@@ -27,7 +27,7 @@ from sqlalchemy import text
 
 from ..models import SupportedFormatsNoGeoJSON
 from ..reference import MEDIATYPES
-from ..util import get_dbconn
+from ..util import get_sqlalchemy_conn
 
 MODEL_DOMAIN = ["AVN", "GFS", "ETA", "NAM", "NBS", "NBE", "ECM", "LAV", "MEX"]
 COLUMNS = (
@@ -60,18 +60,22 @@ def handler(station, model, runtime, fmt):
         runtime = find_runtime(station, model)
 
     # Ready to get the data!
-    df = read_sql(
-        text(
-            "SELECT *, t06_1 ||'/'||t06_2 as t06, t12_1 ||'/'|| t12_2 as t12, "
-            "runtime at time zone 'UTC' as runtime_utc, "
-            "ftime at time zone 'UTC' as ftime_utc "
-            "from alldata where model = :model and station = ANY(:ids) and "
-            "runtime = :runtime ORDER by station ASC, ftime ASC"
-        ),
-        get_dbconn("mos"),
-        params={"model": model, "ids": station, "runtime": runtime},
-        index_col=None,
-    )
+    with get_sqlalchemy_conn("mos") as conn:
+        df = read_sql(
+            text(
+                """
+                SELECT *, t06_1 ||'/'||t06_2 as t06, t12_1 ||'/'|| t12_2
+                    as t12,
+                runtime at time zone 'UTC' as runtime_utc,
+                ftime at time zone 'UTC' as ftime_utc
+                from alldata where model = :model and station = ANY(:ids) and
+                runtime = :runtime ORDER by station ASC, ftime ASC
+                """
+            ),
+            conn,
+            params={"model": model, "ids": station, "runtime": runtime},
+            index_col=None,
+        )
     if df.empty:
         raise HTTPException(404, "No data found for query.")
     # Hacky to work around string formatting issue with pandas 1.4.0

@@ -23,7 +23,7 @@ from sqlalchemy import text
 
 from ...models import SupportedFormats
 from ...models.nws.ugcs import UGCSchema
-from ...util import deliver_df, get_dbconn
+from ...util import deliver_df, get_sqlalchemy_conn
 
 router = APIRouter()
 
@@ -35,7 +35,6 @@ def handler(state, wfo, valid, just_firewx):
         "wfo": wfo,
         "valid": valid,
     }
-    pgconn = get_dbconn("postgis")
     state_limiter = ""
     if state is not None:
         state_limiter = " and substr(ugc, 1, 2) = :state "
@@ -45,20 +44,22 @@ def handler(state, wfo, valid, just_firewx):
     firewx = " and source != 'fz' "
     if just_firewx:
         firewx = " and source = 'fz' "
-    df = read_postgis(
-        text(
-            f"""
-        SELECT ugc, simple_geom as geom, name, state, wfo from ugcs WHERE
-        ((begin_ts <= :valid and end_ts > :valid) or
-        (begin_ts <= :valid and end_ts is null)) {wfo_limiter} {state_limiter}
-        {firewx} ORDER by ugc ASC
-        """
-        ),
-        pgconn,
-        geom_col="geom",
-        params=params,
-        index_col=None,
-    )
+    with get_sqlalchemy_conn("postgis") as pgconn:
+        df = read_postgis(
+            text(
+                f"""
+            SELECT ugc, simple_geom as geom, name, state, wfo from ugcs WHERE
+            ((begin_ts <= :valid and end_ts > :valid) or
+            (begin_ts <= :valid and end_ts is null))
+            {wfo_limiter} {state_limiter}
+            {firewx} ORDER by ugc ASC
+            """
+            ),
+            pgconn,
+            geom_col="geom",
+            params=params,
+            index_col=None,
+        )
     return df
 
 

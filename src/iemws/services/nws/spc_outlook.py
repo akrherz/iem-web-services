@@ -30,40 +30,39 @@ from sqlalchemy import text
 
 # Local
 from ...models import SupportedFormats
-from ...util import deliver_df, get_dbconn
+from ...util import deliver_df, get_sqlalchemy_conn
 
 router = APIRouter()
 
 
 def handler(day, valid, cycle, outlook_type):
     """Handle the request, return dict"""
-    pgconn = get_dbconn("postgis")
     # Maybe brittle
     expire = utc(valid.year, valid.month, valid.day, 12) + timedelta(days=1)
-
-    df = gpd.read_postgis(
-        text(
+    with get_sqlalchemy_conn("postgis") as pgconn:
+        df = gpd.read_postgis(
+            text(
+                """
+            select
+            issue at time zone 'UTC' as issue,
+            product_issue at time zone 'UTC' as product_issue,
+            expire at time zone 'UTC' as expire,
+            threshold, category, geom, product_id
+            from spc_outlooks
+            where outlook_type = :outlook_type and cycle = :cycle
+            and expire = :expire and day = :day
             """
-        select
-        issue at time zone 'UTC' as issue,
-        product_issue at time zone 'UTC' as product_issue,
-        expire at time zone 'UTC' as expire,
-        threshold, category, geom, product_id
-        from spc_outlooks
-        where outlook_type = :outlook_type and cycle = :cycle
-        and expire = :expire and day = :day
-        """
-        ),
-        pgconn,
-        geom_col="geom",
-        params={
-            "outlook_type": outlook_type,
-            "cycle": cycle,
-            "expire": expire,
-            "day": day,
-        },
-        index_col=None,
-    )
+            ),
+            pgconn,
+            geom_col="geom",
+            params={
+                "outlook_type": outlook_type,
+                "cycle": cycle,
+                "expire": expire,
+                "day": day,
+            },
+            index_col=None,
+        )
     return df
 
 

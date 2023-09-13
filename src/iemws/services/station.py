@@ -12,25 +12,24 @@ from sqlalchemy import text
 
 # Local
 from ..models import SupportedFormats
-from ..util import deliver_df, get_dbconn
+from ..util import deliver_df, get_sqlalchemy_conn
 
 router = APIRouter()
 
 
 def handler(station_id):
     """Handle the request, return dict"""
-    pgconn = get_dbconn("mesosite")
-
-    df = gpd.read_postgis(
-        text(
-            "SELECT *, ST_X(geom) as longitude, ST_Y(geom) as latitude "
-            "from stations where id = :station_id ORDER by name ASC"
-        ),
-        pgconn,
-        params={"station_id": station_id},
-        geom_col="geom",
-        index_col=None,
-    )
+    with get_sqlalchemy_conn("mesosite") as pgconn:
+        df = gpd.read_postgis(
+            text(
+                "SELECT *, ST_X(geom) as longitude, ST_Y(geom) as latitude "
+                "from stations where id = :station_id ORDER by name ASC"
+            ),
+            pgconn,
+            params={"station_id": station_id},
+            geom_col="geom",
+            index_col=None,
+        )
     if df.empty:
         raise HTTPException(
             status_code=404,

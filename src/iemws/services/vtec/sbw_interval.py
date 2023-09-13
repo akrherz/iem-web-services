@@ -32,14 +32,13 @@ from sqlalchemy import text
 # Local
 from ...models import SupportedFormats
 from ...models.sbw_interval import SBWIntervalModel
-from ...util import deliver_df, get_dbconn
+from ...util import deliver_df, get_sqlalchemy_conn
 
 router = APIRouter()
 
 
 def handler(begints, endts, wfo, only_new, ph):
     """Handler"""
-    pgconn = get_dbconn("postgis")
     begints = begints.replace(tzinfo=timezone.utc)
     endts = endts.replace(tzinfo=timezone.utc)
 
@@ -55,27 +54,29 @@ def handler(begints, endts, wfo, only_new, ph):
         wfolimiter = " and wfo in :wfo "
     if only_new:
         statuslimiter = " and status = 'NEW' "
-    df = read_postgis(
-        text(
-            f"""
-        SELECT
-        issue at time zone 'UTC' as utc_issue,
-        expire at time zone 'UTC' as utc_expire,
-        polygon_begin at time zone 'UTC' as utc_polygon_begin,
-        polygon_end at time zone 'UTC' as utc_polygon_end,
-        w.phenomena || '.' || w.significance as ph_sig,
-        w.wfo, eventid, phenomena, significance, null as nws_color,
-        null as event_label, status, geom
-        from sbw w WHERE
-        w.polygon_begin >= :begints and w.polygon_begin < :endts {wfolimiter}
-        {statuslimiter} {phlimiter} ORDER by w.polygon_begin ASC
-        """
-        ),
-        pgconn,
-        geom_col="geom",
-        params=params,
-        index_col=None,
-    )
+    with get_sqlalchemy_conn("postgis") as pgconn:
+        df = read_postgis(
+            text(
+                f"""
+            SELECT
+            issue at time zone 'UTC' as utc_issue,
+            expire at time zone 'UTC' as utc_expire,
+            polygon_begin at time zone 'UTC' as utc_polygon_begin,
+            polygon_end at time zone 'UTC' as utc_polygon_end,
+            w.phenomena || '.' || w.significance as ph_sig,
+            w.wfo, eventid, phenomena, significance, null as nws_color,
+            null as event_label, status, geom
+            from sbw w WHERE
+            w.polygon_begin >= :begints and w.polygon_begin < :endts
+            {wfolimiter} {statuslimiter} {phlimiter}
+            ORDER by w.polygon_begin ASC
+            """
+            ),
+            pgconn,
+            geom_col="geom",
+            params=params,
+            index_col=None,
+        )
     df["nws_color"] = df["ph_sig"].apply(NWS_COLORS.get)
     df["event_label"] = df["ph_sig"].apply(
         lambda x: get_ps_string(*x.split("."))

@@ -12,25 +12,25 @@ from pandas.io.sql import read_sql
 
 from ..models import SupportedFormatsNoGeoJSON
 from ..models.last_shef import LastSHEFSchema
-from ..util import deliver_df, get_dbconn
+from ..util import deliver_df, get_sqlalchemy_conn
 
 router = APIRouter()
 
 
 def handler(station):
     """Handle the request, return dict"""
-    pgconn = get_dbconn("iem")
-    df = read_sql(
-        "select station, to_char(valid at time zone 'UTC', "
-        "'YYYY-MM-DDThh24:MI:SSZ') as utc_valid, "
-        "physical_code, duration, source, type, extremum, probability, "
-        "depth, dv_interval, depth, qualifier, unit_convention, "
-        "product_id, value from current_shef where station = %s "
-        "ORDER by physical_code ASC",
-        pgconn,
-        params=(station,),
-        index_col=None,
-    )
+    with get_sqlalchemy_conn("iem") as conn:
+        df = read_sql(
+            "select station, to_char(valid at time zone 'UTC', "
+            "'YYYY-MM-DDThh24:MI:SSZ') as utc_valid, "
+            "physical_code, duration, source, type, extremum, probability, "
+            "depth, dv_interval, depth, qualifier, unit_convention, "
+            "product_id, value from current_shef where station = %s "
+            "ORDER by physical_code ASC",
+            conn,
+            params=(station,),
+            index_col=None,
+        )
     return df
 
 

@@ -1,6 +1,5 @@
 """Helpers."""
 import logging
-import os
 import tempfile
 from contextlib import contextmanager
 
@@ -58,15 +57,20 @@ def deliver_df(df: DataFrame, fmt: str):
 @contextmanager
 def get_sqlalchemy_conn(name):
     """Return a context managed sqlalchemy connection."""
-    pgconn = engine.create_engine(get_dbconn(name))
+    # create a sqlalchemy connection with a default timezone of UTC set
+    # https://stackoverflow.com/questions/26105730
+    pgconn = engine.create_engine(
+        get_dbconnstr(name),
+        connect_args={"options": "-c TimeZone=UTC"},
+    )
     yield pgconn
     pgconn.dispose()
 
 
-def get_dbconn(name):
+def get_dbconnstr(name):
     """Get a database connection string."""
-    # Dragons: We set this now so that any subquent database reads will
-    # properly load timestamptz column types into datetime objects
-    os.environ["PGTZ"] = "UTC"
-    # Le Sigh
-    return util.get_dbconnstr(name).replace("postgresql", "postgresql+psycopg")
+    # 1. Allows us to specify the usage of psycopg as the module
+    # 2. Sets the timezone to UTC
+    return util.get_dbconnstr(name).replace(
+        "postgresql:", "postgresql+psycopg:"
+    )

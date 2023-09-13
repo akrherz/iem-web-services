@@ -15,14 +15,13 @@ from geopandas import read_postgis
 from pyiem.util import utc
 
 from ...models import SupportedFormats
-from ...util import deliver_df, get_dbconn
+from ...util import deliver_df, get_sqlalchemy_conn
 
 router = APIRouter()
 
 
 def handler(valid, hours):
     """Handle the request, return dict"""
-    pgconn = get_dbconn("postgis")
     if valid is None:
         valid = utc()
     valid = valid.replace(tzinfo=timezone.utc)
@@ -35,19 +34,20 @@ def handler(valid, hours):
 
     # 1. We want anything issued between sts and valid
     # 2. We want anything issued < valid and expire > valid
-    df = read_postgis(
-        f"""
-        select product_id, geom, year, num,
-        issue at time zone 'UTC' as issue,
-        expire at time zone 'UTC' as expire,
-        watch_confidence, concerning from mcd
-        where {limiter}
-        """,
-        pgconn,
-        geom_col="geom",
-        params=params,
-        index_col=None,
-    )
+    with get_sqlalchemy_conn("postgis") as pgconn:
+        df = read_postgis(
+            f"""
+            select product_id, geom, year, num,
+            issue at time zone 'UTC' as issue,
+            expire at time zone 'UTC' as expire,
+            watch_confidence, concerning from mcd
+            where {limiter}
+            """,
+            pgconn,
+            geom_col="geom",
+            params=params,
+            index_col=None,
+        )
     return df
 
 
