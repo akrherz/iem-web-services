@@ -28,20 +28,21 @@ router = APIRouter()
 
 def handler(lon, lat, radius_degrees, radius_miles, begints, endts):
     """Handle the request, return dict"""
-    # Figure out which radius search to use
-    if radius_degrees is not None:
-        searchgeo = "ST_SetSrid(ST_MakePoint(:lon, :lat), 4326)"
-        spatial = f"ST_DWithin(l.geom, {searchgeo}, {radius_degrees})"
-    else:
-        meters = (units("mile") * radius_miles).to(units("m")).m
-        searchgeo = "ST_MakePoint(:lon, :lat)::geography"
-        spatial = f"ST_DWithin(l.geom::geography, {searchgeo}, {meters})"
     params = {
         "lon": lon,
         "lat": lat,
         "begints": begints,
         "endts": endts,
+        "radius_degrees": radius_degrees,
     }
+    # Figure out which radius search to use
+    if radius_degrees is not None:
+        searchgeo = "ST_SetSrid(ST_MakePoint(:lon, :lat), 4326)"
+        spatial = f"ST_DWithin(l.geom, {searchgeo}, :radius_degrees)"
+    else:
+        params["meters"] = (units("mile") * radius_miles).to(units("m")).m
+        searchgeo = "ST_MakePoint(:lon, :lat)::geography"
+        spatial = f"ST_DWithin(l.geom::geography, {searchgeo}, :meters)"
     temporal = ""
     if begints is not None and endts is not None:
         params["begints"] = params["begints"].replace(tzinfo=ZoneInfo("UTC"))
