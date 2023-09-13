@@ -8,7 +8,7 @@ from datetime import date
 from fastapi import APIRouter, Query
 from pandas.io.sql import read_sql
 
-from ..util import deliver_df, get_dbconn
+from ..util import deliver_df, get_sqlalchemy_conn
 
 ISO = "%Y-%m-%dT%H:%M:%SZ"
 router = APIRouter()
@@ -16,30 +16,30 @@ router = APIRouter()
 
 def run(sdate, edate, lon, lat):
     """Do the work, please"""
-    pgconn = get_dbconn("postgis")
 
     giswkt = f"POINT({lon} {lat})"
-    df = read_sql(
-        """
-        with timedomain as (
-            select distinct valid from usdm WHERE valid >= %s and
-            valid <= %s
-        ),
-        hits as (
-            SELECT valid, max(dm) as category from usdm WHERE
-            ST_Contains(
-                geom, ST_SetSRID(ST_GeomFromEWKT(%s),4326))
-            and valid >= %s and valid <= %s
-            GROUP by valid
+    with get_sqlalchemy_conn("postgis") as pgconn:
+        df = read_sql(
+            """
+            with timedomain as (
+                select distinct valid from usdm WHERE valid >= %s and
+                valid <= %s
+            ),
+            hits as (
+                SELECT valid, max(dm) as category from usdm WHERE
+                ST_Contains(
+                    geom, ST_SetSRID(ST_GeomFromEWKT(%s),4326))
+                and valid >= %s and valid <= %s
+                GROUP by valid
+            )
+            select to_char(t.valid, 'YYYY-mm-dd') as valid, category
+            from timedomain t LEFT JOIN hits h on (t.valid = h.valid)
+            ORDER by t.valid ASC
+            """,
+            pgconn,
+            params=(sdate, edate, giswkt, sdate, edate),
+            index_col=None,
         )
-        select to_char(t.valid, 'YYYY-mm-dd') as valid, category
-        from timedomain t LEFT JOIN hits h on (t.valid = h.valid)
-        ORDER by t.valid ASC
-        """,
-        pgconn,
-        params=(sdate, edate, giswkt, sdate, edate),
-        index_col=None,
-    )
     df["category"] = df["category"].astype("Int64")
     return df
 

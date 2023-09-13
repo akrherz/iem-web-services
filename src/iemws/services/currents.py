@@ -13,17 +13,17 @@ For better or worse, the ".json" in the URI path above controls the output
 format that the service emits.  This service supports ".json", ".geojson",
 and ".txt" (comma delimited) formats.
 """
-from datetime import date
+from datetime import date, timedelta
 from typing import List
 
+import geopandas as gpd
 import numpy as np
 from fastapi import APIRouter, Query
-from geopandas import read_postgis
 from sqlalchemy import text
 
 from ..models import SupportedFormats
 from ..models.currents import CurrentsSchema
-from ..util import deliver_df, get_dbconn
+from ..util import deliver_df, get_sqlalchemy_conn
 
 router = APIRouter()
 
@@ -48,7 +48,7 @@ WITH agg as (
     t.geom, ST_x(t.geom) as lon, ST_y(t.geom) as lat
     from current c JOIN stations t on (c.iemid = t.iemid) WHERE
     REPLACEME not t.metasite and t.online
-    and c.valid > (now() - ':minutes minutes'::interval)
+    and c.valid > (now() - :dtinterval)
 )
     SELECT c.id as station, c.name, c.county, c.state, c.network,
     to_char(s.day, 'YYYY-mm-dd') as local_date, snow, snowd, snoww,
@@ -97,7 +97,6 @@ def handler(
     minutes,
 ):
     """Handle the request, return dict"""
-    pgconn = get_dbconn("iem")
     params = {}
     if station is not None:
         sql = SQL.replace("REPLACEME", "t.id = ANY(:ids) and")
@@ -130,10 +129,15 @@ def handler(
         )
         minutes = min([minutes, 600])
 
-    params["minutes"] = minutes
-    df = read_postgis(
-        text(sql), pgconn, params=params, index_col="station", geom_col="geom"
-    )
+    params["dtinterval"] = timedelta(minutes=minutes)
+    with get_sqlalchemy_conn("iem") as conn:
+        df = gpd.read_postgis(
+            text(sql),
+            conn,
+            params=params,
+            index_col="station",
+            geom_col="geom",
+        )
     if event is not None and event in df.columns:
         df = df[df[event].notna()]
     df = compute(df)

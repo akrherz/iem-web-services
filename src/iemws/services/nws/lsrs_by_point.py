@@ -21,49 +21,49 @@ from sqlalchemy import text
 # Local
 from ...models import SupportedFormats
 from ...models.nws.lsrs_by_point import Schema
-from ...util import deliver_df, get_dbconn
+from ...util import deliver_df, get_sqlalchemy_conn
 
 router = APIRouter()
 
 
 def handler(lon, lat, radius_degrees, radius_miles, begints, endts):
     """Handle the request, return dict"""
-    pgconn = get_dbconn("postgis")
-    # Figure out which radius search to use
-    if radius_degrees is not None:
-        searchgeo = "ST_SetSrid(ST_MakePoint(:lon, :lat), 4326)"
-        spatial = f"ST_DWithin(l.geom, {searchgeo}, {radius_degrees})"
-    else:
-        meters = (units("mile") * radius_miles).to(units("m")).m
-        searchgeo = "ST_MakePoint(:lon, :lat)::geography"
-        spatial = f"ST_DWithin(l.geom::geography, {searchgeo}, {meters})"
     params = {
         "lon": lon,
         "lat": lat,
         "begints": begints,
         "endts": endts,
+        "radius_degrees": radius_degrees,
     }
+    # Figure out which radius search to use
+    if radius_degrees is not None:
+        searchgeo = "ST_SetSrid(ST_MakePoint(:lon, :lat), 4326)"
+        spatial = f"ST_DWithin(l.geom, {searchgeo}, :radius_degrees)"
+    else:
+        params["meters"] = (units("mile") * radius_miles).to(units("m")).m
+        searchgeo = "ST_MakePoint(:lon, :lat)::geography"
+        spatial = f"ST_DWithin(l.geom::geography, {searchgeo}, :meters)"
     temporal = ""
     if begints is not None and endts is not None:
         params["begints"] = params["begints"].replace(tzinfo=ZoneInfo("UTC"))
         params["endts"] = params["endts"].replace(tzinfo=ZoneInfo("UTC"))
         temporal = " and valid >= :begints and valid < :endts "
-
-    df = gpd.read_postgis(
-        text(
-            f"""
-        select to_char(valid at time zone 'UTC', 'YYYY-MM-DDThh24:MI:SSZ')
-           as valid, type, magnitude, city, county, l.state, l.source, remark,
-        l.wfo, typetext, l.geom, product_id, unit, qualifier, ugc,
-        product_id_summary from lsrs l LEFT JOIN ugcs u on (l.gid = u.gid)
-        WHERE {spatial} {temporal}
-        """
-        ),
-        pgconn,
-        geom_col="geom",
-        params=params,
-        index_col=None,
-    )
+    with get_sqlalchemy_conn("postgis") as pgconn:
+        df = gpd.read_postgis(
+            text(
+                f"""
+            select to_char(valid at time zone 'UTC', 'YYYY-MM-DDThh24:MI:SSZ')
+            as valid, type, magnitude, city, county, l.state, l.source, remark,
+            l.wfo, typetext, l.geom, product_id, unit, qualifier, ugc,
+            product_id_summary from lsrs l LEFT JOIN ugcs u on (l.gid = u.gid)
+            WHERE {spatial} {temporal}
+            """
+            ),
+            pgconn,
+            geom_col="geom",
+            params=params,
+            index_col=None,
+        )
     return df
 
 

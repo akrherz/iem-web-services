@@ -16,11 +16,10 @@ from typing import List
 import geopandas as gpd
 import pandas as pd
 from fastapi import APIRouter, Query
-from pandas.io.sql import read_sql
 from shapely.ops import unary_union
 from sqlalchemy import text
 
-from ..util import get_dbconn
+from ..util import get_sqlalchemy_conn
 
 ISO9660 = "%Y-%m-%dT%H:%M:%SZ"
 LSRTYPE2PHENOM = {
@@ -80,14 +79,13 @@ class COWSession:
         self.windhailtag = windhailtag.upper() == "Y"
         self.limitwarns = limitwarns.upper() == "Y"
         self.fcster = fcster
-        # our database connection
-        self.dbconn = get_dbconn("postgis")
 
     def milk(self):
         """Milk the Cow and see what happens"""
-        self.load_events()
-        self.load_stormreports()
-        self.compute_shared_border()
+        with get_sqlalchemy_conn("postgis") as dbconn:
+            self.load_events(dbconn)
+            self.load_stormreports(dbconn)
+            self.compute_shared_border(dbconn)
         self.sbw_verify()
         self.area_verify()
         self.compute_stats()
@@ -202,7 +200,7 @@ class COWSession:
             " (w.windtag is null and w.hailtag is null)) "
         )
 
-    def load_events(self):
+    def load_events(self, dbconn):
         """Build out the listing of events based on the request"""
         self.events = gpd.read_postgis(
             text(
@@ -250,7 +248,7 @@ class COWSession:
         ORDER by issue ASC
         """
             ),
-            self.dbconn,
+            dbconn,
             params={
                 "begints": self.begints,
                 "endts": self.endts,
@@ -273,7 +271,7 @@ class COWSession:
         s2163 = self.events["geom"].to_crs(epsg=2163)
         self.events_buffered = s2163.buffer(self.warningbuffer * 1000.0)
 
-    def load_stormreports(self):
+    def load_stormreports(self, dbconn):
         """Build out the listing of storm reports based on the request"""
         self.stormreports = gpd.read_postgis(
             f"""
@@ -288,7 +286,7 @@ class COWSession:
          type = 'T' or (type = 'G' and magnitude >= %s) or type = 'D'
          or type = 'F' or type = 'x') ORDER by valid ASC
         """,
-            self.dbconn,
+            dbconn,
             params=(self.begints, self.endts, self.hailsize, self.wind),
             geom_col="geom",
             crs={"init": "epsg:4326"},
@@ -307,10 +305,10 @@ class COWSession:
         s2163 = self.stormreports["geom"].to_crs(epsg=2163)
         self.stormreports_buffered = s2163.buffer(self.lsrbuffer * 1000.0)
 
-    def compute_shared_border(self):
+    def compute_shared_border(self, dbconn):
         """Compute a stat"""
         # re ST_Buffer(simple_geom) see akrherz/iem#163
-        df = read_sql(
+        df = pd.read_sql(
             text(
                 f"""
             WITH stormbased as (
@@ -351,7 +349,7 @@ class COWSession:
             from agg GROUP by key
         """
             ),
-            self.dbconn,
+            dbconn,
             params={
                 "begints": self.begints,
                 "endts": self.endts,

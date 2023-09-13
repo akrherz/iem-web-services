@@ -19,49 +19,49 @@ from fastapi import APIRouter, Query
 from geopandas import read_postgis
 
 from ...models import SupportedFormats
-from ...util import deliver_df, get_dbconn
+from ...util import deliver_df, get_sqlalchemy_conn
 
 router = APIRouter()
 
 
 def handler(state, wfo):
     """Handle the request, return dict"""
-    pgconn = get_dbconn("postgis")
     state_limiter = ""
     if state is not None:
         state_limiter = f" and substr(w.ugc, 1, 2) = '{state}' "
     wfo_limiter = ""
     if wfo is not None:
         wfo_limiter = f" and w.wfo = '{wfo}' "
-
-    df = read_postgis(
-        f"""
-        WITH polys as (
-            SELECT wfo, eventid, hvtec_nwsli, w.geom, h.name, h.river_name,
-            st_x(h.geom) as longitude, st_y(h.geom) as latitude,
-            phenomena, significance
-            from sbw w JOIN hvtec_nwsli h on (w.hvtec_nwsli = h.nwsli)
-            where expire > now() and phenomena = 'FL' and
-            significance = 'W' and
-            polygon_end > now() and status not in ('EXP', 'CAN') and
-            hvtec_nwsli is not null {wfo_limiter}),
-        counties as (
-            SELECT w.hvtec_nwsli, sumtxt(u.name || ', ') as counties from
-            warnings w JOIN ugcs u on (w.gid = u.gid) WHERE
-            w.expire > now() and phenomena = 'FL' and significance = 'W'
-            and status NOT IN ('EXP','CAN') {wfo_limiter} {state_limiter}
-            GROUP by hvtec_nwsli),
-        agg as (
-            SELECT p.*, c.counties
-            from polys p JOIN counties c on (p.hvtec_nwsli = c.hvtec_nwsli)
+    with get_sqlalchemy_conn("postgis") as pgconn:
+        df = read_postgis(
+            f"""
+            WITH polys as (
+                SELECT wfo, eventid, hvtec_nwsli, w.geom, h.name, h.river_name,
+                st_x(h.geom) as longitude, st_y(h.geom) as latitude,
+                phenomena, significance
+                from sbw w JOIN hvtec_nwsli h on (w.hvtec_nwsli = h.nwsli)
+                where expire > now() and phenomena = 'FL' and
+                significance = 'W' and
+                polygon_end > now() and status not in ('EXP', 'CAN') and
+                hvtec_nwsli is not null {wfo_limiter}),
+            counties as (
+                SELECT w.hvtec_nwsli, sumtxt(u.name || ', ') as counties from
+                warnings w JOIN ugcs u on (w.gid = u.gid) WHERE
+                w.expire > now() and phenomena = 'FL' and significance = 'W'
+                and status NOT IN ('EXP','CAN') {wfo_limiter} {state_limiter}
+                GROUP by hvtec_nwsli),
+            agg as (
+                SELECT p.*, c.counties
+                from polys p JOIN counties c on (p.hvtec_nwsli = c.hvtec_nwsli)
+            )
+            SELECT r.*, a.* from riverpro r JOIN agg a on
+                (r.nwsli = a.hvtec_nwsli)
+            ORDER by a.river_name ASC, latitude DESC
+            """,
+            pgconn,
+            geom_col="geom",
+            index_col=None,
         )
-        SELECT r.*, a.* from riverpro r JOIN agg a on (r.nwsli = a.hvtec_nwsli)
-        ORDER by a.river_name ASC, latitude DESC
-        """,
-        pgconn,
-        geom_col="geom",
-        index_col=None,
-    )
     return df
 
 

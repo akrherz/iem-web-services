@@ -9,21 +9,20 @@ from fastapi import APIRouter
 from geopandas import read_postgis
 
 from ..models import SupportedFormats
-from ..util import deliver_df, get_dbconn
+from ..util import deliver_df, get_sqlalchemy_conn
 
 router = APIRouter()
 
 
 def handler():
     """Handle the request, return dict"""
-    pgconn = get_dbconn("mesosite")
-
-    df = read_postgis(
-        "SELECT *, extent as geom from networks ORDER by id ASC",
-        pgconn,
-        geom_col="geom",
-        index_col=None,
-    )
+    with get_sqlalchemy_conn("mesosite") as pgconn:
+        df = read_postgis(
+            "SELECT *, extent as geom from networks ORDER by id ASC",
+            pgconn,
+            geom_col="geom",
+            index_col=None,
+        )
     return df
 
 

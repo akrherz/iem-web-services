@@ -26,7 +26,7 @@ from pyiem.network import Table as NetworkTable
 
 from ..models import SupportedFormatsNoGeoJSON
 from ..models.obhistory import ObHistoryDataItem, ObHistorySchema
-from ..util import deliver_df, get_dbconn
+from ..util import deliver_df, get_sqlalchemy_conn
 
 router = APIRouter()
 
@@ -35,21 +35,22 @@ def get_df(network, station, date):
     """Figure out how to get the data being requested."""
     if date == datetime.date.today() and network not in ["ISUSM"]:
         # Use IEM Access
-        pgconn = get_dbconn("iem")
-        return read_sql(
-            "SELECT distinct valid at time zone 'UTC' as utc_valid, "
-            "valid at time zone t.tzname as local_valid, tmpf, dwpf, sknt, "
-            "drct, vsby, skyc1, skyl1, skyc2, skyl2, skyc3, skyl3, skyc4, "
-            "skyl4, relh, feel, alti, mslp, phour, p03i, p24i, "
-            "phour as p01i, raw, gust, max_tmpf_6hr, min_tmpf_6hr, "
-            "array_to_string(wxcodes, ' ') as wxcodes, snowdepth "
-            "from current_log c JOIN stations t on (c.iemid = t.iemid) "
-            "WHERE t.id = %s and t.network = %s and "
-            "date(valid at time zone t.tzname) = %s ORDER by utc_valid ASC",
-            pgconn,
-            params=(station, network, date),
-            index_col=None,
-        )
+        with get_sqlalchemy_conn("iem") as pgconn:
+            df = read_sql(
+                "SELECT distinct valid at time zone 'UTC' as utc_valid, "
+                "valid at time zone t.tzname as local_valid, tmpf, dwpf, sknt, "
+                "drct, vsby, skyc1, skyl1, skyc2, skyl2, skyc3, skyl3, skyc4, "
+                "skyl4, relh, feel, alti, mslp, phour, p03i, p24i, "
+                "phour as p01i, raw, gust, max_tmpf_6hr, min_tmpf_6hr, "
+                "array_to_string(wxcodes, ' ') as wxcodes, snowdepth "
+                "from current_log c JOIN stations t on (c.iemid = t.iemid) "
+                "WHERE t.id = %s and t.network = %s and "
+                "date(valid at time zone t.tzname) = %s ORDER by utc_valid ASC",
+                pgconn,
+                params=(station, network, date),
+                index_col=None,
+            )
+        return df
     nt = NetworkTable(network, only_online=False)
     if station not in nt.sts:
         raise HTTPException(404, "Station + Network unknown to the IEM.")
@@ -61,44 +62,46 @@ def get_df(network, station, date):
     tz = pytz.timezone(tzname)
     if network.find("_ASOS") > 0:
         # Use ASOS
-        pgconn = get_dbconn("asos")
-        return read_sql(
-            "SELECT valid at time zone 'UTC' as utc_valid, "
-            "valid at time zone %s as local_valid, tmpf, dwpf, sknt, drct, "
-            "vsby, skyc1, skyl1, skyc2, skyl2, skyc3, skyl3, skyc4, skyl4, "
-            "relh, feel, alti, mslp, p01i, p03i, p24i, metar as raw, "
-            "p03i, p06i, p24i, max_tmpf_6hr, min_tmpf_6hr, gust, "
-            "array_to_string(wxcodes, ' ') as wxcodes, snowdepth "
-            "from alldata WHERE station = %s and "
-            "valid >= %s and valid < %s ORDER by valid ASC",
-            pgconn,
-            params=(tzname, station, sts, ets),
-            index_col=None,
-        )
+        with get_sqlalchemy_conn("asos") as pgconn:
+            df = read_sql(
+                "SELECT valid at time zone 'UTC' as utc_valid, "
+                "valid at time zone %s as local_valid, tmpf, dwpf, sknt, drct, "
+                "vsby, skyc1, skyl1, skyc2, skyl2, skyc3, skyl3, skyc4, skyl4, "
+                "relh, feel, alti, mslp, p01i, p03i, p24i, metar as raw, "
+                "p03i, p06i, p24i, max_tmpf_6hr, min_tmpf_6hr, gust, "
+                "array_to_string(wxcodes, ' ') as wxcodes, snowdepth "
+                "from alldata WHERE station = %s and "
+                "valid >= %s and valid < %s ORDER by valid ASC",
+                pgconn,
+                params=(tzname, station, sts, ets),
+                index_col=None,
+            )
+        return df
     if network.find("_RWIS") > 0:
         # Use RWIS
-        pgconn = get_dbconn("rwis")
-        return read_sql(
-            "SELECT valid at time zone 'UTC' as utc_valid, "
-            "valid at time zone %s as local_valid, tmpf, dwpf, sknt, drct, "
-            "gust from alldata WHERE station = %s and "
-            "valid >= %s and valid < %s ORDER by valid ASC",
-            pgconn,
-            params=(tzname, station, sts, ets),
-            index_col=None,
-        )
+        with get_sqlalchemy_conn("rwis") as pgconn:
+            df = read_sql(
+                "SELECT valid at time zone 'UTC' as utc_valid, "
+                "valid at time zone %s as local_valid, tmpf, dwpf, sknt, drct, "
+                "gust from alldata WHERE station = %s and "
+                "valid >= %s and valid < %s ORDER by valid ASC",
+                pgconn,
+                params=(tzname, station, sts, ets),
+                index_col=None,
+            )
+        return df
     if network in ["ISUSM", "ISUAG"]:
         # Use ISUAG
-        pgconn = get_dbconn("isuag")
-        df = read_sql(
-            "SELECT valid at time zone 'UTC' as utc_valid, phour, "
-            "valid at time zone %s as local_valid, tmpf, relh, sknt, drct "
-            "from alldata WHERE station = %s and "
-            "valid >= %s and valid < %s ORDER by valid ASC",
-            pgconn,
-            params=(tzname, station, sts, ets),
-            index_col=None,
-        )
+        with get_sqlalchemy_conn("isuag") as pgconn:
+            df = read_sql(
+                "SELECT valid at time zone 'UTC' as utc_valid, phour, "
+                "valid at time zone %s as local_valid, tmpf, relh, sknt, drct "
+                "from alldata WHERE station = %s and "
+                "valid >= %s and valid < %s ORDER by valid ASC",
+                pgconn,
+                params=(tzname, station, sts, ets),
+                index_col=None,
+            )
         # Compute dew point
         if not df.empty:
             try:
@@ -116,27 +119,28 @@ def get_df(network, station, date):
     if network in ["OT", "KCCI", "KELO", "KCRG", "KIMT", "SCAN"]:
         # lazy
         providers = {"OT": "other", "SCAN": "scan"}
-        pgconn = get_dbconn(providers.get(network, "snet"))
-        return read_sql(
-            "SELECT valid at time zone 'UTC' as utc_valid, "
-            "valid at time zone %s as local_valid, tmpf, dwpf, sknt, drct "
-            "from alldata WHERE station = %s and "
-            "valid >= %s and valid < %s ORDER by valid ASC",
-            pgconn,
-            params=(tzname, station, sts, ets),
-            index_col=None,
-        )
+        with get_sqlalchemy_conn(providers.get(network, "snet")) as pgconn:
+            df = read_sql(
+                "SELECT valid at time zone 'UTC' as utc_valid, "
+                "valid at time zone %s as local_valid, tmpf, dwpf, sknt, drct "
+                "from alldata WHERE station = %s and "
+                "valid >= %s and valid < %s ORDER by valid ASC",
+                pgconn,
+                params=(tzname, station, sts, ets),
+                index_col=None,
+            )
+        return df
     if network == "USCRN":
-        pgconn = get_dbconn("other")
-        df = read_sql(
-            "SELECT valid at time zone 'UTC' as utc_valid, "
-            "valid at time zone %s as local_valid, tmpc, rh, "
-            "wind_mps from uscrn_alldata WHERE station = %s and "
-            "valid >= %s and valid < %s ORDER by valid ASC",
-            pgconn,
-            params=(tzname, station, sts, ets),
-            index_col=None,
-        )
+        with get_sqlalchemy_conn("other") as pgconn:
+            df = read_sql(
+                "SELECT valid at time zone 'UTC' as utc_valid, "
+                "valid at time zone %s as local_valid, tmpc, rh, "
+                "wind_mps from uscrn_alldata WHERE station = %s and "
+                "valid >= %s and valid < %s ORDER by valid ASC",
+                pgconn,
+                params=(tzname, station, sts, ets),
+                index_col=None,
+            )
         if df.empty:
             return df
         # Do some unit work
@@ -163,16 +167,16 @@ def get_df(network, station, date):
         return df
     if network.find("_COOP") > 0 or network.find("_DCP") > 0:
         # Use HADS
-        pgconn = get_dbconn("hads")
-        df = read_sql(
-            "SELECT distinct valid at time zone 'UTC' as utc_valid, "
-            "key, value "
-            f"from raw{date.strftime('%Y')} WHERE station = %s and "
-            "valid >= %s and valid < %s ORDER by utc_valid ASC",
-            pgconn,
-            params=(station, sts, ets),
-            index_col=None,
-        )
+        with get_sqlalchemy_conn("hads") as pgconn:
+            df = read_sql(
+                "SELECT distinct valid at time zone 'UTC' as utc_valid, "
+                "key, value "
+                f"from raw{date.strftime('%Y')} WHERE station = %s and "
+                "valid >= %s and valid < %s ORDER by utc_valid ASC",
+                pgconn,
+                params=(station, sts, ets),
+                index_col=None,
+            )
         if df.empty:
             return df
         df = df.pivot_table(

@@ -28,49 +28,50 @@ from sqlalchemy import text
 # Local
 from ...models import SupportedFormats
 from ...models.nws.outlook_by_point import Schema
-from ...util import deliver_df, get_dbconn
+from ...util import deliver_df, get_sqlalchemy_conn
 
 router = APIRouter()
 
 
 def handler(lon, lat, valid):
     """Handle the request, return dict"""
-    pgconn = get_dbconn("postgis")
-
-    df = gpd.read_postgis(
-        text(
+    with get_sqlalchemy_conn("postgis") as pgconn:
+        df = gpd.read_postgis(
+            text(
+                """
+            with opts as (
+                select product_issue, issue, expire, day, id, outlook_type,
+                rank() OVER (PARTITION by day, outlook_type
+                    ORDER by product_issue desc) from spc_outlook
+                where product_issue > :sts and product_issue < :valid),
+            current as (
+                select * from opts where rank = 1),
+            agg as (
+                select geom, day, outlook_type,
+                product_issue at time zone 'UTC' as product_issue,
+                issue at time zone 'UTC' as issue,
+                expire at time zone 'UTC' as expire,
+                o.threshold, rank() OVER (PARTITION by day, outlook_type,
+                category
+                    ORDER by case when o.threshold = 'SIGN'
+                    then 0 else priority end desc), priority, category
+                from spc_outlook_geometries o, current c,
+                spc_outlook_thresholds t
+                WHERE o.threshold = t.threshold and o.spc_outlook_id = c.id and
+                ST_Contains(geom, ST_SetSRID(ST_Point(:lon, :lat), 4326)))
+            SELECT * from agg where rank = 1 or threshold = 'SIGN';
             """
-        with opts as (
-            select product_issue, issue, expire, day, id, outlook_type,
-            rank() OVER (PARTITION by day, outlook_type
-                ORDER by product_issue desc) from spc_outlook
-            where product_issue > :sts and product_issue < :valid),
-        current as (
-            select * from opts where rank = 1),
-        agg as (
-            select geom, day, outlook_type,
-            product_issue at time zone 'UTC' as product_issue,
-            issue at time zone 'UTC' as issue,
-            expire at time zone 'UTC' as expire,
-            o.threshold, rank() OVER (PARTITION by day, outlook_type, category
-                ORDER by case when o.threshold = 'SIGN'
-                then 0 else priority end desc), priority, category
-            from spc_outlook_geometries o, current c, spc_outlook_thresholds t
-            WHERE o.threshold = t.threshold and o.spc_outlook_id = c.id and
-            ST_Contains(geom, ST_SetSRID(ST_Point(:lon, :lat), 4326)))
-        SELECT * from agg where rank = 1 or threshold = 'SIGN';
-        """
-        ),
-        pgconn,
-        geom_col="geom",
-        params={
-            "valid": valid,
-            "sts": valid - timedelta(hours=27),
-            "lat": lat,
-            "lon": lon,
-        },
-        index_col=None,
-    )
+            ),
+            pgconn,
+            geom_col="geom",
+            params={
+                "valid": valid,
+                "sts": valid - timedelta(hours=27),
+                "lat": lat,
+                "lon": lon,
+            },
+            index_col=None,
+        )
     return df.drop(columns=["rank", "priority"], errors="ignore")
 
 

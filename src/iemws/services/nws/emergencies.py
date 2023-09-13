@@ -16,50 +16,49 @@ from sqlalchemy import text
 # Local
 from ...models import SupportedFormats
 from ...models.nws.emergencies import Schema
-from ...util import deliver_df, get_dbconn
+from ...util import deliver_df, get_sqlalchemy_conn
 
 router = APIRouter()
 
 
 def handler():
     """Handle the request, return dict"""
-    pgconn = get_dbconn("postgis")
-
-    df = gpd.read_postgis(
-        text(
+    with get_sqlalchemy_conn("postgis") as pgconn:
+        df = gpd.read_postgis(
+            text(
+                """
+            with county as (
+                select w.wfo, eventid, phenomena, significance,
+                extract(year from issue) as year,
+                min(product_issue at time zone 'UTC') as utc_product_issue,
+                min(init_expire at time zone 'UTC') as utc_init_expire,
+                min(issue at time zone 'UTC') as utc_issue,
+                max(expire at time zone 'UTC') as utc_expire,
+                array_to_string(array_agg(distinct substr(w.ugc, 1, 2)), ',')
+                    as states, st_union(simple_geom) as geo
+                from warnings w JOIN ugcs u on (w.gid = u.gid)
+                where phenomena in ('TO', 'FF') and significance = 'W' and
+                is_emergency
+                GROUP by w.wfo, eventid, phenomena, significance, year),
+            polys as (
+                select wfo, eventid, phenomena,
+                extract(year from polygon_begin) as year, polygon_begin, geom
+                from sbw where phenomena in ('TO', 'FF')
+                and significance = 'W' and is_emergency)
+            select c.year, c.wfo, c.eventid, c.phenomena, c.significance,
+            c.utc_product_issue, c.utc_init_expire, c.utc_issue, c.utc_expire,
+            c.states, coalesce(p.geom, c.geo) as geom,
+            case when p.wfo is not null then 't' else 'f' end as is_sbw
+            from county c LEFT JOIN polys p on
+            (c.wfo = p.wfo and c.eventid = p.eventid and
+            c.phenomena = p.phenomena and c.year = p.year)
+            ORDER by c.utc_issue asc, p.polygon_begin asc
             """
-        with county as (
-            select w.wfo, eventid, phenomena, significance,
-            extract(year from issue) as year,
-            min(product_issue at time zone 'UTC') as utc_product_issue,
-            min(init_expire at time zone 'UTC') as utc_init_expire,
-            min(issue at time zone 'UTC') as utc_issue,
-            max(expire at time zone 'UTC') as utc_expire,
-            array_to_string(array_agg(distinct substr(w.ugc, 1, 2)), ',')
-                as states, st_union(simple_geom) as geo
-            from warnings w JOIN ugcs u on (w.gid = u.gid)
-            where phenomena in ('TO', 'FF') and significance = 'W' and
-            is_emergency
-            GROUP by w.wfo, eventid, phenomena, significance, year),
-        polys as (
-            select wfo, eventid, phenomena,
-            extract(year from polygon_begin) as year, polygon_begin, geom
-            from sbw where phenomena in ('TO', 'FF')
-            and significance = 'W' and is_emergency)
-        select c.year, c.wfo, c.eventid, c.phenomena, c.significance,
-        c.utc_product_issue, c.utc_init_expire, c.utc_issue, c.utc_expire,
-        c.states, coalesce(p.geom, c.geo) as geom,
-        case when p.wfo is not null then 't' else 'f' end as is_sbw
-        from county c LEFT JOIN polys p on
-        (c.wfo = p.wfo and c.eventid = p.eventid and
-        c.phenomena = p.phenomena and c.year = p.year)
-        ORDER by c.utc_issue asc, p.polygon_begin asc
-        """
-        ),
-        pgconn,
-        geom_col="geom",
-        index_col=None,
-    )
+            ),
+            pgconn,
+            geom_col="geom",
+            index_col=None,
+        )
     # NOTE the above has duplicated entries, so we 'dedup'
     df = (
         df.groupby(["year", "wfo", "eventid", "phenomena", "significance"])

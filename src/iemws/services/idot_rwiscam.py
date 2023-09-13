@@ -11,7 +11,7 @@ from ..models import SupportedFormats
 from ..models.idot_rwiscam import IDOTRWIScamSchema
 
 # Local
-from ..util import deliver_df, get_dbconn
+from ..util import deliver_df, get_sqlalchemy_conn
 
 router = APIRouter()
 
@@ -26,30 +26,30 @@ def make_url(fullid, row):
 
 def handler(valid, window):
     """Do the requested work."""
-    pgconn = get_dbconn("mesosite")
-    df = gpd.read_postgis(
-        """
-        with data as (
-            select cam, valid, valid - %s::timestamptz as delta, name, geom
-            from camera_log c JOIN webcams w on (c.cam = w.id)
-            where valid >= %s and valid <= %s and cam ~* 'IDOT-')
-        select cam as fullid,
-        substr(cam, 1, 8) as rwisid,
-        substr(cam, 10, 2)::int as viewid,
-        valid at time zone 'UTC' as utc_valid,
-        case when delta < '0'::interval then -1 * delta else delta end
-            as proximity, name, geom from data
-        ORDER by proximity asc
-        """,
-        pgconn,
-        params=(
-            valid,
-            valid - timedelta(minutes=window),
-            valid + timedelta(minutes=window),
-        ),
-        geom_col="geom",
-        index_col=None,
-    )
+    with get_sqlalchemy_conn("mesosite") as pgconn:
+        df = gpd.read_postgis(
+            """
+            with data as (
+                select cam, valid, valid - %s::timestamptz as delta, name, geom
+                from camera_log c JOIN webcams w on (c.cam = w.id)
+                where valid >= %s and valid <= %s and cam ~* 'IDOT-')
+            select cam as fullid,
+            substr(cam, 1, 8) as rwisid,
+            substr(cam, 10, 2)::int as viewid,
+            valid at time zone 'UTC' as utc_valid,
+            case when delta < '0'::interval then -1 * delta else delta end
+                as proximity, name, geom from data
+            ORDER by proximity asc
+            """,
+            pgconn,
+            params=(
+                valid,
+                valid - timedelta(minutes=window),
+                valid + timedelta(minutes=window),
+            ),
+            geom_col="geom",
+            index_col=None,
+        )
     if not df.empty:
         # Take the first entry for each cam
         df = df.groupby("fullid").first().copy()

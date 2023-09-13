@@ -4,14 +4,13 @@ from fastapi import APIRouter, Query
 from geopandas import read_postgis
 
 from ..models import SupportedFormats
-from ..util import deliver_df, get_dbconn
+from ..util import deliver_df, get_sqlalchemy_conn
 
 router = APIRouter()
 
 
 def handler(pe, duration, days):
     """Handle the request, return dict"""
-    pgconn = get_dbconn("iem")
     sql = f"""
     WITH data as (
         SELECT c.station, c.valid, c.value,
@@ -26,7 +25,8 @@ def handler(pe, duration, days):
     value, lon, lat, geom from data
     where row_number = 1
     """
-    df = read_postgis(sql, pgconn, geom_col="geom")
+    with get_sqlalchemy_conn("iem") as pgconn:
+        df = read_postgis(sql, pgconn, geom_col="geom")
     return df
 
 

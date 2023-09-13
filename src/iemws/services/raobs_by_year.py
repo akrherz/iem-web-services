@@ -10,14 +10,13 @@ from pyiem.network import Table as NetworkTable
 from pyiem.util import utc
 from sqlalchemy import text
 
-from ..util import deliver_df, get_dbconn
+from ..util import deliver_df, get_sqlalchemy_conn
 
 router = APIRouter()
 
 
 def handler(station, year):
     """Handle the request, return dict"""
-    pgconn = get_dbconn("raob")
     stations = [station]
     if station.startswith("_"):
         nt = NetworkTable("RAOB", only_online=False)
@@ -25,15 +24,15 @@ def handler(station, year):
 
     sts = utc(year, 1, 1)
     ets = utc(year + 1, 1, 1)
-
-    df = read_sql(
-        text(
-            "SELECT * from raob_flights where station = ANY(:ids) "
-            "and valid >= :sts and valid < :ets ORDER by valid ASC"
-        ),
-        pgconn,
-        params={"ids": stations, "sts": sts, "ets": ets},
-    )
+    with get_sqlalchemy_conn("raob") as pgconn:
+        df = read_sql(
+            text(
+                "SELECT * from raob_flights where station = ANY(:ids) "
+                "and valid >= :sts and valid < :ets ORDER by valid ASC"
+            ),
+            pgconn,
+            params={"ids": stations, "sts": sts, "ets": ets},
+        )
 
     return df
 

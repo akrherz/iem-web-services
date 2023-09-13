@@ -14,7 +14,7 @@ from fastapi import APIRouter, Query
 from pandas.io.sql import read_sql
 from pyiem.util import utc
 
-from ..util import deliver_df, get_dbconn
+from ..util import deliver_df, get_sqlalchemy_conn
 
 router = APIRouter()
 
@@ -25,27 +25,29 @@ def handler(station, date):
     station3 = station[1:] if station.startswith("K") else station
     sts = utc(date.year, date.month, date.day, 0, 0)
     ets = sts + datetime.timedelta(hours=24)
-    dbconn = get_dbconn("asos")
-    # Get METARs
-    obs = read_sql(
-        "SELECT valid at time zone 'UTC' as utc_valid, metar, skyc1, skyl1, "
-        "skyc2, skyl2, skyc3, skyl3, skyc4, skyl4 "
-        "from alldata where station = %s and valid >= %s "
-        "and valid < %s and report_type != 1 ORDER by valid ASC",
-        dbconn,
-        index_col=None,
-        params=(station3, sts, ets),
-    )
-    # Get SCP
-    scp = read_sql(
-        "SELECT valid at time zone 'UTC' as utc_scp_valid, mid, high, "
-        "cldtop1, cldtop2, eca, source from scp_alldata "
-        "where station = %s and valid >= %s "
-        "and valid < %s ORDER by valid ASC",
-        dbconn,
-        index_col=None,
-        params=(station, sts, ets),
-    )
+    with get_sqlalchemy_conn("asos") as dbconn:
+        # Get METARs
+        obs = read_sql(
+            """
+            SELECT valid at time zone 'UTC' as utc_valid, metar, skyc1, skyl1,
+            skyc2, skyl2, skyc3, skyl3, skyc4, skyl4
+            from alldata where station = %s and valid >= %s
+            and valid < %s and report_type != 1 ORDER by valid ASC
+            """,
+            dbconn,
+            index_col=None,
+            params=(station3, sts, ets),
+        )
+        # Get SCP
+        scp = read_sql(
+            "SELECT valid at time zone 'UTC' as utc_scp_valid, mid, high, "
+            "cldtop1, cldtop2, eca, source from scp_alldata "
+            "where station = %s and valid >= %s "
+            "and valid < %s ORDER by valid ASC",
+            dbconn,
+            index_col=None,
+            params=(station, sts, ets),
+        )
     # Figure out how many unique sources we have
     df = None
     for source in scp["source"].unique():

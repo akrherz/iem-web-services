@@ -11,7 +11,7 @@ from ..models import SupportedFormats
 from ..models.idot_dashcam import IDOTDashcamSchema
 
 # Local
-from ..util import deliver_df, get_dbconn
+from ..util import deliver_df, get_sqlalchemy_conn
 
 router = APIRouter()
 
@@ -26,20 +26,20 @@ def make_url(row):
 
 def handler(valid, window):
     """Do the requested work."""
-    pgconn = get_dbconn("postgis")
-    df = read_postgis(
-        "SELECT row_number() OVER() as index, label as cid, "
-        "valid as utc_valid, geom, ST_X(geom) as lon, "
-        "ST_Y(geom) as lat from idot_dashcam_log WHERE valid >= %s "
-        "and valid <= %s ORDER by valid ASC",
-        pgconn,
-        params=(
-            valid - timedelta(minutes=window),
-            valid + timedelta(minutes=window),
-        ),
-        geom_col="geom",
-        index_col=None,
-    )
+    with get_sqlalchemy_conn("postgis") as pgconn:
+        df = read_postgis(
+            "SELECT row_number() OVER() as index, label as cid, "
+            "valid as utc_valid, geom, ST_X(geom) as lon, "
+            "ST_Y(geom) as lat from idot_dashcam_log WHERE valid >= %s "
+            "and valid <= %s ORDER by valid ASC",
+            pgconn,
+            params=(
+                valid - timedelta(minutes=window),
+                valid + timedelta(minutes=window),
+            ),
+            geom_col="geom",
+            index_col=None,
+        )
     if not df.empty:
         df["imgurl"] = df.apply(make_url, axis=1)
         df["utc_valid"] = df["utc_valid"].dt.strftime("%Y-%m-%dT%H:%MZ")
