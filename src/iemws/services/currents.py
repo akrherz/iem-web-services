@@ -100,8 +100,8 @@ def handler(
     pgconn = get_dbconn("iem")
     params = {}
     if station is not None:
-        sql = SQL.replace("REPLACEME", "t.id in :ids and")
-        params["ids"] = tuple(station)
+        sql = SQL.replace("REPLACEME", "t.id = ANY(:ids) and")
+        params["ids"] = list(station)
     elif networkclass is not None and wfo is not None:
         sql = SQL.replace(
             "REPLACEME", "t.wfo = :wfo and t.network ~* :network and"

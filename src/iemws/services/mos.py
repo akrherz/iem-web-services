@@ -44,8 +44,8 @@ def find_runtime(station, model):
     cursor = util.get_dbconn("mos").cursor()
     cursor.execute(
         "SELECT max(runtime) from alldata WHERE model = %s and "
-        "station in %s and runtime > now() - '48 hours'::interval",
-        (model, tuple(station)),
+        "station = ANY(%s) and runtime > now() - '48 hours'::interval",
+        (model, station),
     )
     if cursor.rowcount == 0:
         raise HTTPException(404, detail="could not find most recent model run")
@@ -65,11 +65,11 @@ def handler(station, model, runtime, fmt):
             "SELECT *, t06_1 ||'/'||t06_2 as t06, t12_1 ||'/'|| t12_2 as t12, "
             "runtime at time zone 'UTC' as runtime_utc, "
             "ftime at time zone 'UTC' as ftime_utc "
-            "from alldata where model = :model and station in :ids and "
+            "from alldata where model = :model and station = ANY(:ids) and "
             "runtime = :runtime ORDER by station ASC, ftime ASC"
         ),
         get_dbconn("mos"),
-        params={"model": model, "ids": tuple(station), "runtime": runtime},
+        params={"model": model, "ids": station, "runtime": runtime},
         index_col=None,
     )
     if df.empty:

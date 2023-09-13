@@ -6,6 +6,13 @@ from iemws.main import app
 client = TestClient(app)
 
 
+def test_station():
+    """Test that we can query by station."""
+    req = client.get("/currents.json?station=AMW")
+    res = req.json()
+    assert res is not None
+
+
 def test_basic():
     """Test that we need not provide a WFO."""
     req = client.get("/currents.json")
