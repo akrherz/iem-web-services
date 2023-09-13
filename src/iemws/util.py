@@ -58,4 +58,5 @@ def get_dbconn(name):
     # Dragons: We set this now so that any subquent database reads will
     # properly load timestamptz column types into datetime objects
     os.environ["PGTZ"] = "UTC"
-    return util.get_dbconnstr(name)
+    # Le Sigh
+    return util.get_dbconnstr(name).replace("postgresql", "postgresql+psycopg")

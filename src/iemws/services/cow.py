@@ -217,7 +217,7 @@ class COWSession:
             from sbw w WHERE status = 'NEW' {self.sql_wfo_limiter()}
             and issue >= :begints and issue < :endts and expire < :endts
             and significance = 'W'
-            and phenomena in :phenomena {self.sql_tag_limiter()}
+            and phenomena = ANY(:phenomena) {self.sql_tag_limiter()}
         ),
         countybased as (
             SELECT w.wfo, phenomena, eventid, significance,
@@ -232,7 +232,7 @@ class COWSession:
             w.gid is not null {self.sql_wfo_limiter()} and
             issue >= :begints and issue < :endts and expire < :endts
             and significance = 'W'
-            and phenomena in :phenomena
+            and phenomena = ANY(:phenomena)
             {self.sql_fcster_limiter()}
             GROUP by w.wfo, phenomena, eventid, significance, year, fcster
         )
@@ -254,7 +254,7 @@ class COWSession:
             params={
                 "begints": self.begints,
                 "endts": self.endts,
-                "phenomena": tuple(self.phenomena),
+                "phenomena": self.phenomena,
             },
             crs={"init": "epsg:4326"},
             index_col="key",
@@ -266,8 +266,8 @@ class COWSession:
         )
         self.events["verify"] = False
         self.events["lead0"] = None
-        self.events["areaverify"] = 0
-        self.events["sharedborder"] = 0
+        self.events["areaverify"] = 0.0
+        self.events["sharedborder"] = 0.0
         if self.events.empty:
             return
         s2163 = self.events["geom"].to_crs(epsg=2163)
@@ -319,7 +319,7 @@ class COWSession:
                 from sbw w WHERE status = 'NEW' {self.sql_wfo_limiter()}
                 and issue >= :begints and issue < :endts and expire < :endts
                 and significance = 'W'
-                and phenomena in :phenomena {self.sql_tag_limiter()}),
+                and phenomena = ANY(:phenomena) {self.sql_tag_limiter()}),
             countybased as (
                 SELECT ST_Union(ST_Buffer(u.simple_geom, 0)) as geom,
                 w.wfo, phenomena, eventid, significance,
@@ -328,7 +328,7 @@ class COWSession:
                 w.gid is not null {self.sql_wfo_limiter()} and
                 issue >= :begints and issue < :endts and expire < :endts
                 and significance = 'W'
-                and phenomena in :phenomena
+                and phenomena = ANY(:phenomena)
                 {self.sql_fcster_limiter()}
                 GROUP by w.wfo, phenomena, eventid, significance, year,
                 fcster),
@@ -355,7 +355,7 @@ class COWSession:
             params={
                 "begints": self.begints,
                 "endts": self.endts,
-                "phenomena": tuple(self.phenomena),
+                "phenomena": self.phenomena,
             },
             index_col="key",
         )

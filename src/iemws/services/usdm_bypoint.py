@@ -18,6 +18,7 @@ def run(sdate, edate, lon, lat):
     """Do the work, please"""
     pgconn = get_dbconn("postgis")
 
+    giswkt = f"POINT({lon} {lat})"
     df = read_sql(
         """
         with timedomain as (
@@ -27,7 +28,7 @@ def run(sdate, edate, lon, lat):
         hits as (
             SELECT valid, max(dm) as category from usdm WHERE
             ST_Contains(
-                geom, ST_SetSRID(ST_GeomFromEWKT('POINT(%s %s)'),4326))
+                geom, ST_SetSRID(ST_GeomFromEWKT(%s),4326))
             and valid >= %s and valid <= %s
             GROUP by valid
         )
@@ -36,7 +37,7 @@ def run(sdate, edate, lon, lat):
         ORDER by t.valid ASC
         """,
         pgconn,
-        params=(sdate, edate, lon, lat, sdate, edate),
+        params=(sdate, edate, giswkt, sdate, edate),
         index_col=None,
     )
     df["category"] = df["category"].astype("Int64")
