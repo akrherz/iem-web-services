@@ -47,11 +47,11 @@ def handler(begints, endts, wfo, only_new, ph):
     statuslimiter = ""
     phlimiter = ""
     if ph is not None:
-        params["ph"] = tuple(ph)
-        phlimiter = "AND phenomena IN :ph "
+        params["ph"] = ph
+        phlimiter = "AND phenomena = ANY(:ph) "
     if wfo is not None:
-        params["wfo"] = tuple(wfo)
-        wfolimiter = " and wfo in :wfo "
+        params["wfo"] = wfo
+        wfolimiter = " and wfo = ANY(:wfo) "
     if only_new:
         statuslimiter = " and status = 'NEW' "
     with get_sqlalchemy_conn("postgis") as pgconn:
