@@ -1,0 +1,15 @@
+dependencies:
+  - codecov
+  #
+  - fastapi
+  - geopandas
+  # for testing
+  - httpx
+  - metpy
+  - pygrib
+  - pyproj
+  - pytest
+  - pytest-runner
+  - sqlalchemy
+  # For logging
+  - uvicorn
