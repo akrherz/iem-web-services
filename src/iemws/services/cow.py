@@ -254,7 +254,7 @@ class COWSession:
                 "endts": self.endts,
                 "phenomena": self.phenomena,
             },
-            crs={"init": "epsg:4326"},
+            crs=4326,
             index_col="key",
         )
         self.events = self.events.assign(
@@ -289,7 +289,7 @@ class COWSession:
             dbconn,
             params=(self.begints, self.endts, self.hailsize, self.wind),
             geom_col="geom",
-            crs={"init": "epsg:4326"},
+            crs=4326,
         )
         self.stormreports["events"] = [
             [] for _ in range(len(self.stormreports.index))
