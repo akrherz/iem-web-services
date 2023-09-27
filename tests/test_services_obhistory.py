@@ -27,10 +27,16 @@ def test_uscrn_has_data():
     """Test USCRN request for historical data."""
     req = client.get(
         "/obhistory.json",
-        params={"network": "USCRN", "station": "96404", "date": "2020-08-08"},
+        params={
+            "network": "USCRN",
+            "station": "96404",
+            "date": "2020-08-08",
+            "full": True,
+        },
     )
     res = req.json()
     assert len(res["data"]) == 252
+    assert "vsby" in res["data"][0]
 
 
 def test_uscrn_has_nodata():

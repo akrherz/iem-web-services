@@ -214,7 +214,7 @@ def compute(df, full):
         df["local_valid"] = df["local_valid"].dt.strftime("%Y-%m-%dT%H:%M")
     # Make sure we have all columns
     if full:
-        for item in ObHistoryDataItem.__fields__:
+        for item in ObHistoryDataItem.model_fields:
             if item not in df.columns:
                 df[item] = np.nan
     # replace any None values with np.nan
