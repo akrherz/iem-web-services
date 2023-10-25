@@ -28,10 +28,15 @@ place to see what I am up to.
 Please don't sue Iowa State University when daryl herzmann gets hit by a bus
 someday and then entire IEM goes away!
 """
+import threading
+import time
 import warnings
+from collections import namedtuple
 from logging.config import dictConfig
+from queue import Queue
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
+from pyiem.util import get_dbconn
 from shapely.errors import ShapelyDeprecationWarning
 
 from .config import log_config
@@ -108,6 +113,59 @@ tags_metadata = [
 ]
 
 dictConfig(log_config)
+# Queue for writing telemetry data to database
+TELEMETRY_QUEUE = Queue()
+TELEMETRY_QUEUE_THREAD = {"worker": None, "dbconn": None}
+TELEMETRY = namedtuple(
+    "TELEMETRY",
+    ["timing", "status_code", "client_addr", "app", "request_uri"],
+)
+
+
+def _writer_thread():
+    """Runs for ever and writes telemetry data to the database."""
+    while True:
+        data = TELEMETRY_QUEUE.get()
+
+        def _writer():
+            """Actually write the data."""
+            if TELEMETRY_QUEUE_THREAD["dbconn"] is None:
+                TELEMETRY_QUEUE_THREAD["dbconn"] = get_dbconn("mesosite")
+            cursor = TELEMETRY_QUEUE_THREAD["dbconn"].cursor()
+            cursor.execute(
+                """
+                insert into website_telemetry(timing, status_code, client_addr,
+                app, request_uri) values (%s, %s, %s, %s, %s)
+                """,
+                (
+                    data.timing,
+                    data.status_code,
+                    data.client_addr,
+                    data.app,
+                    data.request_uri,
+                ),
+            )
+            cursor.close()
+            TELEMETRY_QUEUE_THREAD["dbconn"].commit()
+
+        try:
+            _writer()
+        except Exception as exp:
+            print(exp)
+            TELEMETRY_QUEUE_THREAD["dbconn"] = None
+
+
+def _add_to_queue(data):
+    """Adds data to queue, ensures a thread is running to process."""
+    if TELEMETRY_QUEUE_THREAD["worker"] is None:
+        TELEMETRY_QUEUE_THREAD["worker"] = threading.Thread(
+            target=_writer_thread,
+            name="telemetry",
+            daemon=True,
+        )
+        TELEMETRY_QUEUE_THREAD["worker"].start()
+    TELEMETRY_QUEUE.put(data)
+
 
 app = FastAPI(
     root_path="/api/1",
@@ -115,6 +173,31 @@ app = FastAPI(
     title="IEM API v1",
     openapi_tags=tags_metadata,
 )
+
+
+@app.middleware("http")
+async def record_request_timing(request: Request, call_next):
+    """
+    A middleware to record request timing.
+    """
+    start_time = time.time()
+    response = await call_next(request)
+    remote_addr = (
+        request.headers.get("X-Forwarded-For", "").split(",")[0].strip()
+        or request.client.host
+    )
+    _add_to_queue(
+        TELEMETRY(
+            time.time() - start_time,
+            response.status_code,
+            remote_addr,
+            request.url.path,
+            request.url.path + "?" + request.url.query,
+        )
+    )
+
+    return response
+
 
 # Unexpected Exception Handling, works in gunicorn, but not uvicorn??
 app.add_exception_handler(Exception, handle_exception)
