@@ -37,15 +37,17 @@ def get_df(network, station, date):
         # Use IEM Access
         with get_sqlalchemy_conn("iem") as pgconn:
             df = read_sql(
-                "SELECT distinct valid at time zone 'UTC' as utc_valid, "
-                "valid at time zone t.tzname as local_valid, tmpf, dwpf, sknt, "
-                "drct, vsby, skyc1, skyl1, skyc2, skyl2, skyc3, skyl3, skyc4, "
-                "skyl4, relh, feel, alti, mslp, phour, p03i, p24i, "
-                "phour as p01i, raw, gust, max_tmpf_6hr, min_tmpf_6hr, "
-                "array_to_string(wxcodes, ' ') as wxcodes, snowdepth "
-                "from current_log c JOIN stations t on (c.iemid = t.iemid) "
-                "WHERE t.id = %s and t.network = %s and "
-                "date(valid at time zone t.tzname) = %s ORDER by utc_valid ASC",
+                """
+                SELECT distinct valid at time zone 'UTC' as utc_valid,
+                valid at time zone t.tzname as local_valid, tmpf, dwpf, sknt,
+                drct, vsby, skyc1, skyl1, skyc2, skyl2, skyc3, skyl3, skyc4,
+                skyl4, relh, feel, alti, mslp, phour, p03i, p24i,
+                phour as p01i, raw, gust, max_tmpf_6hr, min_tmpf_6hr,
+                array_to_string(wxcodes, ' ') as wxcodes, snowdepth
+                from current_log c JOIN stations t on (c.iemid = t.iemid)
+                WHERE t.id = %s and t.network = %s and
+                date(valid at time zone t.tzname) = %s ORDER by utc_valid ASC
+                """,
                 pgconn,
                 params=(station, network, date),
                 index_col=None,
@@ -64,14 +66,16 @@ def get_df(network, station, date):
         # Use ASOS
         with get_sqlalchemy_conn("asos") as pgconn:
             df = read_sql(
-                "SELECT valid at time zone 'UTC' as utc_valid, "
-                "valid at time zone %s as local_valid, tmpf, dwpf, sknt, drct, "
-                "vsby, skyc1, skyl1, skyc2, skyl2, skyc3, skyl3, skyc4, skyl4, "
-                "relh, feel, alti, mslp, p01i, p03i, p24i, metar as raw, "
-                "p03i, p06i, p24i, max_tmpf_6hr, min_tmpf_6hr, gust, "
-                "array_to_string(wxcodes, ' ') as wxcodes, snowdepth "
-                "from alldata WHERE station = %s and "
-                "valid >= %s and valid < %s ORDER by valid ASC",
+                """
+                SELECT valid at time zone 'UTC' as utc_valid,
+                valid at time zone %s as local_valid, tmpf, dwpf, sknt, drct,
+                vsby, skyc1, skyl1, skyc2, skyl2, skyc3, skyl3, skyc4, skyl4,
+                relh, feel, alti, mslp, p01i, p03i, p24i, metar as raw,
+                p03i, p06i, p24i, max_tmpf_6hr, min_tmpf_6hr, gust,
+                array_to_string(wxcodes, ' ') as wxcodes, snowdepth
+                from alldata WHERE station = %s and
+                valid >= %s and valid < %s ORDER by valid ASC
+                """,
                 pgconn,
                 params=(tzname, station, sts, ets),
                 index_col=None,
@@ -81,10 +85,12 @@ def get_df(network, station, date):
         # Use RWIS
         with get_sqlalchemy_conn("rwis") as pgconn:
             df = read_sql(
-                "SELECT valid at time zone 'UTC' as utc_valid, "
-                "valid at time zone %s as local_valid, tmpf, dwpf, sknt, drct, "
-                "gust from alldata WHERE station = %s and "
-                "valid >= %s and valid < %s ORDER by valid ASC",
+                """
+                SELECT valid at time zone 'UTC' as utc_valid,
+                valid at time zone %s as local_valid, tmpf, dwpf, sknt, drct,
+                gust from alldata WHERE station = %s and
+                valid >= %s and valid < %s ORDER by valid ASC
+                """,
                 pgconn,
                 params=(tzname, station, sts, ets),
                 index_col=None,

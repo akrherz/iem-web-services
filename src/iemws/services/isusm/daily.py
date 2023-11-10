@@ -99,7 +99,8 @@ def get_df_isuag(sdate, edate, gddbase, gddceil):
             )
             select a.*, st_x(geom) as lon, st_y(geom) as lat, geom, name,
             plot_name as city from
-            agg a JOIN stations t on (a.station = t.id) WHERE t.network = 'ISUAG'
+            agg a JOIN stations t on (a.station = t.id)
+            WHERE t.network = 'ISUAG'
             """,
             pgconn,
             params=(
@@ -138,7 +139,8 @@ def get_df_isusm(sdate, edate, gddbase, gddceil):
                     :gddbase, :gddceil, c2f(t4_c_max_qc), c2f(t4_c_min_qc)))
                     as sgdd,
                 sum(gddxx(
-                    :gddbase, :gddceil, c2f(tair_c_max_qc), c2f(tair_c_min_qc)))
+                    :gddbase, :gddceil, c2f(tair_c_max_qc),
+                    c2f(tair_c_min_qc)))
                     as gdd,
                 sum(slrkj_tot_qc) / 1000. as srad,
                 sum(rain_in_tot_qc) as precip
