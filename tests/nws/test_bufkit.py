@@ -37,13 +37,13 @@ def test_docustring(url):
 def test_bad_model():
     """Test that an error comes for a bad model."""
     res = client.get("/nws/bufkit.json?model=Q")
-    assert res.status_code == 500
+    assert res.status_code == 422
 
 
 def test_setting_runtime_but_no_runtime():
     """Test this combo."""
     res = client.get("/nws/bufkit.json?runtime=2021-01-01T00:00&station=KDSM")
-    assert res.status_code == 500
+    assert res.status_code == 422
 
 
 def test_nam4km():

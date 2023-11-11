@@ -31,6 +31,8 @@ station picked is not an exact science.
 current UTC timestamp to locate a forecast hour.  It is always best to
 specify both or set `fall=1` to get all forecast hours for that `runtime`.
 
+The service will return a HTTP status code of 422 for requests that are
+slightly not what we expect.
 """
 import json
 import os
@@ -211,7 +213,7 @@ def handler(ctx):
         lon = ctx["lon"]
         lat = ctx["lat"]
         if lat is None or lon is None:
-            raise HTTPException(500, detail="Need to provide lat/lon")
+            raise HTTPException(422, detail="Need to provide lat/lon")
         df = LOCS[LOCS["model"] == model]
         dist = ((df["lat"] - lat) ** 2 + (df["lon"] - lon) ** 2) ** 0.5
         idxs = dist.sort_values(ascending=True).index.values[:10]
@@ -225,7 +227,7 @@ def handler(ctx):
                 row = LOCS[(LOCS["model"] == model) & (LOCS["sid"] == station)]
             if row.empty:
                 raise HTTPException(
-                    500,
+                    422,
                     detail=f"Unknown station '{station}' for model '{model}'",
                 )
         # Possible that row is a DataFrame
@@ -283,7 +285,7 @@ def handler(ctx):
             lon = float(row["lon"])
             break
     if sz == 0:
-        raise HTTPException(500, detail="Could not find any profile.")
+        raise HTTPException(422, detail="Could not find any profile.")
     if ctx["fmt"] == "txt":
         return sio.getvalue()
 
@@ -311,7 +313,7 @@ def handler(ctx):
         fhours = stndf.index.values
     for fhour in fhours:
         if fhour not in sndf.index:
-            raise HTTPException(500, f"Failed to find forecast hour {fhour}")
+            raise HTTPException(422, f"Failed to find forecast hour {fhour}")
         levels = sndf[sndf["STIM"] == fhour].drop("STIM", axis=1)
         res["profiles"].append(
             {
@@ -344,7 +346,7 @@ def service(
 ):
     """Replaced above."""
     if model not in ["GFS", "HRRR", "NAM", "NAM4KM", "RAP"]:
-        raise HTTPException(500, "Invalid model parameter provided.")
+        raise HTTPException(422, "Invalid model parameter provided.")
     ctx = {
         "fmt": fmt,
         "lon": lon,
