@@ -31,7 +31,8 @@ def handler(valid):
             text(
                 """
             select station, network, value, geom, wfo, ugc_county,
-            st_x(geom) as longitude, st_y(geom) as latitude, name from
+            valid at time zone 'UTC' as utc_valid,
+            st_x(geom) as longitude, st_y(geom) as latitude, name, state from
             raw r, stations t where valid = :valid and key = 'SFQRZZZ'
             and r.station = t.id and
             (t.network ~* 'COOP' or t.network ~* 'DCP')
