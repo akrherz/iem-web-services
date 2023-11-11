@@ -1,0 +1,13 @@
+"""Test the nws/snowfall_6hour service."""
+
+from fastapi.testclient import TestClient
+from iemws.main import app
+
+client = TestClient(app)
+
+
+def test_basic():
+    """Test basic calls."""
+    service = "/nws/snowfall_6hour.geojson?valid=2023-11-10T12:00:00Z"
+    res = client.get(service).json()
+    assert res["features"][0]["properties"]["station"] == "DMX"
