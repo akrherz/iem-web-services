@@ -1,4 +1,4 @@
-COPY uscrn_t2020(station,valid,tmpc,precip_mm,srad,srad_flag,skinc,skinc_flag,skinc_type,rh,rh_flag,vsm5,soilc5,wetness,wetness_flag,wind_mps,wind_mps_flag) FROM STDIN (FORMAT CSV);
+COPY t2020(station,valid,tmpc,precip_mm,srad,srad_flag,skinc,skinc_flag,skinc_type,rh,rh_flag,vsm5,soilc5,wetness,wetness_flag,wind_mps,wind_mps_flag) FROM STDIN (FORMAT CSV);
 96404,2020-08-08 00:05:00-05,13.3,0,12,0,11.6,C,0,62,0,,,969,0,0.18,0
 96404,2020-08-08 00:10:00-05,13.5,0,11,0,11.3,C,0,59,0,,,969,0,0.32,0
 96404,2020-08-08 00:15:00-05,13.2,0,10,0,10.9,C,0,61,0,,,968,0,0.12,0

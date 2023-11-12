@@ -137,11 +137,11 @@ def get_df(network, station, date):
             )
         return df
     if network == "USCRN":
-        with get_sqlalchemy_conn("other") as pgconn:
+        with get_sqlalchemy_conn("uscrn") as pgconn:
             df = read_sql(
                 "SELECT valid at time zone 'UTC' as utc_valid, "
                 "valid at time zone %s as local_valid, tmpc, rh, "
-                "wind_mps from uscrn_alldata WHERE station = %s and "
+                "wind_mps from alldata WHERE station = %s and "
                 "valid >= %s and valid < %s ORDER by valid ASC",
                 pgconn,
                 params=(tzname, station, sts, ets),
