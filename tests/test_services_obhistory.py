@@ -57,3 +57,12 @@ def test_snet_has_nodata():
     )
     res = req.json()
     assert len(res["data"]) == 0
+
+
+def test_scan():
+    """Test SCAN request."""
+    req = client.get(
+        "/obhistory.json",
+        params={"network": "SCAN", "station": "S2031", "date": "2020-08-08"},
+    )
+    assert req.status_code == 200

@@ -33,7 +33,7 @@ router = APIRouter()
 
 def get_df(network, station, date):
     """Figure out how to get the data being requested."""
-    if date == datetime.date.today() and network not in ["ISUSM"]:
+    if date == datetime.date.today() and network not in ["ISUSM", "SCAN"]:
         # Use IEM Access
         with get_sqlalchemy_conn("iem") as pgconn:
             df = read_sql(
@@ -122,9 +122,28 @@ def get_df(network, station, date):
             except TypeError:
                 df["dwpf"] = np.nan
         return df
-    if network in ["OT", "KCCI", "KELO", "KCRG", "KIMT", "SCAN"]:
+    if network == "SCAN":
+        with get_sqlalchemy_conn("scan") as pgconn:
+            df = read_sql(
+                """
+                SELECT valid at time zone 'UTC' as utc_valid,
+                valid at time zone %s as local_valid, tmpf, dwpf, sknt, drct,
+                srad, relh, c1tmpf as soilt2, c2tmpf as soilt4,
+                c3tmpf as soilt8, c4tmpf as soilt20, c5tmpf as soilt40,
+                c1smv as soilm2, c2smv as soilm4, c3smv as soilm8,
+                c4smv as soilm20, c5smv as soilm40, phour
+                from alldata WHERE station = %s and
+                valid >= %s and valid < %s ORDER by valid ASC
+                """,
+                pgconn,
+                params=(tzname, station, sts, ets),
+                index_col=None,
+            )
+        return df
+
+    if network in ["OT", "KCCI", "KELO", "KCRG", "KIMT"]:
         # lazy
-        providers = {"OT": "other", "SCAN": "scan"}
+        providers = {"OT": "other"}
         with get_sqlalchemy_conn(providers.get(network, "snet")) as pgconn:
             df = read_sql(
                 "SELECT valid at time zone 'UTC' as utc_valid, "
