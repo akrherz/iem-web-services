@@ -27,6 +27,8 @@ class Item(BaseModel):
         ...,
         title="IEM identifier for NWS Text Product that was a LSR Summary.",
     )
+    lon: float = Field(..., title="Longitude of the report")
+    lat: float = Field(..., title="Latitude of the report")
 
 
 class Schema(BaseModel):
