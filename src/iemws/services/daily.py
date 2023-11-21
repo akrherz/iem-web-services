@@ -123,7 +123,10 @@ def service(
         None, description="IEM Station Identifier", max_length=20
     ),
     date: datetime.date = Query(
-        None, description="Local station calendar date"
+        None,
+        description="Local station calendar date",
+        ge=datetime.date(1928, 1, 1),
+        le=(datetime.date.today() + datetime.timedelta(days=1)),
     ),
     month: int = Query(None, description="Local station month"),
     year: int = Query(None, ge=1928, le=2030, description="Local station day"),
