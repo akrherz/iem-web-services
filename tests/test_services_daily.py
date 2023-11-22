@@ -42,3 +42,17 @@ def test_climate_date():
     )
     res = req.json()
     assert res is not None
+
+
+def test_asos_date():
+    """Test a ASOS station query."""
+    req = client.get("/daily.json?date=2023-01-01&network=IA_ASOS&station=AMW")
+    assert req.status_code == 200
+
+
+def test_asos_year_month():
+    """Test a ASOS station query."""
+    req = client.get(
+        "/daily.json?year=2023&month=1&network=IA_ASOS&station=AMW"
+    )
+    assert req.status_code == 200

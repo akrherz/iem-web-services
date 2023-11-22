@@ -89,7 +89,7 @@ def get_df(network, station, date, month, year):
             ).replace(day=1)
             params["sts"] = datetime.date(year, month, 1)
             params["ets"] = dt2
-            dl = " and day >= :sts and day < :dt2 "
+            dl = " and day >= :sts and day < :ets "
         with get_sqlalchemy_conn("iem") as conn:
             df = read_postgis(
                 text(
