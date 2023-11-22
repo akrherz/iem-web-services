@@ -24,6 +24,7 @@
 127.0.0.1 iemdb-coop.local
 127.0.0.1 iemdb-isuag.local
 127.0.0.1 iemdb-portfolio.local
+127.0.0.1 iemdb-raob.local
 127.0.0.1 iemdb-smos.local
 127.0.0.1 iemdb-talltowers.local
 127.0.0.1 iemdb-td.local

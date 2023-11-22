@@ -2,3 +2,7 @@
 line-length = 79
 select = ["E", "F", "I"]
 target-version = "py39"
+
+[tool.setuptools_scm]
+version_scheme = "post-release"
+
