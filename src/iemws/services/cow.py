@@ -157,7 +157,7 @@ class COWSession:
             if pd.isnull(stat):
                 self.stats[key] = None
 
-    def sql_lsr_limiter(self):
+    def lsr_limiter_list(self) -> list:
         """How to limit LSR types"""
         # This adds in some extra things that the database will ignore
         ltypes = self.lsrtype.copy()
@@ -172,36 +172,25 @@ class COWSession:
             ltypes.extend(["M", "W", "h"])
         if "DS" in self.lsrtype:
             ltypes.append("2")
-        if len(ltypes) == 1:
-            return f" and type = '{ltypes[0]}'"
-        return f" and type in {tuple(ltypes)} "
+        return ltypes
 
     def sql_fcster_limiter(self):
         """Should we limit the fcster column?"""
-        if self.fcster is None:
-            return " "
-        return f" and fcster ILIKE '{self.fcster}' "
-
-    def sql_wfo_limiter(self):
-        """get the SQL for how we limit WFOs"""
-        if "_ALL" in self.wfo or not self.wfo:
-            return " "
-        if len(self.wfo) == 1:
-            return f" and w.wfo = '{self.wfo[0]}' "
-        return f" and w.wfo in {tuple(self.wfo)} "
+        return " " if self.fcster is None else " and fcster ILIKE :fcster "
 
     def sql_tag_limiter(self):
         """Do we need to limit the events based on tags"""
         if not self.limitwarns:
             return " "
         return (
-            f" and ((w.windtag >= {self.wind} or "
-            f"w.hailtag >= {self.hailsize}) or "
+            " and ((w.windtag >= :wind or "
+            "w.hailtag >= :hailsize) or "
             " (w.windtag is null and w.hailtag is null)) "
         )
 
     def load_events(self, dbconn):
         """Build out the listing of events based on the request"""
+        wlimit = "" if not self.wfo else " and w.wfo = ANY(:wfos)"
         self.events = gpd.read_postgis(
             text(
                 f"""
@@ -212,7 +201,7 @@ class COWSession:
             ST_perimeter(ST_transform(geom,2163)) as perimeter,
             ST_xmax(geom) as lon0, ST_ymax(geom) as lat0,
             extract(year from issue at time zone 'UTC') as year
-            from sbw w WHERE status = 'NEW' {self.sql_wfo_limiter()}
+            from sbw w WHERE status = 'NEW' {wlimit}
             and issue >= :begints and issue < :endts and expire < :endts
             and significance = 'W'
             and phenomena = ANY(:phenomena) {self.sql_tag_limiter()}
@@ -227,7 +216,7 @@ class COWSession:
             max(expire at time zone 'UTC') as mexpire,
             extract(year from issue at time zone 'UTC') as year, w.fcster
             from warnings w JOIN ugcs u on (u.gid = w.gid) WHERE
-            w.gid is not null {self.sql_wfo_limiter()} and
+            w.gid is not null {wlimit} and
             issue >= :begints and issue < :endts and expire < :endts
             and significance = 'W'
             and phenomena = ANY(:phenomena)
@@ -253,6 +242,10 @@ class COWSession:
                 "begints": self.begints,
                 "endts": self.endts,
                 "phenomena": self.phenomena,
+                "wfos": self.wfo,
+                "fcster": self.fcster,
+                "wind": self.wind,
+                "hailsize": self.hailsize,
             },
             crs=4326,
             index_col="key",
@@ -273,21 +266,32 @@ class COWSession:
 
     def load_stormreports(self, dbconn):
         """Build out the listing of storm reports based on the request"""
+        params = {
+            "begints": self.begints,
+            "ltypes": self.lsr_limiter_list(),
+            "endts": self.endts,
+            "hailsize": self.hailsize,
+            "wind": self.wind,
+            "wfos": self.wfo,
+        }
+        wlimit = "" if not self.wfo else " and wfo = ANY(:wfos)"
         self.stormreports = gpd.read_postgis(
-            f"""
+            text(
+                f"""
         SELECT distinct valid at time zone 'UTC' as valid,
         type, magnitude, city, county, state,
         source, remark, wfo, typetext, ST_x(geom) as lon0, ST_y(geom) as lat0,
         geom
-        from lsrs w WHERE valid >= %s and valid <= %s
-        {self.sql_wfo_limiter()} {self.sql_lsr_limiter()}
+        from lsrs w WHERE valid >= :begints and valid <= :endts
+        {wlimit} and type = ANY(:ltypes)
         and ((type = 'M' and magnitude >= 34) or type = '2' or
-        (type in ('H', 'h') and magnitude >= %s) or type = 'W' or
-         type = 'T' or (type = 'G' and magnitude >= %s) or type = 'D'
+        (type in ('H', 'h') and magnitude >= :hailsize) or type = 'W' or
+         type = 'T' or (type = 'G' and magnitude >= :wind) or type = 'D'
          or type = 'F' or type = 'x') ORDER by valid ASC
-        """,
+        """
+            ),
             dbconn,
-            params=(self.begints, self.endts, self.hailsize, self.wind),
+            params=params,
             geom_col="geom",
             crs=4326,
         )
@@ -308,13 +312,14 @@ class COWSession:
     def compute_shared_border(self, dbconn):
         """Compute a stat"""
         # re ST_Buffer(simple_geom) see akrherz/iem#163
+        wlimit = "" if not self.wfo else " and w.wfo = ANY(:wfos) "
         df = pd.read_sql(
             text(
                 f"""
             WITH stormbased as (
                 SELECT geom, wfo, eventid, phenomena, significance,
                 extract(year from issue at time zone 'UTC') as year
-                from sbw w WHERE status = 'NEW' {self.sql_wfo_limiter()}
+                from sbw w WHERE status = 'NEW' {wlimit}
                 and issue >= :begints and issue < :endts and expire < :endts
                 and significance = 'W'
                 and phenomena = ANY(:phenomena) {self.sql_tag_limiter()}),
@@ -323,7 +328,7 @@ class COWSession:
                 w.wfo, phenomena, eventid, significance,
                 extract(year from issue at time zone 'UTC') as year, w.fcster
                 from warnings w JOIN ugcs u on (u.gid = w.gid) WHERE
-                w.gid is not null {self.sql_wfo_limiter()} and
+                w.gid is not null {wlimit} and
                 issue >= :begints and issue < :endts and expire < :endts
                 and significance = 'W'
                 and phenomena = ANY(:phenomena)
@@ -354,6 +359,10 @@ class COWSession:
                 "begints": self.begints,
                 "endts": self.endts,
                 "phenomena": self.phenomena,
+                "wfos": self.wfo,
+                "fcster": self.fcster,
+                "wind": self.wind,
+                "hailsize": self.hailsize,
             },
             index_col="key",
         )
@@ -383,6 +392,7 @@ class COWSession:
 
                 _sr = self.stormreports.loc[sidx]
                 verify = False
+                print(_ev["phenomena"])
                 if _ev["phenomena"] == "FF" and _sr["type"] in ["F", "x"]:
                     verify = True
                 elif _ev["phenomena"] == "TO":

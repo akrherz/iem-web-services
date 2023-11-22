@@ -9,6 +9,24 @@ from iemws.main import app
 client = TestClient(app)
 
 
+def test_testdata():
+    """Test what our testdata provides CI."""
+    # NOTE, this is all set to Story county due to test data with 1 UGC
+    params = {
+        "begints": "2018-06-20T17:00Z",
+        "endts": "2018-06-21T03:00Z",
+        "wfo": "DMX",
+        "phenomena": ["SV", "TO", "FF"],
+    }
+    res = client.get(
+        "/cow.json",
+        params=params,
+    )
+    cow = res.json()
+    assert cow["stats"]["events_total"] == 15
+    assert len(cow["stormreports"]["features"]) == 14
+
+
 def test_fcster():
     """Test calling with the fcster tag."""
     params = {
@@ -21,7 +39,6 @@ def test_fcster():
         params=params,
     )
     cow = res.json()
-    print(cow)
     assert cow["stats"]["events_total"] == 0
 
 
