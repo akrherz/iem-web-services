@@ -191,7 +191,7 @@ async def record_request_timing(request: Request, call_next):
         TELEMETRY(
             time.time() - start_time,
             response.status_code,
-            remote_addr,
+            "127.0.0.1" if remote_addr == "testclient" else remote_addr,
             request.url.path,
             request.url.path + "?" + request.url.query,
         )
