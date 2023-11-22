@@ -21,6 +21,7 @@ from fastapi import APIRouter, HTTPException, Query
 
 # third party
 from geopandas import read_postgis
+from sqlalchemy import text
 
 from ..models import SupportedFormats
 from ..models.daily import DailySchema
@@ -31,20 +32,26 @@ router = APIRouter()
 
 def get_df(network, station, date, month, year):
     """Handle the request, return dict"""
+    params = {
+        "station": station,
+        "network": network,
+        "day": date,
+        "year": year,
+        "month": month,
+    }
     if network.endswith("CLIMATE"):
-        sl = ""
-        if station is not None:
-            sl = f" and station = '{station}'"
+        sl = " and station = :station " if station is not None else ""
         dl = ""
         if date is not None:
-            dl = f" and day = '{date:%Y-%m-%d}' "
+            dl = " and day = :day "
         elif month is None and year is not None:
-            dl = f" and year = {year} "
+            dl = " and year = :year "
         elif month is not None and year is not None:
-            dl = f" and year = '{year}' and month = '{month}'"
+            dl = " and year = :year and month = :month "
         with get_sqlalchemy_conn("coop") as conn:
             df = read_postgis(
-                f"""
+                text(
+                    f"""
                 SELECT station, to_char(day, 'YYYY-mm-dd') as date,
                 high as max_tmpf, low as min_tmpf,
                 temp_estimated as tmpf_est, precip_estimated as precip_est,
@@ -57,23 +64,22 @@ def get_df(network, station, date, month, year):
                 temp_hour, geom, id, name
                 from alldata_{network[:2]} s JOIN stations t
                 on (s.station = t.id)
-                WHERE t.network = %s {sl} {dl}
+                WHERE t.network = :network {sl} {dl}
                 ORDER by day ASC, station ASC
-                """,
+                """
+                ),
                 conn,
-                params=(network,),
+                params=params,
                 geom_col="geom",
             )
 
     else:
-        sl = ""
-        if station is not None:
-            sl = f" and id = '{station}'"
+        sl = " and id = :station " if station is not None else ""
         dl = ""
         table = "summary"
         if date is not None:
             table = f"summary_{date:%Y}"
-            dl = f" and day = '{date:%Y-%m-%d}' "
+            dl = " and day = :day "
         elif month is None and year is not None:
             table = f"summary_{year}"
         elif month is not None and year is not None:
@@ -81,10 +87,13 @@ def get_df(network, station, date, month, year):
             dt2 = (
                 datetime.date(year, month, 1) + datetime.timedelta(days=35)
             ).replace(day=1)
-            dl = f" and day >= '{year}-{month}-01' and day < '{dt2:%Y-%m-%d}'"
+            params["sts"] = datetime.date(year, month, 1)
+            params["ets"] = dt2
+            dl = " and day >= :sts and day < :dt2 "
         with get_sqlalchemy_conn("iem") as conn:
             df = read_postgis(
-                f"""
+                text(
+                    f"""
                 SELECT id as station, to_char(day, 'YYYY-mm-dd') as date,
                 max_tmpf, min_tmpf, pday as precip, max_gust, snow, snowd,
                 min_rh, max_rh, max_dwpf, min_dwpf, min_feel, avg_feel,
@@ -96,11 +105,12 @@ def get_df(network, station, date, month, year):
                 min_rstage, max_rstage,
                 geom, id, name
                 from {table} s JOIN stations t on (s.iemid = t.iemid)
-                WHERE t.network = %s {sl} {dl}
+                WHERE t.network = :network {sl} {dl}
                 ORDER by day ASC, id ASC
-                """,
+                """
+                ),
                 conn,
-                params=(network,),
+                params=params,
                 geom_col="geom",
             )
     return df
