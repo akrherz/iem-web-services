@@ -3,8 +3,8 @@
 See [IEM Cow](https://mesonet.agron.iastate.edu/cow/) webpage for the user
 frontend to this API and for more discussion about what this does.
 
-While this service only emits JSON, the JSON response embeds to GeoJSON objects
-providing the storm reports and warnings.
+While this service only emits JSON, the JSON response embeds two GeoJSON
+objects providing the storm reports and warnings.
 
 Changed on 2 Sep 2021 to count LSRs valid at warning expiration time as
 verifying as per NWS Verification Branch guidance.
@@ -33,6 +33,7 @@ LSRTYPE2PHENOM = {
     "W": "MA",
     "h": "MA",
     "2": "DS",
+    "q": "SQ",
 }
 router = APIRouter()
 
@@ -68,10 +69,10 @@ class COWSession:
         # query parameters
         self.phenomena = [x[:2] for x in phenomena]
         if not self.phenomena:
-            self.phenomena = ["TO", "SV", "FF", "MA", "DS"]
+            self.phenomena = ["TO", "SV", "FF", "MA", "DS", "SQ"]
         self.lsrtype = [x[:2] for x in lsrtype]
         if not self.lsrtype:
-            self.lsrtype = ["TO", "SV", "FF", "MA", "DS"]
+            self.lsrtype = ["TO", "SV", "FF", "MA", "DS", "SQ"]
         self.hailsize = hailsize
         self.lsrbuffer = lsrbuffer
         self.warningbuffer = warningbuffer
@@ -172,6 +173,8 @@ class COWSession:
             ltypes.extend(["M", "W", "h"])
         if "DS" in self.lsrtype:
             ltypes.append("2")
+        if "SQ" in self.lsrtype:
+            ltypes.append("q")
         return ltypes
 
     def sql_fcster_limiter(self):
@@ -286,8 +289,8 @@ class COWSession:
         {wlimit} and type = ANY(:ltypes)
         and ((type = 'M' and magnitude >= 34) or type = '2' or
         (type in ('H', 'h') and magnitude >= :hailsize) or type = 'W' or
-         type = 'T' or (type = 'G' and magnitude >= :wind) or type = 'D'
-         or type = 'F' or type = 'x') ORDER by valid ASC
+         type = 'T' or (type = 'G' and magnitude >= :wind) or
+         type in ('D', 'F', 'x', 'q')) ORDER by valid ASC
         """
             ),
             dbconn,
@@ -392,7 +395,6 @@ class COWSession:
 
                 _sr = self.stormreports.loc[sidx]
                 verify = False
-                print(_ev["phenomena"])
                 if _ev["phenomena"] == "FF" and _sr["type"] in ["F", "x"]:
                     verify = True
                 elif _ev["phenomena"] == "TO":
@@ -405,6 +407,8 @@ class COWSession:
                 elif _ev["phenomena"] == "DS":
                     if _sr["type"] == "2":
                         verify = True
+                elif _ev["phenomena"] == "SQ" and _sr["type"] == "q":
+                    verify = True
                 elif _ev["phenomena"] == "MA" and _sr["type"] in [
                     "W",
                     "M",
