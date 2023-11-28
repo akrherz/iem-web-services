@@ -9,6 +9,23 @@ from iemws.main import app
 client = TestClient(app)
 
 
+def test_gh163_snow_squall():
+    """Test that we can exercise snow squall warnings."""
+    params = {
+        "begints": "2023-11-28T00:00Z",
+        "endts": "2023-11-29T00:00Z",
+        "wfo": "BGM",
+        "phenomena": ["SQ"],
+    }
+    res = client.get(
+        "/cow.json",
+        params=params,
+    )
+    cow = res.json()
+    assert cow["stats"]["events_total"] == 2
+    assert cow["stats"]["events_verified"] == 1
+
+
 def test_testdata():
     """Test what our testdata provides CI."""
     # NOTE, this is all set to Story county due to test data with 1 UGC
