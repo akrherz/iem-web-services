@@ -9,7 +9,7 @@ from fastapi import APIRouter
 from geopandas import read_postgis
 
 from ..models import SupportedFormats
-from ..util import deliver_df, get_sqlalchemy_conn
+from ..util import cache_control, deliver_df, get_sqlalchemy_conn
 
 router = APIRouter()
 
@@ -33,6 +33,7 @@ def handler():
         "iem",
     ],
 )
+@cache_control(3600)
 def networks_service(
     fmt: SupportedFormats,
 ):

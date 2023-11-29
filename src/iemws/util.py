@@ -2,6 +2,8 @@
 import logging
 import tempfile
 from contextlib import contextmanager
+from functools import wraps
+from typing import Callable
 
 from fastapi import Request, Response
 from fastapi.responses import JSONResponse
@@ -14,6 +16,22 @@ from .models import SupportedFormats
 from .reference import MEDIATYPES
 
 LOG = logging.getLogger("iemws")
+
+
+def cache_control(max_age: int):
+    """Add cache control headers to response."""
+
+    def decorator(func: Callable):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            res = func(*args, **kwargs)
+            if isinstance(res, Response):
+                res.headers["Cache-Control"] = f"public, max-age={max_age}"
+            return res
+
+        return wrapper
+
+    return decorator
 
 
 def handle_exception(request: Request, exc):

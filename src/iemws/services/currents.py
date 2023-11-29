@@ -23,7 +23,7 @@ from sqlalchemy import text
 
 from ..models import SupportedFormats
 from ..models.currents import CurrentsSchema
-from ..util import deliver_df, get_sqlalchemy_conn
+from ..util import cache_control, deliver_df, get_sqlalchemy_conn
 
 router = APIRouter()
 
@@ -152,6 +152,7 @@ def handler(
         "iem",
     ],
 )
+@cache_control(120)
 def currents_service(
     fmt: SupportedFormats,
     network: str = Query(None, description="IEM Network Identifier"),
