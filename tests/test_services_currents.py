@@ -6,6 +6,12 @@ from iemws.main import app
 client = TestClient(app)
 
 
+def test_ccoop():
+    """Exercise this special selector."""
+    req = client.get("/currents.json?network=CCOOP")
+    assert req.status_code == 200
+
+
 def test_station():
     """Test that we can query by station."""
     req = client.get("/currents.json?station=AMW")

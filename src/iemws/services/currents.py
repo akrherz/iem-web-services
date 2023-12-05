@@ -8,6 +8,7 @@ You can approach this API via the following ways:
  - `/currents.json?wfo=DMX` :: Everything the IEM has for WFO DMX
  - `/currents.json?station=DSM&station=AMW` :: Explicit listing of stations
  - `/currents.json?event=ice_accretion_1hr` :: Special METAR service.
+ - `/currents.json?network=CCOOP` :: Special for CCOOP sites.
 
 For better or worse, the ".json" in the URI path above controls the output
 format that the service emits.  This service supports ".json", ".geojson",
@@ -98,7 +99,11 @@ def handler(
 ):
     """Handle the request, return dict"""
     params = {}
-    if station is not None:
+    if network == "CCOOP":
+        sql = SQL.replace(
+            "REPLACEME", "t.network ~* 'DCP' and t.name ~* 'CCOOP' and"
+        )
+    elif station is not None:
         sql = SQL.replace("REPLACEME", "t.id = ANY(:ids) and")
         params["ids"] = list(station)
     elif networkclass is not None and wfo is not None:
