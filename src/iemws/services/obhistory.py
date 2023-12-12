@@ -141,9 +141,9 @@ def get_df(network, station, date):
             )
         return df
 
-    if network in ["OT", "KCCI", "KELO", "KCRG", "KIMT"]:
+    if network in ["OT", "KCCI", "KELO", "KCRG", "KIMT", "WMO_BUFR_SRF"]:
         # lazy
-        providers = {"OT": "other"}
+        providers = {"OT": "other", "WMO_BUFR_SRF": "other"}
         with get_sqlalchemy_conn(providers.get(network, "snet")) as pgconn:
             df = read_sql(
                 "SELECT valid at time zone 'UTC' as utc_valid, "
@@ -273,7 +273,7 @@ def service(
         ..., description="IEM Network Identifier", max_length=20
     ),
     station: str = Query(
-        ..., description="IEM Station Identifier", max_length=20
+        ..., description="IEM Station Identifier", max_length=64
     ),
     date: datetime.date = Query(
         None, description="Local station calendar date"
