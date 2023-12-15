@@ -10,6 +10,7 @@ from fastapi.responses import JSONResponse
 from pandas import DataFrame
 from pandas.api.types import is_datetime64_any_dtype as isdt
 from pyiem import util
+from pyiem.reference import ISO8601
 from sqlalchemy import engine
 
 from .models import SupportedFormats
@@ -48,7 +49,7 @@ def deliver_df(df: DataFrame, fmt: str):
     # Dragons: do timestamp conversion as pandas has many bugs
     for column in df.columns:
         if isdt(df[column]):
-            df[column] = df[column].dt.strftime("%Y-%m-%dT%H:%M:%SZ")
+            df[column] = df[column].dt.strftime(ISO8601)
     res = ""
     if fmt != SupportedFormats.geojson:
         if "geom" in df.columns:

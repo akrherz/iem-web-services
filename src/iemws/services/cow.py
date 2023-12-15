@@ -16,12 +16,12 @@ from typing import List
 import geopandas as gpd
 import pandas as pd
 from fastapi import APIRouter, Query
+from pyiem.reference import ISO8601
 from shapely.ops import unary_union
 from sqlalchemy import text
 
 from ..util import get_sqlalchemy_conn
 
-ISO9660 = "%Y-%m-%dT%H:%M:%SZ"
 LSRTYPE2PHENOM = {
     "T": "TO",
     "H": "SV",
@@ -474,7 +474,7 @@ class COWSession:
             for colname in df.select_dtypes(
                 include=["datetime64[ns]"]
             ).columns:
-                df[colname] = df[colname].dt.strftime(ISO9660)
+                df[colname] = df[colname].dt.strftime(ISO8601)
 
         def _to_csv(val):
             """helper."""
@@ -523,7 +523,7 @@ def handler(
     # Some stuff is not JSON serializable
     cow.clean_dataframes()
     res = {
-        "generated_at": datetime.utcnow().strftime(ISO9660),
+        "generated_at": datetime.utcnow().strftime(ISO8601),
         "params": {
             "wfo": cow.wfo,
             "phenomena": cow.phenomena,
@@ -533,8 +533,8 @@ def handler(
             "wind": cow.wind,
             "windhailtag": cow.windhailtag,
             "limitwarns": cow.limitwarns,
-            "begints": cow.begints.strftime(ISO9660),
-            "endts": cow.endts.strftime(ISO9660),
+            "begints": cow.begints.strftime(ISO8601),
+            "endts": cow.endts.strftime(ISO8601),
             "warningbuffer": cow.warningbuffer,
         },
         "stats": cow.stats,
