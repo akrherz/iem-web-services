@@ -10,7 +10,6 @@ from pandas.io.sql import read_sql
 
 from ..util import deliver_df, get_sqlalchemy_conn
 
-ISO = "%Y-%m-%dT%H:%M:%SZ"
 router = APIRouter()
 
 

@@ -46,6 +46,7 @@ import requests
 from fastapi import APIRouter, HTTPException, Query, Response
 from metpy.units import units
 from pyiem.nws.bufkit import read_bufkit
+from pyiem.reference import ISO8601
 from pyiem.util import logger, utc
 
 # local
@@ -82,7 +83,6 @@ def load_stations():
 # Load stations
 LOCS = load_stations()
 BASEURL = "https://mtarchive.geol.iastate.edu"
-ISO9660 = "%Y-%m-%dT%H:%M:%SZ"
 # http://www.meteo.psu.edu/bufkit/bufkit_parameters.txt
 KGM2 = "kilogram / meter ** 2"
 UNITS = {
@@ -180,13 +180,13 @@ def do_gr(ctx):
     levels["wind_speed"] = levels["wind_speed"].round(2)
     records = levels.to_dict(orient="records")
     res = {
-        "time": ctx["valid"].strftime(ISO9660),
+        "time": ctx["valid"].strftime(ISO8601),
         "lat": ctx["lat"],
         "lon": ctx["lon"],
         "source": {
             "type": "model",
             "model": ctx["model"],
-            "run_time": ctx["runtime"].strftime(ISO9660),
+            "run_time": ctx["runtime"].strftime(ISO8601),
             "forecast_hour": ctx["fhour"],
         },
         "levels": records,
@@ -297,7 +297,7 @@ def handler(ctx):
         return json.dumps(res)
     stndf = stndf.drop("utc_valid", axis=1)
     res = {
-        "server_time": utc().strftime(ISO9660),
+        "server_time": utc().strftime(ISO8601),
         "variables": UNITS,
         "profiles": [],
         "lat": lat,
@@ -306,7 +306,7 @@ def handler(ctx):
             "type": "model",
             "model": model,
             "station": station,
-            "run_time": runtime.strftime(ISO9660),
+            "run_time": runtime.strftime(ISO8601),
         },
     }
     if ctx["fall"]:
@@ -318,7 +318,7 @@ def handler(ctx):
         res["profiles"].append(
             {
                 "forecast_hour": int(fhour),
-                "time": (runtime + timedelta(hours=fhour)).strftime(ISO9660),
+                "time": (runtime + timedelta(hours=fhour)).strftime(ISO8601),
                 "levels": levels.to_dict(orient="records"),
                 "parameters": stndf.loc[fhour].to_dict(),
             }
