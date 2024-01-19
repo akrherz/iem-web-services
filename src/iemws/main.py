@@ -183,9 +183,12 @@ async def record_request_timing(request: Request, call_next):
     """
     start_time = time.time()
     response = await call_next(request)
+    clienthost = ""
+    if request.client:
+        clienthost = request.client.host
     remote_addr = (
         request.headers.get("X-Forwarded-For", "").split(",")[0].strip()
-        or request.client.host
+        or clienthost
     )
     _add_to_queue(
         TELEMETRY(
