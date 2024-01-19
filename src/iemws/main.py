@@ -183,9 +183,8 @@ async def record_request_timing(request: Request, call_next):
     """
     start_time = time.time()
     response = await call_next(request)
-    clienthost = ""
-    if request.client:
-        clienthost = request.client.host
+    # within pytest, request.client is None
+    clienthost = None if request.client is None else request.client.host
     remote_addr = (
         request.headers.get("X-Forwarded-For", "").split(",")[0].strip()
         or clienthost
