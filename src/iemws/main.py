@@ -36,7 +36,7 @@ from logging.config import dictConfig
 from queue import Queue
 
 from fastapi import FastAPI, Request
-from pyiem.util import get_dbconn
+from pyiem.util import LOG, get_dbconn
 from shapely.errors import ShapelyDeprecationWarning
 
 from .config import log_config
@@ -152,7 +152,7 @@ def _writer_thread():
         try:
             _writer()
         except Exception as exp:
-            print(exp)
+            LOG.exception(exp)
             TELEMETRY_QUEUE_THREAD["dbconn"] = None
 
 
