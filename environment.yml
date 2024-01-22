@@ -6,6 +6,8 @@ dependencies:
   # for testing
   - httpx
   - metpy
+  # For the future warning
+  - pandas>=2.2
   - pygrib
   - pyproj
   - pytest
