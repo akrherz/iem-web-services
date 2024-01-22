@@ -35,6 +35,7 @@ from collections import namedtuple
 from logging.config import dictConfig
 from queue import Queue
 
+import pandas as pd
 from fastapi import FastAPI, Request
 from pyiem.util import LOG, get_dbconn
 from shapely.errors import ShapelyDeprecationWarning
@@ -90,6 +91,8 @@ from .util import handle_exception
 
 # Stop a Shapely deprecation warning until geopandas is updated
 warnings.filterwarnings("ignore", category=ShapelyDeprecationWarning)
+# Stop a Pandas warning about future silent downcasting
+pd.set_option("future.no_silent_downcasting", True)
 
 # Order here controls the order of the API documentation
 tags_metadata = [
