@@ -42,6 +42,7 @@ from shapely.errors import ShapelyDeprecationWarning
 
 from .config import log_config
 from .services import (
+    climodat,
     cow,
     currents,
     daily,
@@ -215,6 +216,7 @@ app.include_router(iemre_daily.router)
 app.include_router(iemre_hourly.router)
 app.include_router(iemre_multiday.router)
 
+app.include_router(climodat.router)
 app.include_router(idot_dashcam.router)
 app.include_router(idot_rwiscam.router)
 app.include_router(iowa_winter_roadcond.router)
