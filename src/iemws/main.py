@@ -66,6 +66,7 @@ from .services import (
     station,
     usdm_bypoint,
 )
+from .services.iem import trending_autoplots
 from .services.iemre import daily as iemre_daily
 from .services.iemre import hourly as iemre_hourly
 from .services.iemre import multiday as iemre_multiday
@@ -215,6 +216,7 @@ app.include_router(ffg_bypoint.router)
 app.include_router(iemre_daily.router)
 app.include_router(iemre_hourly.router)
 app.include_router(iemre_multiday.router)
+app.include_router(trending_autoplots.router)
 
 app.include_router(climodat.router)
 app.include_router(idot_dashcam.router)

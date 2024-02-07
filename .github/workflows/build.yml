@@ -56,9 +56,12 @@ jobs:
 
     - name: Setup Postgres
       run: |
+        set -e
         git clone --depth 1 https://github.com/akrherz/iem-database.git database
         git clone --depth 1 https://github.com/akrherz/ci_tooling.git .ci_tooling
-        . .ci_tooling/postgres.sh
+        cd .ci_tooling
+        . postgres.sh
+        cd ..
         cd database; sh bootstrap.sh
         python schema_manager.py
         cd ../testdata
@@ -73,7 +76,7 @@ jobs:
 
     - name: Upload coverage to Codecov
       if: ${{ env.PYTHON_VERSION == '3.11' }}
-      uses: codecov/codecov-action@v3
+      uses: codecov/codecov-action@v4
       env:
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       with:
