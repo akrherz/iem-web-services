@@ -14,10 +14,11 @@ if [ "$#" -eq  "0" ]
 # --preload can not be used with --reload
 # Shutdown with just kill <PID>, no core dumps?
 # jitter tries to keep all workers restarting at the same time
+# graceful-timeout is how long we wait for a worker to finish
 
 gunicorn \
  -w $WORKERS \
- --graceful-timeout 0 \
+ --graceful-timeout 60 \
  -k iemws.worker.RestartableUvicornWorker \
  -b 0.0.0.0:8000 \
  --max-requests 500 \
