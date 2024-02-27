@@ -8,6 +8,8 @@ import pytz
 from fastapi import APIRouter, HTTPException, Path, Response
 from pyiem.util import get_dbconnc
 
+from iemws.util import cache_control
+
 router = APIRouter()
 
 
@@ -56,6 +58,7 @@ def handler(product_id):
         "nws",
     ],
 )
+@cache_control(300)
 def nwstext_service(
     product_id: str = Path(..., max_length=35, min_length=28),
 ):

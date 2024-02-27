@@ -8,7 +8,7 @@ from fastapi import APIRouter, HTTPException, Path
 from geopandas import read_postgis
 
 from ..models import SupportedFormats
-from ..util import deliver_df, get_sqlalchemy_conn
+from ..util import cache_control, deliver_df, get_sqlalchemy_conn
 
 router = APIRouter()
 
@@ -54,6 +54,7 @@ def handler(network_id):
         "iem",
     ],
 )
+@cache_control(600)
 def service(
     fmt: SupportedFormats,
     network_id: str = Path(..., description="IEM Network Identifier."),
