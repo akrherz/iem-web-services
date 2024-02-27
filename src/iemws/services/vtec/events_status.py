@@ -33,6 +33,7 @@ def handler(valid, wfo):
             min(issue at time zone 'UTC') as issue,
             max(expire at time zone 'UTC') as expire,
             max(hvtec_nwsli) as nwsli,
+            max(purge_time at time zone 'UTC') as product_expires,
             max(fcster) as fcster
             from warnings w JOIN ugcs u on (w.gid = u.gid)
             where expire >= :valid and
