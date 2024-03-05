@@ -19,3 +19,6 @@ class SBWIntervalModel(BaseModel):
     nws_color: str = Field(..., title="NWS Color")
     event_label: str = Field(..., title="Event Label")
     status: str = Field(..., title="Status")
+    product_id: str = Field(
+        ..., title="IEM defined NWS Text Product ID associated with polygon"
+    )

@@ -21,6 +21,7 @@ cycle values are?  They are the UTC hour timestamp of the outlook, for example
 And finally, the `outlook_type` parameter, which is either `C` for convective
 or `F` for fire weather.
 """
+
 from datetime import date, timedelta
 
 import geopandas as gpd

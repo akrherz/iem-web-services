@@ -14,6 +14,7 @@ The IEM has attempted to properly keep track of the UGC database since 2007.
 For GeoJSON, this service returns simplified geometries as the full resolution
 dataset is very large.
 """
+
 from datetime import datetime, timezone
 
 from fastapi import APIRouter, Query

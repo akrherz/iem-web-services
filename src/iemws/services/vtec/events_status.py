@@ -3,6 +3,7 @@
 This service provides a listing of NWS VTEC events that are active at a
 given point in time.  GeoJSON is presently not supported for this service.
 """
+
 from datetime import datetime, timezone
 
 import pandas as pd
@@ -34,7 +35,9 @@ def handler(valid, wfo):
             max(expire at time zone 'UTC') as expire,
             max(hvtec_nwsli) as nwsli,
             max(purge_time at time zone 'UTC') as product_expires,
-            max(fcster) as fcster
+            max(fcster) as fcster,
+            min(product_ids[1]) as issue_product_id,
+            max(product_ids[array_upper(product_ids, 1)]) as last_product_id
             from warnings w JOIN ugcs u on (w.gid = u.gid)
             where expire >= :valid and
             product_issue <= :valid {wfolimiter}

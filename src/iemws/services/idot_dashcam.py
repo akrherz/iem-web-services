@@ -1,4 +1,5 @@
 """Exposes Iowa DOT 'Dashcam' imagery from its snowplows."""
+
 from datetime import datetime, timedelta, timezone
 
 from fastapi import APIRouter, Query

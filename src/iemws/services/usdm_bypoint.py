@@ -3,6 +3,7 @@
 The case of no-drought for the given USDM date is presented by a `null` value
 in the JSON.
 """
+
 from datetime import date
 
 from fastapi import APIRouter, Query

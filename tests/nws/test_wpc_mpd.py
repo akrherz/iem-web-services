@@ -1,4 +1,5 @@
 """Test the nws/wpc_mpd service."""
+
 # third party
 from fastapi.testclient import TestClient
 

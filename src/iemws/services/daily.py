@@ -14,6 +14,7 @@ Note that this service can emit GeoJSON, but sometimes that format does not
 make much sense, for example when requesting just one station's worth of data.
 
 """
+
 # stdlib
 import datetime
 

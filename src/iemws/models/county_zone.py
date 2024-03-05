@@ -1,4 +1,5 @@
 """Models for county_zone API."""
+
 # pylint: disable=no-name-in-module
 from typing import List
 

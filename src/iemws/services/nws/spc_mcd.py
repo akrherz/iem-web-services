@@ -8,6 +8,7 @@ The other option is to provide a number of hours to look back for any
 MCDs issued within that timespan. For example, to get any MCDs issued
 within the past six hours `/api/1/nws/spc_mcd.geojson?hours=6`.
 """
+
 from datetime import datetime, timedelta, timezone
 
 from fastapi import APIRouter, Query

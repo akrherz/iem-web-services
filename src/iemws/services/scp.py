@@ -7,6 +7,7 @@ suffixed to include the SCP source code for that observation.  For example,
 the field ``mid_1`` represents the mid value from the Goes East Sounder. The
 ``_2`` value is the Goes West Sounder and ``_3`` value is the Goes Imager. A
 given site may have 1 or more of those 3 potential options."""
+
 import datetime
 
 import pandas as pd

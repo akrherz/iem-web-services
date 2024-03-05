@@ -16,6 +16,7 @@ The NBE and NBS MOS data is saved every hour, but then only the 1, 7, 13, and
 19 Z runs are saved after 7 days have passed (to save space in the database).
 The data found within the NBX is included with the NBE.
 """
+
 from datetime import datetime
 from typing import List
 

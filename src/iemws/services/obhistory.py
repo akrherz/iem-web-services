@@ -13,6 +13,7 @@ default is to only return variables that the station/network supports. Setting
 it to `true` means that each response contains the full domain of available
 variables from this service even if the station does not report it.
 """
+
 import datetime
 from zoneinfo import ZoneInfo
 

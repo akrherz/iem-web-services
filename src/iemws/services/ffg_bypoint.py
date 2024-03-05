@@ -6,6 +6,7 @@ assume you want the latest forecast.  If you provide a valid timestamp, the
 service will look for the nearest forecast made within the past 24 hours of
 the provided time.
 """
+
 import os
 from datetime import datetime, timedelta
 
@@ -23,7 +24,7 @@ router = APIRouter()
 def get_grib_filename(valid):
     """Figure out which file we have for this valid timestamp."""
     # Rectify to six hourly
-    valid = valid.replace(hour=(valid.hour - valid.hour % 6))
+    valid = valid.replace(hour=valid.hour - valid.hour % 6)
     for hr in range(0, 25, 6):
         lvalid = valid - timedelta(hours=hr)
         testfn = lvalid.strftime(

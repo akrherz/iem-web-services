@@ -8,6 +8,7 @@ The other option is to provide a number of hours to look back for any
 MPDs issued within that timespan. For example, to get any MPDs issued
 within the past six hours `/api/1/nws/wpc_mpd.geojson?hours=6`.
 """
+
 from datetime import datetime, timedelta, timezone
 
 from fastapi import APIRouter, Query

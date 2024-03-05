@@ -1,4 +1,5 @@
 """Simple ping/pong style service returning the server's time."""
+
 from datetime import datetime
 
 from fastapi import APIRouter

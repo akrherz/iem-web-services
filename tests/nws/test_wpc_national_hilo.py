@@ -1,4 +1,5 @@
 """Test the nws/wpc_national_hilo service."""
+
 # third party
 from fastapi.testclient import TestClient
 

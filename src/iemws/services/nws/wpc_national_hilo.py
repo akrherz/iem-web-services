@@ -18,6 +18,7 @@ text/xml product.
 The `n_x` return column/attribute denotes if the value is a minimum=N or
 maximum=X.
 """
+
 from datetime import date
 
 from fastapi import APIRouter, Query

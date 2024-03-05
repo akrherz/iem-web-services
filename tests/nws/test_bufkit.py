@@ -1,4 +1,5 @@
 """Test the nws/bufkit service."""
+
 # stdlib
 import re
 

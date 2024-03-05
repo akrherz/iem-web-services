@@ -12,6 +12,7 @@ prior to that time.
 Presently, the `presentwx`, `skyl`, and `skyc` fields are arrays in JSON and
 space seperated strings in TXT output formats.
 """
+
 from datetime import datetime, timezone
 
 from fastapi import APIRouter, Query, Response
