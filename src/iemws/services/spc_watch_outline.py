@@ -4,6 +4,7 @@ This returns the issuance watch polygon outlines in GeoJSON format valid at
 the provided UTC timestamp.  These are the four sided watch outlines and not
 some county union.
 """
+
 from datetime import datetime
 
 import pytz

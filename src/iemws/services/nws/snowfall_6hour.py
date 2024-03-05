@@ -7,6 +7,7 @@ reports as collected via disseminated SHEF reports using the SFQ code.
 
 Trace values are encoded as ``0.0001``.
 """
+
 from datetime import datetime
 
 import geopandas as gpd

@@ -1,4 +1,5 @@
 """Test the obhistory service."""
+
 from datetime import date
 
 from fastapi.testclient import TestClient

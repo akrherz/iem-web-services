@@ -3,6 +3,7 @@
 This service provides a listing of NWS VTEC events that are active at a
 given point in time.  GeoJSON is presently not supported for this service.
 """
+
 from datetime import datetime, timezone
 
 import pandas as pd

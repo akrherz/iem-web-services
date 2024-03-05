@@ -2,6 +2,7 @@
 
 This service emits a text file for a given IEM defined product ID. For example:
 `/api/1/nwstext/201410071957-KDMX-FXUS63-AFDDMX`"""
+
 import datetime
 
 import pytz

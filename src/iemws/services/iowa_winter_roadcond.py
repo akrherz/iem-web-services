@@ -1,4 +1,5 @@
 """Exposes Iowa DOT Winter Road Conditions."""
+
 from datetime import datetime, timedelta, timezone
 
 from fastapi import APIRouter, Query

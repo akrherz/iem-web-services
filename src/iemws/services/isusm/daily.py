@@ -3,6 +3,7 @@
 Returns Iowa State University Soil Moisture Network daily or multi daily
 summary information.  Please note that the end date is inclusive.
 """
+
 from datetime import date, datetime
 
 import numpy as np

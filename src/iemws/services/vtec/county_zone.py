@@ -8,6 +8,7 @@ attributes do contain the 6-character UGC codes, so joining that to a
 higher resolution dataset may be necessary for your visualization purposes.
 
 """
+
 from datetime import datetime, timezone
 
 from fastapi import APIRouter, Query

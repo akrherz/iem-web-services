@@ -18,6 +18,7 @@ to simplify, if you are only worried about the issuance polygons, use the
 `utc_{issue,expire}` timestamps.  If you are worried about the polygon
 updates, use the `utc_polygon_{begin,end}` timestamps.
 """
+
 # stdlib
 from datetime import datetime, timezone
 from typing import List

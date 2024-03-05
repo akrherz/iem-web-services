@@ -1,4 +1,5 @@
 """Test the vtec/sbw_interval service."""
+
 # third party
 from fastapi.testclient import TestClient
 

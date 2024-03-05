@@ -1,4 +1,5 @@
 """Models for nws/snowfall_6hour API."""
+
 # pylint: disable=no-name-in-module,too-few-public-methods
 from typing import List
 

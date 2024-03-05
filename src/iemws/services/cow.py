@@ -9,6 +9,7 @@ objects providing the storm reports and warnings.
 Changed on 2 Sep 2021 to count LSRs valid at warning expiration time as
 verifying as per NWS Verification Branch guidance.
 """
+
 import json
 from datetime import datetime
 from typing import List

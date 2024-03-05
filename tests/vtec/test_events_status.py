@@ -1,4 +1,5 @@
 """Test the vtec/sbw_interval service."""
+
 from fastapi.testclient import TestClient
 from iemws.main import app
 

@@ -34,6 +34,7 @@ specify both or set `fall=1` to get all forecast hours for that `runtime`.
 The service will return a HTTP status code of 422 for requests that are
 slightly not what we expect.
 """
+
 import json
 import os
 from datetime import datetime, timedelta, timezone

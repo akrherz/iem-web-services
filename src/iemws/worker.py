@@ -2,6 +2,7 @@
 
 https://github.com/benoitc/gunicorn/issues/2339#issuecomment-867481389
 """
+
 import os
 import signal
 import threading

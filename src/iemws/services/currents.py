@@ -14,6 +14,7 @@ For better or worse, the ".json" in the URI path above controls the output
 format that the service emits.  This service supports ".json", ".geojson",
 and ".txt" (comma delimited) formats.
 """
+
 from datetime import date, timedelta
 from typing import List
 

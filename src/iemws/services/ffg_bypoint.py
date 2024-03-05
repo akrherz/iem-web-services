@@ -6,6 +6,7 @@ assume you want the latest forecast.  If you provide a valid timestamp, the
 service will look for the nearest forecast made within the past 24 hours of
 the provided time.
 """
+
 import os
 from datetime import datetime, timedelta
 
