@@ -32,7 +32,7 @@ from sqlalchemy import text
 
 # Local
 from ...models import SupportedFormats
-from ...models.sbw_interval import SBWIntervalModel
+from ...models.vtec.sbw_interval import SBWIntervalModel
 from ...util import deliver_df, get_sqlalchemy_conn
 
 router = APIRouter()
@@ -66,7 +66,7 @@ def handler(begints, endts, wfo, only_new, ph):
             polygon_end at time zone 'UTC' as utc_polygon_end,
             w.phenomena || '.' || w.significance as ph_sig,
             w.wfo, eventid, phenomena, significance, null as nws_color,
-            null as event_label, status, geom
+            null as event_label, status, geom, product_id
             from sbw w WHERE
             w.polygon_begin >= :begints and w.polygon_begin < :endts
             {wfolimiter} {statuslimiter} {phlimiter}
