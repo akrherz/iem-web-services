@@ -24,7 +24,7 @@ router = APIRouter()
 def get_grib_filename(valid):
     """Figure out which file we have for this valid timestamp."""
     # Rectify to six hourly
-    valid = valid.replace(hour=(valid.hour - valid.hour % 6))
+    valid = valid.replace(hour=valid.hour - valid.hour % 6)
     for hr in range(0, 25, 6):
         lvalid = valid - timedelta(hours=hr)
         testfn = lvalid.strftime(
