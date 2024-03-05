@@ -64,13 +64,13 @@ def handler(begints, endts, wfo, only_new, ph):
             expire at time zone 'UTC' as utc_expire,
             polygon_begin at time zone 'UTC' as utc_polygon_begin,
             polygon_end at time zone 'UTC' as utc_polygon_end,
-            w.phenomena || '.' || w.significance as ph_sig,
-            w.wfo, eventid, phenomena, significance, null as nws_color,
+            phenomena || '.' || significance as ph_sig,
+            wfo, eventid, phenomena, significance, null as nws_color,
             null as event_label, status, geom, product_id
-            from sbw w WHERE
-            w.polygon_begin >= :begints and w.polygon_begin < :endts
+            from sbw WHERE
+            polygon_begin >= :begints and polygon_begin < :endts
             {wfolimiter} {statuslimiter} {phlimiter}
-            ORDER by w.polygon_begin ASC
+            ORDER by polygon_begin ASC
             """
             ),
             pgconn,
