@@ -2,6 +2,12 @@
 
 This service provides a listing of NWS VTEC events that are active at a
 given point in time.  GeoJSON is presently not supported for this service.
+
+The `issue_product_id` and `last_product_id` values are IEM assigned NWS Text
+Product Identifiers that can be used to retrieve the raw text.  You can either
+get that text via this API at `/nwstext/{product_id}` or take the user to a
+more friendly interface at
+`https://mesonet.agron.iastate.edu/p.php?pid={product_id}`.
 """
 
 from datetime import datetime, timezone
@@ -27,22 +33,39 @@ def handler(valid, wfo):
         df = pd.read_sql(
             text(
                 f"""
-            select w.wfo, eventid, phenomena, significance,
-            phenomena || '.' || significance as ph_sig,
-            string_agg(u.name || ' ['||u.state||']', ', ') as locations,
-            max(updated at time zone 'UTC') as updated,
-            min(issue at time zone 'UTC') as issue,
-            max(expire at time zone 'UTC') as expire,
-            max(hvtec_nwsli) as nwsli,
-            max(purge_time at time zone 'UTC') as product_expires,
+            with data as (
+                select w.wfo, eventid, phenomena, significance,
+                phenomena || '.' || significance as ph_sig,
+                substr(w.tableoid::regclass::text, 10, 4) as year,
+                status,
+                u.name || ' ['||u.state||']' as location,
+                updated at time zone 'UTC' as _updated,
+                issue at time zone 'UTC' as _issue,
+                expire at time zone 'UTC' as _expire,
+                hvtec_nwsli as nwsli,
+                purge_time at time zone 'UTC' as product_expires,
+                fcster as fcster,
+                product_ids[1] as issue_product_id,
+                product_ids[array_upper(product_ids, 1)] as last_product_id
+                from warnings w JOIN ugcs u on (w.gid = u.gid)
+                where expire >= :valid and
+                product_issue <= :valid {wfolimiter}
+            )
+            SELECT wfo, eventid, phenomena, significance, ph_sig, year,
+            max(status) as status,
+            string_agg(location, ', ') as locations,
+            max(_updated) as updated,
+            min(_issue) as issue,
+            max(_expire) as expire,
+            max(nwsli) as nwsli,
+            max(product_expires) as product_expires,
             max(fcster) as fcster,
-            min(product_ids[1]) as issue_product_id,
-            max(product_ids[array_upper(product_ids, 1)]) as last_product_id
-            from warnings w JOIN ugcs u on (w.gid = u.gid)
-            where expire >= :valid and
-            product_issue <= :valid {wfolimiter}
-            GROUP by w.wfo, eventid, phenomena, significance, ph_sig
-            ORDER by w.wfo, updated desc
+            min(issue_product_id) as issue_product_id,
+            max(last_product_id) as last_product_id
+            from data
+            GROUP by
+                wfo, eventid, phenomena, significance, ph_sig, year, status
+            ORDER by wfo, updated desc
             """
             ),
             pgconn,
@@ -57,7 +80,7 @@ def handler(valid, wfo):
         df["issue"] = pd.to_datetime([])
     df["url"] = (
         "https://mesonet.agron.iastate.edu/vtec/#"
-        + df["issue"].dt.strftime("%Y")
+        + df["year"]
         + "-O-NEW-K"
         + df["wfo"]
         + "-"
