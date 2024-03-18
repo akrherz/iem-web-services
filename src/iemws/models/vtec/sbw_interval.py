@@ -22,3 +22,4 @@ class SBWIntervalModel(BaseModel):
     product_id: str = Field(
         ..., title="IEM defined NWS Text Product ID associated with polygon"
     )
+    year: int = Field(..., title="Year associated with the VTEC event.")

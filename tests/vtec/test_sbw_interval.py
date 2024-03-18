@@ -9,6 +9,12 @@ from iemws.main import app
 client = TestClient(app)
 
 
+def test_no_params():
+    """Test with no parameters."""
+    req = client.get("/vtec/sbw_interval.geojson")
+    assert req.status_code == 200
+
+
 def test_230914_failure():
     """Test a production failure..."""
     # https://mesonet.agron.iastate.edu/api/1/vtec/sbw_interval.geojson?begints=2023-08-30T00%3A00%3A00Z&endts=2023-08-31T00%3A00%3A00Z&only_new=true&ph=TO
