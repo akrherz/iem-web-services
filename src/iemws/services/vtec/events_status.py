@@ -36,7 +36,7 @@ def handler(valid, wfo):
             with data as (
                 select w.wfo, eventid, phenomena, significance,
                 phenomena || '.' || significance as ph_sig,
-                substr(w.tableoid::regclass::text, 10, 4) as year,
+                vtec_year as year,
                 status,
                 u.name || ' ['||u.state||']' as location,
                 updated at time zone 'UTC' as _updated,
