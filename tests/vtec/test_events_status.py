@@ -8,8 +8,9 @@ client = TestClient(app)
 
 def test_basic():
     """Test basic calls."""
-    url = "/vtec/events_status.json?valid=2024-01-01T00:00"
+    url = "/vtec/events_status.json?valid=2023-02-03T02:30"
     req = client.get(url)
+    assert req.json()["data"][0]["year"] == 2023  # Included with test data
     assert req.status_code == 200
 
     url = "/vtec/events_status.json?wfo=MEG"

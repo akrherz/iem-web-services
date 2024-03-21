@@ -80,7 +80,7 @@ def handler(valid, wfo):
         df["issue"] = pd.to_datetime([])
     df["url"] = (
         "https://mesonet.agron.iastate.edu/vtec/#"
-        + df["year"]
+        + df["year"].astype(str)
         + "-O-NEW-K"
         + df["wfo"]
         + "-"
