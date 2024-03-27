@@ -33,12 +33,13 @@ import threading
 import time
 import warnings
 from collections import namedtuple
+from datetime import timedelta
 from logging.config import dictConfig
 from queue import Queue
 
 import pandas as pd
 from fastapi import FastAPI, Request
-from pyiem.util import LOG, get_dbconn
+from pyiem.util import LOG, get_dbconn, utc
 from shapely.errors import ShapelyDeprecationWarning
 
 from .config import log_config
@@ -122,7 +123,7 @@ tags_metadata = [
 dictConfig(log_config)
 # Queue for writing telemetry data to database
 TELEMETRY_QUEUE = Queue()
-TELEMETRY_QUEUE_THREAD = {"worker": None, "dbconn": None}
+TELEMETRY_QUEUE_THREAD = {"worker": None, "dbconn": None, "lasterr": utc(1980)}
 TELEMETRY = namedtuple(
     "TELEMETRY",
     ["timing", "status_code", "client_addr", "app", "request_uri"],
@@ -156,8 +157,10 @@ def _writer_thread():
             TELEMETRY_QUEUE_THREAD["dbconn"].commit()
 
         try:
-            _writer()
+            if utc() > TELEMETRY_QUEUE_THREAD["lasterr"]:
+                _writer()
         except Exception as exp:
+            TELEMETRY_QUEUE_THREAD["lasterr"] = utc() + timedelta(minutes=5)
             LOG.exception(exp)
             TELEMETRY_QUEUE_THREAD["dbconn"] = None
 
