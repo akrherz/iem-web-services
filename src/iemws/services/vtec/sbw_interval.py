@@ -41,13 +41,14 @@ from ...util import deliver_df, get_sqlalchemy_conn
 router = APIRouter()
 
 
-def handler(begints, endts, wfo, only_new, ph):
+def handler(begints, endts, wfo, only_new, ph, include_can):
     """Handler"""
 
     params = {"begints": begints, "endts": endts}
     wfolimiter = ""
     statuslimiter = ""
     phlimiter = ""
+    canlimiter = "" if include_can else " and status != 'CAN' "
     if ph is not None:
         params["ph"] = ph
         phlimiter = "AND phenomena = ANY(:ph) "
@@ -70,7 +71,7 @@ def handler(begints, endts, wfo, only_new, ph):
             null as event_label, status, geom, product_id, vtec_year as year
             from sbw WHERE
             polygon_begin >= :begints and polygon_begin < :endts
-            {wfolimiter} {statuslimiter} {phlimiter}
+            {wfolimiter} {statuslimiter} {phlimiter} {canlimiter}
             ORDER by polygon_begin ASC
             """
             ),
@@ -109,6 +110,13 @@ def service(
     ph: List[str] = Query(
         None, description="VTEC Phenomena 2-letter codes.", max_length=2
     ),
+    include_can: bool = Query(
+        True,
+        description=(
+            "Include polygons associated with the CANcel VTEC event. This is "
+            "ignored when `only_new` is True."
+        ),
+    ),
 ):
     """Replaced above."""
     if begints is not None:
@@ -119,7 +127,7 @@ def service(
         begints = utc() - timedelta(hours=24)
         endts = utc()
 
-    df = handler(begints, endts, wfo, only_new, ph)
+    df = handler(begints, endts, wfo, only_new, ph, include_can)
     return deliver_df(df, fmt)
 
 
