@@ -20,7 +20,7 @@ def test_230914_failure():
     # https://mesonet.agron.iastate.edu/api/1/vtec/sbw_interval.geojson?begints=2023-08-30T00%3A00%3A00Z&endts=2023-08-31T00%3A00%3A00Z&only_new=true&ph=TO
     url = (
         "/vtec/sbw_interval.geojson?begints=2023-08-30T00%3A00%3A00Z&"
-        "endts=2023-08-31T00%3A00%3A00Z&only_new=true&ph=TO"
+        "endts=2023-08-31T00%3A00%3A00Z&only_new=true&ph=TO&include_can=0"
     )
     req = client.get(url)
     assert req.status_code == 200

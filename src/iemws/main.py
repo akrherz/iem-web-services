@@ -130,35 +130,36 @@ TELEMETRY = namedtuple(
 )
 
 
+def _writer(data):
+    """Actually write the data."""
+    if TELEMETRY_QUEUE_THREAD["dbconn"] is None:
+        TELEMETRY_QUEUE_THREAD["dbconn"] = get_dbconn("mesosite")
+    cursor = TELEMETRY_QUEUE_THREAD["dbconn"].cursor()
+    cursor.execute(
+        """
+        insert into website_telemetry(timing, status_code, client_addr,
+        app, request_uri) values (%s, %s, %s, %s, %s)
+        """,
+        (
+            data.timing,
+            data.status_code,
+            data.client_addr,
+            data.app,
+            data.request_uri,
+        ),
+    )
+    cursor.close()
+    TELEMETRY_QUEUE_THREAD["dbconn"].commit()
+
+
 def _writer_thread():
     """Runs for ever and writes telemetry data to the database."""
     while True:
         data = TELEMETRY_QUEUE.get()
 
-        def _writer():
-            """Actually write the data."""
-            if TELEMETRY_QUEUE_THREAD["dbconn"] is None:
-                TELEMETRY_QUEUE_THREAD["dbconn"] = get_dbconn("mesosite")
-            cursor = TELEMETRY_QUEUE_THREAD["dbconn"].cursor()
-            cursor.execute(
-                """
-                insert into website_telemetry(timing, status_code, client_addr,
-                app, request_uri) values (%s, %s, %s, %s, %s)
-                """,
-                (
-                    data.timing,
-                    data.status_code,
-                    data.client_addr,
-                    data.app,
-                    data.request_uri,
-                ),
-            )
-            cursor.close()
-            TELEMETRY_QUEUE_THREAD["dbconn"].commit()
-
         try:
             if utc() > TELEMETRY_QUEUE_THREAD["lasterr"]:
-                _writer()
+                _writer(data)
         except Exception as exp:
             TELEMETRY_QUEUE_THREAD["lasterr"] = utc() + timedelta(minutes=5)
             LOG.exception(exp)
