@@ -48,30 +48,43 @@ def handler(begints, endts, wfo, only_new, ph, include_can):
     wfolimiter = ""
     statuslimiter = ""
     phlimiter = ""
-    canlimiter = "" if include_can else " and status != 'CAN' "
+    canlimiter = "" if include_can else " and s.status != 'CAN' "
     if ph is not None:
         params["ph"] = ph
-        phlimiter = "AND phenomena = ANY(:ph) "
+        phlimiter = "AND s.phenomena = ANY(:ph) "
     if wfo is not None:
         params["wfo"] = wfo
-        wfolimiter = " and wfo = ANY(:wfo) "
+        wfolimiter = " and s.wfo = ANY(:wfo) "
     if only_new:
-        statuslimiter = " and status = 'NEW' "
+        statuslimiter = " and s.status = 'NEW' "
     with get_sqlalchemy_conn("postgis") as pgconn:
         df = read_postgis(
             text(
                 f"""
             SELECT
-            issue at time zone 'UTC' as utc_issue,
-            expire at time zone 'UTC' as utc_expire,
+            array_to_string(array_agg(u.ugc ORDER by u.ugc ASC), ', ')
+                as ugclist,
+            array_to_string(array_agg(u.name || ' ['||u.state||']'
+                ORDER by u.ugc ASC), ', ') as locations,
+            s.issue at time zone 'UTC' as utc_issue,
+            s.expire at time zone 'UTC' as utc_expire,
             polygon_begin at time zone 'UTC' as utc_polygon_begin,
             polygon_end at time zone 'UTC' as utc_polygon_end,
-            phenomena || '.' || significance as ph_sig,
-            wfo, eventid, phenomena, significance, null as nws_color,
-            null as event_label, status, geom, product_id, vtec_year as year
-            from sbw WHERE
-            polygon_begin >= :begints and polygon_begin < :endts
+            s.phenomena || '.' || s.significance as ph_sig,
+            s.wfo, s.eventid, s.phenomena, s.significance,
+            max(null) as nws_color,
+            max(null) as event_label, s.status, s.geom, s.product_id,
+            s.vtec_year as year, product_signature as fcster
+            from sbw s, warnings w, ugcs u WHERE s.vtec_year = w.vtec_year
+            and s.wfo = w.wfo and
+            s.eventid = w.eventid and s.phenomena = w.phenomena and
+            s.significance = w.significance and w.gid = u.gid and
+            polygon_begin >= :begints and polygon_begin < :endts and
+            s.polygon_begin < w.expire
             {wfolimiter} {statuslimiter} {phlimiter} {canlimiter}
+            GROUP by s.issue, s.expire, s.polygon_begin, s.polygon_end,
+            ph_sig, s.wfo, s.eventid, s.phenomena, s.significance, s.status,
+            s.geom, s.product_id, s.vtec_year, s.product_signature
             ORDER by polygon_begin ASC
             """
             ),
