@@ -7,6 +7,8 @@ from pydantic import BaseModel, Field
 class SBWIntervalModel(BaseModel):
     """Data Schema."""
 
+    ugclist: str = Field(..., title="UGC csv associated with polygon")
+    locations: str = Field(..., title="Location csv associated with polygon")
     utc_issue: str = Field(..., title="Issuance UTC timestamp")
     utc_expire: str = Field(..., title="Expiration UTC timestamp")
     utc_polygon_begin: str = Field(..., title="Polygon Begin UTC timestamp")
@@ -23,3 +25,4 @@ class SBWIntervalModel(BaseModel):
         ..., title="IEM defined NWS Text Product ID associated with polygon"
     )
     year: int = Field(..., title="Year associated with the VTEC event.")
+    fcster: str = Field(..., title="Forecaster / Product Signature")
