@@ -16,7 +16,8 @@ def test_valid_request():
     """Test valid request."""
     pid = "202101010000-KDMX-TTAAII-AAABBB"
     req = client.get(f"/nwstext/{pid}")
-    assert req.text == "HI DARYL"
+    assert "X-IEM-Notice" in req.headers
+    assert req.text == "HI DARYL, NULL BBB"
 
 
 def test_valid_request_bbb():
