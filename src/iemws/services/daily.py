@@ -91,6 +91,8 @@ def get_df(network, station, date, month, year):
             params["sts"] = datetime.date(year, month, 1)
             params["ets"] = dt2
             dl = " and day >= :sts and day < :ets "
+        if table != "summary" and table < "summary_1928":
+            raise HTTPException(500, detail="No data available for this date.")
         with get_sqlalchemy_conn("iem") as conn:
             df = read_postgis(
                 text(
