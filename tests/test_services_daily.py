@@ -6,6 +6,14 @@ from iemws.main import app
 client = TestClient(app)
 
 
+def test_pre1928_request():
+    """Test that this is handled."""
+    req = client.get(
+        "/daily.json?station=MMLW1&network=WA_DCP&year=1920&month=3",
+    )
+    assert req.status_code == 500
+
+
 def test_error500():
     """Test that an invalid request is caught."""
     req = client.get("/daily.json?network=IA_ASOS")
