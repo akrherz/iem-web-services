@@ -150,3 +150,17 @@ def test_180620(prodtest):
     assert abs(cow["stats"]["area_verify[%]"] - 17.0) < 0.1
     _ev = cow["events"]["features"][0]["properties"]
     assert abs(_ev["parea"] - 919.0) < 1
+
+
+def test_gh131_tornado_possible():
+    """Tornado Possible in SVRs."""
+    params = {
+        "wfo": "DMX",
+        "begints": "2024-05-21T21:00Z",
+        "endts": "2024-05-21T23:00Z",
+        "phenomena": "SV",
+        "lsrtype": "TO",
+    }
+    cow = client.get("/cow.json", params=params).json()
+    assert cow["stats"]["svr_with_torpossible_total"] == 2
+    assert cow["stats"]["svr_with_torpossible_verified"] == 2
