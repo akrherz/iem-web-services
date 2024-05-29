@@ -37,6 +37,7 @@ LSRTYPE2PHENOM = {
     "q": "SQ",
 }
 router = APIRouter()
+TOR_IN_SVRTORPOSSIBLE = "tor_in_svrtorpossible"
 
 
 class COWSession:
@@ -154,6 +155,12 @@ class COWSession:
         self.stats["size_poly_vs_county[%]"] = (
             0 if _ev.empty else _ev["parea"].sum() / _ev["carea"].sum() * 100.0
         )
+        self.stats["svr_with_torpossible_total"] = int(
+            _ev["svr_tornado_possible"].sum()
+        )
+        self.stats["svr_with_torpossible_verified"] = int(
+            _ev[TOR_IN_SVRTORPOSSIBLE].sum()
+        )
         # Prevent NaN values from above
         for key, stat in self.stats.items():
             if pd.isnull(stat):
@@ -200,6 +207,7 @@ class COWSession:
                 f"""
         WITH stormbased as (
             SELECT wfo, phenomena, eventid, hailtag, windtag,
+            coalesce(tornadotag, '') = 'POSSIBLE' as svr_tornado_possible,
             geom, significance,
             ST_area(ST_transform(geom,2163)) / 1000000.0 as parea,
             ST_perimeter(ST_transform(geom,2163)) as perimeter,
@@ -229,7 +237,7 @@ class COWSession:
         )
         SELECT s.year::int, s.wfo, s.phenomena, s.eventid, s.geom,
         c.missue as issue,
-        c.mexpire as expire, c.statuses, c.fcster,
+        c.mexpire as expire, c.statuses, c.fcster, svr_tornado_possible,
         s.significance, s.hailtag, s.windtag, c.carea, c.ar_ugc,
         s.lat0, s.lon0, s.perimeter, s.parea, c.ar_ugcname,
         s.year || s.wfo || s.eventid || s.phenomena || s.significance ||
@@ -260,6 +268,7 @@ class COWSession:
             stormreports_all=lambda df_: [[] for _ in range(len(df_.index))],
         )
         self.events["verify"] = False
+        self.events[TOR_IN_SVRTORPOSSIBLE] = False
         self.events["lead0"] = None
         self.events["areaverify"] = 0.0
         self.events["sharedborder"] = 0.0
@@ -417,6 +426,13 @@ class COWSession:
                     "h",
                 ]:
                     verify = True
+                elif (
+                    _ev["phenomena"] == "SV"
+                    and _sr["type"] == "T"
+                    and _ev["svr_tornado_possible"]
+                ):
+                    # Special accounting for tornados within tor possible SVRs
+                    self.events.at[eidx, TOR_IN_SVRTORPOSSIBLE] = True
                 elif _ev["phenomena"] == "SV" and _sr["type"] in [
                     "G",
                     "D",
