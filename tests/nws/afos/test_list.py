@@ -8,9 +8,9 @@ client = TestClient(app)
 
 def test_char3_source():
     """Test that we can deal with a 3 char source."""
-    req = client.get("/nws/afos/list.json?cccc=DMX&date=2022-10-24")
+    req = client.get("/nws/afos/list.json?cccc=DMX&date=2021-01-01")
     res = req.json()
-    assert res is not None
+    assert len(res["data"]) >= 2
 
 
 def test_badcall():

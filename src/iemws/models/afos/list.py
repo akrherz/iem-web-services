@@ -10,6 +10,14 @@ class AFOSListItem(BaseModel):
     """Data Schema."""
 
     entered: str = Field(..., title="WMO Text Product Issuance Time (UTC)")
+    link: str = Field(
+        ...,
+        title="URL to the IEM webpage showing this product.",
+    )
+    text_link: str = Field(
+        ...,
+        title="URL to the raw text of the product.",
+    )
     pil: str = Field(
         ...,
         title="3-6 letter PIL with trailing whitespace trimmed.",
