@@ -33,11 +33,11 @@ KDMX text TOR products for the UTC date of 28 Oct 2022.
 
 import datetime
 
-from fastapi import APIRouter, HTTPException, Query
-
 # Third Party
-from pandas.io.sql import read_sql
-from pyiem.util import get_sqlalchemy_conn, utc
+import pandas as pd
+from fastapi import APIRouter, HTTPException, Query
+from pyiem.database import get_sqlalchemy_conn
+from pyiem.util import utc
 from sqlalchemy import text
 
 # Local
@@ -78,7 +78,7 @@ def handler(cccc, pil, date):
         fs.append("source = :cccc")
     with get_sqlalchemy_conn("afos") as conn:
         # We don't auto-list some internal products like WRK LLL
-        df = read_sql(
+        df = pd.read_sql(
             text(
                 f"""
             select entered at time zone 'UTC' as entered, trim(pil) as pil,
@@ -95,6 +95,14 @@ def handler(cccc, pil, date):
             conn,
             params=params,
             index_col=None,
+        )
+    if not df.empty:
+        df["link"] = (
+            "https://mesonet.agron.iastate.edu/p.php?pid=" + df["product_id"]
+        )
+        df["text_link"] = (
+            "https://mesonet.agron.iastate.edu/api/1/nwstext/"
+            + df["product_id"]
         )
     return df
 
