@@ -212,7 +212,8 @@ class COWSession:
             ST_area(ST_transform(geom,2163)) / 1000000.0 as parea,
             ST_perimeter(ST_transform(geom,2163)) as perimeter,
             ST_xmax(geom) as lon0, ST_ymax(geom) as lat0,
-            extract(year from issue at time zone 'UTC') as year
+            extract(year from issue at time zone 'UTC') as year,
+            product_id
             from sbw w WHERE status = 'NEW' {wlimit}
             and issue >= :begints and issue < :endts and expire < :endts
             and significance = 'W'
@@ -242,7 +243,7 @@ class COWSession:
         s.lat0, s.lon0, s.perimeter, s.parea, c.ar_ugcname,
         s.year || s.wfo || s.eventid || s.phenomena || s.significance ||
         row_number() OVER (PARTITION by s.year, s.wfo, s.eventid, s.phenomena,
-        s.significance ORDER by c.missue ASC) as key
+        s.significance ORDER by c.missue ASC) as key, s.product_id
         from stormbased s JOIN countybased c on
         (c.eventid = s.eventid and c.wfo = s.wfo and c.year = s.year
         and c.phenomena = s.phenomena and c.significance = s.significance)
@@ -274,6 +275,26 @@ class COWSession:
         self.events["sharedborder"] = 0.0
         if self.events.empty:
             return
+        self.events["product_text"] = (
+            "https://mesonet.agron.iastate.edu/api/1/nwstext/"
+            + self.events["product_id"]
+        )
+        self.events["product_href"] = (
+            "https://mesonet.agron.iastate.edu/p.php?pid="
+            + self.events["product_id"]
+        )
+        self.events["link"] = (
+            "https://mesonet.agron.iastate.edu/vtec/f/"
+            + self.events["year"].astype(str)
+            + "-O-NEW-K"
+            + self.events["wfo"]
+            + "-"
+            + self.events["phenomena"]
+            + "-"
+            + self.events["significance"]
+            + "-"
+            + self.events["eventid"].astype(str).str.pad(4, fillchar="0")
+        )
         s2163 = self.events["geom"].to_crs(epsg=2163)
         self.events_buffered = s2163.buffer(self.warningbuffer * 1000.0)
 
@@ -319,6 +340,14 @@ class COWSession:
         )
         if self.stormreports.empty:
             return
+        self.stormreports["link"] = (
+            "https://mesonet.agron.iastate.edu/lsr/#"
+            + self.stormreports["wfo"]
+            + "/"
+            + self.stormreports["valid"].dt.strftime("%Y%m%d%H%M")
+            + "/"
+            + self.stormreports["valid"].dt.strftime("%Y%m%d%H%M")
+        )
         s2163 = self.stormreports["geom"].to_crs(epsg=2163)
         self.stormreports_buffered = s2163.buffer(self.lsrbuffer * 1000.0)
 
