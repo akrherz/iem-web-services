@@ -275,6 +275,20 @@ class COWSession:
         self.events["sharedborder"] = 0.0
         if self.events.empty:
             return
+        self.events["visual_imgurl"] = (
+            "https://mesonet.agron.iastate.edu/GIS/radmap.php?visual=1&vtec="
+            + self.events["year"].astype(str)
+            + ".K"
+            + self.events["wfo"]
+            + "."
+            + self.events["phenomena"]
+            + "."
+            + self.events["significance"]
+            + "."
+            + self.events["eventid"].astype(str).str.pad(4, fillchar="0")
+            + "&lsrbuffer="
+            + str(self.lsrbuffer)
+        )
         self.events["product_text"] = (
             "https://mesonet.agron.iastate.edu/api/1/nwstext/"
             + self.events["product_id"]
