@@ -53,6 +53,16 @@ def test_basic():
     assert res is not None
 
 
+def test_dcp_alldata():
+    """Test a query that should hit alldata."""
+    req = client.get(
+        "/obhistory.json",
+        params={"network": "IA_DCP", "station": "DMX", "date": "2023-11-10"},
+    )
+    res = req.json()
+    assert res["data"]
+
+
 def test_dcp():
     """Test a DCP station request."""
     req = client.get(
