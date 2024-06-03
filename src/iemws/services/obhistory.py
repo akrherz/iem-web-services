@@ -18,11 +18,11 @@ import datetime
 from zoneinfo import ZoneInfo
 
 import numpy as np
+import pandas as pd
 import pytz
 from fastapi import APIRouter, HTTPException, Query
 from metpy.calc import dewpoint_from_relative_humidity
 from metpy.units import masked_array, units
-from pandas.io.sql import read_sql
 from pyiem.network import Table as NetworkTable
 
 from ..models import SupportedFormatsNoGeoJSON
@@ -37,7 +37,7 @@ def get_df(network, station, date):
     if date == datetime.date.today() and network not in ["ISUSM", "SCAN"]:
         # Use IEM Access
         with get_sqlalchemy_conn("iem") as pgconn:
-            df = read_sql(
+            df = pd.read_sql(
                 """
                 SELECT distinct valid at time zone 'UTC' as utc_valid,
                 valid at time zone t.tzname as local_valid, tmpf, dwpf, sknt,
@@ -66,7 +66,7 @@ def get_df(network, station, date):
     if network.find("_ASOS") > 0:
         # Use ASOS
         with get_sqlalchemy_conn("asos") as pgconn:
-            df = read_sql(
+            df = pd.read_sql(
                 """
                 SELECT valid at time zone 'UTC' as utc_valid,
                 valid at time zone %s as local_valid, tmpf, dwpf, sknt, drct,
@@ -85,7 +85,7 @@ def get_df(network, station, date):
     if network.find("_RWIS") > 0:
         # Use RWIS
         with get_sqlalchemy_conn("rwis") as pgconn:
-            df = read_sql(
+            df = pd.read_sql(
                 """
                 SELECT valid at time zone 'UTC' as utc_valid,
                 valid at time zone %s as local_valid, tmpf, dwpf, sknt, drct,
@@ -100,7 +100,7 @@ def get_df(network, station, date):
     if network in ["ISUSM", "ISUAG"]:
         # Use ISUAG
         with get_sqlalchemy_conn("isuag") as pgconn:
-            df = read_sql(
+            df = pd.read_sql(
                 "SELECT valid at time zone 'UTC' as utc_valid, phour, "
                 "valid at time zone %s as local_valid, tmpf, relh, sknt, drct "
                 "from alldata WHERE station = %s and "
@@ -125,7 +125,7 @@ def get_df(network, station, date):
         return df
     if network == "SCAN":
         with get_sqlalchemy_conn("scan") as pgconn:
-            df = read_sql(
+            df = pd.read_sql(
                 """
                 SELECT valid at time zone 'UTC' as utc_valid,
                 valid at time zone %s as local_valid, tmpf, dwpf, sknt, drct,
@@ -146,7 +146,7 @@ def get_df(network, station, date):
         # lazy
         providers = {"OT": "other", "WMO_BUFR_SRF": "other"}
         with get_sqlalchemy_conn(providers.get(network, "snet")) as pgconn:
-            df = read_sql(
+            df = pd.read_sql(
                 "SELECT valid at time zone 'UTC' as utc_valid, "
                 "valid at time zone %s as local_valid, tmpf, dwpf, sknt, drct "
                 "from alldata WHERE station = %s and "
@@ -158,7 +158,7 @@ def get_df(network, station, date):
         return df
     if network == "USCRN":
         with get_sqlalchemy_conn("uscrn") as pgconn:
-            df = read_sql(
+            df = pd.read_sql(
                 "SELECT valid at time zone 'UTC' as utc_valid, "
                 "valid at time zone %s as local_valid, tmpc, rh, "
                 "wind_mps from alldata WHERE station = %s and "
@@ -170,18 +170,19 @@ def get_df(network, station, date):
         if df.empty:
             return df
         # Do some unit work
-        tmpc = masked_array(df["tmpc"].values, units("degC"))
-        df["tmpf"] = tmpc.to(units("degF")).m
-        if df["rh"].isna().all():
-            df["dwpf"] = np.nan
-        else:
-            df["dwpf"] = (
-                dewpoint_from_relative_humidity(
-                    tmpc, masked_array(df["rh"].values, units("percent"))
+        if not df["tmpc"].isna().all():
+            tmpc = masked_array(df["tmpc"].values, units("degC"))
+            df["tmpf"] = tmpc.to(units("degF")).m
+            if df["rh"].isna().all():
+                df["dwpf"] = np.nan
+            else:
+                df["dwpf"] = (
+                    dewpoint_from_relative_humidity(
+                        tmpc, masked_array(df["rh"].values, units("percent"))
+                    )
+                    .to(units("degF"))
+                    .m
                 )
-                .to(units("degF"))
-                .m
-            )
         if df["wind_mps"].isna().all():
             df["sknt"] = np.nan
         else:
@@ -194,7 +195,7 @@ def get_df(network, station, date):
     if network.find("_COOP") > 0 or network.find("_DCP") > 0:
         # Use HADS
         with get_sqlalchemy_conn("hads") as pgconn:
-            df = read_sql(
+            df = pd.read_sql(
                 "SELECT distinct valid at time zone 'UTC' as utc_valid, "
                 "key, value "
                 f"from raw{date.strftime('%Y')} WHERE station = %s and "
@@ -203,24 +204,27 @@ def get_df(network, station, date):
                 params=(station, sts, ets),
                 index_col=None,
             )
-        if df.empty:
-            return df
-        df = df.pivot_table(
-            index="utc_valid", columns="key", values="value", aggfunc="first"
-        )
-        df = df.reset_index()
-        # Query alldata too as it has the variable conversions done
-        df2 = read_sql(
-            "SELECT valid at time zone 'UTC' as utc_valid, "
-            "tmpf, dwpf, sknt, drct "
-            "from alldata WHERE station = %s and "
-            "valid >= %s and valid < %s ORDER by utc_valid ASC",
-            pgconn,
-            params=(station, sts, ets),
-            index_col=None,
-        )
-        if not df2.empty:
-            df = df.merge(df2, on="utc_valid")
+            if df.empty:
+                return df
+            df = df.pivot_table(
+                index="utc_valid",
+                columns="key",
+                values="value",
+                aggfunc="first",
+            )
+            df = df.reset_index()
+            # Query alldata too as it has the variable conversions done
+            df2 = pd.read_sql(
+                "SELECT valid at time zone 'UTC' as utc_valid, "
+                "tmpf, dwpf, sknt, drct "
+                "from alldata WHERE station = %s and "
+                "valid >= %s and valid < %s ORDER by utc_valid ASC",
+                pgconn,
+                params=(station, sts, ets),
+                index_col=None,
+            )
+            if not df2.empty:
+                df = df.merge(df2, on="utc_valid")
 
         # Generate the local_valid column
         df["local_valid"] = (
