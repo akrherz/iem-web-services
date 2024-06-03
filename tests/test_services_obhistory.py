@@ -57,7 +57,7 @@ def test_dcp_alldata():
     """Test a query that should hit alldata."""
     req = client.get(
         "/obhistory.json",
-        params={"network": "IA_DCP", "station": "DMX", "date": "2023-11-10"},
+        params={"network": "IA_DCP", "station": "DNKI4", "date": "2023-11-10"},
     )
     res = req.json()
     assert res["data"]
