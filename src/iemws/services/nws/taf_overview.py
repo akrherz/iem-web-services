@@ -36,7 +36,8 @@ def handler():
                 WHERE t.network ~* 'ASOS'),
             agg2 as (
                 select a.id, min(visibility) as min_visibility
-                from agg a JOIN taf2021 t on (a.id = t.taf_id) GROUP by a.id)
+                from agg a JOIN taf_forecast t on
+                (a.id = t.taf_id) GROUP by a.id)
 
             select s.station, s.product_id, s.geom, s.name,
             to_char(s.issuance at time zone 'UTC', 'YYYY-MM-DDThh24:MI:SSZ')
@@ -54,7 +55,7 @@ def handler():
         + "&issued="
         + df["utc_issued"]
     )
-    df["text_href"] = f"/api/1/nwstext/{df['product_id'].str.strip()}"
+    df["text_href"] = "/api/1/nwstext/" + df["product_id"].str.strip()
     return df
 
 
