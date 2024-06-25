@@ -1,9 +1,9 @@
 """Helpers."""
 
 import logging
-import tempfile
 from contextlib import contextmanager
 from functools import wraps
+from io import BytesIO
 from typing import Callable
 
 from fastapi import Request, Response
@@ -67,10 +67,10 @@ def deliver_df(df: DataFrame, fmt: str):
         if df.empty:
             res = '{"type": "FeatureCollection", "features": []}'
         else:
-            with tempfile.NamedTemporaryFile("w", delete=True) as tmp:
-                df.to_file(tmp.name, driver="GeoJSON")
-                with open(tmp.name, encoding="utf8") as fh:
-                    res = fh.read()
+            with BytesIO() as tmp:
+                df.crs = "EPSG:4326"
+                df.to_file(tmp, driver="GeoJSON", engine="pyogrio")
+                res = tmp.getvalue()
     return Response(res, media_type=MEDIATYPES[fmt])
 
 

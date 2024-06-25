@@ -9,6 +9,7 @@ dependencies:
   # For the future warning
   - pandas>=2.2
   - pygrib
+  - pyogrio
   - pyproj
   - pytest
   - pytest-runner
