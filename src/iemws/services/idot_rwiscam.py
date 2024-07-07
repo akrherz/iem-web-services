@@ -93,8 +93,11 @@ def idot_rwiscam_service(
 ):
     """Replaced Below."""
     if valid is None:
-        valid = utc() - timedelta(minutes=window * 2)
-    if valid.tzinfo is None:
+        # We want the closest to now, but need to expand the window some
+        valid = utc()
+        if window == 15:
+            window = 30
+    elif valid.tzinfo is None:
         valid = valid.replace(tzinfo=timezone.utc)
     df = handler(valid, window)
     return deliver_df(df, fmt)
