@@ -6,8 +6,7 @@ from functools import wraps
 from io import BytesIO
 from typing import Callable
 
-from fastapi import Request, Response
-from fastapi.responses import JSONResponse
+from fastapi import Response
 from pandas import DataFrame
 from pandas.api.types import is_datetime64_any_dtype as isdt
 from pyiem import util
@@ -34,15 +33,6 @@ def cache_control(max_age: int):
         return wrapper
 
     return decorator
-
-
-def handle_exception(request: Request, exc):
-    """Handle exceptions."""
-    LOG.exception("Exception for %s", request.url, exc_info=exc)
-    return JSONResponse(
-        status_code=500,
-        content="Unexpected error, email akrherz@iastate.edu if you wish :)",
-    )
 
 
 def deliver_df(df: DataFrame, fmt: str):

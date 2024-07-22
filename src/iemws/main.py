@@ -39,6 +39,7 @@ from queue import Queue
 
 import pandas as pd
 from fastapi import FastAPI, Request
+from fastapi.responses import JSONResponse
 from pyiem.util import LOG, get_dbconn, utc
 from shapely.errors import ShapelyDeprecationWarning
 
@@ -91,7 +92,6 @@ from .services.nws import (
 )
 from .services.nws.afos import list as nws_afos_list
 from .services.vtec import county_zone, events_status, sbw_interval
-from .util import handle_exception
 
 # Stop a Shapely deprecation warning until geopandas is updated
 warnings.filterwarnings("ignore", category=ShapelyDeprecationWarning)
@@ -186,6 +186,31 @@ app = FastAPI(
 )
 
 
+def _add_to_queue_from_request(
+    request: Request, response_time: float, status_code: int
+):
+    """Add telemetry data from request."""
+    # within pytest, request.client is None
+    clienthost = None if request.client is None else request.client.host
+    remote_addr = (
+        request.headers.get("X-Forwarded-For", "").split(",")[0].strip()
+        or clienthost
+    )
+    # This is why we can't have nice things
+    path = request.url.path
+    if not path.startswith("/api/1"):
+        path = f"/api/1{path}"
+    _add_to_queue(
+        TELEMETRY(
+            response_time,
+            status_code,
+            "127.0.0.1" if remote_addr == "testclient" else remote_addr,
+            f"{path}",
+            f"{path}?{request.url.query}",
+        )
+    )
+
+
 @app.middleware("http")
 async def record_request_timing(request: Request, call_next):
     """
@@ -193,26 +218,23 @@ async def record_request_timing(request: Request, call_next):
     """
     start_time = time.time()
     response = await call_next(request)
-    # within pytest, request.client is None
-    clienthost = None if request.client is None else request.client.host
-    remote_addr = (
-        request.headers.get("X-Forwarded-For", "").split(",")[0].strip()
-        or clienthost
-    )
-    _add_to_queue(
-        TELEMETRY(
-            time.time() - start_time,
-            response.status_code,
-            "127.0.0.1" if remote_addr == "testclient" else remote_addr,
-            request.url.path,
-            request.url.path + "?" + request.url.query,
-        )
+    _add_to_queue_from_request(
+        request, time.time() - start_time, response.status_code
     )
 
     return response
 
 
-# Unexpected Exception Handling, works in gunicorn, but not uvicorn??
+def handle_exception(request: Request, exc):
+    """Handle exceptions."""
+    LOG.exception("Exception for %s", request.url, exc_info=exc)
+    _add_to_queue_from_request(request, 0, 500)
+    return JSONResponse(
+        status_code=500,
+        content="Unexpected error, email akrherz@iastate.edu if you wish :)",
+    )
+
+
 app.add_exception_handler(Exception, handle_exception)
 
 # The order here impacts the docs order
