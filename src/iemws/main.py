@@ -126,7 +126,7 @@ TELEMETRY_QUEUE = Queue()
 TELEMETRY_QUEUE_THREAD = {"worker": None, "dbconn": None, "lasterr": utc(1980)}
 TELEMETRY = namedtuple(
     "TELEMETRY",
-    ["timing", "status_code", "client_addr", "app", "request_uri"],
+    ["timing", "status_code", "client_addr", "app", "request_uri", "vhost"],
 )
 
 
@@ -138,7 +138,7 @@ def _writer(data):
     cursor.execute(
         """
         insert into website_telemetry(timing, status_code, client_addr,
-        app, request_uri) values (%s, %s, %s, %s, %s)
+        app, request_uri, vhost) values (%s, %s, %s, %s, %s, %s)
         """,
         (
             data.timing,
@@ -146,6 +146,7 @@ def _writer(data):
             data.client_addr,
             data.app,
             data.request_uri,
+            data.vhost,
         ),
     )
     cursor.close()
@@ -200,6 +201,8 @@ def _add_to_queue_from_request(
     path = request.url.path
     if not path.startswith("/api/1"):
         path = f"/api/1{path}"
+    # The best that we can do.
+    host = request.headers.get("x-forwarded-server", "").split(",")[0].strip()
     _add_to_queue(
         TELEMETRY(
             response_time,
@@ -207,6 +210,7 @@ def _add_to_queue_from_request(
             "127.0.0.1" if remote_addr == "testclient" else remote_addr,
             f"{path}",
             f"{path}?{request.url.query}",
+            host,
         )
     )
 
