@@ -15,6 +15,9 @@ hour.  For example, use `12:00Z` for the 12z run instead of `12:30Z`.
 The NBE and NBS MOS data is saved every hour, but then only the 1, 7, 13, and
 19 Z runs are saved after 7 days have passed (to save space in the database).
 The data found within the NBX is included with the NBE.
+
+This service will emit `404` HTTP status codes if no data is found for the
+requested station and model.
 """
 
 from datetime import datetime
@@ -55,8 +58,6 @@ def find_runtime(station, model):
 
 def handler(station, model, runtime, fmt):
     """Handle the request."""
-    if model not in MODEL_DOMAIN:
-        raise HTTPException(503, detail="model= is not in processed domain")
     if runtime is None:
         runtime = find_runtime(station, model)
 
@@ -101,7 +102,12 @@ def service(
     station: List[str] = Query(
         ..., description="Full MOS Station Identifier", max_length=6
     ),
-    model: str = Query(..., description="MOS Model ID"),
+    model: str = Query(
+        ...,
+        pattern="^(AVN|GFS|ETA|NAM|NBS|NBE|ECM|LAV|MEX)$",
+        max_length=3,
+        description="MOS Model ID",
+    ),
     runtime: datetime = Query(None, description="MOS Model Cycle Time"),
 ):
     """Replaced above with module __doc__"""

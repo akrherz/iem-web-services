@@ -24,6 +24,7 @@ from fastapi import APIRouter, HTTPException, Query
 from metpy.calc import dewpoint_from_relative_humidity
 from metpy.units import masked_array, units
 from pyiem.network import Table as NetworkTable
+from sqlalchemy import text
 
 from ..models import SupportedFormatsNoGeoJSON
 from ..models.obhistory import ObHistoryDataItem, ObHistorySchema
@@ -142,6 +143,22 @@ def get_df(network, station, date):
             )
         return df
 
+    if network == "IACOCORAHS":
+        with get_sqlalchemy_conn("iem") as pgconn:
+            df = pd.read_sql(
+                text("""
+                    SELECT coop_valid at time zone 'UTC' as utc_valid,
+                    coop_valid at time zone tzname as local_valid,
+                    pday from summary s JOIN stations t on (s.iemid = t.iemid)
+                    WHERE t.id = :station and t.network = 'IACOCORAHS' and
+                    day = :day and coop_valid is not null
+                     """),
+                pgconn,
+                params={"station": station, "day": date},
+                parse_dates={"utc_valid": "valid"},
+                index_col=None,
+            )
+        return df
     if network in ["OT", "KCCI", "KELO", "KCRG", "KIMT", "WMO_BUFR_SRF"]:
         # lazy
         providers = {"OT": "other", "WMO_BUFR_SRF": "other"}
@@ -258,8 +275,8 @@ def handler(network, station, date, full):
     if date is None:
         date = datetime.date.today()
     df = get_df(network, station, date)
-    if df is None:
-        raise HTTPException(500, "No Data For Station.")
+    if df is None or df.empty:
+        return df
     # Run any addition calculations, if necessary
     return compute(df, full)
 

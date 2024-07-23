@@ -8,6 +8,14 @@ from iemws.main import app
 client = TestClient(app)
 
 
+def test_cocorahs():
+    """Test that cocorahs returns something."""
+    req = client.get(
+        "/obhistory.json?station=IA-PK-97&network=IACOCORAHS&date=2000-01-01"
+    )
+    assert req.status_code == 200
+
+
 def test_404():
     """Test that this generates a 404"""
     req = client.get("/obhistory.json?station=AMW&network=AI&date=2000-01-01")
