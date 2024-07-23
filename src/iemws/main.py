@@ -222,9 +222,12 @@ async def record_request_timing(request: Request, call_next):
     """
     start_time = time.time()
     response = await call_next(request)
-    _add_to_queue_from_request(
-        request, time.time() - start_time, response.status_code
-    )
+    if response.status_code not in [
+        405,
+    ]:
+        _add_to_queue_from_request(
+            request, time.time() - start_time, response.status_code
+        )
 
     return response
 
