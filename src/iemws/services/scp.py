@@ -12,8 +12,8 @@ import datetime
 
 import pandas as pd
 from fastapi import APIRouter, Query
-from pandas.io.sql import read_sql
 from pyiem.util import utc
+from sqlalchemy import text
 
 from ..util import deliver_df, get_sqlalchemy_conn
 
@@ -28,26 +28,28 @@ def handler(station, date):
     ets = sts + datetime.timedelta(hours=24)
     with get_sqlalchemy_conn("asos") as dbconn:
         # Get METARs
-        obs = read_sql(
-            """
+        obs = pd.read_sql(
+            text("""
             SELECT valid at time zone 'UTC' as utc_valid, metar, skyc1, skyl1,
             skyc2, skyl2, skyc3, skyl3, skyc4, skyl4
-            from alldata where station = %s and valid >= %s
-            and valid < %s and report_type != 1 ORDER by valid ASC
-            """,
+            from alldata where station = :station3 and valid >= :sts
+            and valid < :ets and report_type != 1 ORDER by valid ASC
+            """),
             dbconn,
             index_col=None,
-            params=(station3, sts, ets),
+            params={"station3": station3, "sts": sts, "ets": ets},
         )
         # Get SCP
-        scp = read_sql(
-            "SELECT valid at time zone 'UTC' as utc_scp_valid, mid, high, "
-            "cldtop1, cldtop2, eca, source from scp_alldata "
-            "where station = %s and valid >= %s "
-            "and valid < %s ORDER by valid ASC",
+        scp = pd.read_sql(
+            text("""
+            SELECT valid at time zone 'UTC' as utc_scp_valid, mid, high,
+            cldtop1, cldtop2, eca, source from scp_alldata
+            where station = :station and valid >= :sts
+            and valid < :ets ORDER by valid ASC
+                 """),
             dbconn,
             index_col=None,
-            params=(station, sts, ets),
+            params={"station": station, "sts": sts, "ets": ets},
         )
     # Figure out how many unique sources we have
     df = None
