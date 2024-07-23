@@ -64,8 +64,7 @@ jobs:
         cd ..
         cd database; sh bootstrap.sh
         python schema_manager.py
-        cd ../testdata
-        sh load.sh
+        python store_test_data.py
 
     - name: Setup CI from ci-tooling
       run: |
