@@ -1,3 +1,9 @@
+[tool.pytest.ini_options]
+filterwarnings = [
+    "ignore:numpy.ndarray size changed:RuntimeWarning",
+    "ignore:'cgi' is deprecated and slated for removal:DeprecationWarning",
+]
+
 [tool.ruff]
 line-length = 79
 target-version = "py39"

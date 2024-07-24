@@ -8,6 +8,15 @@ from iemws.main import app
 client = TestClient(app)
 
 
+def test_nstl():
+    """Test that NSTL works."""
+    resp = client.get(
+        "/obhistory.json?station=NSTL11&network=NSTLFLUX&date=2000-01-01"
+    )
+    assert resp.status_code == 404
+    assert resp.json()["detail"] == "No data found for request"
+
+
 def test_cocorahs():
     """Test that cocorahs returns something."""
     req = client.get(

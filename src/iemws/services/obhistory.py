@@ -304,6 +304,10 @@ def service(
 ):
     """Replaced above with module __doc__"""
     df = handler(network.upper(), station.upper(), date, full)
+    if df is None:
+        raise HTTPException(
+            status_code=404, detail="No data found for request"
+        )
     return deliver_df(df, fmt)
 
 
