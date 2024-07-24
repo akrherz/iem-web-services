@@ -56,16 +56,15 @@ jobs:
 
     - name: Setup Postgres
       run: |
-        set -e
-        git clone --depth 1 https://github.com/akrherz/iem-database.git database
-        git clone --depth 1 https://github.com/akrherz/ci_tooling.git .ci_tooling
+        set -e -x
+        git clone https://github.com/akrherz/iem-database.git database
+        git clone https://github.com/akrherz/ci_tooling.git .ci_tooling
         cd .ci_tooling
         . postgres.sh
         cd ..
         cd database; sh bootstrap.sh
         python schema_manager.py
-        cd ../testdata
-        sh load.sh
+        python store_test_data.py
 
     - name: Setup CI from ci-tooling
       run: |
