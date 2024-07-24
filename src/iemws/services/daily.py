@@ -146,7 +146,7 @@ def service(
 ):
     """Replaced above with module __doc__"""
     if all(x is None for x in [station, date, month, year]):
-        raise HTTPException(500, detail="Not enough arguments provided.")
+        raise HTTPException(422, detail="Not enough arguments provided.")
 
     df = get_df(network, station, date, month, year)
     return deliver_df(df, fmt)

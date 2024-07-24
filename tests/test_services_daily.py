@@ -14,10 +14,10 @@ def test_pre1928_request():
     assert req.status_code == 500
 
 
-def test_error500():
+def test_error422():
     """Test that an invalid request is caught."""
     req = client.get("/daily.json?network=IA_ASOS")
-    assert req.status_code == 500
+    assert req.status_code == 422
 
 
 def test_basic():
