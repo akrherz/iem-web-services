@@ -26,7 +26,7 @@ from sqlalchemy import text
 
 from ..models import SupportedFormats
 from ..models.daily import DailySchema
-from ..util import deliver_df, get_sqlalchemy_conn
+from ..util import cache_control, deliver_df, get_sqlalchemy_conn
 
 router = APIRouter()
 
@@ -127,6 +127,7 @@ def get_df(network, station, date, month, year):
         "iem",
     ],
 )
+@cache_control(300)
 def service(
     fmt: SupportedFormats,
     network: str = Query(
