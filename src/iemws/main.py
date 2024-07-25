@@ -45,6 +45,7 @@ from shapely.errors import ShapelyDeprecationWarning
 
 from .config import log_config
 from .services import (
+    asos_interval_summary,
     climodat,
     cow,
     currents,
@@ -252,6 +253,7 @@ app.include_router(iemre_hourly.router)
 app.include_router(iemre_multiday.router)
 app.include_router(trending_autoplots.router)
 
+app.include_router(asos_interval_summary.router)
 app.include_router(climodat.router)
 app.include_router(idot_dashcam.router)
 app.include_router(idot_rwiscam.router)
