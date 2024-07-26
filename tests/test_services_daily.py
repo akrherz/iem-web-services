@@ -11,7 +11,7 @@ def test_pre1928_request():
     req = client.get(
         "/daily.json?station=MMLW1&network=WA_DCP&year=1920&month=3",
     )
-    assert req.status_code == 500
+    assert req.status_code == 404
 
 
 def test_error422():
