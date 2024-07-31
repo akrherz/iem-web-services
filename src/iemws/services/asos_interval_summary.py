@@ -20,12 +20,16 @@ temperature observations that were made in that window.  The reason is that
 this observation is typically considered the "synoptic" observation for the
 hour.  The precipitation report for this observation is not considered, since
 it represents the previous hour.
+
+Life Choice 2.  In the case of ties for max wind speed or gust, the most recent
+occurence is used.
 """
 
 import datetime
 
 import pandas as pd
 from fastapi import APIRouter, HTTPException, Query
+from pyiem.reference import ISO8601
 from sqlalchemy import text
 
 from ..models import SupportedFormatsNoGeoJSON
@@ -46,7 +50,8 @@ def get_df(
         obs = pd.read_sql(
             text("""
                 SELECT station, valid at time zone 'UTC' as utc_valid,
-                tmpf, p01i,
+                tmpf, p01i, sknt, gust, drct, peak_wind_gust, peak_wind_drct,
+                peak_wind_time at time zone 'UTC' as peak_wind_time,
                 max_tmpf_6hr, min_tmpf_6hr, report_type from alldata WHERE
                 station = ANY(:stations) and valid > :sts and valid <= :ets
                 and report_type in (3, 4) order by valid asc
@@ -54,11 +59,12 @@ def get_df(
             pgconn,
             params={"stations": stations, "sts": effsts, "ets": ets},
             index_col=None,
-            parse_dates="utc_valid",
+            parse_dates=["utc_valid", "peak_wind_time"],
         )
     # Ensure that the utc_valid is localized
     if not obs.empty:
-        obs["utc_valid"] = obs["utc_valid"].dt.tz_localize("UTC")
+        for col in ["peak_wind_time", "utc_valid"]:
+            obs[col] = obs[col].dt.tz_localize("UTC")
     return obs
 
 
@@ -70,9 +76,33 @@ def compute(station: str, obs: pd.DataFrame, sts) -> dict:
         "min_tmpf": None,
         "total_precip_in": None,
         "obs_count": 0,
+        "max_speed_kts": None,
+        "max_gust_kts": None,
+        "max_speed_drct": None,
+        "max_gust_drct": None,
+        "max_speed_time_utc": None,
+        "max_gust_time_utc": None,
     }
     if obs.empty:
         return res
+    # Max sknt is straight forward
+    if obs["sknt"].max() > 0:
+        row = obs.sort_values(["sknt", "utc_valid"], ascending=False).iloc[0]
+        res["max_speed_kts"] = row["sknt"]
+        res["max_speed_drct"] = row["drct"]
+        res["max_speed_time_utc"] = row["utc_valid"].strftime(ISO8601)
+    # Max gust is a bit more complex
+    if obs["gust"].max() > 0:
+        row = obs.sort_values(["gust", "utc_valid"], ascending=False).iloc[0]
+        res["max_gust_kts"] = row["gust"]
+        res["max_gust_time_utc"] = row["utc_valid"].strftime(ISO8601)
+        if obs["peak_wind_gust"].max() >= obs["gust"].max():
+            row = obs.sort_values(
+                ["peak_wind_gust", "peak_wind_time"], ascending=False
+            ).iloc[0]
+            res["max_gust_kts"] = row["peak_wind_gust"]
+            res["max_gust_drct"] = row["peak_wind_drct"]
+            res["max_gust_time_utc"] = row["peak_wind_time"].strftime(ISO8601)
     res["max_tmpf"] = obs["tmpf"].max()
     res["min_tmpf"] = obs["tmpf"].min()
     res["obs_count"] = len(obs.index)

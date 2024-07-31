@@ -15,6 +15,21 @@ def test_nodata():
     assert resp.status_code == 404
 
 
+def test_gh217_wind_fields():
+    """Test that wind fields are properly provided."""
+    resp = client.get(
+        "/asos_interval_summary.json?"
+        "station=DSM&sts=2020-01-10T23:00&ets=2020-01-12T04:00"
+    )
+    jdata = resp.json()
+    assert jdata["data"][0]["max_speed_kts"] == 21
+    assert jdata["data"][0]["max_gust_kts"] == 34
+    assert jdata["data"][0]["max_speed_drct"] == 350
+    assert jdata["data"][0]["max_gust_drct"] == 360
+    assert jdata["data"][0]["max_speed_time_utc"] == "2020-01-11T02:35:00Z"
+    assert jdata["data"][0]["max_gust_time_utc"] == "2020-01-11T01:14:00Z"
+
+
 def test_logic():
     """Test something with data."""
     resp = client.get(
