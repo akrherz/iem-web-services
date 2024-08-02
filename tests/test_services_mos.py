@@ -26,3 +26,9 @@ def test_bad_model():
     """Test with bad model."""
     req = client.get("/mos.json?station=KDSM&model=xxx")
     assert req.status_code == 422
+
+
+def test_no_recent():
+    """Test with bad model."""
+    req = client.get("/mos.json?station=KXX1&model=NAM")
+    assert req.status_code == 404
