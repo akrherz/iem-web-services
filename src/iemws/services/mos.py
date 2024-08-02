@@ -20,18 +20,18 @@ This service will emit `404` HTTP status codes if no data is found for the
 requested station and model.
 """
 
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import List
 
+import pandas as pd
 import pytz
 from fastapi import APIRouter, HTTPException, Query, Response
-from pandas.io.sql import read_sql
-from pyiem import util
+from pyiem.util import utc
 from sqlalchemy import text
 
 from ..models import SupportedFormatsNoGeoJSON
 from ..reference import MEDIATYPES
-from ..util import get_sqlalchemy_conn
+from ..util import cache_control, get_sqlalchemy_conn
 
 MODEL_DOMAIN = ["AVN", "GFS", "ETA", "NAM", "NBS", "NBE", "ECM", "LAV", "MEX"]
 COLUMNS = (
@@ -41,19 +41,34 @@ COLUMNS = (
     "cc1,s12,i12,s24,pzp,prs,txn"
 ).split(",")
 router = APIRouter()
+# Save some database queries
+LATEST_RUNTIME_CACHE = {}
 
 
 def find_runtime(station, model):
     """Figure out what our latest runtime is."""
-    cursor = util.get_dbconn("mos").cursor()
-    cursor.execute(
-        "SELECT max(runtime) from alldata WHERE model = %s and "
-        "station = ANY(%s) and runtime > now() - '48 hours'::interval",
-        (model, station),
-    )
-    if cursor.rowcount == 0:
-        raise HTTPException(404, detail="could not find most recent model run")
-    return cursor.fetchone()[0]
+    # Check our cache
+    if model in LATEST_RUNTIME_CACHE:
+        (settime, runtime) = LATEST_RUNTIME_CACHE[model]  # (settime, runtime)
+        if settime > utc() - timedelta(minutes=20):
+            return runtime
+    with get_sqlalchemy_conn("mos") as engine, engine.begin() as conn:
+        res = conn.execute(
+            text(
+                "SELECT max(runtime) from alldata WHERE model = :model and "
+                "station = ANY(:stations) and "
+                "runtime > now() - '48 hours'::interval"
+            ),
+            {"model": model, "stations": station},
+        )
+        rows = res.fetchone()
+        if not rows:
+            raise HTTPException(
+                404, detail="could not find most recent model run"
+            )
+        runtime = rows[0]
+        LATEST_RUNTIME_CACHE[model] = (utc(), runtime)
+    return runtime
 
 
 def handler(station, model, runtime, fmt):
@@ -63,7 +78,7 @@ def handler(station, model, runtime, fmt):
 
     # Ready to get the data!
     with get_sqlalchemy_conn("mos") as conn:
-        df = read_sql(
+        df = pd.read_sql(
             text(
                 """
                 SELECT *, t06_1 ||'/'||t06_2 as t06, t12_1 ||'/'|| t12_2
@@ -97,6 +112,7 @@ def handler(station, model, runtime, fmt):
         "nws",
     ],
 )
+@cache_control(600)
 def service(
     fmt: SupportedFormatsNoGeoJSON,
     station: List[str] = Query(
