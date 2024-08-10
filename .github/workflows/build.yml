@@ -69,8 +69,8 @@ jobs:
     - name: Setup CI from ci-tooling
       run: |
         python -m pip install --upgrade .
-        coverage run --source=iemws setup.py test
-        coverage xml
+        python -m pytest --cov=iemws
+        python -m coverage xml
 
     - name: Upload coverage to Codecov
       if: ${{ env.PYTHON_VERSION == '3.12' }}
