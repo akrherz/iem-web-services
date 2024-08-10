@@ -13,6 +13,7 @@ dependencies:
   - pyproj
   - pytest
   - pytest-runner
+  - setuptools_scm
   - sqlalchemy
   # For logging
   - uvicorn
