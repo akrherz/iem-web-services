@@ -12,6 +12,7 @@ dependencies:
   - pyogrio
   - pyproj
   - pytest
+  - pytest-cov
   - pytest-runner
   - setuptools_scm
   - sqlalchemy
