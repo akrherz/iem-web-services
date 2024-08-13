@@ -25,27 +25,30 @@ def myrounder(val, precision):
     return round(float(val), precision)
 
 
-def get_timerange(date):
+def get_timerange(date, domain):
     """Figure out what period to get data for."""
-    # Construct a CDT/CST Midnight to 11 PM period
     ts = datetime.datetime(
-        date.year, date.month, date.day, 0, tzinfo=ZoneInfo("America/Chicago")
+        date.year,
+        date.month,
+        date.day,
+        0,
+        tzinfo=iemre.DOMAINS[domain]["tzinfo"],
     )
     return ts, ts.replace(hour=23)
 
 
-def workflow(sts, ets, i, j):
+def workflow(sts, ets, i, j, domain):
     """Return a dict of our data."""
     res = []
 
     # BUG here for Dec 31.
-    fn = iemre.get_hourly_ncname(sts.year)
+    fn = iemre.get_hourly_ncname(sts.year, domain=domain)
 
     if not os.path.isfile(fn):
-        raise HTTPException(500, "No data.")
+        raise HTTPException(400, "No data.")
 
     if i is None or j is None:
-        raise HTTPException(500, "Request outside IEMRE domain bounds.")
+        raise HTTPException(400, "Request outside IEMRE domain bounds.")
 
     UTC = ZoneInfo("UTC")
     with ncopen(fn) as nc:
@@ -97,14 +100,18 @@ def service(
         ...,
         description="The CST/CDT date of interest.",
     ),
-    lon: float = Query(..., description="Longitude of point of interest"),
-    lat: float = Query(..., description="Latitude of point of interest"),
+    lon: float = Query(
+        ..., description="Longitude of point of interest", ge=-180, le=180
+    ),
+    lat: float = Query(
+        ..., description="Latitude of point of interest", ge=-90, le=90
+    ),
 ):
     """Do Something Fun!"""
-    sts, ets = get_timerange(date)
-
-    i, j = iemre.find_ij(lon, lat)
-    if i is None or j is None:
-        raise HTTPException(500, "Request outside IEMRE domain bounds.")
-    df = workflow(sts, ets, i, j)
+    domain = iemre.get_domain(lon, lat)
+    if domain is None:
+        raise HTTPException(400, "Request outside IEMRE domain bounds.")
+    sts, ets = get_timerange(date, domain)
+    i, j = iemre.find_ij(lon, lat, domain=domain)
+    df = workflow(sts, ets, i, j, domain)
     return deliver_df(df, fmt)
