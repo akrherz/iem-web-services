@@ -20,4 +20,4 @@ def test_hourly_out_of_bounds():
         "/iemre/hourly.json",
         params=params,
     )
-    assert res.status_code == 500
+    assert res.status_code == 400
