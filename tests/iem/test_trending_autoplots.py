@@ -1,6 +1,7 @@
 """Test the trending_autoplots service."""
 
 from fastapi.testclient import TestClient
+
 from iemws.main import app
 
 client = TestClient(app)
