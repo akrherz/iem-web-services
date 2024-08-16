@@ -1,6 +1,7 @@
 """Test the asos_interval_summary service."""
 
 from fastapi.testclient import TestClient
+
 from iemws.main import app
 
 client = TestClient(app)
