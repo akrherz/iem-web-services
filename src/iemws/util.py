@@ -58,8 +58,11 @@ def deliver_df(df: DataFrame, fmt: str):
             res = '{"type": "FeatureCollection", "features": []}'
         else:
             with BytesIO() as tmp:
-                df.crs = "EPSG:4326"
-                df.to_file(tmp, driver="GeoJSON", engine="pyogrio")
+                (
+                    df.set_crs("EPSG:4326", allow_override=True).to_file(
+                        tmp, driver="GeoJSON", engine="pyogrio"
+                    )
+                )
                 res = tmp.getvalue()
     return Response(res, media_type=MEDIATYPES[fmt])
 
