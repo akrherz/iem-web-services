@@ -21,8 +21,8 @@ gunicorn \
  --graceful-timeout 60 \
  -k iemws.worker.RestartableUvicornWorker \
  -b 0.0.0.0:8000 \
- --max-requests 500 \
- --max-requests-jitter 50 \
+ --max-requests 50000 \
+ --max-requests-jitter 500 \
  --reload \
  --log-level warning \
  iemws.main:app 2>&1 | logger -p local1.notice --tag iemws &
