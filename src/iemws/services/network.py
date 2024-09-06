@@ -4,10 +4,12 @@ The IEM organizes stations into networks.  This service returns station
 metadata for a given network.
 """
 
+import geopandas as gpd
 from fastapi import APIRouter, HTTPException, Path
-from geopandas import read_postgis
+from sqlalchemy import text
 
 from ..models import SupportedFormats
+from ..models.network import NetworkSchema
 from ..util import cache_control, deliver_df, get_sqlalchemy_conn
 
 router = APIRouter()
@@ -18,21 +20,25 @@ def handler(network_id):
     with get_sqlalchemy_conn("mesosite") as pgconn:
         # One off
         if network_id == "ASOS1MIN":
-            df = read_postgis(
-                "SELECT t.*, ST_X(geom) as longitude, ST_Y(geom) as latitude "
-                "from stations t JOIN station_attributes a "
-                "ON (t.iemid = a.iemid) WHERE t.network ~* 'ASOS' and "
-                "a.attr = 'HAS1MIN' ORDER by id ASC",
+            df = gpd.read_postgis(
+                text("""
+        SELECT t.*, ST_X(geom) as longitude, ST_Y(geom) as latitude
+        from stations t JOIN station_attributes a
+        ON (t.iemid = a.iemid) WHERE t.network ~* 'ASOS' and
+        a.attr = 'HAS1MIN' ORDER by id ASC
+                """),
                 pgconn,
                 geom_col="geom",
                 index_col=None,
             )
         else:
-            df = read_postgis(
-                "SELECT *, ST_X(geom) as longitude, ST_Y(geom) as latitude "
-                "from stations where network = %s ORDER by name ASC",
+            df = gpd.read_postgis(
+                text("""
+        SELECT *, ST_X(geom) as longitude, ST_Y(geom) as latitude
+        from stations where network = :network ORDER by name ASC
+                """),
                 pgconn,
-                params=(network_id,),
+                params={"network": network_id},
                 geom_col="geom",
                 index_col=None,
             )
@@ -53,6 +59,7 @@ def handler(network_id):
     tags=[
         "iem",
     ],
+    response_model=NetworkSchema,
 )
 @cache_control(600)
 def service(
