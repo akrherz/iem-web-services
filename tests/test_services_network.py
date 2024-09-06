@@ -7,6 +7,12 @@ from iemws.main import app
 client = TestClient(app)
 
 
+def test_asos1min():
+    """Test the hacky ASOS1MIN."""
+    resp = client.get("/network/ASOS1MIN.json")
+    assert resp.status_code == 200
+
+
 def test_basic():
     """Test basic calls."""
     # This actually 404s in CI
