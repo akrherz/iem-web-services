@@ -3,14 +3,16 @@
 This service emits a text file for a given IEM defined product ID. For example:
 `/api/1/nwstext/201410071957-KDMX-FXUS63-AFDDMX`
 
-This is a one-shot service, so if the database finds more than one entry for
-the provided identifier, a `X-IEM-Notice` header is added to the response.
+If parameter `nolimit` is unset, this is a one-shot service, so if the database
+finds more than one entry for the provided identifier, a `X-IEM-Notice` header
+is added to the response.  If you provide `nolimit`, then the service will
+return the products seperated by \003 character.
 """
 
 import datetime
 
 import pytz
-from fastapi import APIRouter, HTTPException, Path, Response
+from fastapi import APIRouter, HTTPException, Path, Query, Response
 from pyiem.database import get_dbconnc
 
 from iemws.util import cache_control
@@ -18,7 +20,7 @@ from iemws.util import cache_control
 router = APIRouter()
 
 
-def handler(product_id, headers):
+def handler(product_id, nolimit: bool, headers):
     """Handle the request, return dict"""
     pgconn, cursor = get_dbconnc("afos")
     tokens = product_id.split("-")
@@ -56,7 +58,12 @@ def handler(product_id, headers):
 
     if cursor.rowcount > 1:
         headers["X-IEM-Notice"] = "Multiple Products Found"
-
+        if nolimit:
+            res = []
+            for row in cursor:
+                res.append(row["data"].replace("\r\r\n", "\n"))
+            pgconn.close()
+            return "\003".join(res)
     row = cursor.fetchone()
     pgconn.close()
     return row["data"].replace("\r\r\n", "\n")
@@ -72,10 +79,11 @@ def handler(product_id, headers):
 @cache_control(300)
 def nwstext_service(
     product_id: str = Path(..., max_length=35, min_length=28),
+    nolimit: bool = Query(False, description="Return all products"),
 ):
     """Replaced above by __doc__."""
     headers = {}
-    res = handler(product_id, headers)
+    res = handler(product_id, nolimit, headers)
     return Response(res, headers=headers, media_type="text/plain")
 
 
