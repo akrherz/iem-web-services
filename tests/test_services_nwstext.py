@@ -21,6 +21,14 @@ def test_valid_request():
     assert req.text == "HI DARYL, NULL BBB"
 
 
+def test_nolimit():
+    """Test a nolimit request."""
+    pid = "202101010000-KDMX-TTAAII-AAABBB"
+    req = client.get(f"/nwstext/{pid}?nolimit=1")
+    assert "X-IEM-Notice" in req.headers
+    assert req.text.find("\003") > 0
+
+
 def test_valid_request_bbb():
     """Test valid request."""
     pid = "202101010000-KDMX-TTAAII-AAABBB-RRA"
