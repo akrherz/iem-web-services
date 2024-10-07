@@ -37,6 +37,7 @@ router = APIRouter()
 def handler(lon, lat, valid):
     """Handle the request, return dict"""
     with get_sqlalchemy_conn("postgis") as pgconn:
+        # NB: Postgresql17 was making a poor query plan choice here
         df = gpd.read_postgis(
             text(
                 """
@@ -58,9 +59,9 @@ def handler(lon, lat, valid):
                     then 0 else priority end desc), priority, category
                 from spc_outlook_geometries o, current c,
                 spc_outlook_thresholds t
-                WHERE o.threshold = t.threshold and o.spc_outlook_id = c.id and
-                ST_Contains(geom, ST_Point(:lon, :lat, 4326)))
-            SELECT * from agg where rank = 1 or threshold = 'SIGN';
+                WHERE o.threshold = t.threshold and o.spc_outlook_id = c.id)
+            SELECT * from agg where (rank = 1 or threshold = 'SIGN') and
+            ST_Contains(geom, ST_Point(:lon, :lat, 4326))
             """
             ),
             pgconn,
