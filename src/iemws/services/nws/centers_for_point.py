@@ -25,15 +25,15 @@ def handler(lon, lat):
                 """
             with mywfo as (
                 select wfo from cwa where
-                ST_Contains(the_geom, ST_SetSRID(ST_Point(:lon, :lat), 4326))
+                ST_Contains(the_geom, ST_Point(:lon, :lat, 4326))
                 LIMIT 1),
             myrfc as (
                 select site_id from rfc where
-                ST_Contains(geom, ST_SetSRID(ST_Point(:lon, :lat), 4326))
+                ST_Contains(geom, ST_Point(:lon, :lat, 4326))
                 LIMIT 1),
             mycwsu as (
                 select id as cwsu from cwsu where
-                ST_Contains(geom, ST_SetSRID(ST_Point(:lon, :lat), 4326))
+                ST_Contains(geom, ST_Point(:lon, :lat, 4326))
                 LIMIT 1)
             select wfo, site_id as rfc, cwsu from mywfo, myrfc, mycwsu
             """

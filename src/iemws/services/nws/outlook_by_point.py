@@ -59,7 +59,7 @@ def handler(lon, lat, valid):
                 from spc_outlook_geometries o, current c,
                 spc_outlook_thresholds t
                 WHERE o.threshold = t.threshold and o.spc_outlook_id = c.id and
-                ST_Contains(geom, ST_SetSRID(ST_Point(:lon, :lat), 4326)))
+                ST_Contains(geom, ST_Point(:lon, :lat, 4326)))
             SELECT * from agg where rank = 1 or threshold = 'SIGN';
             """
             ),
