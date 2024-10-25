@@ -1,4 +1,4 @@
-"""Models for nws/snowfall_6hour API."""
+"""Models for nws/varname_6hour API."""
 
 # pylint: disable=no-name-in-module,too-few-public-methods
 from typing import List
@@ -10,7 +10,8 @@ class Item(BaseModel):
     """Data Schema."""
 
     utc_valid: str = Field(..., title="UTC timestamp of observation")
-    value: float = Field(..., title="6 Hour Snowfall (inch)")
+    value: float = Field(..., title="6 Hour value (inch)")
+    shefvar: str = Field(..., title="SHEF variable name")
     wfo: str = Field(..., title="Weather Forecast Office 3-char ID")
     state: str = Field(..., title="State Field")
     station: str = Field(..., title="SHEF station identifier used")
