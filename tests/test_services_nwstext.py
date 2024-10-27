@@ -7,6 +7,12 @@ from iemws.main import app
 client = TestClient(app)
 
 
+def test_invalid_timestamp():
+    """Test that this raises a 422."""
+    req = client.get("/nwstext/20150705-0517-KOKX-CDUS41-CLINYC")
+    assert req.status_code == 422
+
+
 def test_invalid_request():
     """Test basic things."""
     req = client.get("/nwstext/BAH")
