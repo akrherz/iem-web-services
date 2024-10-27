@@ -35,7 +35,13 @@ def handler(product_id, nolimit: bool, headers):
             detail="Invalid product_id format provided",
         )
 
-    ts = datetime.datetime.strptime(tstamp, "%Y%m%d%H%M")
+    try:
+        ts = datetime.datetime.strptime(tstamp, "%Y%m%d%H%M")
+    except ValueError as exp:
+        raise HTTPException(
+            status_code=422,
+            detail="Invalid timestamp provided",
+        ) from exp
     ts = ts.replace(tzinfo=pytz.UTC)
 
     args = [source, pil, ts]
