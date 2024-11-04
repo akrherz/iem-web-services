@@ -82,6 +82,7 @@ from .services.nws import (
     emergencies,
     lsrs_by_point,
     outlook_by_point,
+    sbw_by_line,
     six_hour,
     spc_mcd,
     spc_outlook,
@@ -279,6 +280,7 @@ app.include_router(station.router)
 app.include_router(nwstext.router)
 app.include_router(meteobridge.router)
 app.include_router(drydown.router)
+app.include_router(sbw_by_line.router)
 app.include_router(six_hour.router)
 app.include_router(spc_mcd.router)
 app.include_router(spc_outlook.router)
