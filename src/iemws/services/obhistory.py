@@ -98,16 +98,28 @@ def get_df(network, station, date):
                 index_col=None,
             )
         return df
-    if network in ["ISUSM", "ISUAG"]:
-        # Use ISUAG
+    if network == "ISUSM":
         with get_sqlalchemy_conn("isuag") as pgconn:
             df = pd.read_sql(
-                "SELECT valid at time zone 'UTC' as utc_valid, phour, "
-                "valid at time zone %s as local_valid, tmpf, relh, sknt, drct "
-                "from alldata WHERE station = %s and "
-                "valid >= %s and valid < %s ORDER by valid ASC",
+                text("""
+                SELECT
+                valid at time zone 'UTC' as utc_valid,
+                rain_in_tot_qc as phour, rain_in_tot_f as phour_flag,
+                valid at time zone :tzname as local_valid,
+                c2f(tair_c_avg_qc) as tmpf,
+                rh_avg_qc as relh,
+                ws_mph_qc * 1.15 as sknt,
+                winddir_d1_wvt_qc as drct
+                from sm_hourly WHERE station = :station and
+                valid >= :sts and valid < :ets ORDER by valid ASC
+                """),
                 pgconn,
-                params=(tzname, station, sts, ets),
+                params={
+                    "tzname": tzname,
+                    "station": station,
+                    "sts": sts,
+                    "ets": ets,
+                },
                 index_col=None,
             )
         # Compute dew point

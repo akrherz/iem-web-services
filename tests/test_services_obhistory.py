@@ -42,10 +42,10 @@ def test_asos_archive():
 
 def test_isusm_archive():
     """Test that this works"""
-    req = client.get(
-        "/obhistory.json?station=BOOI4&network=ISUSM&date=2000-01-01"
+    resp = client.get(
+        "/obhistory.json?station=BOOI4&network=ISUSM&date=2024-07-21"
     )
-    assert req.status_code == 200
+    assert resp.json()["data"]
 
 
 def test_rwis_archive():
