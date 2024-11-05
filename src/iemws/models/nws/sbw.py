@@ -26,6 +26,10 @@ class Item(BaseModel):
     squalltag: str = Field(..., title="Squall Tag")
     product_id: str = Field(..., title="Product ID")
     product_signature: str = Field(..., title="Product Signature")
+    issue: str = Field(..., title="Issue Time in UTC")
+    expire: str = Field(..., title="Expire Time in UTC")
+    polygon_begin: str = Field(..., title="Polygon Begin Time in UTC")
+    polygon_end: str = Field(..., title="Polygon End Time in UTC")
 
 
 class StormBasedWarningSchema(BaseModel):

@@ -44,13 +44,22 @@ def handler(
             select wfo, geom, vtec_year, phenomena, significance, eventid,
             windtag, hailtag, tornadotag, damagetag, is_emergency, is_pds,
             windthreat, hailthreat, squalltag, product_id, product_signature,
-            '' as uri
+            '' as uri,
+            to_char(issue at time zone 'UTC', 'YYYY-MM-DDThh24:MI:SSZ')
+                as issue,
+            to_char(expire at time zone 'UTC', 'YYYY-MM-DDThh24:MI:SSZ')
+                as expire,
+            to_char(polygon_begin at time zone 'UTC',
+                'YYYY-MM-DDThh24:MI:SSZ') as polygon_begin,
+            to_char(polygon_end at time zone 'UTC', 'YYYY-MM-DDThh24:MI:SSZ')
+                as polygon_end
             from sbw where
             ST_Intersects(
                 ST_MakeLine(
                     ST_Point(:start_lon, :start_lat, 4326),
                     ST_Point(:end_lon, :end_lat, 4326)), geom)
             and {issuecol} <= :ets and {expirecol} >= :sts {status_filter}
+            ORDER by updated ASC
             """
             ),
             pgconn,
