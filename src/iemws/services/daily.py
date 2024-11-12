@@ -142,7 +142,7 @@ def service(
         ge=datetime.date(1928, 1, 1),
         le=datetime.date(2030, 1, 1),
     ),
-    month: int = Query(None, description="Local station month"),
+    month: int = Query(None, ge=1, le=12, description="Local station month"),
     year: int = Query(None, ge=1849, le=2030, description="Local station day"),
 ):
     """Replaced above with module __doc__"""
