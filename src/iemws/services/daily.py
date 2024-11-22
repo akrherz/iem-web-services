@@ -99,7 +99,8 @@ def get_df(network, station, date, month, year):
                     f"""
                 SELECT id as station, to_char(day, 'YYYY-mm-dd') as date,
                 max_tmpf, min_tmpf, pday as precip, max_gust, snow, snowd,
-                min_rh, max_rh, max_dwpf, min_dwpf, min_feel, avg_feel,
+                min_rh, max_rh, max_dwpf, min_dwpf, min_feel,
+                coalesce(avg_feel, (max_feel + min_feel) / 2.) as avg_feel,
                 max_feel, max_drct,
                 false as precip_est, false as tmpf_est,
                 max_gust_ts at time zone t.tzname as max_gust_localts,
