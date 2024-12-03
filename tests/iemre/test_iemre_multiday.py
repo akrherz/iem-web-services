@@ -21,4 +21,4 @@ def test_multidaily_out_of_bounds():
         "/iemre/multiday.json",
         params=params,
     )
-    assert res.status_code == 500
+    assert res.status_code == 422

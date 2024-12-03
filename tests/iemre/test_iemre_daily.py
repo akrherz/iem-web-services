@@ -20,4 +20,4 @@ def test_daily_out_of_bounds():
         "/iemre/daily.json",
         params=params,
     )
-    assert res.status_code == 500
+    assert res.status_code == 422
