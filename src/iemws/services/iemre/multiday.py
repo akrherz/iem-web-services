@@ -33,8 +33,12 @@ def service(
     fmt: SupportedFormatsNoGeoJSON,
     sdate: datetime.date = Query(..., description="Start Date."),
     edate: datetime.date = Query(..., description="End Date."),
-    lon: float = Query(..., description="Longitude of point of interest"),
-    lat: float = Query(..., description="Latitude of point of interest"),
+    lon: float = Query(
+        ..., description="Longitude of point of interest", ge=-180, le=180
+    ),
+    lat: float = Query(
+        ..., description="Latitude of point of interest", ge=-90, le=90
+    ),
 ):
     """Go Main Go"""
     # Make sure we aren't in the future
@@ -42,13 +46,17 @@ def service(
     if edate > tsend:
         edate = datetime.date.today() - datetime.timedelta(days=1)
 
-    i, j = iemre.find_ij(lon, lat)
+    domain = iemre.get_domain(lon, lat)
+    if domain is None:
+        raise HTTPException(422, "Request outside IEMRE domain bounds.")
+
+    i, j = iemre.find_ij(lon, lat, domain=domain)
     if i is None or j is None:
-        raise HTTPException(500, "Request outside IEMRE domain bounds.")
+        raise HTTPException(422, "Request outside IEMRE domain bounds.")
     offset1 = iemre.daily_offset(sdate)
     offset2 = iemre.daily_offset(edate) + 1
     # Get our netCDF vars
-    with ncopen(iemre.get_daily_ncname(sdate.year)) as nc:
+    with ncopen(iemre.get_daily_ncname(sdate.year, domain=domain)) as nc:
         hightemp = convert_value(
             nc.variables["high_tmpk"][offset1:offset2, j, i], "degK", "degF"
         )
@@ -71,7 +79,7 @@ def service(
     coffset1 = iemre.daily_offset(c2000)
     c2000 = edate.replace(year=2000)
     coffset2 = iemre.daily_offset(c2000) + 1
-    with ncopen(iemre.get_dailyc_ncname()) as cnc:
+    with ncopen(iemre.get_dailyc_ncname(domain=domain)) as cnc:
         chigh = convert_value(
             cnc.variables["high_tmpk"][coffset1:coffset2, j, i], "degK", "degF"
         )
