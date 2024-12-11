@@ -19,7 +19,6 @@ from zoneinfo import ZoneInfo
 
 import numpy as np
 import pandas as pd
-import pytz
 from fastapi import APIRouter, HTTPException, Query
 from metpy.calc import dewpoint_from_relative_humidity
 from metpy.units import masked_array, units
@@ -63,7 +62,6 @@ def get_df(network, station, date):
     tz = ZoneInfo(tzname)
     sts = datetime.datetime(date.year, date.month, date.day, tzinfo=tz)
     ets = sts + datetime.timedelta(hours=24)
-    tz = pytz.timezone(tzname)
     if network.find("_ASOS") > 0:
         # Use ASOS
         with get_sqlalchemy_conn("asos") as pgconn:

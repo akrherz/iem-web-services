@@ -18,6 +18,7 @@ import geopandas as gpd
 import pandas as pd
 from fastapi import APIRouter, Query
 from pyiem.reference import ISO8601
+from pyiem.util import utc
 from shapely.ops import unary_union
 from sqlalchemy import text
 
@@ -583,7 +584,7 @@ def handler(
     # Some stuff is not JSON serializable
     cow.clean_dataframes()
     res = {
-        "generated_at": datetime.utcnow().strftime(ISO8601),
+        "generated_at": utc().strftime(ISO8601),
         "params": {
             "wfo": cow.wfo,
             "phenomena": cow.phenomena,

@@ -15,6 +15,7 @@ from datetime import datetime, timezone
 import pandas as pd
 from fastapi import APIRouter, Query
 from pyiem.nws.vtec import NWS_COLORS, get_ps_string
+from pyiem.util import utc
 from sqlalchemy import text
 
 from ...models import SupportedFormatsNoGeoJSON
@@ -110,9 +111,7 @@ def service(
     ),
 ):
     """Replaced above."""
-    if valid is None:
-        valid = datetime.utcnow()
-    valid = valid.replace(tzinfo=timezone.utc)
+    valid = utc() if valid is None else valid.replace(tzinfo=timezone.utc)
     df = handler(valid, wfo)
     return deliver_df(df, fmt)
 

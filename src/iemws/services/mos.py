@@ -20,11 +20,10 @@ This service will emit `404` HTTP status codes if no data is found for the
 requested station and model.
 """
 
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import List
 
 import pandas as pd
-import pytz
 from fastapi import APIRouter, HTTPException, Query, Response
 from pyiem.util import utc
 from sqlalchemy import text
@@ -128,7 +127,7 @@ def service(
 ):
     """Replaced above with module __doc__"""
     if runtime is not None and runtime.tzinfo is None:
-        runtime = runtime.replace(tzinfo=pytz.UTC)
+        runtime = runtime.replace(tzinfo=timezone.utc)
 
     return Response(
         handler(station, model, runtime, fmt), media_type=MEDIATYPES[fmt]
