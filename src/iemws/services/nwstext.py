@@ -9,9 +9,8 @@ is added to the response.  If you provide `nolimit`, then the service will
 return the products seperated by \003 character.
 """
 
-import datetime
+from datetime import datetime, timezone
 
-import pytz
 from fastapi import APIRouter, HTTPException, Path, Query, Response
 from pyiem.database import get_dbconnc
 
@@ -36,13 +35,13 @@ def handler(product_id, nolimit: bool, headers):
         )
 
     try:
-        ts = datetime.datetime.strptime(tstamp, "%Y%m%d%H%M")
+        ts = datetime.strptime(tstamp, "%Y%m%d%H%M")
     except ValueError as exp:
         raise HTTPException(
             status_code=422,
             detail="Invalid timestamp provided",
         ) from exp
-    ts = ts.replace(tzinfo=pytz.UTC)
+    ts = ts.replace(tzinfo=timezone.utc)
 
     args = [source, pil, ts]
     extra = ""

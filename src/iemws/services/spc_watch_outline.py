@@ -5,9 +5,8 @@ the provided UTC timestamp.  These are the four sided watch outlines and not
 some county union.
 """
 
-from datetime import datetime
+from datetime import datetime, timezone
 
-import pytz
 from fastapi import APIRouter, Query
 from geopandas import read_postgis
 from pyiem.util import utc
@@ -19,10 +18,7 @@ router = APIRouter()
 
 def run(valid):
     """Do the work, please"""
-    if valid is None:
-        valid = utc()
-    else:
-        valid = valid.replace(tzinfo=pytz.UTC)
+    valid = utc() if valid is None else valid.replace(tzinfo=timezone.utc)
     with get_sqlalchemy_conn("postgis") as pgconn:
         df = read_postgis(
             """

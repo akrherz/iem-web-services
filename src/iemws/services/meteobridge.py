@@ -3,13 +3,10 @@
 Unuseful for you all :)
 """
 
-# pylint: disable=unused-argument
-import datetime
-
-import pytz
 from fastapi import APIRouter, HTTPException, Query
+from pyiem.database import get_dbconnc
 from pyiem.observation import Observation
-from pyiem.util import get_dbconnc, get_properties, utc
+from pyiem.util import get_properties, utc
 
 PROPS = {}
 router = APIRouter()
@@ -38,8 +35,7 @@ def handler(
             int(_t[12:14]),
         )
     else:
-        now = datetime.datetime.utcnow()
-        now = now.replace(tzinfo=pytz.UTC)
+        now = utc()
     ob = Observation(sid, "OT", now)
     for fname in [
         "tmpf",
