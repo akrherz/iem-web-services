@@ -29,7 +29,7 @@ def handler():
                 """
             with county as (
                 select w.wfo, eventid, phenomena, significance,
-                extract(year from issue) as year,
+                vtec_year,
                 min(product_issue at time zone 'UTC') as utc_product_issue,
                 min(init_expire at time zone 'UTC') as utc_init_expire,
                 min(issue at time zone 'UTC') as utc_issue,
@@ -39,19 +39,19 @@ def handler():
                 from warnings w JOIN ugcs u on (w.gid = u.gid)
                 where phenomena in ('TO', 'FF') and significance = 'W' and
                 is_emergency
-                GROUP by w.wfo, eventid, phenomena, significance, year),
+                GROUP by w.wfo, eventid, phenomena, significance, vtec_year),
             polys as (
                 select wfo, eventid, phenomena,
-                extract(year from polygon_begin) as year, polygon_begin, geom
+                vtec_year, polygon_begin, geom
                 from sbw where phenomena in ('TO', 'FF')
                 and significance = 'W' and is_emergency)
-            select c.year, c.wfo, c.eventid, c.phenomena, c.significance,
+            select c.vtec_year, c.wfo, c.eventid, c.phenomena, c.significance,
             c.utc_product_issue, c.utc_init_expire, c.utc_issue, c.utc_expire,
             c.states, coalesce(p.geom, c.geo) as geom,
             case when p.wfo is not null then 't' else 'f' end as is_sbw
             from county c LEFT JOIN polys p on
             (c.wfo = p.wfo and c.eventid = p.eventid and
-            c.phenomena = p.phenomena and c.year = p.year)
+            c.phenomena = p.phenomena and c.vtec_year = p.vtec_year)
             ORDER by c.utc_issue asc, p.polygon_begin asc
             """
             ),
@@ -61,14 +61,16 @@ def handler():
         )
     # NOTE the above has duplicated entries, so we 'dedup'
     df = (
-        df.groupby(["year", "wfo", "eventid", "phenomena", "significance"])
+        df.groupby(
+            ["vtec_year", "wfo", "eventid", "phenomena", "significance"]
+        )
         .first()
         .reset_index()
         .sort_values("utc_issue", ascending=True)
     )
     df["uri"] = (
-        "/vtec/#"
-        + df["year"].astype(str)
+        "/vtec/event/"
+        + df["vtec_year"].astype(str)
         + "-O-NEW-K"
         + df["wfo"]
         + "-"
