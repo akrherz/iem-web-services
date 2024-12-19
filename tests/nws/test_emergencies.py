@@ -15,3 +15,4 @@ def test_basic():
     payload = resp.json()
     url = payload["features"][0]["properties"]["uri"]
     assert url.find(".") == -1
+    assert payload["features"][0]["properties"]["year"]

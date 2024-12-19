@@ -45,7 +45,8 @@ def handler():
                 vtec_year, polygon_begin, geom
                 from sbw where phenomena in ('TO', 'FF')
                 and significance = 'W' and is_emergency)
-            select c.vtec_year, c.wfo, c.eventid, c.phenomena, c.significance,
+            select c.vtec_year as year, c.wfo, c.eventid, c.phenomena,
+            c.significance,
             c.utc_product_issue, c.utc_init_expire, c.utc_issue, c.utc_expire,
             c.states, coalesce(p.geom, c.geo) as geom,
             case when p.wfo is not null then 't' else 'f' end as is_sbw
@@ -61,16 +62,14 @@ def handler():
         )
     # NOTE the above has duplicated entries, so we 'dedup'
     df = (
-        df.groupby(
-            ["vtec_year", "wfo", "eventid", "phenomena", "significance"]
-        )
+        df.groupby(["year", "wfo", "eventid", "phenomena", "significance"])
         .first()
         .reset_index()
         .sort_values("utc_issue", ascending=True)
     )
     df["uri"] = (
         "/vtec/event/"
-        + df["vtec_year"].astype(str)
+        + df["year"].astype(str)
         + "-O-NEW-K"
         + df["wfo"]
         + "-"
