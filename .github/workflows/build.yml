@@ -23,6 +23,13 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
+    - name: Run IEM Database container
+      run: |
+        docker run -d --name iem_database -p 5432:5432 ghcr.io/akrherz/iem_database:test_data
+        until docker exec iem_database pg_isready -h localhost; do
+          sleep 6
+        done
+
     - name: Add /etc/hosts entries
       run: |
         cat .github/workflows/etchosts.txt | sudo tee -a /etc/hosts
@@ -53,18 +60,6 @@ jobs:
     - name: Install Python Dependencies
       run: |
         python -m pip install -r pip_requirements.txt
-
-    - name: Setup Postgres
-      run: |
-        set -x
-        git clone https://github.com/akrherz/iem-database.git database
-        git clone https://github.com/akrherz/ci_tooling.git .ci_tooling
-        cd .ci_tooling
-        . postgres.sh
-        cd ..
-        cd database; sh bootstrap.sh
-        python schema_manager.py
-        python store_test_data.py
 
     - name: Setup CI from ci-tooling
       run: |
