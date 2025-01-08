@@ -40,10 +40,8 @@ import os
 from datetime import datetime, timedelta, timezone
 from io import StringIO
 
+import httpx
 import pandas as pd
-
-# Third Party
-import requests
 from fastapi import APIRouter, HTTPException, Query, Response
 from metpy.units import units
 from pyiem.nws.bufkit import read_bufkit
@@ -270,15 +268,15 @@ def handler(ctx):
             f"{station.lower()}.buf"
         )
         try:
-            req = requests.get(url, timeout=20)
+            resp = httpx.get(url, timeout=20)
         except Exception as exp:
             LOG.info("URL %s failed with %s", url, exp)
             raise HTTPException(
                 503,
                 detail="mtarchive backend failed, try later please.",
             ) from exp
-        if req.status_code == 200:
-            sz = sio.write(req.text)
+        if resp.status_code == 200:
+            sz = sio.write(resp.text)
             row = LOCS[(LOCS["model"] == model) & (LOCS["sid"] == station)]
             if isinstance(row, pd.DataFrame):
                 row = row.iloc[0]
@@ -290,7 +288,14 @@ def handler(ctx):
     if ctx["fmt"] == "txt":
         return sio.getvalue()
 
-    sndf, stndf = read_bufkit(sio)
+    try:
+        sndf, stndf = read_bufkit(sio)
+    except Exception as exp:
+        LOG.info("URL %s failed with %s", url, exp)
+        raise HTTPException(
+            503,
+            detail="processing raw bufkit file failed.",
+        ) from exp
     fhour = int((valid - runtime).total_seconds() / 3600)
     fhours = [fhour]
     if ctx["gr"]:
@@ -313,7 +318,7 @@ def handler(ctx):
     if ctx["fall"]:
         fhours = stndf.index.values
     for fhour in fhours:
-        if fhour not in sndf.index:
+        if fhour not in sndf.index or fhour not in stndf.index:
             raise HTTPException(422, f"Failed to find forecast hour {fhour}")
         levels = sndf[sndf["STIM"] == fhour].drop("STIM", axis=1)
         res["profiles"].append(
