@@ -3,7 +3,6 @@ dependencies:
   #
   - fastapi
   - geopandas
-  # for testing
   - httpx
   - metpy
   # For the future warning

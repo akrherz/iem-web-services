@@ -40,10 +40,8 @@ import os
 from datetime import datetime, timedelta, timezone
 from io import StringIO
 
+import httpx
 import pandas as pd
-
-# Third Party
-import requests
 from fastapi import APIRouter, HTTPException, Query, Response
 from metpy.units import units
 from pyiem.nws.bufkit import read_bufkit
@@ -270,15 +268,15 @@ def handler(ctx):
             f"{station.lower()}.buf"
         )
         try:
-            req = requests.get(url, timeout=20)
+            resp = httpx.get(url, timeout=20)
         except Exception as exp:
             LOG.info("URL %s failed with %s", url, exp)
             raise HTTPException(
                 503,
                 detail="mtarchive backend failed, try later please.",
             ) from exp
-        if req.status_code == 200:
-            sz = sio.write(req.text)
+        if resp.status_code == 200:
+            sz = sio.write(resp.text)
             row = LOCS[(LOCS["model"] == model) & (LOCS["sid"] == station)]
             if isinstance(row, pd.DataFrame):
                 row = row.iloc[0]
