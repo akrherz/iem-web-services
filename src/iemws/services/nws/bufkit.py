@@ -290,7 +290,14 @@ def handler(ctx):
     if ctx["fmt"] == "txt":
         return sio.getvalue()
 
-    sndf, stndf = read_bufkit(sio)
+    try:
+        sndf, stndf = read_bufkit(sio)
+    except Exception as exp:
+        LOG.info("URL %s failed with %s", url, exp)
+        raise HTTPException(
+            503,
+            detail="processing raw bufkit file failed.",
+        ) from exp
     fhour = int((valid - runtime).total_seconds() / 3600)
     fhours = [fhour]
     if ctx["gr"]:
@@ -313,7 +320,7 @@ def handler(ctx):
     if ctx["fall"]:
         fhours = stndf.index.values
     for fhour in fhours:
-        if fhour not in sndf.index:
+        if fhour not in sndf.index or fhour not in stndf.index:
             raise HTTPException(422, f"Failed to find forecast hour {fhour}")
         levels = sndf[sndf["STIM"] == fhour].drop("STIM", axis=1)
         res["profiles"].append(
