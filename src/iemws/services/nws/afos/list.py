@@ -86,7 +86,7 @@ def handler(cccc, pil, date):
             source || '-' || wmo || '-' || trim(pil) ||
             (case when bbb is not null then '-' || bbb else '' end)
             as product_id, source as cccc, count(*)
-            from products where {' and '.join(fs)} and entered >= :sts
+            from products where {" and ".join(fs)} and entered >= :sts
             and entered < :ets and substr(pil, 1, 3) not in ('WRK', 'LLL')
             {plimiter} GROUP by entered, pil, product_id, cccc
             ORDER by entered ASC
