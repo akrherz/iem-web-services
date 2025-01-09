@@ -32,7 +32,8 @@ def handler(station, date, tz: str):
         obs = pd.read_sql(
             text("""
             SELECT valid at time zone 'UTC' as utc_valid,
-            valid at time zone :tz as local_valid,
+            to_char(valid at time zone :tz, 'YYYY-MM-DDThh24:MI:SS')
+                 as local_valid,
             metar, skyc1, skyl1,
             skyc2, skyl2, skyc3, skyl3, skyc4, skyl4
             from alldata where station = :station3 and valid >= :sts
@@ -46,7 +47,6 @@ def handler(station, date, tz: str):
         scp = pd.read_sql(
             text("""
             SELECT valid at time zone 'UTC' as utc_scp_valid,
-            valid at time zone :tz as local_scp_valid,
             mid, high,
             cldtop1, cldtop2, eca, source from scp_alldata
             where station = :station and valid >= :sts
@@ -54,7 +54,7 @@ def handler(station, date, tz: str):
                  """),
             dbconn,
             index_col=None,
-            params={"station": station, "sts": sts, "ets": ets, "tz": tz},
+            params={"station": station, "sts": sts, "ets": ets},
         )
     # Figure out how many unique sources we have
     df = None
