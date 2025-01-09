@@ -54,7 +54,7 @@ def handler(state, year):
                 as period_start,
             to_char(ets at time zone 'UTC', 'YYYY-MM-DDThh24:MI:SSZ')
                 as period_end, product_id from wpc_national_high_low
-            {'where ' if limiter else ''} {' and '.join(limiter)}
+            {"where " if limiter else ""} {" and ".join(limiter)}
             ORDER by date asc
             """
             ),
