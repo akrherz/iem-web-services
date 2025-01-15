@@ -1,7 +1,7 @@
 """Provide data to support drydown app."""
 
-import datetime
 import os
+from datetime import date, datetime, timedelta
 
 import numpy as np
 from fastapi import APIRouter, HTTPException, Query
@@ -29,25 +29,25 @@ def append_cfs(res, lon, lat):
     """Append on needed CFS data."""
     gridx, gridy = find_ij(lon, lat)
     lastyear = max(res["data"].keys())
-    thisyear = datetime.date.today().year
-    lastdate = datetime.date(thisyear, 8, 31)
+    thisyear = date.today().year
+    lastdate = date(thisyear, 8, 31)
     if lastyear != thisyear:
         # We don't have any data yet for this year, so we add some
         res["data"][thisyear] = {"dates": [], "high": [], "low": [], "rh": []}
     else:
         # shrug
         if res["data"][lastyear]["dates"]:
-            lastdate = datetime.datetime.strptime(
+            lastdate = datetime.strptime(
                 res["data"][thisyear]["dates"][-1], "%Y-%m-%d"
             ).date()
     # go find the most recent CFS 0z file
-    valid = datetime.date.today()
+    valid = date.today()
     attempt = 0
     while True:
         testfn = valid.strftime("/mesonet/data/iemre/cfs_%Y%m%d00.nc")
         if os.path.isfile(testfn):
             break
-        valid -= datetime.timedelta(hours=24)
+        valid -= timedelta(hours=24)
         attempt += 1
         if attempt > 9:
             return None
@@ -82,9 +82,9 @@ def append_cfs(res, lon, lat):
     entry = res["data"][thisyear]
     # lastdate is either August 31 or a date after, so our first forecast
     # date is i+1
-    tidx = daily_offset(lastdate + datetime.timedelta(days=1))
+    tidx = daily_offset(lastdate + timedelta(days=1))
     for i in range(tidx, 365):
-        lts = datetime.date(thisyear, 1, 1) + datetime.timedelta(days=i)
+        lts = date(thisyear, 1, 1) + timedelta(days=i)
         if lts.month in [9, 10, 11]:
             entry["dates"].append(lts.strftime("%Y-%m-%d"))
             entry["high"].append(_i(high[i]))

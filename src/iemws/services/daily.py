@@ -15,12 +15,10 @@ make much sense, for example when requesting just one station's worth of data.
 
 """
 
-# stdlib
-import datetime
+from datetime import date as dateobj
+from datetime import timedelta
 
 from fastapi import APIRouter, HTTPException, Query
-
-# third party
 from geopandas import read_postgis
 from sqlalchemy import text
 
@@ -31,19 +29,19 @@ from ..util import cache_control, deliver_df, get_sqlalchemy_conn
 router = APIRouter()
 
 
-def get_df(network, station, date, month, year):
+def get_df(network, station, dt, month, year):
     """Handle the request, return dict"""
     params = {
         "station": station,
         "network": network,
-        "day": date,
+        "day": dt,
         "year": year,
         "month": month,
     }
     if network.endswith("CLIMATE"):
         sl = " and station = :station " if station is not None else ""
         dl = ""
-        if date is not None:
+        if dt is not None:
             dl = " and day = :day "
         elif month is None and year is not None:
             dl = " and year = :year "
@@ -78,17 +76,15 @@ def get_df(network, station, date, month, year):
         sl = " and id = :station " if station is not None else ""
         dl = ""
         table = "summary"
-        if date is not None:
-            table = f"summary_{date:%Y}"
+        if dt is not None:
+            table = f"summary_{dt:%Y}"
             dl = " and day = :day "
         elif month is None and year is not None:
             table = f"summary_{year}"
         elif month is not None and year is not None:
             table = f"summary_{year}"
-            dt2 = (
-                datetime.date(year, month, 1) + datetime.timedelta(days=35)
-            ).replace(day=1)
-            params["sts"] = datetime.date(year, month, 1)
+            dt2 = (dateobj(year, month, 1) + timedelta(days=35)).replace(day=1)
+            params["sts"] = dateobj(year, month, 1)
             params["ets"] = dt2
             dl = " and day >= :sts and day < :ets "
         if table != "summary" and table < "summary_1928":
@@ -137,11 +133,11 @@ def service(
     station: str = Query(
         None, description="IEM Station Identifier", max_length=20
     ),
-    date: datetime.date = Query(
+    date: dateobj = Query(
         None,
         description="Local station calendar date",
-        ge=datetime.date(1928, 1, 1),
-        le=datetime.date(2030, 1, 1),
+        ge=dateobj(1928, 1, 1),
+        le=dateobj(2030, 1, 1),
     ),
     month: int = Query(None, ge=1, le=12, description="Local station month"),
     year: int = Query(None, ge=1849, le=2030, description="Local station day"),
