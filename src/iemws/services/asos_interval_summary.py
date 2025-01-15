@@ -25,7 +25,7 @@ Life Choice 2.  In the case of ties for max wind speed or gust, the most recent
 occurence is used.
 """
 
-import datetime
+from datetime import datetime, timedelta, timezone
 
 import pandas as pd
 from fastapi import APIRouter, HTTPException, Query
@@ -39,13 +39,11 @@ from ..util import deliver_df, get_sqlalchemy_conn
 router = APIRouter()
 
 
-def get_df(
-    stations, sts: datetime.datetime, ets: datetime.datetime
-) -> pd.DataFrame:
+def get_df(stations, sts: datetime, ets: datetime) -> pd.DataFrame:
     """Figure out how to get the data being requested."""
     effsts = sts
     if sts.minute == 0:
-        effsts = sts - datetime.timedelta(minutes=10)
+        effsts = sts - timedelta(minutes=10)
     with get_sqlalchemy_conn("asos") as pgconn:
         obs = pd.read_sql(
             text("""
@@ -153,18 +151,18 @@ def service(
         max_length=1000,
         min_length=3,
     ),
-    sts: datetime.datetime = Query(
+    sts: datetime = Query(
         ...,
         description="UTC Start Timestamp, best to be top of the hour",
     ),
-    ets: datetime.datetime = Query(
+    ets: datetime = Query(
         ...,
         description="UTC Inclusive End Timestamp, best to be top of the hour",
     ),
 ):
     """Replaced above with module __doc__"""
-    sts = sts.replace(tzinfo=datetime.timezone.utc)
-    ets = ets.replace(tzinfo=datetime.timezone.utc)
+    sts = sts.replace(tzinfo=timezone.utc)
+    ets = ets.replace(tzinfo=timezone.utc)
     stations = [x.strip()[:4].upper() for x in station.split(",")]
     score = len(stations) * (ets - sts).days
     if score > 100:
