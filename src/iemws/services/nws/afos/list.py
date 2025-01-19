@@ -31,7 +31,8 @@ KDMX text TOR products for the UTC date of 28 Oct 2022.
 
 """
 
-import datetime
+from datetime import date as dateobj
+from datetime import timedelta
 
 # Third Party
 import pandas as pd
@@ -49,10 +50,10 @@ ISO = "YYYY-MM-DDThh24:MI:SSZ"
 router = APIRouter()
 
 
-def handler(cccc, pil, date):
+def handler(cccc, pil, dt):
     """Handle the request, return df."""
-    sts = utc(date.year, date.month, date.day)
-    ets = sts + datetime.timedelta(days=1)
+    sts = utc(dt.year, dt.month, dt.day)
+    ets = sts + timedelta(days=1)
     # Cull out "faked" MOS for now
     plimiter = ""
     if cccc in [
@@ -119,7 +120,7 @@ def service(
     fmt: SupportedFormatsNoGeoJSON,
     cccc: str = Query(None, min_length=3, max_length=4),
     pil: str = Query(None, min_length=3, max_length=6),
-    date: datetime.date = Query(None),
+    date: dateobj = Query(None),
 ):
     """Replaced above."""
     if date is None:

@@ -14,7 +14,8 @@ it to `true` means that each response contains the full domain of available
 variables from this service even if the station does not report it.
 """
 
-import datetime
+from datetime import date as dateobj
+from datetime import datetime, timedelta, timezone
 from zoneinfo import ZoneInfo
 
 import numpy as np
@@ -32,9 +33,9 @@ from ..util import deliver_df, get_sqlalchemy_conn
 router = APIRouter()
 
 
-def get_df(network, station, date):
+def get_df(network, station, dt):
     """Figure out how to get the data being requested."""
-    if date == datetime.date.today() and network not in ["ISUSM", "SCAN"]:
+    if dt == dateobj.today() and network not in ["ISUSM", "SCAN"]:
         # Use IEM Access
         with get_sqlalchemy_conn("iem") as pgconn:
             df = pd.read_sql(
@@ -50,7 +51,7 @@ def get_df(network, station, date):
                 date(valid at time zone t.tzname) = %s ORDER by utc_valid ASC
                 """,
                 pgconn,
-                params=(station, network, date),
+                params=(station, network, dt),
                 index_col=None,
             )
         return df
@@ -60,8 +61,8 @@ def get_df(network, station, date):
     tzname = nt.sts[station]["tzname"]
     # This sucks, but alas we want easy datetime construction
     tz = ZoneInfo(tzname)
-    sts = datetime.datetime(date.year, date.month, date.day, tzinfo=tz)
-    ets = sts + datetime.timedelta(hours=24)
+    sts = datetime(dt.year, dt.month, dt.day, tzinfo=tz)
+    ets = sts + timedelta(hours=24)
     if network.find("_ASOS") > 0:
         # Use ASOS
         with get_sqlalchemy_conn("asos") as pgconn:
@@ -164,7 +165,7 @@ def get_df(network, station, date):
                     day = :day and coop_valid is not null
                      """),
                 pgconn,
-                params={"station": station, "day": date},
+                params={"station": station, "day": dt},
                 parse_dates={"utc_valid": "valid"},
                 index_col=None,
             )
@@ -225,7 +226,7 @@ def get_df(network, station, date):
             df = pd.read_sql(
                 "SELECT distinct valid at time zone 'UTC' as utc_valid, "
                 "key, value "
-                f"from raw{date.strftime('%Y')} WHERE station = %s and "
+                f"from raw{dt:%Y} WHERE station = %s and "
                 "valid >= %s and valid < %s ORDER by utc_valid ASC",
                 pgconn,
                 params=(station, sts, ets),
@@ -255,9 +256,7 @@ def get_df(network, station, date):
 
         # Generate the local_valid column
         df["local_valid"] = (
-            df["utc_valid"]
-            .dt.tz_localize(datetime.timezone.utc)
-            .dt.tz_convert(tz)
+            df["utc_valid"].dt.tz_localize(timezone.utc).dt.tz_convert(tz)
         )
         return df
     return None
@@ -280,11 +279,11 @@ def compute(df, full):
     # df.dropna(how='all', axis=1, inplace=True)
 
 
-def handler(network, station, date, full):
+def handler(network, station, dt, full):
     """Handle the request, return dict"""
-    if date is None:
-        date = datetime.date.today()
-    df = get_df(network, station, date)
+    if dt is None:
+        dt = dateobj.today()
+    df = get_df(network, station, dt)
     if df is None or df.empty:
         return df
     # Run any addition calculations, if necessary
@@ -307,9 +306,7 @@ def service(
     station: str = Query(
         ..., description="IEM Station Identifier", max_length=64
     ),
-    date: datetime.date = Query(
-        None, description="Local station calendar date"
-    ),
+    date: dateobj = Query(None, description="Local station calendar date"),
     full: bool = Query(False, description="Include all variables?"),
 ):
     """Replaced above with module __doc__"""

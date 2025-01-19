@@ -1,6 +1,6 @@
 """IEM Reanalysis multi-day values by point."""
 
-import datetime
+from datetime import date, timedelta
 
 import numpy as np
 import pandas as pd
@@ -31,8 +31,8 @@ def clean(val):
 )
 def service(
     fmt: SupportedFormatsNoGeoJSON,
-    sdate: datetime.date = Query(..., description="Start Date."),
-    edate: datetime.date = Query(..., description="End Date."),
+    sdate: date = Query(..., description="Start Date."),
+    edate: date = Query(..., description="End Date."),
     lon: float = Query(
         ..., description="Longitude of point of interest", ge=-180, le=180
     ),
@@ -42,9 +42,9 @@ def service(
 ):
     """Go Main Go"""
     # Make sure we aren't in the future
-    tsend = datetime.date.today()
+    tsend = date.today()
     if edate > tsend:
-        edate = datetime.date.today() - datetime.timedelta(days=1)
+        edate = date.today() - timedelta(days=1)
 
     domain = iemre.get_domain(lon, lat)
     if domain is None:
@@ -112,7 +112,7 @@ def service(
     res = []
 
     for i in range(0, offset2 - offset1):
-        now = sdate + datetime.timedelta(days=i)
+        now = sdate + timedelta(days=i)
         res.append(
             {
                 "date": now.strftime("%Y-%m-%d"),

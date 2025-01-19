@@ -3,7 +3,7 @@
 This service provides IEM computed sounding parameters for a given site
 and year."""
 
-import datetime
+from datetime import date
 
 from fastapi import APIRouter, Query
 from pandas.io.sql import read_sql
@@ -47,7 +47,7 @@ def handler(station, year):
 )
 def nwstext_service(
     station: str = Query(..., max_length=4, min_length=4),
-    year: int = Query(..., ge=1947, le=datetime.date.today().year),
+    year: int = Query(..., ge=1947, le=date.today().year),
 ):
     """Replaced above by __doc__."""
     df = handler(station, year)

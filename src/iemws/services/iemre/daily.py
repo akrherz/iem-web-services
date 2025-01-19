@@ -1,7 +1,7 @@
 """IEM Reanalysis single Day values by point."""
 
-import datetime
 import os
+from datetime import date as dateobj
 
 import numpy as np
 import pandas as pd
@@ -32,7 +32,7 @@ def myrounder(val, precision):
 )
 def service(
     fmt: SupportedFormatsNoGeoJSON,
-    date: datetime.date = Query(..., description="The date of interest."),
+    date: dateobj = Query(..., description="The date of interest."),
     lon: float = Query(
         ..., description="Longitude of point of interest", ge=-180, le=180
     ),
