@@ -8,7 +8,8 @@ the field ``mid_1`` represents the mid value from the Goes East Sounder. The
 ``_2`` value is the Goes West Sounder and ``_3`` value is the Goes Imager. A
 given site may have 1 or more of those 3 potential options."""
 
-import datetime
+from datetime import date as dateobj
+from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 
 import pandas as pd
@@ -20,13 +21,13 @@ from ..util import deliver_df, get_sqlalchemy_conn
 router = APIRouter()
 
 
-def handler(station, date, tz: str):
+def handler(station, dt, tz: str):
     """Handle the request, return dict"""
     station = f"K{station}" if len(station) == 3 else station
     station3 = station[1:] if station.startswith("K") else station
     tzinfo = ZoneInfo(tz)
-    sts = datetime.datetime(date.year, date.month, date.day, tzinfo=tzinfo)
-    ets = sts + datetime.timedelta(hours=24)
+    sts = datetime(dt.year, dt.month, dt.day, tzinfo=tzinfo)
+    ets = sts + timedelta(hours=24)
     with get_sqlalchemy_conn("asos") as dbconn:
         # Get METARs
         obs = pd.read_sql(
@@ -100,7 +101,7 @@ def handler(station, date, tz: str):
 )
 def service(
     station: str = Query(..., max_length=5, min_length=3),
-    date: datetime.date = Query(..., description="Date of interest"),
+    date: dateobj = Query(..., description="Date of interest"),
     tz: str = Query("UTC", description="Timezone to report timestamps in"),
 ):
     """Replaced above by __doc__."""

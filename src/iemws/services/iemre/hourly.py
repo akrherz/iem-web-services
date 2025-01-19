@@ -1,7 +1,8 @@
 """IEM Reanalysis hourly values by point."""
 
-import datetime
 import os
+from datetime import date as dateobj
+from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 
 import numpy as np
@@ -27,7 +28,7 @@ def myrounder(val, precision):
 
 def get_timerange(date, domain):
     """Figure out what period to get data for."""
-    ts = datetime.datetime(
+    ts = datetime(
         date.year,
         date.month,
         date.day,
@@ -83,7 +84,7 @@ def workflow(sts, ets, i, j, domain):
                     ),
                 }
             )
-            now += datetime.timedelta(hours=1)
+            now += timedelta(hours=1)
     return pd.DataFrame(res)
 
 
@@ -96,7 +97,7 @@ def workflow(sts, ets, i, j, domain):
 )
 def service(
     fmt: SupportedFormatsNoGeoJSON,
-    date: datetime.date = Query(
+    date: dateobj = Query(
         ...,
         description="The CST/CDT date of interest.",
     ),
