@@ -63,6 +63,7 @@ jobs:
 
     - name: Setup CI from ci-tooling
       run: |
+        psql -f .github/load_faked_mos.sql -h localhost -U mesonet mos
         python -m pip install --upgrade .
         python -m pytest --cov=iemws
         python -m coverage xml
