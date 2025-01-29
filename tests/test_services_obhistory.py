@@ -21,7 +21,7 @@ def test_nstl():
 def test_cocorahs():
     """Test that cocorahs returns something."""
     req = client.get(
-        "/obhistory.json?station=IA-PK-97&network=IACOCORAHS&date=2000-01-01"
+        "/obhistory.json?station=IA-PK-97&network=IA_COCORAHS&date=2007-01-01"
     )
     assert req.status_code == 200
 

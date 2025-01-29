@@ -154,18 +154,19 @@ def get_df(network, station, dt):
             )
         return df
 
-    if network == "IACOCORAHS":
-        with get_sqlalchemy_conn("iem") as pgconn:
+    if network.find("_COCORAHS") > 0:
+        with get_sqlalchemy_conn("coop") as pgconn:
             df = pd.read_sql(
-                text("""
-                    SELECT coop_valid at time zone 'UTC' as utc_valid,
-                    coop_valid at time zone tzname as local_valid,
-                    pday from summary s JOIN stations t on (s.iemid = t.iemid)
-                    WHERE t.id = :station and t.network = 'IACOCORAHS' and
-                    day = :day and coop_valid is not null
+                text(f"""
+                    SELECT obvalid at time zone 'UTC' as utc_valid,
+                    obvalid at time zone tzname as local_valid,
+                    precip, snow, snow_swe, snowd, snowd_swe from
+                    cocorahs_{dt:%Y} s JOIN stations t on (s.iemid = t.iemid)
+                    WHERE t.id = :station and t.network = :network and
+                    day = :day
                      """),
                 pgconn,
-                params={"station": station, "day": dt},
+                params={"station": station, "day": dt, "network": network},
                 parse_dates={"utc_valid": "valid"},
                 index_col=None,
             )
