@@ -90,8 +90,15 @@ def get_df(network: str, station, dt, month, year):
             df = read_postgis(
                 text(
                     f"""
-                SELECT id, to_char(day, 'YYYY-mm-dd') as date,
-                precip, snow, snow_swe, snowd, snowd_swe, geom, id, name
+                SELECT id as station, to_char(day, 'YYYY-mm-dd') as date,
+                precip, snow, snow_swe, snowd, snowd_swe, geom, id, name,
+                null as max_dwpf, null as min_dwpf, null as max_tmpf,
+                null as min_tmpf, null as max_rh, null as min_rh,
+                null as max_gust, null as max_gust_localts,
+                null as max_drct, null as avg_sknt, null as vector_avg_drct,
+                null as max_feel, null as min_feel, null as avg_feel,
+                extract(
+                hour from obvalid at time zone t.tzname) as temp_hour
                 from alldata_cocorahs s JOIN stations t
                 on (s.iemid = t.iemid)
                 WHERE t.network = :network {sl} {dl}
