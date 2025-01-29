@@ -29,7 +29,7 @@ from ..util import cache_control, deliver_df, get_sqlalchemy_conn
 router = APIRouter()
 
 
-def get_df(network, station, dt, month, year):
+def get_df(network: str, station, dt, month, year):
     """Handle the request, return dict"""
     params = {
         "station": station,
@@ -65,6 +65,37 @@ def get_df(network, station, dt, month, year):
                 on (s.station = t.id)
                 WHERE t.network = :network {sl} {dl}
                 ORDER by day ASC, station ASC
+                """
+                ),
+                conn,
+                params=params,
+                geom_col="geom",
+            )
+    elif network.endswith("COCORAHS"):
+        sl = " and id = :station " if station is not None else ""
+        dl = ""
+        if dt is not None:
+            dl = " and day = :day "
+        elif month is None and year is not None:
+            dl = " and day >= :sts and day < :ets "
+            params["sts"] = dateobj(year, 1, 1)
+            params["ets"] = dateobj(year + 1, 1, 1)
+        elif month is not None and year is not None:
+            dl = " and day >= :sts and day < :ets "
+            params["sts"] = dateobj(year, month, 1)
+            params["ets"] = (
+                dateobj(year, month, 1) + timedelta(days=35)
+            ).replace(day=1)
+        with get_sqlalchemy_conn("coop") as conn:
+            df = read_postgis(
+                text(
+                    f"""
+                SELECT id, to_char(day, 'YYYY-mm-dd') as date,
+                precip, snow, snow_swe, snowd, snowd_swe, geom, id, name
+                from alldata_cocorahs s JOIN stations t
+                on (s.iemid = t.iemid)
+                WHERE t.network = :network {sl} {dl}
+                ORDER by day ASC, id ASC
                 """
                 ),
                 conn,
