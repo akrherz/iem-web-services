@@ -166,7 +166,10 @@ def get_df(network: str, station, dt, month, year):
 def service(
     fmt: SupportedFormats,
     network: str = Query(
-        ..., description="IEM Network Identifier", max_length=20
+        ...,
+        description="IEM Network Identifier",
+        max_length=20,
+        pattern="^[A-Z0-9_]+$",
     ),
     station: str = Query(
         None, description="IEM Station Identifier", max_length=20
