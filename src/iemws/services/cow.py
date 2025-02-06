@@ -17,10 +17,10 @@ from typing import List
 import geopandas as gpd
 import pandas as pd
 from fastapi import APIRouter, Query
+from pyiem.database import sql_helper
 from pyiem.reference import ISO8601
 from pyiem.util import utc
 from shapely.ops import unary_union
-from sqlalchemy import text
 
 from ..util import get_sqlalchemy_conn
 
@@ -47,26 +47,27 @@ class COWSession:
     def __init__(
         self,
         wfo,
-        begints,
-        endts,
+        begints: datetime,
+        endts: datetime,
         phenomena,
         lsrtype,
         hailsize,
         lsrbuffer,
         warningbuffer,
         wind,
-        windhailtag,
-        limitwarns,
+        windhailtag: bool,
+        limitwarns: bool,
         fcster,
     ):
         """Build out our session based on provided fields"""
         self.wfo = [x[:4] for x in wfo]
         # Figure out the begin and end times
-        self.begints, self.endts = begints, endts
+        self.begints = begints
+        self.endts = endts
         # Storage of data
-        self.events = gpd.GeoDataFrame()
+        self.events: pd.DataFrame = gpd.GeoDataFrame()
         self.events_buffered = None
-        self.stormreports = gpd.GeoDataFrame()
+        self.stormreports: pd.DataFrame = gpd.GeoDataFrame()
         self.stormreports_buffered = None
         self.stats = {}
         # query parameters
@@ -80,8 +81,8 @@ class COWSession:
         self.lsrbuffer = lsrbuffer
         self.warningbuffer = warningbuffer
         self.wind = wind
-        self.windhailtag = windhailtag.upper() == "Y"
-        self.limitwarns = limitwarns.upper() == "Y"
+        self.windhailtag = windhailtag
+        self.limitwarns = limitwarns
         self.fcster = fcster
 
     def milk(self):
@@ -97,7 +98,7 @@ class COWSession:
     def compute_stats(self):
         """Fill out the stats attribute"""
         _ev = self.events
-        _sr = self.stormreports
+        _sr: pd.DataFrame = self.stormreports
         self.stats["area_verify[%]"] = (
             0
             if _ev.empty
@@ -204,8 +205,8 @@ class COWSession:
         """Build out the listing of events based on the request"""
         wlimit = "" if not self.wfo else " and w.wfo = ANY(:wfos)"
         self.events = gpd.read_postgis(
-            text(
-                f"""
+            sql_helper(
+                """
         WITH stormbased as (
             SELECT wfo, phenomena, eventid, hailtag, windtag,
             coalesce(tornadotag, '') = 'POSSIBLE' as svr_tornado_possible,
@@ -218,7 +219,7 @@ class COWSession:
             from sbw w WHERE status = 'NEW' {wlimit}
             and issue >= :begints and issue < :endts and expire < :endts
             and significance = 'W'
-            and phenomena = ANY(:phenomena) {self.sql_tag_limiter()}
+            and phenomena = ANY(:phenomena) {taglimiter}
         ),
         countybased as (
             SELECT w.wfo, phenomena, eventid, significance,
@@ -234,7 +235,7 @@ class COWSession:
             issue >= :begints and issue < :endts and expire < :endts
             and significance = 'W'
             and phenomena = ANY(:phenomena)
-            {self.sql_fcster_limiter()}
+            {flimiter}
             GROUP by w.wfo, phenomena, eventid, significance, year, fcster
         )
         SELECT s.year::int, s.wfo, s.phenomena, s.eventid, s.geom,
@@ -249,7 +250,10 @@ class COWSession:
         (c.eventid = s.eventid and c.wfo = s.wfo and c.year = s.year
         and c.phenomena = s.phenomena and c.significance = s.significance)
         ORDER by issue ASC
-        """
+        """,
+                wlimit=wlimit,
+                taglimiter=self.sql_tag_limiter(),
+                flimiter=self.sql_fcster_limiter(),
             ),
             dbconn,
             params={
@@ -325,8 +329,8 @@ class COWSession:
         }
         wlimit = "" if not self.wfo else " and wfo = ANY(:wfos)"
         self.stormreports = gpd.read_postgis(
-            text(
-                f"""
+            sql_helper(
+                """
         SELECT distinct valid at time zone 'UTC' as valid,
         type, magnitude, city, county, state,
         source, remark, wfo, typetext, ST_x(geom) as lon0, ST_y(geom) as lat0,
@@ -337,7 +341,8 @@ class COWSession:
         (type in ('H', 'h') and magnitude >= :hailsize) or type = 'W' or
          type = 'T' or (type = 'G' and magnitude >= :wind) or
          type in ('D', 'F', 'x', 'q')) ORDER by valid ASC
-        """
+        """,
+                wlimit=wlimit,
             ),
             dbconn,
             params=params,
@@ -371,15 +376,15 @@ class COWSession:
         # re ST_Buffer(simple_geom) see akrherz/iem#163
         wlimit = "" if not self.wfo else " and w.wfo = ANY(:wfos) "
         df = pd.read_sql(
-            text(
-                f"""
+            sql_helper(
+                """
             WITH stormbased as (
                 SELECT geom, wfo, eventid, phenomena, significance,
                 extract(year from issue at time zone 'UTC') as year
                 from sbw w WHERE status = 'NEW' {wlimit}
                 and issue >= :begints and issue < :endts and expire < :endts
                 and significance = 'W'
-                and phenomena = ANY(:phenomena) {self.sql_tag_limiter()}),
+                and phenomena = ANY(:phenomena) {taglimiter}),
             countybased as (
                 SELECT ST_Union(ST_Buffer(u.simple_geom, 0)) as geom,
                 w.wfo, phenomena, eventid, significance,
@@ -389,7 +394,7 @@ class COWSession:
                 issue >= :begints and issue < :endts and expire < :endts
                 and significance = 'W'
                 and phenomena = ANY(:phenomena)
-                {self.sql_fcster_limiter()}
+                {flimiter}
                 GROUP by w.wfo, phenomena, eventid, significance, year,
                 fcster),
             agg as (
@@ -409,7 +414,10 @@ class COWSession:
             year || wfo || eventid || phenomena || significance ||
             '1' as key
             from agg GROUP by key
-        """
+        """,
+                wlimit=wlimit,
+                taglimiter=self.sql_tag_limiter(),
+                flimiter=self.sql_fcster_limiter(),
             ),
             dbconn,
             params={
@@ -519,7 +527,7 @@ class COWSession:
         """Do Areal verification"""
         if self.events_buffered is None:
             return
-        e2163 = self.events.to_crs(epsg=2163)
+        e2163 = self.events.to_crs(epsg=2163)  # type: ignore
         for eidx, _ev in e2163.iterrows():
             if not _ev["stormreports"]:
                 continue
@@ -626,8 +634,8 @@ def cow_service(
     lsrbuffer: float = Query(15),
     warningbuffer: float = Query(1),
     wind: float = Query(58),
-    windhailtag: str = Query("N"),
-    limitwarns: str = Query("N"),
+    windhailtag: bool = Query(default=False),
+    limitwarns: bool = Query(default=False),
     fcster: str = None,
 ):
     """Replaced by __doc__."""
