@@ -127,7 +127,7 @@ def test_190806(prodtest):
     res = client.get("/cow.json", params=params)
     cow = res.json()
     assert cow["stats"]["warned_reports"] == (56 if prodtest else 0)
-    params["windhailtag"] = "Y"
+    params["windhailtag"] = "true"
     res = client.get("/cow.json", params=params)
     cow = res.json()
     assert cow["stats"]["warned_reports"] == (46 if prodtest else 0)
