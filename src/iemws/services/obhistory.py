@@ -25,7 +25,6 @@ from metpy.calc import dewpoint_from_relative_humidity
 from metpy.units import masked_array, units
 from pyiem.database import sql_helper
 from pyiem.network import Table as NetworkTable
-from sqlalchemy import text
 
 from ..models import SupportedFormatsNoGeoJSON
 from ..models.obhistory import ObHistoryDataItem, ObHistorySchema
@@ -40,7 +39,7 @@ def get_df(network, station, dt):
         # Use IEM Access
         with get_sqlalchemy_conn("iem") as pgconn:
             df = pd.read_sql(
-                """
+                sql_helper("""
                 SELECT distinct valid at time zone 'UTC' as utc_valid,
                 valid at time zone t.tzname as local_valid, tmpf, dwpf, sknt,
                 drct, vsby, skyc1, skyl1, skyc2, skyl2, skyc3, skyl3, skyc4,
@@ -48,11 +47,11 @@ def get_df(network, station, dt):
                 phour as p01i, raw, gust, max_tmpf_6hr, min_tmpf_6hr,
                 array_to_string(wxcodes, ' ') as wxcodes, snowdepth
                 from current_log c JOIN stations t on (c.iemid = t.iemid)
-                WHERE t.id = %s and t.network = %s and
-                date(valid at time zone t.tzname) = %s ORDER by utc_valid ASC
-                """,
+                WHERE t.id = :station and t.network = :network and
+                date(valid at time zone t.tzname) =: :dt ORDER by utc_valid ASC
+                """),
                 pgconn,
-                params=(station, network, dt),
+                params={"station": station, "network": network, "dt": dt},
                 index_col=None,
             )
         return df
@@ -64,22 +63,24 @@ def get_df(network, station, dt):
     tz = ZoneInfo(tzname)
     sts = datetime(dt.year, dt.month, dt.day, tzinfo=tz)
     ets = sts + timedelta(hours=24)
+    params = {"tzname": tzname, "station": station, "sts": sts, "ets": ets}
     if network.find("_ASOS") > 0:
         # Use ASOS
         with get_sqlalchemy_conn("asos") as pgconn:
             df = pd.read_sql(
-                """
+                sql_helper("""
                 SELECT valid at time zone 'UTC' as utc_valid,
-                valid at time zone %s as local_valid, tmpf, dwpf, sknt, drct,
+                valid at time zone :tzname as local_valid,
+                tmpf, dwpf, sknt, drct,
                 vsby, skyc1, skyl1, skyc2, skyl2, skyc3, skyl3, skyc4, skyl4,
                 relh, feel, alti, mslp, p01i, p03i, p24i, metar as raw,
                 p03i, p06i, p24i, max_tmpf_6hr, min_tmpf_6hr, gust,
                 array_to_string(wxcodes, ' ') as wxcodes, snowdepth
-                from alldata WHERE station = %s and
-                valid >= %s and valid < %s ORDER by valid ASC
-                """,
+                from alldata WHERE station = :station and
+                valid >= :sts and valid < :ets ORDER by valid ASC
+                """),
                 pgconn,
-                params=(tzname, station, sts, ets),
+                params=params,
                 index_col=None,
             )
         return df
@@ -95,14 +96,14 @@ def get_df(network, station, dt):
                 valid >= :sts and valid < :ets ORDER by valid ASC
                 """),
                 pgconn,
-                params=(tzname, station, sts, ets),
+                params=params,
                 index_col=None,
             )
         return df
     if network == "ISUSM":
         with get_sqlalchemy_conn("isuag") as pgconn:
             df = pd.read_sql(
-                text("""
+                sql_helper("""
                 SELECT
                 valid at time zone 'UTC' as utc_valid,
                 rain_in_tot_qc as phour, rain_in_tot_f as phour_flag,
@@ -115,12 +116,7 @@ def get_df(network, station, dt):
                 valid >= :sts and valid < :ets ORDER by valid ASC
                 """),
                 pgconn,
-                params={
-                    "tzname": tzname,
-                    "station": station,
-                    "sts": sts,
-                    "ets": ets,
-                },
+                params=params,
                 index_col=None,
             )
         # Compute dew point
@@ -140,18 +136,19 @@ def get_df(network, station, dt):
     if network == "SCAN":
         with get_sqlalchemy_conn("scan") as pgconn:
             df = pd.read_sql(
-                """
+                sql_helper("""
                 SELECT valid at time zone 'UTC' as utc_valid,
-                valid at time zone %s as local_valid, tmpf, dwpf, sknt, drct,
+                valid at time zone :tzname as local_valid,
+                tmpf, dwpf, sknt, drct,
                 srad, relh, c1tmpf as soilt2, c2tmpf as soilt4,
                 c3tmpf as soilt8, c4tmpf as soilt20, c5tmpf as soilt40,
                 c1smv as soilm2, c2smv as soilm4, c3smv as soilm8,
                 c4smv as soilm20, c5smv as soilm40, phour
-                from alldata WHERE station = %s and
-                valid >= %s and valid < %s ORDER by valid ASC
-                """,
+                from alldata WHERE station = :station and
+                valid >= :sts and valid < :ets ORDER by valid ASC
+                """),
                 pgconn,
-                params=(tzname, station, sts, ets),
+                params=params,
                 index_col=None,
             )
         return df
@@ -159,14 +156,17 @@ def get_df(network, station, dt):
     if network.find("_COCORAHS") > 0:
         with get_sqlalchemy_conn("coop") as pgconn:
             df = pd.read_sql(
-                text(f"""
+                sql_helper(
+                    """
                     SELECT obvalid at time zone 'UTC' as utc_valid,
                     obvalid at time zone tzname as local_valid,
                     precip, snow, snow_swe, snowd, snowd_swe from
-                    cocorahs_{dt:%Y} s JOIN stations t on (s.iemid = t.iemid)
+                    {table} s JOIN stations t on (s.iemid = t.iemid)
                     WHERE t.id = :station and t.network = :network and
                     day = :day
-                     """),
+                     """,
+                    table=f"cocorahs_{dt:%Y}",
+                ),
                 pgconn,
                 params={"station": station, "day": dt, "network": network},
                 parse_dates={"utc_valid": "valid"},
