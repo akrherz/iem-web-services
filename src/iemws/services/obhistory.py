@@ -23,6 +23,7 @@ import pandas as pd
 from fastapi import APIRouter, HTTPException, Query
 from metpy.calc import dewpoint_from_relative_humidity
 from metpy.units import masked_array, units
+from pyiem.database import sql_helper
 from pyiem.network import Table as NetworkTable
 from sqlalchemy import text
 
@@ -86,12 +87,13 @@ def get_df(network, station, dt):
         # Use RWIS
         with get_sqlalchemy_conn("rwis") as pgconn:
             df = pd.read_sql(
-                """
+                sql_helper("""
                 SELECT valid at time zone 'UTC' as utc_valid,
-                valid at time zone %s as local_valid, tmpf, dwpf, sknt, drct,
-                gust from alldata WHERE station = %s and
-                valid >= %s and valid < %s ORDER by valid ASC
-                """,
+                valid at time zone :tzname as local_valid,
+                tmpf, dwpf, sknt, drct,
+                gust, feel, relh from alldata WHERE station = :station and
+                valid >= :sts and valid < :ets ORDER by valid ASC
+                """),
                 pgconn,
                 params=(tzname, station, sts, ets),
                 index_col=None,
