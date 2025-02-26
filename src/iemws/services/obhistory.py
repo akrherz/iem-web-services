@@ -48,7 +48,7 @@ def get_df(network, station, dt):
                 array_to_string(wxcodes, ' ') as wxcodes, snowdepth
                 from current_log c JOIN stations t on (c.iemid = t.iemid)
                 WHERE t.id = :station and t.network = :network and
-                date(valid at time zone t.tzname) =: :dt ORDER by utc_valid ASC
+                date(valid at time zone t.tzname) = :dt ORDER by utc_valid ASC
                 """),
                 pgconn,
                 params={"station": station, "network": network, "dt": dt},
