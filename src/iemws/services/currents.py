@@ -21,7 +21,7 @@ from typing import List
 import geopandas as gpd
 import numpy as np
 from fastapi import APIRouter, Query
-from sqlalchemy import text
+from pyiem.database import sql_helper
 
 from ..models import SupportedFormats
 from ..models.currents import CurrentsSchema
@@ -49,7 +49,7 @@ WITH agg as (
     array_to_string(wxcodes, ' ') as wxcodes,
     t.geom, ST_x(t.geom) as lon, ST_y(t.geom) as lat
     from current c JOIN stations t on (c.iemid = t.iemid) WHERE
-    REPLACEME and c.valid > (now() - :dtinterval)
+    REPLACEME c.valid > (now() - :dtinterval)
 )
     SELECT c.id as station, c.name, c.county, c.state, c.network,
     to_char(s.day, 'YYYY-mm-dd') as local_date, snow, snowd, snoww,
@@ -137,7 +137,7 @@ def handler(
     params["dtinterval"] = timedelta(minutes=minutes)
     with get_sqlalchemy_conn("iem") as conn:
         df = gpd.read_postgis(
-            text(sql),
+            sql_helper(sql),
             conn,
             params=params,
             index_col="station",
