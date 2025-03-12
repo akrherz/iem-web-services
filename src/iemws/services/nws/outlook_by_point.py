@@ -23,8 +23,8 @@ from datetime import datetime, timedelta, timezone
 
 import geopandas as gpd
 from fastapi import APIRouter, Query
+from pyiem.database import sql_helper
 from pyiem.util import utc
-from sqlalchemy import text
 
 # Local
 from ...models import SupportedFormats
@@ -39,29 +39,41 @@ def handler(lon, lat, valid):
     with get_sqlalchemy_conn("postgis") as pgconn:
         # NB: Postgresql17 was making a poor query plan choice here
         df = gpd.read_postgis(
-            text(
+            sql_helper(
                 """
-            with opts as (
-                select product_issue, issue, expire, day, id, outlook_type,
-                rank() OVER (PARTITION by day, outlook_type
-                    ORDER by product_issue desc) from spc_outlook
-                where product_issue > :sts and product_issue < :valid),
-            current as (
-                select * from opts where rank = 1),
-            agg as (
-                select geom, day, outlook_type,
-                product_issue at time zone 'UTC' as product_issue,
-                issue at time zone 'UTC' as issue,
-                expire at time zone 'UTC' as expire,
-                o.threshold, rank() OVER (PARTITION by day, outlook_type,
-                category
-                    ORDER by case when o.threshold = 'SIGN'
-                    then 0 else priority end desc), priority, category
-                from spc_outlook_geometries o, current c,
-                spc_outlook_thresholds t
-                WHERE o.threshold = t.threshold and o.spc_outlook_id = c.id)
-            SELECT * from agg where (rank = 1 or threshold = 'SIGN') and
-            ST_Contains(geom, ST_Point(:lon, :lat, 4326))
+    -- Narrow the population of outlooks to consider
+    with opts as (
+        select product_issue, issue, expire, day, id, outlook_type,
+        rank() OVER (PARTITION by day, outlook_type
+            ORDER by product_issue desc)
+        from spc_outlook
+        where product_issue > :sts and product_issue < :valid
+    ),
+    -- Get the rank1 outlooks
+    current as (
+        select * from opts where rank = 1
+    ),
+    -- Now associate whatever geometries exist with the outlooks
+    -- we also do an offset 0 to prevent CTE collapsing and bad query plan
+    agg as (
+        select geom, day, outlook_type,
+        product_issue at time zone 'UTC' as product_issue,
+        issue at time zone 'UTC' as issue,
+        expire at time zone 'UTC' as expire,
+        o.threshold, priority, category
+        from spc_outlook_geometries o, current c, spc_outlook_thresholds t
+        WHERE o.threshold = t.threshold and o.spc_outlook_id = c.id
+        offset 0
+    ),
+    -- Now we are prepared to do the spatial query
+    agg2 as (
+        SELECT *, rank() OVER (PARTITION by day, outlook_type,
+        category ORDER by case when threshold = 'SIGN'
+        then 0 else priority end desc)
+        from agg where ST_Contains(geom, ST_Point(:lon, :lat, 4326))
+    )
+    -- Return any rank 1 or SIGN thresholds
+    select * from agg2 where rank = 1 or threshold = 'SIGN'
             """
             ),
             pgconn,
@@ -73,7 +85,7 @@ def handler(lon, lat, valid):
                 "lon": lon,
             },
             index_col=None,
-        )
+        )  # type:ignore
     return df.drop(columns=["rank", "priority"], errors="ignore")
 
 
