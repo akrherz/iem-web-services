@@ -11,7 +11,7 @@ reason is that some of these emergencies predated polygon warnings.
 
 import geopandas as gpd
 from fastapi import APIRouter
-from sqlalchemy import text
+from pyiem.database import sql_helper
 
 # Local
 from ...models import SupportedFormats
@@ -25,7 +25,7 @@ def handler():
     """Handle the request, return dict"""
     with get_sqlalchemy_conn("postgis") as pgconn:
         df = gpd.read_postgis(
-            text(
+            sql_helper(
                 """
             with county as (
                 select w.wfo, eventid, phenomena, significance,
@@ -59,7 +59,7 @@ def handler():
             pgconn,
             geom_col="geom",
             index_col=None,
-        )
+        )  # type: ignore
     # NOTE the above has duplicated entries, so we 'dedup'
     df = (
         df.groupby(["year", "wfo", "eventid", "phenomena", "significance"])

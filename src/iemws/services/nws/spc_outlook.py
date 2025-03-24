@@ -26,10 +26,9 @@ from datetime import date, timedelta
 
 import geopandas as gpd
 from fastapi import APIRouter, Query
+from pyiem.database import sql_helper
 from pyiem.util import utc
-from sqlalchemy import text
 
-# Local
 from ...models import SupportedFormats
 from ...util import deliver_df, get_sqlalchemy_conn
 
@@ -42,7 +41,7 @@ def handler(day, valid, cycle, outlook_type):
     expire = utc(valid.year, valid.month, valid.day, 12) + timedelta(days=1)
     with get_sqlalchemy_conn("postgis") as pgconn:
         df = gpd.read_postgis(
-            text(
+            sql_helper(
                 """
             select
             issue at time zone 'UTC' as issue,
@@ -63,7 +62,7 @@ def handler(day, valid, cycle, outlook_type):
                 "day": day,
             },
             index_col=None,
-        )
+        )  # type: ignore
     return df
 
 

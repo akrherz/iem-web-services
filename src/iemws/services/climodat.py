@@ -2,7 +2,7 @@
 
 import pandas as pd
 from fastapi import APIRouter, HTTPException, Query
-from sqlalchemy import text
+from pyiem.database import sql_helper
 
 from ..models import SupportedFormatsNoGeoJSON
 from ..models.climodat import PORDailyClimoSchema
@@ -17,7 +17,7 @@ def handler(station):
     # Load up the data and let pandas do the heavy lifting
     with get_sqlalchemy_conn("coop") as conn:
         obs = pd.read_sql(
-            text(
+            sql_helper(
                 "select sday, year, high, low, precip from alldata "
                 "WHERE station = :station ORDER by day asc"
             ),

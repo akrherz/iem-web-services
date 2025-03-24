@@ -6,7 +6,7 @@ metadata for a given network.
 
 import geopandas as gpd
 from fastapi import APIRouter, HTTPException, Path
-from sqlalchemy import text
+from pyiem.database import sql_helper
 
 from ..models import SupportedFormats
 from ..models.network import NetworkSchema
@@ -21,7 +21,7 @@ def handler(network_id):
         # One off
         if network_id == "ASOS1MIN":
             df = gpd.read_postgis(
-                text("""
+                sql_helper("""
         SELECT t.*, ST_X(geom) as longitude, ST_Y(geom) as latitude
         from stations t JOIN station_attributes a
         ON (t.iemid = a.iemid) WHERE t.network ~* 'ASOS' and
@@ -30,10 +30,10 @@ def handler(network_id):
                 pgconn,
                 geom_col="geom",
                 index_col=None,
-            )
+            )  # type: ignore
         else:
             df = gpd.read_postgis(
-                text("""
+                sql_helper("""
         SELECT *, ST_X(geom) as longitude, ST_Y(geom) as latitude
         from stations where network = :network ORDER by name ASC
                 """),
@@ -41,7 +41,7 @@ def handler(network_id):
                 params={"network": network_id},
                 geom_col="geom",
                 index_col=None,
-            )
+            )  # type: ignore
     if df.empty:
         raise HTTPException(
             status_code=404,

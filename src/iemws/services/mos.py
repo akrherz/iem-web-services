@@ -25,8 +25,8 @@ from typing import List
 
 import pandas as pd
 from fastapi import APIRouter, HTTPException, Query, Response
+from pyiem.database import sql_helper
 from pyiem.util import utc
-from sqlalchemy import text
 
 from ..models import SupportedFormatsNoGeoJSON
 from ..reference import MEDIATYPES
@@ -53,7 +53,7 @@ def find_runtime(station, model):
             return runtime
     with get_sqlalchemy_conn("mos") as engine, engine.begin() as conn:
         res = conn.execute(
-            text(
+            sql_helper(
                 "SELECT max(runtime) from alldata WHERE model = :model and "
                 "station = ANY(:stations) and "
                 "runtime > now() - '48 hours'::interval"
@@ -78,7 +78,7 @@ def handler(station, model, runtime, fmt):
     # Ready to get the data!
     with get_sqlalchemy_conn("mos") as conn:
         df = pd.read_sql(
-            text(
+            sql_helper(
                 """
                 SELECT *, t06_1 ||'/'||t06_2 as t06, t12_1 ||'/'|| t12_2
                     as t12,

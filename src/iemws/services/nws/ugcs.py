@@ -19,8 +19,8 @@ from datetime import datetime, timezone
 
 from fastapi import APIRouter, Query
 from geopandas import read_postgis
+from pyiem.database import sql_helper
 from pyiem.util import utc
-from sqlalchemy import text
 
 from ...models import SupportedFormats
 from ...models.nws.ugcs import UGCSchema
@@ -47,20 +47,23 @@ def handler(state, wfo, valid, just_firewx):
         firewx = " and source = 'fz' "
     with get_sqlalchemy_conn("postgis") as pgconn:
         df = read_postgis(
-            text(
-                f"""
+            sql_helper(
+                """
             SELECT ugc, simple_geom as geom, name, state, wfo from ugcs WHERE
             ((begin_ts <= :valid and end_ts > :valid) or
             (begin_ts <= :valid and end_ts is null))
             {wfo_limiter} {state_limiter}
             {firewx} ORDER by ugc ASC
-            """
+            """,
+                state_limiter=state_limiter,
+                wfo_limiter=wfo_limiter,
+                firewx=firewx,
             ),
             pgconn,
             geom_col="geom",
             params=params,
             index_col=None,
-        )
+        )  # type: ignore
     return df
 
 

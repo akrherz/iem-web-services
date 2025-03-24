@@ -10,7 +10,7 @@ from datetime import datetime, timezone
 
 import geopandas as gpd
 from fastapi import APIRouter, Query
-from sqlalchemy import text
+from pyiem.database import sql_helper
 
 # Local
 from ...models import SupportedFormats
@@ -39,8 +39,8 @@ def handler(
         status_filter = ""
     with get_sqlalchemy_conn("postgis") as pgconn:
         df = gpd.read_postgis(
-            text(
-                f"""
+            sql_helper(
+                """
             select wfo, geom, vtec_year, phenomena, significance, eventid,
             windtag, hailtag, tornadotag, damagetag, is_emergency, is_pds,
             windthreat, hailthreat, squalltag, product_id, product_signature,
@@ -60,7 +60,10 @@ def handler(
                     ST_Point(:end_lon, :end_lat, 4326)), geom)
             and {issuecol} <= :ets and {expirecol} >= :sts {status_filter}
             ORDER by updated ASC
-            """
+            """,
+                issuecol=issuecol,
+                expirecol=expirecol,
+                status_filter=status_filter,
             ),
             pgconn,
             params={
@@ -73,7 +76,7 @@ def handler(
             },
             geom_col="geom",
             index_col=None,
-        )
+        )  # type: ignore
     # NOTE the above has duplicated entries, so we 'dedup'
     if not df.empty:
         df["uri"] = (

@@ -8,7 +8,7 @@ results in some cases.
 
 import geopandas as gpd
 from fastapi import APIRouter, HTTPException, Path
-from sqlalchemy import text
+from pyiem.database import sql_helper
 
 # Local
 from ..models import SupportedFormats
@@ -21,7 +21,7 @@ def handler(station_id):
     """Handle the request, return dict"""
     with get_sqlalchemy_conn("mesosite") as pgconn:
         df = gpd.read_postgis(
-            text(
+            sql_helper(
                 "SELECT *, ST_X(geom) as longitude, ST_Y(geom) as latitude "
                 "from stations where id = :station_id ORDER by name ASC"
             ),
@@ -29,7 +29,7 @@ def handler(station_id):
             params={"station_id": station_id},
             geom_col="geom",
             index_col=None,
-        )
+        )  # type: ignore
     if df.empty:
         raise HTTPException(
             status_code=404,

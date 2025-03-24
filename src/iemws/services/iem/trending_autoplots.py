@@ -7,8 +7,8 @@ unscientific, but it is a start.
 
 import pandas as pd
 from fastapi import APIRouter
+from pyiem.database import sql_helper
 from pyiem.util import utc
-from sqlalchemy import text
 
 from ...models import SupportedFormatsNoGeoJSON
 from ...util import cache_control, deliver_df, get_sqlalchemy_conn
@@ -28,7 +28,7 @@ def handler():
     }
     with get_sqlalchemy_conn("mesosite") as pgconn:
         df = pd.read_sql(
-            text(
+            sql_helper(
                 """
             with one as (
                  select appid, count(*) from autoplot_timing where

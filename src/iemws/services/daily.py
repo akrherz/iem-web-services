@@ -18,9 +18,9 @@ make much sense, for example when requesting just one station's worth of data.
 from datetime import date as dateobj
 from datetime import timedelta
 
+import geopandas as gpd
 from fastapi import APIRouter, HTTPException, Query
-from geopandas import read_postgis
-from sqlalchemy import text
+from pyiem.database import sql_helper
 
 from ..models import SupportedFormats
 from ..models.daily import DailySchema
@@ -48,9 +48,10 @@ def get_df(network: str, station, dt, month, year):
         elif month is not None and year is not None:
             dl = " and year = :year and month = :month "
         with get_sqlalchemy_conn("coop") as conn:
-            df = read_postgis(
-                text(
-                    f"""
+            table = f"alldata_{network[:2].lower()}"
+            df = gpd.read_postgis(
+                sql_helper(
+                    """
                 SELECT station, to_char(day, 'YYYY-mm-dd') as date,
                 high as max_tmpf, low as min_tmpf,
                 temp_estimated as tmpf_est, precip_estimated as precip_est,
@@ -61,16 +62,19 @@ def get_df(network: str, station, dt, month, year):
                 null as avg_sknt, null as vector_avg_drct,
                 null as min_rstage, null as max_rstage,
                 temp_hour, geom, id, name
-                from alldata_{network[:2]} s JOIN stations t
+                from {table} s JOIN stations t
                 on (s.station = t.id)
                 WHERE t.network = :network {sl} {dl}
                 ORDER by day ASC, station ASC
-                """
+                """,
+                    table=table,
+                    sl=sl,
+                    dl=dl,
                 ),
                 conn,
                 params=params,
                 geom_col="geom",
-            )
+            )  # type: ignore
     elif network.endswith("COCORAHS"):
         sl = " and id = :station " if station is not None else ""
         dl = ""
@@ -87,9 +91,9 @@ def get_df(network: str, station, dt, month, year):
                 dateobj(year, month, 1) + timedelta(days=35)
             ).replace(day=1)
         with get_sqlalchemy_conn("coop") as conn:
-            df = read_postgis(
-                text(
-                    f"""
+            df = gpd.read_postgis(
+                sql_helper(
+                    """
                 SELECT id as station, to_char(day, 'YYYY-mm-dd') as date,
                 precip, snow, snow_swe, snowd, snowd_swe, geom, id, name,
                 null as max_dwpf, null as min_dwpf, null as max_tmpf,
@@ -103,12 +107,14 @@ def get_df(network: str, station, dt, month, year):
                 on (s.iemid = t.iemid)
                 WHERE t.network = :network {sl} {dl}
                 ORDER by day ASC, id ASC
-                """
+                """,
+                    sl=sl,
+                    dl=dl,
                 ),
                 conn,
                 params=params,
                 geom_col="geom",
-            )
+            )  # type: ignore
 
     else:
         sl = " and id = :station " if station is not None else ""
@@ -128,9 +134,9 @@ def get_df(network: str, station, dt, month, year):
         if table != "summary" and table < "summary_1900":
             raise HTTPException(404, detail="No data available for this date.")
         with get_sqlalchemy_conn("iem") as conn:
-            df = read_postgis(
-                text(
-                    f"""
+            df = gpd.read_postgis(
+                sql_helper(
+                    """
                 SELECT id as station, to_char(day, 'YYYY-mm-dd') as date,
                 max_tmpf, min_tmpf, pday as precip, max_gust, snow, snowd,
                 min_rh, max_rh, max_dwpf, min_dwpf, min_feel,
@@ -145,12 +151,15 @@ def get_df(network: str, station, dt, month, year):
                 from {table} s JOIN stations t on (s.iemid = t.iemid)
                 WHERE t.network = :network {sl} {dl}
                 ORDER by day ASC, id ASC
-                """
+                """,
+                    table=table,
+                    sl=sl,
+                    dl=dl,
                 ),
                 conn,
                 params=params,
                 geom_col="geom",
-            )
+            )  # type:ignore
     return df
 
 

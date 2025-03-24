@@ -29,8 +29,8 @@ from datetime import datetime, timedelta, timezone
 
 import pandas as pd
 from fastapi import APIRouter, HTTPException, Query
+from pyiem.database import sql_helper
 from pyiem.reference import ISO8601
-from sqlalchemy import text
 
 from ..models import SupportedFormatsNoGeoJSON
 from ..models.asos_interval_summary import AISSchema
@@ -46,7 +46,7 @@ def get_df(stations, sts: datetime, ets: datetime) -> pd.DataFrame:
         effsts = sts - timedelta(minutes=10)
     with get_sqlalchemy_conn("asos") as pgconn:
         obs = pd.read_sql(
-            text("""
+            sql_helper("""
                 SELECT station, valid at time zone 'UTC' as utc_valid,
                 tmpf, p01i, sknt, gust, drct, peak_wind_gust, peak_wind_drct,
                 peak_wind_time at time zone 'UTC' as peak_wind_time,

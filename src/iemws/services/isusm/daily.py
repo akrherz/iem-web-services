@@ -6,12 +6,12 @@ summary information.  Please note that the end date is inclusive.
 
 from datetime import date, datetime
 
+import geopandas as gpd
 import numpy as np
+import pandas as pd
 from fastapi import APIRouter, Query
-from geopandas import read_postgis
-from pandas.io.sql import read_sql
+from pyiem.database import sql_helper
 from pyiem.tracker import loadqc
-from sqlalchemy import text
 
 # Local
 from ...models import SupportedFormats
@@ -38,16 +38,16 @@ def iemtracker(df, edate):
 def get_climo(sdate, edate, gddbase, gddceil):
     """Build the climatology dataframe."""
     with get_sqlalchemy_conn("coop") as conn:
-        df = read_sql(
-            """
+        df = pd.read_sql(
+            sql_helper("""
             with climo as (
                 select station, sday,
-                avg(gddxx(%s, %s, high, low)) as gdd,
+                avg(gddxx(:gddbase, :gddceil, high, low)) as gdd,
                 avg(precip) as precip
                 from alldata_ia WHERE
                 station in (select distinct climate_site from stations where
                     network in ('ISUAG', 'ISUSM')) and
-                sday >= %s and sday <= %s
+                sday >= :sdate and sday <= :edate
                 GROUP by station, sday
             ), agg as (
                 select station, sum(gdd) as climo_gdd, sum(precip)
@@ -58,14 +58,14 @@ def get_climo(sdate, edate, gddbase, gddceil):
             stations t
             WHERE t.network in ('ISUAG', 'ISUSM') and
             t.climate_site = a.station
-            """,
+            """),
             conn,
-            params=(
-                gddbase,
-                gddceil,
-                sdate.strftime("%m%d"),
-                edate.strftime("%m%d"),
-            ),
+            params={
+                "gddbase": gddbase,
+                "gddceil": gddceil,
+                "sdate": sdate.strftime("%m%d"),
+                "edate": edate.strftime("%m%d"),
+            },
         )
     return df
 
@@ -74,25 +74,25 @@ def get_df_isuag(sdate, edate, gddbase, gddceil):
     """Here we go."""
     ets = datetime(edate.year, edate.month, edate.day, 23, 59)
     with get_sqlalchemy_conn("isuag") as pgconn:
-        df = read_postgis(
-            """
+        df = gpd.read_postgis(
+            sql_helper("""
             WITH hourly_daily as (
                 SELECT station, date(valid),
                 max(c300) as tsoil_high,
                 min(c300) as tsoil_low
-                from hourly WHERE valid >= %s and valid < %s
+                from hourly WHERE valid >= :sdate and valid < :ets
                 GROUP by station, date
             ), hourly_agg as (
                 select station,
-                sum(gddxx(%s, %s, tsoil_high, tsoil_low)) as sgdd
+                sum(gddxx(:gddbase, :gddceil, tsoil_high, tsoil_low)) as sgdd
                 from hourly_daily GROUP by station
             ), daily_agg as (
                 select station,
                 sum(c70) as et,
-                sum(gddxx(%s, %s, c11, c12)) as gdd,
+                sum(gddxx(:gddbase, :gddceil, c11, c12)) as gdd,
                 sum(c80) as srad,
                 sum(c90) as precip
-                from daily WHERE valid >= %s and valid <= %s
+                from daily WHERE valid >= :sdate and valid <= :edate
                 GROUP by station
             ), agg as (
                 select d.*, h.sgdd from
@@ -102,21 +102,18 @@ def get_df_isuag(sdate, edate, gddbase, gddceil):
             plot_name as city from
             agg a JOIN stations t on (a.station = t.id)
             WHERE t.network = 'ISUAG'
-            """,
+            """),
             pgconn,
-            params=(
-                sdate,
-                ets,
-                gddbase,
-                gddceil,
-                gddbase,
-                gddceil,
-                sdate,
-                edate,
-            ),
+            params={
+                "sdate": sdate,
+                "ets": ets,
+                "gddbase": gddbase,
+                "gddceil": gddceil,
+                "edate": edate,
+            },
             index_col=None,
             geom_col="geom",
-        )
+        )  # type: ignore
     return df
 
 
@@ -130,8 +127,8 @@ def get_df_isusm(sdate, edate, gddbase, gddceil):
         "ets": ets,
     }
     with get_sqlalchemy_conn("isuag") as pgconn:
-        df = read_postgis(
-            text(
+        df = gpd.read_postgis(
+            sql_helper(
                 """
             WITH daily_agg as (
                 select station,
@@ -158,7 +155,7 @@ def get_df_isusm(sdate, edate, gddbase, gddceil):
             params=params,
             index_col=None,
             geom_col="geom",
-        )
+        )  # type: ignore
     return df
 
 

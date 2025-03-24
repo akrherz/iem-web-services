@@ -13,9 +13,8 @@ from enum import Enum
 
 import geopandas as gpd
 from fastapi import APIRouter, Query
-from sqlalchemy import text
+from pyiem.database import sql_helper
 
-# Local
 from ...models import SupportedFormats
 from ...models.nws.six_hour import Schema
 from ...util import deliver_df, get_sqlalchemy_conn
@@ -37,7 +36,7 @@ def handler(valid: datetime, varname: str) -> gpd.GeoDataFrame:
     }
     with get_sqlalchemy_conn("hads") as pgconn:
         df = gpd.read_postgis(
-            text(
+            sql_helper(
                 """
             select station, network, key as shefvar, value, geom, wfo,
             ugc_county, valid at time zone 'UTC' as utc_valid,
@@ -52,7 +51,7 @@ def handler(valid: datetime, varname: str) -> gpd.GeoDataFrame:
             geom_col="geom",
             params=params,
             index_col=None,
-        )
+        )  # type: ignore
         # We have duplicate network entries, so we do a hack
         if not df.empty:
             df = df.groupby("station").first()
