@@ -125,7 +125,7 @@ def get_df(network: str, station, dt, month, year):
             params["sts"] = dateobj(year, month, 1)
             params["ets"] = dt2
             dl = " and day >= :sts and day < :ets "
-        if table != "summary" and table < "summary_1928":
+        if table != "summary" and table < "summary_1900":
             raise HTTPException(404, detail="No data available for this date.")
         with get_sqlalchemy_conn("iem") as conn:
             df = read_postgis(
@@ -177,7 +177,7 @@ def service(
     date: dateobj = Query(
         None,
         description="Local station calendar date",
-        ge=dateobj(1928, 1, 1),
+        ge=dateobj(1900, 1, 1),
         le=dateobj(2030, 1, 1),
     ),
     month: int = Query(None, ge=1, le=12, description="Local station month"),
