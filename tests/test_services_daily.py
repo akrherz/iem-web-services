@@ -7,10 +7,10 @@ from iemws.main import app
 client = TestClient(app)
 
 
-def test_pre1928_request():
+def test_pre1900_request():
     """Test that this is handled."""
     req = client.get(
-        "/daily.json?station=MMLW1&network=WA_DCP&year=1920&month=3",
+        "/daily.json?station=MMLW1&network=WA_DCP&year=1899&month=3",
     )
     assert req.status_code == 404
 
