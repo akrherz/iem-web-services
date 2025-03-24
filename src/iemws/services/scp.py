@@ -14,7 +14,7 @@ from zoneinfo import ZoneInfo
 
 import pandas as pd
 from fastapi import APIRouter, Query
-from sqlalchemy import text
+from pyiem.database import sql_helper
 
 from ..util import deliver_df, get_sqlalchemy_conn
 
@@ -31,7 +31,7 @@ def handler(station, dt, tz: str):
     with get_sqlalchemy_conn("asos") as dbconn:
         # Get METARs
         obs = pd.read_sql(
-            text("""
+            sql_helper("""
             SELECT valid at time zone 'UTC' as utc_valid,
             to_char(valid at time zone :tz, 'YYYY-MM-DDThh24:MI:SS')
                  as local_valid,
@@ -46,7 +46,7 @@ def handler(station, dt, tz: str):
         )
         # Get SCP
         scp = pd.read_sql(
-            text("""
+            sql_helper("""
             SELECT valid at time zone 'UTC' as utc_scp_valid,
             mid, high,
             cldtop1, cldtop2, eca, source from scp_alldata

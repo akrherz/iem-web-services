@@ -29,9 +29,9 @@ from fastapi import APIRouter, Query
 
 # Third party
 from geopandas import read_postgis
+from pyiem.database import sql_helper
 from pyiem.nws.vtec import NWS_COLORS, get_ps_string
 from pyiem.util import utc
-from sqlalchemy import text
 
 # Local
 from ...models import SupportedFormats
@@ -59,8 +59,8 @@ def handler(begints, endts, wfo, only_new, ph, include_can):
         statuslimiter = " and s.status = 'NEW' "
     with get_sqlalchemy_conn("postgis") as pgconn:
         df = read_postgis(
-            text(
-                f"""
+            sql_helper(
+                """
             SELECT
             array_to_string(array_agg(u.ugc ORDER by u.ugc ASC), ', ')
                 as ugclist,
@@ -86,13 +86,17 @@ def handler(begints, endts, wfo, only_new, ph, include_can):
             ph_sig, s.wfo, s.eventid, s.phenomena, s.significance, s.status,
             s.geom, s.product_id, s.vtec_year, s.product_signature
             ORDER by polygon_begin ASC
-            """
+            """,
+                wfolimiter=wfolimiter,
+                statuslimiter=statuslimiter,
+                phlimiter=phlimiter,
+                canlimiter=canlimiter,
             ),
             pgconn,
             geom_col="geom",
             params=params,
             index_col=None,
-        )
+        )  # type: ignore
     df["nws_color"] = df["ph_sig"].apply(NWS_COLORS.get)
     df["event_label"] = df["ph_sig"].apply(
         lambda x: get_ps_string(*x.split("."))

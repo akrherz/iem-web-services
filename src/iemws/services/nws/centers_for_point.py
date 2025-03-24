@@ -7,7 +7,7 @@ marine and fire weather zones are included.
 
 import pandas as pd
 from fastapi import APIRouter, Query
-from sqlalchemy import text
+from pyiem.database import sql_helper
 
 # Local
 from ...models import SupportedFormatsNoGeoJSON
@@ -21,7 +21,7 @@ def handler(lon, lat):
     """Handle the request, return dict"""
     with get_sqlalchemy_conn("postgis") as pgconn:
         df = pd.read_sql(
-            text(
+            sql_helper(
                 """
             with mywfo as (
                 select wfo from cwa where

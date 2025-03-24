@@ -37,9 +37,8 @@ from datetime import timedelta
 # Third Party
 import pandas as pd
 from fastapi import APIRouter, HTTPException, Query
-from pyiem.database import get_sqlalchemy_conn
+from pyiem.database import get_sqlalchemy_conn, sql_helper
 from pyiem.util import utc
-from sqlalchemy import text
 
 # Local
 from ....models import SupportedFormatsNoGeoJSON
@@ -80,18 +79,20 @@ def handler(cccc, pil, dt):
     with get_sqlalchemy_conn("afos") as conn:
         # We don't auto-list some internal products like WRK LLL
         df = pd.read_sql(
-            text(
-                f"""
+            sql_helper(
+                """
             select entered at time zone 'UTC' as entered, trim(pil) as pil,
             to_char(entered at time zone 'UTC', 'YYYYmmddHH24MI') || '-' ||
             source || '-' || wmo || '-' || trim(pil) ||
             (case when bbb is not null then '-' || bbb else '' end)
             as product_id, source as cccc, count(*)
-            from products where {" and ".join(fs)} and entered >= :sts
+            from products where {cols} and entered >= :sts
             and entered < :ets and substr(pil, 1, 3) not in ('WRK', 'LLL')
             {plimiter} GROUP by entered, pil, product_id, cccc
             ORDER by entered ASC
-            """
+            """,
+                cols=" and ".join(fs),
+                plimiter=plimiter,
             ),
             conn,
             params=params,

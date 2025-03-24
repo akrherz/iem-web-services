@@ -14,9 +14,9 @@ from datetime import datetime, timezone
 
 import pandas as pd
 from fastapi import APIRouter, Query
+from pyiem.database import sql_helper
 from pyiem.nws.vtec import NWS_COLORS, get_ps_string
 from pyiem.util import utc
-from sqlalchemy import text
 
 from ...models import SupportedFormatsNoGeoJSON
 from ...util import deliver_df, get_sqlalchemy_conn
@@ -32,8 +32,8 @@ def handler(valid, wfo):
         wfolimiter = " and w.wfo = :wfo "
     with get_sqlalchemy_conn("postgis") as pgconn:
         df = pd.read_sql(
-            text(
-                f"""
+            sql_helper(
+                """
             with data as (
                 select w.wfo, eventid, phenomena, significance,
                 phenomena || '.' || significance as ph_sig,
@@ -67,7 +67,8 @@ def handler(valid, wfo):
             GROUP by
                 wfo, eventid, phenomena, significance, ph_sig, year, status
             ORDER by wfo, updated desc
-            """
+            """,
+                wfolimiter=wfolimiter,
             ),
             pgconn,
             params=params,
