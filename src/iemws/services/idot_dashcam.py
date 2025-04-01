@@ -2,16 +2,13 @@
 
 from datetime import datetime, timedelta, timezone
 
+import geopandas as gpd
 from fastapi import APIRouter, Query
-from geopandas import read_postgis
-
-# third party
+from pyiem.database import sql_helper
 from pyiem.util import utc
 
 from ..models import SupportedFormats
 from ..models.idot_dashcam import IDOTDashcamSchema
-
-# Local
 from ..util import deliver_df, get_sqlalchemy_conn
 
 router = APIRouter()
@@ -28,19 +25,20 @@ def make_url(row):
 def handler(valid, window):
     """Do the requested work."""
     with get_sqlalchemy_conn("postgis") as pgconn:
-        df = read_postgis(
-            "SELECT row_number() OVER() as index, label as cid, "
-            "valid as utc_valid, geom, ST_X(geom) as lon, "
-            "ST_Y(geom) as lat from idot_dashcam_log WHERE valid >= %s "
-            "and valid <= %s ORDER by valid ASC",
+        df = gpd.read_postgis(
+            sql_helper("""
+    SELECT row_number() OVER() as index, label as cid,
+    valid as utc_valid, geom, ST_X(geom) as lon,
+    ST_Y(geom) as lat from idot_dashcam_log WHERE valid >= :sts
+    and valid <= :ets ORDER by valid ASC"""),
             pgconn,
-            params=(
-                valid - timedelta(minutes=window),
-                valid + timedelta(minutes=window),
-            ),
+            params={
+                "sts": valid - timedelta(minutes=window),
+                "ets": valid + timedelta(minutes=window),
+            },
             geom_col="geom",
             index_col=None,
-        )
+        )  # type: ignore
     if not df.empty:
         df["imgurl"] = df.apply(make_url, axis=1)
         df["utc_valid"] = df["utc_valid"].dt.strftime("%Y-%m-%dT%H:%MZ")
