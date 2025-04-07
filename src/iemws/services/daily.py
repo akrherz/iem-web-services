@@ -15,6 +15,7 @@ make much sense, for example when requesting just one station's worth of data.
 
 """
 
+import re
 from datetime import date as dateobj
 from datetime import timedelta
 
@@ -28,6 +29,8 @@ from ..util import cache_control, deliver_df, get_sqlalchemy_conn
 
 router = APIRouter()
 
+CLIMATE_NETWORK_RE = re.compile(r"^[A-Z]{2}CLIMATE$")
+
 
 def get_df(network: str, station, dt, month, year):
     """Handle the request, return dict"""
@@ -38,7 +41,7 @@ def get_df(network: str, station, dt, month, year):
         "year": year,
         "month": month,
     }
-    if network.endswith("CLIMATE"):
+    if CLIMATE_NETWORK_RE.match(network):
         sl = " and station = :station " if station is not None else ""
         dl = ""
         if dt is not None:
