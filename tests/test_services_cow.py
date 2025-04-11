@@ -16,6 +16,7 @@ def test_gh163_snow_squall():
         "endts": "2023-11-29T00:00Z",
         "wfo": "BGM",
         "phenomena": ["SQ"],
+        "enable_shared_border": "true",
     }
     res = client.get(
         "/cow.json",

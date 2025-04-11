@@ -6,13 +6,15 @@ frontend to this API and for more discussion about what this does.
 While this service only emits JSON, the JSON response embeds two GeoJSON
 objects providing the storm reports and warnings.
 
-Changed on 2 Sep 2021 to count LSRs valid at warning expiration time as
-verifying as per NWS Verification Branch guidance.
+Updated **2025-04-11**, added `enable_shared_border` parameter to enable
+shared border calculation. This is a boolean parameter that defaults to
+False when more than one (year * wfos) of data is requested.
+It is recommended to only enable this parameter when needed.
 """
 
 import json
 from datetime import datetime
-from typing import List
+from typing import List, Optional
 
 import geopandas as gpd
 import pandas as pd
@@ -58,6 +60,7 @@ class COWSession:
         windhailtag: bool,
         limitwarns: bool,
         fcster,
+        enable_shared_border: bool,
     ):
         """Build out our session based on provided fields"""
         self.wfo = [x[:4] for x in wfo]
@@ -84,13 +87,15 @@ class COWSession:
         self.windhailtag = windhailtag
         self.limitwarns = limitwarns
         self.fcster = fcster
+        self.enable_shared_border = enable_shared_border
 
     def milk(self):
         """Milk the Cow and see what happens"""
         with get_sqlalchemy_conn("postgis") as dbconn:
             self.load_events(dbconn)
             self.load_stormreports(dbconn)
-            self.compute_shared_border(dbconn)
+            if self.enable_shared_border:
+                self.compute_shared_border(dbconn)
         self.sbw_verify()
         self.area_verify()
         self.compute_stats()
@@ -267,7 +272,7 @@ class COWSession:
             },
             crs=4326,
             index_col="key",
-        )
+        )  # type: ignore
         self.events = self.events.assign(
             status=lambda df_: df_["statuses"],  # le sigh
             stormreports=lambda df_: [[] for _ in range(len(df_.index))],
@@ -348,7 +353,7 @@ class COWSession:
             params=params,
             geom_col="geom",
             crs=4326,
-        )
+        )  # type: ignore
         self.stormreports["events"] = [
             [] for _ in range(len(self.stormreports.index))
         ]
@@ -572,6 +577,7 @@ def handler(
     windhailtag,
     limitwarns,
     fcster,
+    enable_shared_border,
 ):
     """Handle the request, return dict"""
     cow = COWSession(
@@ -587,6 +593,7 @@ def handler(
         windhailtag,
         limitwarns,
         fcster,
+        enable_shared_border,
     )
     cow.milk()
     # Some stuff is not JSON serializable
@@ -605,6 +612,7 @@ def handler(
             "begints": cow.begints.strftime(ISO8601),
             "endts": cow.endts.strftime(ISO8601),
             "warningbuffer": cow.warningbuffer,
+            "enable_shared_border": cow.enable_shared_border,
         },
         "stats": cow.stats,
         "events": json.loads(cow.events.to_json()),
@@ -637,8 +645,14 @@ def cow_service(
     windhailtag: bool = Query(default=False),
     limitwarns: bool = Query(default=False),
     fcster: str = None,
+    enable_shared_border: Optional[bool] = Query(
+        default=None, title="Enable Shared Border calculation"
+    ),
 ):
     """Replaced by __doc__."""
+    if enable_shared_border is None:
+        # When ambiguous, set it to False for requests > 1 yr * wfos
+        enable_shared_border = (len(wfo) * (endts - begints).days) < 365
     return handler(
         wfo,
         begints,
@@ -652,6 +666,7 @@ def cow_service(
         windhailtag,
         limitwarns,
         fcster,
+        enable_shared_border,
     )
 
 
