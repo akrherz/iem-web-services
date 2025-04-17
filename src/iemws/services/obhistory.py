@@ -173,9 +173,9 @@ def get_df(network, station, dt):
                 index_col=None,
             )
         return df
-    if network in ["OT", "KCCI", "KELO", "KCRG", "KIMT", "WMO_BUFR_SRF"]:
+    if network in "OT KCCI KELO KCRG KIMT WMO_BUFR_SRF VTWAC".split():
         # lazy
-        providers = {"OT": "other", "WMO_BUFR_SRF": "other"}
+        providers = {"OT": "other", "WMO_BUFR_SRF": "other", "VTWAC": "other"}
         with get_sqlalchemy_conn(providers.get(network, "snet")) as pgconn:
             df = pd.read_sql(
                 "SELECT valid at time zone 'UTC' as utc_valid, "
