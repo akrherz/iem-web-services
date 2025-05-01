@@ -5,9 +5,9 @@ from datetime import date as dateobj
 
 import numpy as np
 import pandas as pd
-import pyiem.prism as prismutil
 from fastapi import APIRouter, HTTPException, Query
 from pyiem import iemre
+from pyiem.grid.nav import PRISM800
 from pyiem.util import convert_value, mm2inch, ncopen
 
 from ...models import SupportedFormatsNoGeoJSON
@@ -59,7 +59,7 @@ def service(
         if not os.path.isfile(ncfn):
             prism_precip = None
         else:
-            i2, j2 = prismutil.find_ij(lon, lat)
+            i2, j2 = PRISM800.find_ij(lon, lat)  # type:ignore
             with ncopen(ncfn) as nc:
                 prism_precip = mm2inch(nc.variables["ppt"][offset, j2, i2])
     else:
