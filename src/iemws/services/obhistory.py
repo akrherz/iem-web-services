@@ -33,9 +33,11 @@ from ..util import deliver_df, get_sqlalchemy_conn
 router = APIRouter()
 
 
-def get_df(network, station, dt):
+def get_df(network: str, station, dt):
     """Figure out how to get the data being requested."""
-    if dt == dateobj.today() and network not in ["ISUSM", "SCAN"]:
+    if dt == dateobj.today() and not network.endswith(
+        ("ISUSM", "SCAN", "RWIS")
+    ):
         # Use IEM Access
         with get_sqlalchemy_conn("iem") as pgconn:
             df = pd.read_sql(
@@ -91,7 +93,8 @@ def get_df(network, station, dt):
                 sql_helper("""
                 SELECT valid at time zone 'UTC' as utc_valid,
                 valid at time zone :tzname as local_valid,
-                tmpf, dwpf, sknt, drct,
+                tmpf, dwpf, sknt, drct, vsby, tfs0, tfs1, tfs2, tfs3,
+                tfs0_text, tfs1_text, tfs2_text, tfs3_text, pcpn,
                 gust, feel, relh from alldata WHERE station = :station and
                 valid >= :sts and valid < :ets ORDER by valid ASC
                 """),
