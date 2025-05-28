@@ -86,13 +86,13 @@ def service(
     radius_degrees: float = Query(
         None,
         description="Search radius in decimal degrees.",
-        ge=0,
+        gt=0,
         lt=10,
     ),
     radius_miles: float = Query(
         None,
         description="Search radius in decimal miles.",
-        ge=0,
+        gt=0,
         lt=1000,
     ),
     begints: datetime = Query(
