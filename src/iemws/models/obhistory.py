@@ -41,6 +41,9 @@ class ObHistoryDataItem(BaseModel):
     min_tmpf_6hr: float = Field(..., title="METAR 6 Hour Min Temp [F]")
     wxcodes: str = Field(..., title="Present Weather METAR Codes")
     snowdepth: str = Field(..., title="Snow Depth [inch]")
+    peak_wind_gust: float = Field(..., title="Peak Wind Gust [kts]")
+    peak_wind_drct: float = Field(..., title="Peak Wind Gust Direction [deg]")
+    peak_wind_time: str = Field(..., title="Peak Wind Gust Time (UTC)")
 
 
 class ObHistorySchema(BaseModel):

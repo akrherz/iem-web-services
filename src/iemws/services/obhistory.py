@@ -47,7 +47,9 @@ def get_df(network: str, station, dt):
                 drct, vsby, skyc1, skyl1, skyc2, skyl2, skyc3, skyl3, skyc4,
                 skyl4, relh, feel, alti, mslp, phour, p03i, p24i,
                 phour as p01i, raw, gust, max_tmpf_6hr, min_tmpf_6hr,
-                array_to_string(wxcodes, ' ') as wxcodes, snowdepth
+                array_to_string(wxcodes, ' ') as wxcodes, snowdepth,
+                peak_wind_gust, peak_wind_drct,
+                peak_wind_time at time zone 'UTC' as peak_wind_time
                 from current_log c JOIN stations t on (c.iemid = t.iemid)
                 WHERE t.id = :station and t.network = :network and
                 date(valid at time zone t.tzname) = :dt ORDER by utc_valid ASC
@@ -77,7 +79,9 @@ def get_df(network: str, station, dt):
                 vsby, skyc1, skyl1, skyc2, skyl2, skyc3, skyl3, skyc4, skyl4,
                 relh, feel, alti, mslp, p01i, p03i, p24i, metar as raw,
                 p03i, p06i, p24i, max_tmpf_6hr, min_tmpf_6hr, gust,
-                array_to_string(wxcodes, ' ') as wxcodes, snowdepth
+                array_to_string(wxcodes, ' ') as wxcodes, snowdepth,
+                peak_wind_gust, peak_wind_drct,
+                peak_wind_time at time zone 'UTC' as peak_wind_time
                 from alldata WHERE station = :station and
                 valid >= :sts and valid < :ets ORDER by valid ASC
                 """),
