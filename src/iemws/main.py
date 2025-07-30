@@ -79,6 +79,7 @@ from .services.nws import (
     bufkit,
     centers_for_point,
     current_flood_warnings,
+    current_flood_watches,
     emergencies,
     lsrs_by_point,
     outlook_by_point,
@@ -263,6 +264,7 @@ app.include_router(isusm_daily.router)
 app.include_router(bufkit.router)
 app.include_router(centers_for_point.router)
 app.include_router(current_flood_warnings.router)
+app.include_router(current_flood_watches.router)
 app.include_router(emergencies.router)
 app.include_router(outlook_by_point.router)
 app.include_router(daily.router)

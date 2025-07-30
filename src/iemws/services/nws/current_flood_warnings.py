@@ -15,8 +15,9 @@ the warnings.  The data returned is sorted by river name and then crudely by
 forecast warning point latitude descending (north to south).
 """
 
+import geopandas as gpd
 from fastapi import APIRouter, Query
-from geopandas import read_postgis
+from pyiem.database import sql_helper
 
 from ...models import SupportedFormats
 from ...util import deliver_df, get_sqlalchemy_conn
@@ -24,30 +25,37 @@ from ...util import deliver_df, get_sqlalchemy_conn
 router = APIRouter()
 
 
-def handler(state, wfo):
+def handler(state, wfo, significance: str) -> gpd.GeoDataFrame:
     """Handle the request, return dict"""
+    params = {
+        "significance": significance,
+        "state": state,
+        "wfo": wfo,
+    }
     state_limiter = ""
     if state is not None:
-        state_limiter = f" and substr(w.ugc, 1, 2) = '{state}' "
+        state_limiter = " and substr(w.ugc, 1, 2) = :state "
     wfo_limiter = ""
     if wfo is not None:
-        wfo_limiter = f" and w.wfo = '{wfo}' "
+        wfo_limiter = " and w.wfo = :wfo "
     with get_sqlalchemy_conn("postgis") as pgconn:
-        df = read_postgis(
-            f"""
+        df = gpd.read_postgis(
+            sql_helper(
+                """
             WITH polys as (
                 SELECT wfo, eventid, hvtec_nwsli, w.geom, h.name, h.river_name,
                 st_x(h.geom) as longitude, st_y(h.geom) as latitude,
                 phenomena, significance
                 from sbw w JOIN hvtec_nwsli h on (w.hvtec_nwsli = h.nwsli)
                 where expire > now() and phenomena = 'FL' and
-                significance = 'W' and
+                significance = :significance and
                 polygon_end > now() and status not in ('EXP', 'CAN') and
                 hvtec_nwsli is not null {wfo_limiter}),
             counties as (
                 SELECT w.hvtec_nwsli, sumtxt(u.name || ', ') as counties from
                 warnings w JOIN ugcs u on (w.gid = u.gid) WHERE
-                w.expire > now() and phenomena = 'FL' and significance = 'W'
+                w.expire > now() and phenomena = 'FL'
+                and significance = :significance
                 and status NOT IN ('EXP','CAN') {wfo_limiter} {state_limiter}
                 GROUP by hvtec_nwsli),
             agg as (
@@ -58,10 +66,14 @@ def handler(state, wfo):
                 (r.nwsli = a.hvtec_nwsli)
             ORDER by a.river_name ASC, latitude DESC
             """,
+                wfo_limiter=wfo_limiter,
+                state_limiter=state_limiter,
+            ),
             pgconn,
             geom_col="geom",
             index_col=None,
-        )
+            params=params,
+        )  # type: ignore
     return df
 
 
@@ -78,7 +90,7 @@ def service(
     wfo: str = Query(None, min_length=3, max_length=3),
 ):
     """Replaced above."""
-    df = handler(state, wfo)
+    df = handler(state, wfo, "W")
     return deliver_df(df, fmt)
 
 
