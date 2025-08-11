@@ -234,12 +234,16 @@ def get_df(network: str, station, dt):
         # Use HADS
         with get_sqlalchemy_conn("hads") as pgconn:
             df = pd.read_sql(
-                "SELECT distinct valid at time zone 'UTC' as utc_valid, "
-                "key, value "
-                f"from raw{dt:%Y} WHERE station = %s and "
-                "valid >= %s and valid < %s ORDER by utc_valid ASC",
+                sql_helper(
+                    """
+    SELECT distinct valid at time zone 'UTC' as utc_valid, key, value
+    from {table} WHERE station = :station and
+    valid >= :sts and valid < :ets ORDER by utc_valid ASC
+                        """,
+                    table=f"raw{dt:%Y}",
+                ),
                 pgconn,
-                params=(station, sts, ets),
+                params={"station": station, "sts": sts, "ets": ets},
                 index_col=None,
             )
             if df.empty:
