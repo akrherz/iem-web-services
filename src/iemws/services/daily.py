@@ -181,13 +181,13 @@ def service(
         ...,
         description="IEM Network Identifier",
         max_length=20,
-        pattern="^[A-Z0-9_]+$",
+        pattern=r"^[A-Z0-9_]+$",
     ),
     station: str = Query(
         None,
         description="IEM Station Identifier",
         max_length=20,
-        pattern=r"^[A-Z0-9_]+$",
+        pattern=r"^[A-Z0-9_\-]+$",
     ),
     date: dateobj = Query(
         None,
