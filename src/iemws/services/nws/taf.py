@@ -46,7 +46,7 @@ def handler(fmt, station, issued):
             select
             to_char(t.valid at time zone 'UTC', '{ISO}') as utc_valid,
             raw,
-            is_tempo,
+            case when t.ftype = 2 then true else false end as is_tempo,
             to_char(t.end_valid at time zone 'UTC', '{ISO}') as utc_end_valid,
             sknt,
             drct,
@@ -57,9 +57,12 @@ def handler(fmt, station, issued):
             skyl,
             ws_level,
             ws_drct,
-            ws_sknt
+            ws_sknt,
+            label as ftype
             from taf{issued.year} t JOIN forecast f on
-            (t.taf_id = f.id) ORDER by valid ASC
+            (t.taf_id = f.id)
+            JOIN taf_ftype ft on (t.ftype = ft.ftype)
+            ORDER by valid ASC
             """,
             pgconn,
             params=(station, issued, issued),

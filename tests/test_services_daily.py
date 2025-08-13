@@ -30,10 +30,11 @@ def test_basic():
 
 def test_cocorahs():
     """Test a cocorahs station query."""
-    req = client.get(
+    resp = client.get(
         "/daily.json?year=2021&network=IA_COCORAHS&station=IA-PK-97"
     )
-    res = req.json()
+    assert resp.status_code == 200
+    res = resp.json()
     assert res is not None
 
 
