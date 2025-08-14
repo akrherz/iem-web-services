@@ -7,27 +7,34 @@ If parameter `nolimit` is unset, this is a one-shot service, so if the database
 finds more than one entry for the provided identifier, a `X-IEM-Notice` header
 is added to the response.  If you provide `nolimit`, then the service will
 return the products seperated by \003 character.
+
+The product_id's source and WMO TTAAII are omitted from the database source. In
+general, the AFOS/AWIPS ID + bbb (if present) and timestamp is sufficient
+to uniquely identify products.
 """
 
 from datetime import datetime, timezone
 
 from fastapi import APIRouter, HTTPException, Path, Query, Response
-from pyiem.database import get_dbconnc
+from pyiem.database import sql_helper, with_sqlalchemy_conn
+from sqlalchemy.engine import Connection
 
 from iemws.util import cache_control
 
 router = APIRouter()
 
 
-def handler(product_id, nolimit: bool, headers):
+@with_sqlalchemy_conn("afos")
+def handler(
+    product_id, nolimit: bool, headers, conn: Connection | None = None
+):
     """Handle the request, return dict"""
-    pgconn, cursor = get_dbconnc("afos")
     tokens = product_id.split("-")
     bbb = None
     if len(tokens) == 4:
-        (tstamp, source, _ttaaii, pil) = tokens
+        (tstamp, _source, _ttaaii, pil) = tokens
     elif len(tokens) == 5:
-        (tstamp, source, _ttaaii, pil, bbb) = tokens
+        (tstamp, _source, _ttaaii, pil, bbb) = tokens
     else:
         raise HTTPException(
             status_code=404,
@@ -43,35 +50,37 @@ def handler(product_id, nolimit: bool, headers):
         ) from exp
     ts = ts.replace(tzinfo=timezone.utc)
 
-    args = [source, pil, ts]
-    extra = ""
-    if bbb:
-        extra = " and bbb = %s"
-        args.append(bbb)
+    params = {
+        "pil": pil,
+        "entered": ts,
+        "bbb": bbb,
+    }
+    blim = "" if bbb is None else " and bbb = :bbb"
     # When bbb is unset, we can hit some ambiguity, so we prioritize the
     # entry that has no bbb
-    cursor.execute(
-        "SELECT data from products where source = %s "
-        f"and pil = %s and entered = %s {extra} "
-        "order by bbb ASC NULLS FIRST",
-        args,
+    rs = conn.execute(
+        sql_helper(
+            """
+    SELECT data from products where pil = :pil and entered = :entered
+    {blim} order by bbb ASC NULLS FIRST
+        """,
+            blim=blim,
+        ),
+        params,
     )
 
-    if cursor.rowcount == 0:
-        pgconn.close()
+    if rs.rowcount == 0:
         raise HTTPException(status_code=404, detail="Product not found.")
 
-    if cursor.rowcount > 1:
+    if rs.rowcount > 1:
         headers["X-IEM-Notice"] = "Multiple Products Found"
         if nolimit:
             res = []
-            for row in cursor:
-                res.append(row["data"].replace("\r\r\n", "\n"))
-            pgconn.close()
+            for row in rs:
+                res.append(row[0].replace("\r\r\n", "\n"))
             return "\003".join(res)
-    row = cursor.fetchone()
-    pgconn.close()
-    return row["data"].replace("\r\r\n", "\n")
+    row = rs.fetchone()
+    return row[0].replace("\r\r\n", "\n")
 
 
 @router.get(
