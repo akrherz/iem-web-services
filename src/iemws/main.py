@@ -63,6 +63,7 @@ from .services import (
     nwstext,
     obhistory,
     raobs_by_year,
+    rwis,
     scp,
     servertime,
     shef_currents,
@@ -282,6 +283,7 @@ app.include_router(station.router)
 app.include_router(nwstext.router)
 app.include_router(meteobridge.router)
 app.include_router(drydown.router)
+app.include_router(rwis.router)
 app.include_router(sbw_by_line.router)
 app.include_router(six_hour.router)
 app.include_router(spc_mcd.router)

@@ -99,7 +99,9 @@ def get_df(network: str, station, dt):
                 valid at time zone :tzname as local_valid,
                 tmpf, dwpf, sknt, drct, vsby, tfs0, tfs1, tfs2, tfs3,
                 tfs0_text, tfs1_text, tfs2_text, tfs3_text, pcpn,
-                gust, feel, relh from alldata WHERE station = :station and
+                gust, feel, relh from
+                alldata a JOIN stations t on (a.iemid = t.iemid)
+                WHERE t.id = :station and
                 valid >= :sts and valid < :ets ORDER by valid ASC
                 """),
                 pgconn,
