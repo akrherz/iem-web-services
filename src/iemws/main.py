@@ -40,7 +40,8 @@ from queue import Queue
 import pandas as pd
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
-from pyiem.util import LOG, get_dbconn, utc
+from pyiem.database import get_dbconn
+from pyiem.util import LOG, utc
 from shapely.errors import ShapelyDeprecationWarning
 
 from .config import log_config
