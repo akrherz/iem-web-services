@@ -8,9 +8,10 @@ finds more than one entry for the provided identifier, a `X-IEM-Notice` header
 is added to the response.  If you provide `nolimit`, then the service will
 return the products seperated by \003 character.
 
-The product_id's source and WMO TTAAII are omitted from the database source. In
+The product_id's WMO TTAAII is omitted from the database search. In
 general, the AFOS/AWIPS ID + bbb (if present) and timestamp is sufficient
-to uniquely identify products.
+to uniquely identify products.  The source is used to remove ambiguity, if
+necessary.
 """
 
 from datetime import datetime, timezone
@@ -32,9 +33,9 @@ def handler(
     tokens = product_id.split("-")
     bbb = None
     if len(tokens) == 4:
-        (tstamp, _source, _ttaaii, pil) = tokens
+        (tstamp, source, _ttaaii, pil) = tokens
     elif len(tokens) == 5:
-        (tstamp, _source, _ttaaii, pil, bbb) = tokens
+        (tstamp, source, _ttaaii, pil, bbb) = tokens
     else:
         raise HTTPException(
             status_code=404,
@@ -54,6 +55,7 @@ def handler(
         "pil": pil,
         "entered": ts,
         "bbb": bbb,
+        "source": source,
     }
     blim = "" if bbb is None else " and bbb = :bbb"
     # When bbb is unset, we can hit some ambiguity, so we prioritize the
@@ -61,7 +63,7 @@ def handler(
     rs = conn.execute(
         sql_helper(
             """
-    SELECT data from products where pil = :pil and entered = :entered
+    SELECT data, source from products where pil = :pil and entered = :entered
     {blim} order by bbb ASC NULLS FIRST
         """,
             blim=blim,
@@ -69,18 +71,30 @@ def handler(
         params,
     )
 
-    if rs.rowcount == 0:
+    res = []
+    res_all = []
+    for row in rs:
+        payload = row[0].replace("\r", "")
+        # Can we remove ambiguity by checking the source
+        if row[1] == source:
+            res.append(payload)
+        res_all.append(payload)
+
+    # If we found nothing, 404
+    if not res_all:
         raise HTTPException(status_code=404, detail="Product not found.")
 
-    if rs.rowcount > 1:
-        headers["X-IEM-Notice"] = "Multiple Products Found"
-        if nolimit:
-            res = []
-            for row in rs:
-                res.append(row[0].replace("\r\r\n", "\n"))
-            return "\003".join(res)
-    row = rs.fetchone()
-    return row[0].replace("\r\r\n", "\n")
+    # If the filtered result is len 1, we win
+    if len(res) == 1:
+        return res[0]
+
+    # Now we have ambiguous returns
+    headers["X-IEM-Notice"] = "Multiple Products Found"
+    if nolimit:
+        # At this point res is either len=0 or >1
+        return "\003".join(res if len(res) > 1 else res_all)
+    # Give up, more or less
+    return res_all[0]
 
 
 @router.get(
