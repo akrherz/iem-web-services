@@ -1,12 +1,16 @@
 # Fire up our server
 export PYTHONPATH=$(pwd)/src
 
-if [ "$#" -eq  "0" ]
-   then
-     WORKERS=16
- else
-     WORKERS=$1
- fi
+# Require script to be called with two arguments, workers and max-requests
+if [ "$#" -ne 2 ]; then
+    echo "Usage: $0 <workers> <max-requests>"
+    echo "  workers: number of worker processes to spawn"
+    echo "  max-requests: number of requests a worker will process before restarting"
+    exit 1
+fi
+
+WORKERS=$1
+MAXREQUESTS=$2
 
 # https://www.uvicorn.org/deployment/
 # Something (likely pygrib) leaks memory, so we don't let an individual worker
@@ -21,7 +25,7 @@ gunicorn \
  --graceful-timeout 60 \
  -k iemws.worker.RestartableUvicornWorker \
  -b 0.0.0.0:8000 \
- --max-requests 50000 \
+ --max-requests $MAXREQUESTS \
  --max-requests-jitter 500 \
  --reload \
  --log-level warning \
