@@ -9,7 +9,7 @@ from typing import Callable
 from fastapi import Response
 from pandas import DataFrame
 from pandas.api.types import is_datetime64_any_dtype as isdt
-from pyiem import util
+from pyiem.database import get_dbconnstr as pyiem_get_dbconnstr
 from pyiem.reference import ISO8601
 from sqlalchemy import engine
 
@@ -84,6 +84,6 @@ def get_dbconnstr(name):
     """Get a database connection string."""
     # 1. Allows us to specify the usage of psycopg as the module
     # 2. Sets the timezone to UTC
-    return util.get_dbconnstr(name).replace(
+    return pyiem_get_dbconnstr(name).replace(
         "postgresql:", "postgresql+psycopg:"
     )
