@@ -155,7 +155,7 @@ UNITS = {
 }
 
 
-def do_gr(ctx):
+def do_gr(ctx: dict):
     """Custom schema."""
     s = ctx["sndf"]["STIM PRES HGHT TMPC DWPC DRCT SKNT OMEG".split()]
     levels = s[s["STIM"] == ctx["fhour"]].drop("STIM", axis=1)
@@ -202,7 +202,7 @@ def do_gr(ctx):
     return res
 
 
-def handler(ctx):
+def handler(ctx: dict):
     """Handle the request, return dict"""
     begin = utc()
     model = ctx["model"].upper()
@@ -239,8 +239,7 @@ def handler(ctx):
     runtimes = [
         ctx["runtime"],
     ]
-    valid = utc()
-    valid = utc(valid.year, valid.month, valid.day, valid.hour)
+    valid = utc().replace(minute=0, second=0, microsecond=0)
     if ctx["time"] is not None:
         valid = ctx["time"].replace(tzinfo=timezone.utc)
     if ctx["runtime"] is None:
@@ -254,6 +253,7 @@ def handler(ctx):
 
     sio = StringIO()
     sz = 0
+    url = ""
     for station, runtime in [(x, y) for x in stations for y in runtimes]:
         runtime = runtime.replace(tzinfo=timezone.utc)
         prefix = model.lower()
@@ -268,7 +268,8 @@ def handler(ctx):
             f"{station.lower()}.buf"
         )
         try:
-            resp = httpx.get(url, timeout=20)
+            # Tightened up to attempt to prevent service stacking
+            resp = httpx.get(url, timeout=10)
         except Exception as exp:
             LOG.info("URL %s failed with %s", url, exp)
             raise HTTPException(
@@ -313,6 +314,7 @@ def handler(ctx):
             "model": model,
             "station": station,
             "run_time": runtime.strftime(ISO8601),
+            "url": url,
         },
     }
     if ctx["fall"]:
@@ -343,6 +345,7 @@ def service(
         "RAP",
         description="Model in 'GFS', 'HRRR', 'NAM', 'NAM4KM', 'RAP'",
         max_length=6,
+        pattern="^(GFS|HRRR|NAM|NAM4KM|RAP)$",
     ),
     time: datetime = Query(None, description="Profile Valid Time in UTC"),
     runtime: datetime = Query(None, description="Model Init Time UTC"),
@@ -351,8 +354,6 @@ def service(
     gr: bool = Query(False, description="Use Gibson Ridge JSON Schema"),
 ):
     """Replaced above."""
-    if model not in ["GFS", "HRRR", "NAM", "NAM4KM", "RAP"]:
-        raise HTTPException(422, "Invalid model parameter provided.")
     ctx = {
         "fmt": fmt,
         "lon": lon,
