@@ -1,6 +1,7 @@
 """Test the nws/bufkit service."""
 
 import re
+from pathlib import Path
 
 import httpx
 import pytest
@@ -27,9 +28,12 @@ def test_error_handling(httpx_mock: HTTPXMock):
 
 def test_error_with_invalid_file(httpx_mock: HTTPXMock):
     """Test when the service provides an empty file."""
-    httpx_mock.add_response(content=b"")
+    testfn = Path(__file__).parent / "rap_kdsm.buf"
+    with open(testfn) as fh:
+        httpx_mock.add_response(content=fh.read(1000).encode())
     res = client.get("/nws/bufkit.json?lon=-92.5&lat=42.5")
-    assert res.status_code == 422
+    assert res.status_code == 503
+    assert "raw bufkit file failed" in res.json().get("detail", "").lower()
 
 
 def test_230220_multiple_stations():
