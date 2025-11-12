@@ -12,6 +12,8 @@ dependencies:
   - pyproj
   - pytest
   - pytest-cov
+  # For httpx request mocking
+  - pytest-httpx
   - pytest-runner
   - setuptools_scm
   - sqlalchemy
