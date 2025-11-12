@@ -271,7 +271,7 @@ def handler(ctx: dict):
             # Tightened up to attempt to prevent service stacking
             resp = httpx.get(url, timeout=10)
         except Exception as exp:
-            LOG.info("URL %s failed with %s", url, exp)
+            LOG.warning("URL %s download failed with %s", url, exp)
             raise HTTPException(
                 503,
                 detail="mtarchive backend failed, try later please.",
@@ -292,7 +292,7 @@ def handler(ctx: dict):
     try:
         sndf, stndf = read_bufkit(sio)
     except Exception as exp:
-        LOG.info("URL %s failed with %s", url, exp)
+        LOG.warning("URL %s failed bufkit reader with %s", url, exp)
         raise HTTPException(
             503,
             detail="processing raw bufkit file failed.",

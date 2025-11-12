@@ -1,18 +1,35 @@
 """Test the nws/bufkit service."""
 
-# stdlib
 import re
 
-# third party
+import httpx
 import pytest
 from fastapi.testclient import TestClient
+from pytest_httpx import HTTPXMock
 
-# Local
 from iemws.main import app
 from iemws.services.nws import bufkit
 
 URLS = re.compile(r"`/api/1([^\s]*)`")
 client = TestClient(app)
+
+
+def test_error_handling(httpx_mock: HTTPXMock):
+    """Test error handling code paths."""
+    # Simulate a timeout
+    httpx_mock.add_exception(
+        httpx.TimeoutException("Simulated timeout for testing")
+    )
+    res = client.get("/nws/bufkit.json?lon=-92.5&lat=42.5")
+    assert res.status_code == 503
+    assert "mtarchive backend failed" in res.json().get("detail", "").lower()
+
+
+def test_error_with_invalid_file(httpx_mock: HTTPXMock):
+    """Test when the service provides an empty file."""
+    httpx_mock.add_response(content=b"")
+    res = client.get("/nws/bufkit.json?lon=-92.5&lat=42.5")
+    assert res.status_code == 422
 
 
 def test_230220_multiple_stations():
@@ -28,7 +45,7 @@ def test_basic():
     assert res is not None
 
 
-@pytest.mark.parametrize("url", URLS.findall(bufkit.__doc__))
+@pytest.mark.parametrize("url", URLS.findall(str(bufkit.__doc__)))
 def test_docustring(url):
     """Test example URLs found in the docstring."""
     res = client.get(url).json()
