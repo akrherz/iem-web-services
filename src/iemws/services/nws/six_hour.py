@@ -28,12 +28,16 @@ LOOKUP = {
 }
 
 
-def handler(valid: datetime, varname: str) -> gpd.GeoDataFrame:
+def handler(
+    valid: datetime, varname: str, wfo: str | None
+) -> gpd.GeoDataFrame:
     """Handle the request, return dict"""
     params = {
         "valid": valid,
         "shefvar": LOOKUP[varname],
+        "wfo": wfo,
     }
+    wfo_limit = "" if wfo is None else " and t.wfo = :wfo "
     with get_sqlalchemy_conn("hads") as pgconn:
         df = gpd.read_postgis(
             sql_helper(
@@ -43,9 +47,10 @@ def handler(valid: datetime, varname: str) -> gpd.GeoDataFrame:
             st_x(geom) as longitude, st_y(geom) as latitude, name, state from
             raw r, stations t where valid = :valid and key = :shefvar
             and r.station = t.id and
-            (t.network ~* 'COOP' or t.network ~* 'DCP')
+            (t.network ~* 'COOP' or t.network ~* 'DCP') {wfo_limit}
             order by station asc, network asc
-            """
+            """,
+                wfo_limit=wfo_limit,
             ),
             pgconn,
             geom_col="geom",
@@ -72,9 +77,15 @@ def service(
     valid: datetime = Query(
         ..., description="UTC Timestamp to return reports for."
     ),
+    wfo: str = Query(
+        default=None,
+        description="Optionally filter by WFO",
+        min_length=3,
+        max_length=4,
+    ),
 ):
     """Replaced above."""
-    df = handler(valid, varname)
+    df = handler(valid, varname, wfo)
     return deliver_df(df, fmt)
 
 
