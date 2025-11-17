@@ -13,3 +13,10 @@ def test_basic():
         service = f"/nws/{varname}_6hour.geojson?valid=2023-11-10T12:00:00Z"
         res = client.get(service).json()
         assert res["features"][0]["properties"]["station"] == "DNKI4"
+
+
+def test_wfo_limit():
+    """Test calling for a given WFO."""
+    service = "/nws/snowfall_6hour.geojson?valid=2023-11-10T12:00:00Z&wfo=DVN"
+    res = client.get(service)
+    assert res.status_code == 200
