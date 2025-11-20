@@ -44,11 +44,11 @@ router = APIRouter()
 LATEST_RUNTIME_CACHE = {}
 
 
-def find_runtime(station, model):
+def find_runtime(station: list, model: str) -> datetime:
     """Figure out what our latest runtime is."""
     # Check our cache
     if model in LATEST_RUNTIME_CACHE:
-        (settime, runtime) = LATEST_RUNTIME_CACHE[model]  # (settime, runtime)
+        (settime, runtime) = LATEST_RUNTIME_CACHE[model]
         if settime > utc() - timedelta(minutes=20):
             return runtime
     with get_sqlalchemy_conn("mos") as engine, engine.begin() as conn:
@@ -63,14 +63,19 @@ def find_runtime(station, model):
         rows = res.fetchone()
         if not rows:
             raise HTTPException(
-                404, detail="could not find most recent model run"
+                404,
+                detail=(
+                    "For the provided station(s) and lack of runtime= value, "
+                    "this service could not find any recent MOS data for the "
+                    "provided model over the past 48 hours."
+                ),
             )
         runtime = rows[0]
         LATEST_RUNTIME_CACHE[model] = (utc(), runtime)
     return runtime
 
 
-def handler(station, model, runtime, fmt):
+def handler(station: list, model: str, runtime: datetime, fmt: str) -> str:
     """Handle the request."""
     if runtime is None:
         runtime = find_runtime(station, model)
@@ -93,7 +98,14 @@ def handler(station, model, runtime, fmt):
             index_col=None,
         )
     if df.empty:
-        raise HTTPException(404, "No data found for query.")
+        raise HTTPException(
+            404,
+            detail=(
+                "Database query found no results for the provided station(s) "
+                ", model, and runtime.  Please review that your stations are "
+                "four character ICAOs in the case of airports."
+            ),
+        )
     # Hacky to work around string formatting issue with pandas 1.4.0
     df["runtime"] = df["runtime_utc"].dt.strftime("%Y-%m-%d %H:%M")
     df["ftime"] = df["ftime_utc"].dt.strftime("%Y-%m-%d %H:%M")
@@ -115,7 +127,14 @@ def handler(station, model, runtime, fmt):
 def service(
     fmt: SupportedFormatsNoGeoJSON,
     station: List[str] = Query(
-        ..., description="Full MOS Station Identifier", max_length=6
+        ...,
+        description=(
+            "Full MOS station identifiers. Please provide the four character "
+            "ICAO identifier(s) in the case of airports.  This is done as "
+            "some three character identifiers are ambiguous.  You can provide "
+            "up to six stations in a single request."
+        ),
+        max_length=6,
     ),
     model: str = Query(
         ...,
@@ -123,11 +142,24 @@ def service(
         max_length=3,
         description="MOS Model ID",
     ),
-    runtime: datetime = Query(None, description="MOS Model Cycle Time"),
+    runtime: datetime = Query(
+        default=None,
+        description="MOS Model Cycle Time in UTC please.",
+    ),
 ):
     """Replaced above with module __doc__"""
     if runtime is not None and runtime.tzinfo is None:
         runtime = runtime.replace(tzinfo=timezone.utc)
+    # Ensure that provided stations are uppercase and reasonable size
+    for stid in station:
+        if len(stid) < 3 or len(stid) > 6 or stid.upper() != stid:
+            raise HTTPException(
+                422,
+                detail=(
+                    f"Provided station identifier {stid} is invalid, must be "
+                    "between 3 and 6 characters in length and uppercase."
+                ),
+            )
 
     return Response(
         handler(station, model, runtime, fmt), media_type=MEDIATYPES[fmt]
