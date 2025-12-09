@@ -54,7 +54,7 @@ def service(
 
     fn = iemre.get_daily_ncname(date.year, domain=domain)
 
-    if domain == "" and date.year > 1980:
+    if domain == "conus" and date.year > 1980:
         ncfn = f"/mesonet/data/prism/{date.year}_daily.nc"
         if not os.path.isfile(ncfn):
             prism_precip = None
@@ -65,7 +65,7 @@ def service(
     else:
         prism_precip = None
 
-    if domain == "" and date.year > 2000:
+    if domain == "conus" and date.year > 2000:
         ncfn = iemre.get_daily_mrms_ncname(date.year)
         if not os.path.isfile(ncfn):
             mrms_precip = None
