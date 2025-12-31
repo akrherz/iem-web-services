@@ -2,7 +2,7 @@
 
 from datetime import datetime, timedelta, timezone
 
-from fastapi import APIRouter, Query
+from fastapi import APIRouter, HTTPException, Query
 from geopandas import read_postgis
 
 # third party
@@ -65,6 +65,8 @@ def service(
         valid = utc()
     if valid.tzinfo is None:
         valid = valid.replace(tzinfo=timezone.utc)
+    if valid.year < 1900:
+        raise HTTPException(422, detail="Valid must be later than 1900!")
     df = handler(valid)
     return deliver_df(df, fmt)
 

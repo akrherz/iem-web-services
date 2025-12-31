@@ -9,6 +9,14 @@ from iemws.main import app
 client = TestClient(app)
 
 
+def test_invalid_date():
+    """Test too soon date."""
+    res = client.get(
+        "/iowa_winter_roadcond.geojson", params={"valid": "1800-01-01T12:00Z"}
+    )
+    assert res.status_code == 422
+
+
 def test_first():
     """Test we can do things."""
     res = client.get(
