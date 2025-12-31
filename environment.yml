@@ -1,6 +1,5 @@
 dependencies:
   - codecov
-  #
   - fastapi
   - geopandas
   - httpx
