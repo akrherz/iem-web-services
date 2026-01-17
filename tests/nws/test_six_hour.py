@@ -7,6 +7,12 @@ from iemws.main import app
 client = TestClient(app)
 
 
+def test_invalid_varname():
+    """Test that we get a 422 when given a bad varname."""
+    res = client.get("/nws/badvar_6hour.geojson?valid=2023-11-10T12:00:00Z")
+    assert res.status_code == 422
+
+
 def test_basic():
     """Test basic calls."""
     for varname in "swe snowfall precip snowdepth".split():

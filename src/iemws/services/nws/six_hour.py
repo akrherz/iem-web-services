@@ -63,6 +63,13 @@ def handler(
     return df
 
 
+class VarName(str, Enum):
+    snowfall = "snowfall"
+    precip = "precip"
+    snowdepth = "snowdepth"
+    swe = "swe"
+
+
 @router.get(
     "/nws/{varname}_6hour.{fmt}",
     description=__doc__,
@@ -73,7 +80,7 @@ def handler(
 )
 def service(
     fmt: SupportedFormats,
-    varname: str = Enum("varname", ["snowfall", "precip", "snowdepth", "swe"]),
+    varname: VarName,
     valid: datetime = Query(
         ..., description="UTC Timestamp to return reports for."
     ),
