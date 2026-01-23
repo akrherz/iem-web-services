@@ -4,8 +4,8 @@ dependencies:
   - geopandas
   - httpx
   - metpy
-  # For the future warning
-  - pandas>=2.2
+  # Modern
+  - pandas>=3
   - pygrib
   - pyogrio
   - pyproj

@@ -27,7 +27,7 @@ def handler(valid, window):
     with get_sqlalchemy_conn("postgis") as pgconn:
         df = gpd.read_postgis(
             sql_helper("""
-    SELECT row_number() OVER() as index, label as cid,
+    SELECT label as cid,
     valid as utc_valid, geom, ST_X(geom) as lon,
     ST_Y(geom) as lat from idot_dashcam_log WHERE valid >= :sts
     and valid <= :ets ORDER by valid ASC"""),
