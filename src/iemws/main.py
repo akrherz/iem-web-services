@@ -37,7 +37,6 @@ from datetime import timedelta
 from logging.config import dictConfig
 from queue import Queue
 
-import pandas as pd
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 from pyiem.database import get_dbconn
@@ -100,8 +99,6 @@ from .services.vtec import county_zone, events_status, sbw_interval
 
 # Stop a Shapely deprecation warning until geopandas is updated
 warnings.filterwarnings("ignore", category=ShapelyDeprecationWarning)
-# Stop a Pandas warning about future silent downcasting
-pd.set_option("future.no_silent_downcasting", True)
 
 # Order here controls the order of the API documentation
 tags_metadata = [
