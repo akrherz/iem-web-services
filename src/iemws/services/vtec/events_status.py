@@ -53,6 +53,7 @@ def handler(valid, wfo):
                 product_issue <= :valid {wfolimiter}
             )
             SELECT wfo, eventid, phenomena, significance, ph_sig, year,
+            '' as url,
             max(status) as status,
             string_agg(location, ', ') as locations,
             max(_updated) as updated,
@@ -65,7 +66,7 @@ def handler(valid, wfo):
             max(last_product_id) as last_product_id
             from data
             GROUP by
-                wfo, eventid, phenomena, significance, ph_sig, year, status
+            wfo, eventid, phenomena, significance, ph_sig, year, url, status
             ORDER by wfo, updated desc
             """,
                 wfolimiter=wfolimiter,
@@ -80,18 +81,19 @@ def handler(valid, wfo):
     )
     if df.empty:
         df["issue"] = pd.to_datetime([])
-    df["url"] = (
-        "https://mesonet.agron.iastate.edu/vtec/#"
-        + df["year"].astype(str)
-        + "-O-NEW-K"
-        + df["wfo"]
-        + "-"
-        + df["phenomena"]
-        + "-"
-        + df["significance"]
-        + "-"
-        + df["eventid"].astype(str).str.pad(4, fillchar="0")
-    )
+    if not df.empty:
+        df["url"] = (
+            "https://mesonet.agron.iastate.edu/vtec/#"
+            + df["year"].astype(str)
+            + "-O-NEW-K"
+            + df["wfo"]
+            + "-"
+            + df["phenomena"]
+            + "-"
+            + df["significance"]
+            + "-"
+            + df["eventid"].astype(str).str.pad(4, fillchar="0")
+        )
     return df
 
 
