@@ -15,8 +15,8 @@ valid for the next day and not the day 2 outlook from "yesterday".
 If `valid` is not provided, you get the current outlooks.
 
 The SPC hatched/significant probability is handled in a special manner such
-that both the `SIGN` threshold and outlook probability number are both
-returned.
+that both the `SIGN|CIG1|CIG2|CIG3` threshold and outlook probability number
+are both returned.
 """
 
 from datetime import datetime, timedelta, timezone
@@ -34,7 +34,7 @@ from ...util import deliver_df, get_sqlalchemy_conn
 router = APIRouter()
 
 
-def handler(lon, lat, valid):
+def handler(lon: float, lat: float, valid: datetime):
     """Handle the request, return dict"""
     with get_sqlalchemy_conn("postgis") as pgconn:
         # NB: Postgresql17 was making a poor query plan choice here
@@ -68,12 +68,12 @@ def handler(lon, lat, valid):
     -- Now we are prepared to do the spatial query
     agg2 as (
         SELECT *, rank() OVER (PARTITION by day, outlook_type,
-        category ORDER by case when threshold = 'SIGN'
+        category ORDER by case when threshold = ANY(:sigs)
         then 0 else priority end desc)
         from agg where ST_Contains(geom, ST_Point(:lon, :lat, 4326))
     )
-    -- Return any rank 1 or SIGN thresholds
-    select * from agg2 where rank = 1 or threshold = 'SIGN'
+    -- Return any rank 1 or SIGN,CIG thresholds
+    select * from agg2 where rank = 1 or threshold = ANY(:sigs)
             """
             ),
             pgconn,
@@ -83,6 +83,7 @@ def handler(lon, lat, valid):
                 "sts": valid - timedelta(hours=27),
                 "lat": lat,
                 "lon": lon,
+                "sigs": ["SIGN", "CIG1", "CIG2", "CIG3"],
             },
             index_col=None,
         )  # type:ignore
