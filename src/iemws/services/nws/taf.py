@@ -14,11 +14,11 @@ space seperated strings in TXT output formats.
 """
 
 from datetime import datetime, timezone
+from typing import Annotated
 
 from fastapi import APIRouter, Query, Response
-
-# Third Party
 from pandas.io.sql import read_sql
+from pyiem.database import sql_helper
 from pyiem.util import utc
 
 # Local
@@ -30,7 +30,7 @@ ISO = "YYYY-MM-DDThh24:MI:SSZ"
 router = APIRouter()
 
 
-def handler(fmt, station, issued):
+def handler(fmt: str, station: str, issued: datetime | None):
     """Handle the request, return dict"""
     if issued is None:
         issued = utc()
@@ -38,16 +38,18 @@ def handler(fmt, station, issued):
         issued = issued.replace(tzinfo=timezone.utc)
     with get_sqlalchemy_conn("asos") as pgconn:
         df = read_sql(
-            f"""
+            sql_helper(
+                """
             WITH forecast as (
-                select id from taf where station = %s and
-                valid > %s - '24 hours'::interval and valid <= %s
+                select id, station, product_id, is_amendment from taf
+                where station = :station and
+                valid > :issued - '24 hours'::interval and valid <= :issued
                 ORDER by valid DESC LIMIT 1)
             select
-            to_char(t.valid at time zone 'UTC', '{ISO}') as utc_valid,
+            to_char(t.valid at time zone 'UTC', :iso) as utc_valid,
             raw,
             case when t.ftype = 2 then true else false end as is_tempo,
-            to_char(t.end_valid at time zone 'UTC', '{ISO}') as utc_end_valid,
+            to_char(t.end_valid at time zone 'UTC', :iso) as utc_end_valid,
             sknt,
             drct,
             gust,
@@ -58,14 +60,19 @@ def handler(fmt, station, issued):
             ws_level,
             ws_drct,
             ws_sknt,
-            label as ftype
-            from taf{issued.year} t JOIN forecast f on
+            label as ftype,
+            f.is_amendment,
+            f.product_id,
+            f.station
+            from {table} t JOIN forecast f on
             (t.taf_id = f.id)
             JOIN taf_ftype ft on (t.ftype = ft.ftype)
             ORDER by valid ASC
             """,
+                table=f"taf{issued:%Y}",
+            ),
             pgconn,
-            params=(station, issued, issued),
+            params={"station": station, "issued": issued, "iso": ISO},
             index_col=None,
         )
 
@@ -85,8 +92,11 @@ def handler(fmt, station, issued):
 )
 def service(
     fmt: SupportedFormatsNoGeoJSON,
-    station: str = Query(..., min_length=4, max_length=4),
-    issued: datetime = Query(None),
+    station: Annotated[str, Query(min_length=4, max_length=4)],
+    issued: Annotated[
+        datetime | None,
+        Query(description="Valid time to look for most recent TAF before"),
+    ] = None,
 ):
     """Replaced above."""
     return Response(handler(fmt, station, issued), media_type=MEDIATYPES[fmt])

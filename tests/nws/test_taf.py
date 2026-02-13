@@ -9,8 +9,8 @@ client = TestClient(app)
 
 def test_basic():
     """Test basic calls."""
-    req = client.get("/nws/taf.json?station=KDSM")
-    res = req.json()
+    resp = client.get("/nws/taf.json?station=KDSM&issued=2026-02-13T12:00")
+    res = resp.json()
     assert res is not None
 
 
