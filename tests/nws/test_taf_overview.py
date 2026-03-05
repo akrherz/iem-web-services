@@ -10,6 +10,7 @@ client = TestClient(app)
 def test_overview_at():
     """Test a request at a given timestamp."""
     resp = client.get("/nws/taf_overview.json?at=2023-01-01T00:00:00Z")
+    assert "data" in resp.json()
     assert resp.status_code == 200
 
 
@@ -36,12 +37,12 @@ def test_ok_large_station_request():
         "/nws/taf_overview.json?sts=2022-01-01T00:00&ets=2022-12-01T00:00"
         "&station=KDSM"
     )
+    assert "data" in resp.json()
     assert resp.status_code == 200
 
 
 def test_basic():
     """Test basic calls."""
     resp = client.get("/nws/taf_overview.geojson")
-    res = resp.json()
-    assert res is not None
+    assert "features" in resp.json()
     assert resp.status_code == 200
