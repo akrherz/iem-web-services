@@ -73,13 +73,13 @@ def handler(
                 """
             with forecasts as (
                 select station, id, valid as issuance, product_id,
-                is_amendment,
+                is_amendment, issue, expire,
                 row_number() OVER (PARTITION by station ORDER by valid DESC)
                 from taf where valid > :sts and valid <= :ets
                 {station_limiter}),
             agg as (
                 select station, id, issuance, product_id, is_amendment,
-                row_number as seqnumber
+                row_number as seqnumber, issue, expire
                 from forecasts
                 where row_number {row_number_operator} 1),
             stinfo as (
@@ -94,6 +94,8 @@ def handler(
 
             select s.station, s.product_id, s.geom, s.name, s.is_amendment,
             s.seqnumber,
+            to_char(s.issue , 'YYYY-MM-DDThh24:MI:SSZ') as utc_issue,
+            to_char(s.expire , 'YYYY-MM-DDThh24:MI:SSZ') as utc_expire,
             to_char(s.issuance at time zone 'UTC', 'YYYY-MM-DDThh24:MI:SSZ')
                 as utc_issued,
             ST_X(geom) as lon, ST_Y(geom) as lat,
