@@ -16,6 +16,7 @@ variables from this service even if the station does not report it.
 
 from datetime import date as dateobj
 from datetime import datetime, timedelta, timezone
+from typing import Annotated
 from zoneinfo import ZoneInfo
 
 import numpy as np
@@ -316,14 +317,21 @@ def handler(network, station, dt, full):
 )
 def service(
     fmt: SupportedFormatsNoGeoJSON,
-    network: str = Query(
-        ..., description="IEM Network Identifier", max_length=20
-    ),
-    station: str = Query(
-        ..., description="IEM Station Identifier", max_length=64
-    ),
-    date: dateobj = Query(None, description="Local station calendar date"),
-    full: bool = Query(False, description="Include all variables?"),
+    network: Annotated[
+        str,
+        Query(
+            description="IEM Network Identifier",
+            max_length=20,
+            pattern="^[A-Z0-9_]+$",
+        ),
+    ],
+    station: Annotated[
+        str, Query(description="IEM Station Identifier", max_length=64)
+    ],
+    date: Annotated[
+        dateobj | None, Query(description="Local station calendar date")
+    ] = None,
+    full: Annotated[bool, Query(description="Include all variables?")] = False,
 ):
     """Replaced above with module __doc__"""
     df = handler(network.upper(), station.upper(), date, full)
