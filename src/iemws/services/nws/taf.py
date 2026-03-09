@@ -41,7 +41,8 @@ def handler(fmt: str, station: str, issued: datetime | None):
             sql_helper(
                 """
             WITH forecast as (
-                select id, station, product_id, is_amendment from taf
+                select id, station, product_id, is_amendment,
+                issue, expire from taf
                 where station = :station and
                 valid > :issued - '24 hours'::interval and valid <= :issued
                 ORDER by valid DESC LIMIT 1)
@@ -50,6 +51,8 @@ def handler(fmt: str, station: str, issued: datetime | None):
             raw,
             case when t.ftype = 2 then true else false end as is_tempo,
             to_char(t.end_valid at time zone 'UTC', :iso) as utc_end_valid,
+            to_char(f.issue at time zone 'UTC', :iso) as utc_taf_issue,
+            to_char(f.expire at time zone 'UTC', :iso) as utc_taf_expire,
             sknt,
             drct,
             gust,
