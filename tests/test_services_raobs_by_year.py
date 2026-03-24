@@ -9,6 +9,15 @@ from iemws.main import app
 client = TestClient(app)
 
 
+def test_unknown_virtual_station():
+    """Test that we get a 404 for unknown virtual station."""
+    res = client.get(
+        "/raobs_by_year.json",
+        params={"station": "_FOO", "year": 2023},
+    )
+    assert res.status_code == 404
+
+
 def test_invalid_sortby():
     """Test that this generated."""
     res = client.get(

@@ -33,7 +33,7 @@ shear_sfc_6km_smps | Surface to 6km Shear (m/s)
 
 from datetime import date
 from enum import Enum
-from typing import Optional
+from typing import Annotated
 
 import pandas as pd
 from fastapi import APIRouter, HTTPException, Query
@@ -70,8 +70,8 @@ class SortByParameter(str, Enum):
 
 def handler(
     station: str,
-    year: Optional[int],
-    sortby: Optional[SortByParameter],
+    year: int | None,
+    sortby: SortByParameter | None,
     limit: int,
     asc: bool,
 ) -> pd.DataFrame:
@@ -87,6 +87,8 @@ def handler(
     if station.startswith("_"):
         station_limiter = "station = ANY(:station)"
         nt = NetworkTable("RAOB", only_online=False)
+        if station not in nt.sts:
+            raise HTTPException(status_code=404, detail="Unknown station")
         params["station"] = (
             nt.sts[station]["name"].split("--")[1].strip().split()
         )
@@ -126,22 +128,30 @@ def handler(
 )
 def nwstext_service(
     fmt: SupportedFormatsNoGeoJSON,
-    station: str = Query(..., max_length=4, min_length=4),
-    year: Optional[int] = Query(None, ge=1947, le=date.today().year),
-    sortby: Optional[SortByParameter] = Query(
-        None,
-        description="Sort by Parameter, year is ignored",
-    ),
-    limit: Optional[int] = Query(
-        100,
-        description="Limit to the number of results returned, only for sortby",
-        le=1000,
-        ge=1,
-    ),
-    asc: Optional[bool] = Query(
-        False,
-        description="Sort in ascending order, only for sortby",
-    ),
+    station: Annotated[str, Query(max_length=4, min_length=4)],
+    year: Annotated[int | None, Query(ge=1947, le=date.today().year)] = None,
+    sortby: Annotated[
+        SortByParameter | None,
+        Query(
+            description="Sort by Parameter, year is ignored",
+        ),
+    ] = None,
+    limit: Annotated[
+        int,
+        Query(
+            description=(
+                "Limit to the number of results returned, only for sortby"
+            ),
+            le=1000,
+            ge=1,
+        ),
+    ] = 100,
+    asc: Annotated[
+        bool,
+        Query(
+            description="Sort in ascending order, only for sortby",
+        ),
+    ] = False,
 ):
     """Replaced above by __doc__."""
     if fmt == "json" and year is None and sortby is None:
