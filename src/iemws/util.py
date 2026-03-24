@@ -67,23 +67,28 @@ def deliver_df(df: DataFrame, fmt: str):
     return Response(res, media_type=MEDIATYPES[fmt])
 
 
+def get_dbconnstr(name: str, rw: bool | None = False):
+    """Get a database connection string.
+
+    Args:
+      name (str): The name of the database to connect to
+      rw (bool | None): Should a read-write connection be required?
+    """
+    # 1. Allows us to specify the usage of psycopg as the module
+    # 2. Sets the timezone to UTC
+    return pyiem_get_dbconnstr(name, rw=rw).replace(
+        "postgresql:", "postgresql+psycopg:"
+    )
+
+
 @contextmanager
-def get_sqlalchemy_conn(name):
+def get_sqlalchemy_conn(name: str, rw: bool | None = False):
     """Return a context managed sqlalchemy connection."""
     # create a sqlalchemy connection with a default timezone of UTC set
     # https://stackoverflow.com/questions/26105730
     pgconn = engine.create_engine(
-        get_dbconnstr(name),
+        get_dbconnstr(name, rw=rw),
         connect_args={"options": "-c TimeZone=UTC"},
     )
     yield pgconn
     pgconn.dispose()
-
-
-def get_dbconnstr(name):
-    """Get a database connection string."""
-    # 1. Allows us to specify the usage of psycopg as the module
-    # 2. Sets the timezone to UTC
-    return pyiem_get_dbconnstr(name).replace(
-        "postgresql:", "postgresql+psycopg:"
-    )

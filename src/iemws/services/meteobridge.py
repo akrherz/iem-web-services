@@ -51,7 +51,7 @@ def handler(
         if vars()[fname] == "M":
             continue
         ob.data[fname] = float(vars()[fname])
-    pgconn, cursor = get_dbconnc("iem")
+    pgconn, cursor = get_dbconnc("iem", rw=True)
     ob.save(cursor)
     cursor.close()
     pgconn.commit()
