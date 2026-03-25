@@ -2,12 +2,8 @@
 
 from fastapi.testclient import TestClient
 
-from iemws.main import app
 
-client = TestClient(app)
-
-
-def test_sbw_by_line():
+def test_sbw_by_line(client: TestClient):
     """Test."""
     service = (
         "/nws/sbw_by_line.json?start_lat=41.03&start_lon=-96.31&"
@@ -18,7 +14,7 @@ def test_sbw_by_line():
     assert jdata["data"]
 
 
-def test_sbw_by_line_include():
+def test_sbw_by_line_include(client: TestClient):
     """Test."""
     service = (
         "/nws/sbw_by_line.json?start_lat=41.03&start_lon=-96.31&"

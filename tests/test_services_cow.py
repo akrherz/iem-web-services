@@ -1,15 +1,9 @@
 """These are slower tests, so they go here."""
 
-# third party
 from fastapi.testclient import TestClient
 
-# local
-from iemws.main import app
 
-client = TestClient(app)
-
-
-def test_gh163_snow_squall():
+def test_gh163_snow_squall(client: TestClient):
     """Test that we can exercise snow squall warnings."""
     params = {
         "begints": "2023-11-28T00:00Z",
@@ -27,7 +21,7 @@ def test_gh163_snow_squall():
     assert cow["stats"]["events_verified"] == 1
 
 
-def test_testdata():
+def test_testdata(client: TestClient):
     """Test what our testdata provides CI."""
     # NOTE, this is all set to Story county due to test data with 1 UGC
     params = {
@@ -45,7 +39,7 @@ def test_testdata():
     assert len(cow["stormreports"]["features"]) == 14
 
 
-def test_fcster():
+def test_fcster(client: TestClient):
     """Test calling with the fcster tag."""
     params = {
         "begints": "2020-05-03T12:00Z",
@@ -60,7 +54,7 @@ def test_fcster():
     assert cow["stats"]["events_total"] == 0
 
 
-def test_limitwarns():
+def test_limitwarns(client: TestClient):
     """Test calling with the fcster tag."""
     params = {
         "limitwarns": "Y",
@@ -77,7 +71,7 @@ def test_limitwarns():
     assert cow["stats"]["events_total"] == 0
 
 
-def test_issue10_nowfo():
+def test_issue10_nowfo(client: TestClient):
     """Test that we need not provide a WFO."""
     res = client.get(
         "/cow.json",
@@ -87,7 +81,7 @@ def test_issue10_nowfo():
     assert cow["stats"]["events_total"] == 180
 
 
-def test_iemissue163_slowlix(prodtest):
+def test_iemissue163_slowlix(client: TestClient, prodtest):
     """See why this query is so slow!"""
     res = client.get(
         "/cow.json",
@@ -101,7 +95,7 @@ def test_iemissue163_slowlix(prodtest):
     assert cow["stats"]["events_total"] == (395 if prodtest else 0)
 
 
-def test_dsw(prodtest):
+def test_dsw(client: TestClient, prodtest):
     """Dust Storm Warnings"""
     params = {
         "wfo": "PSR",
@@ -116,7 +110,7 @@ def test_dsw(prodtest):
     assert cow["stats"]["events_total"] == (18 if prodtest else 0)
 
 
-def test_190806(prodtest):
+def test_190806(client: TestClient, prodtest):
     """Test that we can limit verification to tags."""
 
     params = {
@@ -134,7 +128,7 @@ def test_190806(prodtest):
     assert cow["stats"]["warned_reports"] == (46 if prodtest else 0)
 
 
-def test_180620(prodtest):
+def test_180620(client: TestClient, prodtest):
     """Compare with what we have from legacy PHP based Cow"""
     params = {
         "wfo": ["DMX", "XXX"],
@@ -153,7 +147,7 @@ def test_180620(prodtest):
     assert abs(_ev["parea"] - 919.0) < 1
 
 
-def test_gh131_tornado_possible():
+def test_gh131_tornado_possible(client: TestClient):
     """Tornado Possible in SVRs."""
     params = {
         "wfo": "DMX",

@@ -2,18 +2,14 @@
 
 from fastapi.testclient import TestClient
 
-from iemws.main import app
 
-client = TestClient(app)
-
-
-def test_asos1min():
+def test_asos1min(client: TestClient):
     """Test the hacky ASOS1MIN."""
     resp = client.get("/network/ASOS1MIN.json")
     assert resp.status_code == 200
 
 
-def test_basic():
+def test_basic(client: TestClient):
     """Test basic calls."""
     # This actually 404s in CI
     req = client.get("/network/IA_ASOS.json")
@@ -21,7 +17,7 @@ def test_basic():
     assert res is not None
 
 
-def test_404():
+def test_404(client: TestClient):
     """Test that a 404 is raised."""
     req = client.get("/network/IA2_ASOS2.json")
     assert req.status_code == 404

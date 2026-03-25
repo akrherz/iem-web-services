@@ -5,39 +5,39 @@ in the JSON.
 """
 
 from datetime import date
+from typing import Annotated
 
 from fastapi import APIRouter, Query
 from pandas.io.sql import read_sql
+from pyiem.database import sql_helper
 
 from ..util import deliver_df, get_sqlalchemy_conn
 
 router = APIRouter()
 
 
-def run(sdate, edate, lon, lat):
+def run(sdate: date, edate: date, lon: float, lat: float):
     """Do the work, please"""
 
-    giswkt = f"POINT({lon} {lat})"
     with get_sqlalchemy_conn("postgis") as pgconn:
         df = read_sql(
-            """
+            sql_helper("""
             with timedomain as (
-                select distinct valid from usdm WHERE valid >= %s and
-                valid <= %s
+                select distinct valid from usdm WHERE valid >= :sdate and
+                valid <= :edate
             ),
             hits as (
                 SELECT valid, max(dm) as category from usdm WHERE
-                ST_Contains(
-                    geom, ST_SetSRID(ST_GeomFromEWKT(%s),4326))
-                and valid >= %s and valid <= %s
+                ST_Contains(geom, ST_Point(:lon, :lat,4326))
+                and valid >= :sdate and valid <= :edate
                 GROUP by valid
             )
             select to_char(t.valid, 'YYYY-mm-dd') as valid, category
             from timedomain t LEFT JOIN hits h on (t.valid = h.valid)
             ORDER by t.valid ASC
-            """,
+            """),
             pgconn,
-            params=(sdate, edate, giswkt, sdate, edate),
+            params={"sdate": sdate, "edate": edate, "lon": lon, "lat": lat},
             index_col=None,
         )
     df["category"] = df["category"].astype("Int64")
@@ -52,10 +52,10 @@ def run(sdate, edate, lon, lat):
     ],
 )
 def usdm_bypoint_service(
-    sdate: date = Query(...),
-    edate: date = Query(...),
-    lon: float = Query(...),
-    lat: float = Query(...),
+    sdate: Annotated[date, Query(description="start date")],
+    edate: Annotated[date, Query(description="end date")],
+    lon: Annotated[float, Query(description="Longitude degrees E")],
+    lat: Annotated[float, Query(description="Latitude degrees E")],
 ):
     """Replaced above."""
     df = run(sdate, edate, lon, lat)

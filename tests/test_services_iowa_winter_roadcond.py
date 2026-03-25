@@ -1,15 +1,9 @@
 """Test iowa_winter_roadcond."""
 
-# third party
 from fastapi.testclient import TestClient
 
-# Local
-from iemws.main import app
 
-client = TestClient(app)
-
-
-def test_invalid_date():
+def test_invalid_date(client: TestClient):
     """Test too soon date."""
     res = client.get(
         "/iowa_winter_roadcond.geojson", params={"valid": "1800-01-01T12:00Z"}
@@ -17,7 +11,7 @@ def test_invalid_date():
     assert res.status_code == 422
 
 
-def test_first():
+def test_first(client: TestClient):
     """Test we can do things."""
     res = client.get(
         "/iowa_winter_roadcond.geojson", params={"valid": "2021-01-01T12:00Z"}
@@ -26,7 +20,7 @@ def test_first():
     assert "features" in j
 
 
-def test_json():
+def test_json(client: TestClient):
     """Test we can do things."""
     res = client.get(
         "/iowa_winter_roadcond.json", params={"valid": "2021-01-01T12:00"}

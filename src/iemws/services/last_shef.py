@@ -7,6 +7,8 @@ is generally in "real-time", so everything returned should be current up until
 the request time.
 """
 
+from typing import Annotated
+
 from fastapi import APIRouter, Query
 from pandas.io.sql import read_sql
 
@@ -44,7 +46,7 @@ def handler(station):
 )
 def last_shef_service(
     fmt: SupportedFormatsNoGeoJSON,
-    station: str = Query(..., max_length=8),
+    station: Annotated[str, Query(max_length=8)],
 ):
     """Replaced above with __doc__."""
 

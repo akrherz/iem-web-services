@@ -2,12 +2,8 @@
 
 from fastapi.testclient import TestClient
 
-from iemws.main import app
 
-client = TestClient(app)
-
-
-def test_basic():
+def test_basic(client: TestClient):
     """Test simple."""
     req = client.get("/iem/trending_autoplots.json")
     assert req.status_code == 200

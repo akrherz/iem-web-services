@@ -1,15 +1,9 @@
 """Test the vtec/county_zone service."""
 
-# third party
 from fastapi.testclient import TestClient
 
-# Local
-from iemws.main import app
 
-client = TestClient(app)
-
-
-def test_basic():
+def test_basic(client: TestClient):
     """Test basic calls."""
     req = client.get("/vtec/county_zone.geojson")
     res = req.json()

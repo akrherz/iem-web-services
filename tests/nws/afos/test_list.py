@@ -2,32 +2,28 @@
 
 from fastapi.testclient import TestClient
 
-from iemws.main import app
 
-client = TestClient(app)
-
-
-def test_char3_source():
+def test_char3_source(client: TestClient):
     """Test that we can deal with a 3 char source."""
     req = client.get("/nws/afos/list.json?cccc=DMX&date=2021-01-01")
     res = req.json()
     assert len(res["data"]) >= 2
 
 
-def test_badcall():
+def test_badcall(client: TestClient):
     """Test what happens when we don't set anything."""
     req = client.get("/nws/afos/list.json")
     assert req.status_code == 400
 
 
-def test_basic():
+def test_basic(client: TestClient):
     """Test basic calls."""
     req = client.get("/nws/afos/list.json?cccc=KWNO")
     res = req.json()
     assert res is not None
 
 
-def test_both():
+def test_both(client: TestClient):
     """Test specifying both."""
     lst = "cccc=KDMX&pil=TORDMX pil=TORDMX cccc=KDMX&pil=TOR pil=TOR".split()
     for c in lst:

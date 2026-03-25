@@ -1,16 +1,20 @@
 """Useful for testing."""
 
-# local
 import os
 
-# third party
 import pytest
+from fastapi.testclient import TestClient
 
-# Local
+from iemws.main import app
 from iemws.services import drydown
 
 # Make testing fasture
 drydown.NCOPEN_TIMEOUT = 0.01
+
+
+@pytest.fixture()
+def client():
+    return TestClient(app)
 
 
 @pytest.fixture()

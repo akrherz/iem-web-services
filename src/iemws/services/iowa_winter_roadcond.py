@@ -1,25 +1,22 @@
 """Exposes Iowa DOT Winter Road Conditions."""
 
 from datetime import datetime, timedelta, timezone
+from typing import Annotated
 
+import geopandas as gpd
 from fastapi import APIRouter, HTTPException, Query
-from geopandas import read_postgis
-
-# third party
 from pyiem.util import utc
 
 from ..models import SupportedFormats
-
-# Local
 from ..util import deliver_df, get_sqlalchemy_conn
 
 router = APIRouter()
 
 
-def handler(valid):
+def handler(valid: datetime):
     """Do the requested work."""
     with get_sqlalchemy_conn("postgis") as pgconn:
-        df = read_postgis(
+        df = gpd.read_postgis(
             """
             WITH data as (
                 select b.type as rtype, b.int1, b.segid, c.cond_code, c.valid,
@@ -56,9 +53,10 @@ def handler(valid):
 )
 def service(
     fmt: SupportedFormats,
-    valid: datetime = Query(
-        None, description="UTC timestamp to look for conditions."
-    ),
+    valid: Annotated[
+        datetime | None,
+        Query(description="UTC timestamp to look for conditions."),
+    ] = None,
 ):
     """Replaced Below."""
     if valid is None:

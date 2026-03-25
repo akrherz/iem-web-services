@@ -4,12 +4,8 @@ from datetime import date
 
 from fastapi.testclient import TestClient
 
-from iemws.main import app
 
-client = TestClient(app)
-
-
-def test_nstl():
+def test_nstl(client: TestClient):
     """Test that NSTL works."""
     resp = client.get(
         "/obhistory.json?station=NSTL11&network=NSTLFLUX&date=2000-01-01"
@@ -18,7 +14,7 @@ def test_nstl():
     assert resp.json()["detail"] == "No data found for request"
 
 
-def test_cocorahs():
+def test_cocorahs(client: TestClient):
     """Test that cocorahs returns something."""
     req = client.get(
         "/obhistory.json?station=IA-PK-97&network=IA_COCORAHS&date=2007-01-01"
@@ -26,13 +22,13 @@ def test_cocorahs():
     assert req.status_code == 200
 
 
-def test_404():
+def test_404(client: TestClient):
     """Test that this generates a 404"""
     req = client.get("/obhistory.json?station=AMW&network=AI&date=2000-01-01")
     assert req.status_code == 404
 
 
-def test_asos_archive():
+def test_asos_archive(client: TestClient):
     """Test that this works"""
     req = client.get(
         "/obhistory.json?station=AMW&network=IA_ASOS&date=2000-01-01"
@@ -40,7 +36,7 @@ def test_asos_archive():
     assert req.status_code == 200
 
 
-def test_isusm_archive():
+def test_isusm_archive(client: TestClient):
     """Test that this works"""
     resp = client.get(
         "/obhistory.json?station=BOOI4&network=ISUSM&date=2024-07-21"
@@ -48,7 +44,7 @@ def test_isusm_archive():
     assert resp.json()["data"]
 
 
-def test_rwis_archive():
+def test_rwis_archive(client: TestClient):
     """Test that works"""
     req = client.get(
         "/obhistory.json?station=RAMI4&network=IA_RWIS&date=2000-01-01"
@@ -56,7 +52,7 @@ def test_rwis_archive():
     assert req.status_code == 200
 
 
-def test_today():
+def test_today(client: TestClient):
     """Test a request for today's data."""
     req = client.get(
         f"/obhistory.json?date={date.today():%Y-%m-%d}&station=AMW&network=AI"
@@ -64,14 +60,14 @@ def test_today():
     assert req.status_code == 200
 
 
-def test_basic():
+def test_basic(client: TestClient):
     """Test that we can walk."""
     req = client.get("/obhistory.json")
     res = req.json()
     assert res is not None
 
 
-def test_dcp_alldata():
+def test_dcp_alldata(client: TestClient):
     """Test a query that should hit alldata."""
     req = client.get(
         "/obhistory.json",
@@ -81,7 +77,7 @@ def test_dcp_alldata():
     assert res["data"]
 
 
-def test_dcp():
+def test_dcp(client: TestClient):
     """Test a DCP station request."""
     req = client.get(
         "/obhistory.json",
@@ -91,7 +87,7 @@ def test_dcp():
     assert not res["data"]
 
 
-def test_uscrn_has_data():
+def test_uscrn_has_data(client: TestClient):
     """Test USCRN request for historical data."""
     req = client.get(
         "/obhistory.json",
@@ -107,7 +103,7 @@ def test_uscrn_has_data():
     assert "vsby" in res["data"][0]
 
 
-def test_uscrn_has_nodata():
+def test_uscrn_has_nodata(client: TestClient):
     """Test USCRN request for historical data."""
     req = client.get(
         "/obhistory.json",
@@ -117,7 +113,7 @@ def test_uscrn_has_nodata():
     assert len(res["data"]) == 0
 
 
-def test_snet_has_nodata():
+def test_snet_has_nodata(client: TestClient):
     """Test SNET request for historical data."""
     req = client.get(
         "/obhistory.json",
@@ -127,7 +123,7 @@ def test_snet_has_nodata():
     assert len(res["data"]) == 0
 
 
-def test_scan():
+def test_scan(client: TestClient):
     """Test SCAN request."""
     req = client.get(
         "/obhistory.json",

@@ -1,15 +1,9 @@
 """Test idot_dashcam."""
 
-# third party
 from fastapi.testclient import TestClient
 
-# Local
-from iemws.main import app
 
-client = TestClient(app)
-
-
-def test_first():
+def test_first(client: TestClient):
     """Test we can do things."""
     res = client.get(
         "/idot_dashcam.geojson", params={"valid": "2021-01-01T12:00Z"}
@@ -18,7 +12,7 @@ def test_first():
     assert "features" in j
 
 
-def test_json():
+def test_json(client: TestClient):
     """Test we can do things."""
     res = client.get(
         "/idot_dashcam.json", params={"valid": "2021-01-01T12:00"}
