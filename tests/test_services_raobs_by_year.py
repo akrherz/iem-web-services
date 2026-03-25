@@ -1,15 +1,9 @@
 """Test raobs_by_year."""
 
-# Third Party
 from fastapi.testclient import TestClient
 
-# Local
-from iemws.main import app
 
-client = TestClient(app)
-
-
-def test_unknown_virtual_station():
+def test_unknown_virtual_station(client: TestClient):
     """Test that we get a 404 for unknown virtual station."""
     res = client.get(
         "/raobs_by_year.json",
@@ -18,7 +12,7 @@ def test_unknown_virtual_station():
     assert res.status_code == 404
 
 
-def test_invalid_sortby():
+def test_invalid_sortby(client: TestClient):
     """Test that this generated."""
     res = client.get(
         "/raobs_by_year.json",
@@ -27,7 +21,7 @@ def test_invalid_sortby():
     assert res.status_code == 422
 
 
-def test_sortby():
+def test_sortby(client: TestClient):
     """Test that this generated."""
     res = client.get(
         "/raobs_by_year.json",
@@ -36,19 +30,19 @@ def test_sortby():
     assert res.status_code == 200
 
 
-def test_without_year_json():
+def test_without_year_json(client: TestClient):
     """Test support for no year provision."""
     res = client.get("/raobs_by_year.json", params={"station": "KOAX"})
     assert res.status_code == 422
 
 
-def test_without_year_csv():
+def test_without_year_csv(client: TestClient):
     """Test that this generated."""
     res = client.get("/raobs_by_year.txt", params={"station": "KOAX"})
     assert res.status_code == 200
 
 
-def test_first():
+def test_first(client: TestClient):
     """Test we can do things."""
     res = client.get(
         "/raobs_by_year.json", params={"station": "_OAX", "year": 2023}

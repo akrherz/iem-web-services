@@ -2,12 +2,8 @@
 
 from fastapi.testclient import TestClient
 
-from iemws.main import app
 
-client = TestClient(app)
-
-
-def test_valid_request():
+def test_valid_request(client: TestClient):
     """Test valid request."""
     req = client.get("/last_shef.txt?station=KDMX")
     assert req.text.startswith("station")

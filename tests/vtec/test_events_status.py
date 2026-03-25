@@ -2,12 +2,8 @@
 
 from fastapi.testclient import TestClient
 
-from iemws.main import app
 
-client = TestClient(app)
-
-
-def test_basic():
+def test_basic(client: TestClient):
     """Test basic calls."""
     url = "/vtec/events_status.json?valid=2023-02-03T02:30"
     req = client.get(url)

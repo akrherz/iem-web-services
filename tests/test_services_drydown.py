@@ -1,20 +1,14 @@
 """Test the drydown service."""
 
-# local
 import os
 from datetime import datetime, timedelta
 
-# third party
 from fastapi.testclient import TestClient
 
-# local
-from iemws.main import app
 from iemws.services.drydown import append_cfs
 
-client = TestClient(app)
 
-
-def test_append_cfs():
+def test_append_cfs(client: TestClient):
     """Test that we can append CFS data."""
     res = {"data": {2021: {"dates": ["2021-11-01"]}}}
     assert append_cfs(res, -95, 42) is None
@@ -31,7 +25,7 @@ def test_append_cfs():
         os.unlink(fn)
 
 
-def test_basic():
+def test_basic(client: TestClient):
     """Test that we need not provide a WFO."""
     req = client.get("/drydown.json")
     res = req.json()

@@ -135,7 +135,7 @@ TELEMETRY = namedtuple(
 def _writer(data):
     """Actually write the data."""
     if TELEMETRY_QUEUE_THREAD["dbconn"] is None:
-        TELEMETRY_QUEUE_THREAD["dbconn"] = get_dbconn("mesosite")
+        TELEMETRY_QUEUE_THREAD["dbconn"] = get_dbconn("mesosite", rw=True)
     cursor = TELEMETRY_QUEUE_THREAD["dbconn"].cursor()
     cursor.execute(
         """

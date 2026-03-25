@@ -1,15 +1,9 @@
 """Test iemre/daily service."""
 
-# third party
 from fastapi.testclient import TestClient
 
-# local
-from iemws.main import app
 
-client = TestClient(app)
-
-
-def test_daily_out_of_bounds():
+def test_daily_out_of_bounds(client: TestClient):
     """Test a call for outside of bounds point."""
     params = {
         "lon": 48.87,

@@ -1,6 +1,7 @@
 """Exposes Iowa RWIS Imagery."""
 
 from datetime import datetime, timedelta, timezone
+from typing import Annotated
 
 import geopandas as gpd
 from fastapi import APIRouter, Query
@@ -83,13 +84,16 @@ def handler(valid, window):
 )
 def idot_rwiscam_service(
     fmt: SupportedFormats,
-    valid: datetime = Query(
-        None, description="UTC timestamp to look for imagery."
-    ),
-    window: int = Query(
-        15,
-        description=("Number of minutes to look around the given valid."),
-    ),
+    valid: Annotated[
+        datetime | None,
+        Query(description="UTC timestamp to look for imagery."),
+    ] = None,
+    window: Annotated[
+        int,
+        Query(
+            description=("Number of minutes to look around the given valid."),
+        ),
+    ] = 15,
 ):
     """Replaced Below."""
     if valid is None:

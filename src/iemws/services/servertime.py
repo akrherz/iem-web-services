@@ -1,6 +1,6 @@
 """Simple ping/pong style service returning the server's time."""
 
-from fastapi import APIRouter, Query
+from fastapi import APIRouter
 from pyiem.reference import ISO8601
 from pyiem.util import utc
 
@@ -14,12 +14,8 @@ router = APIRouter()
         "debug",
     ],
 )
-def time_service(
-    opt: str = Query(None, description="For testing purposes."),
-):
+def time_service():
     """Babysteps."""
-    if opt == "fail":
-        raise Exception("This is a test of the emergency broadcast system!")
     return utc().strftime(ISO8601)
 
 

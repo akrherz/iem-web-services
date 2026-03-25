@@ -1,21 +1,15 @@
 """Test the vtec/sbw_interval service."""
 
-# third party
 from fastapi.testclient import TestClient
 
-# Local
-from iemws.main import app
 
-client = TestClient(app)
-
-
-def test_no_params():
+def test_no_params(client: TestClient):
     """Test with no parameters."""
     req = client.get("/vtec/sbw_interval.geojson")
     assert req.status_code == 200
 
 
-def test_230914_failure():
+def test_230914_failure(client: TestClient):
     """Test a production failure..."""
     # https://mesonet.agron.iastate.edu/api/1/vtec/sbw_interval.geojson?begints=2023-08-30T00%3A00%3A00Z&endts=2023-08-31T00%3A00%3A00Z&only_new=true&ph=TO
     url = (
@@ -28,7 +22,7 @@ def test_230914_failure():
     assert res is not None
 
 
-def test_basic():
+def test_basic(client: TestClient):
     """Test basic calls."""
     url = "/vtec/sbw_interval?begints=2020-01-01T00:00&endts=2020-01-02T00:00"
     req = client.get(url)

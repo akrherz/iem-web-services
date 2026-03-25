@@ -2,12 +2,8 @@
 
 from fastapi.testclient import TestClient
 
-from iemws.main import app
 
-client = TestClient(app)
-
-
-def test_basic():
+def test_basic(client: TestClient):
     """Test that we can walk."""
     params = {
         "pe": "TA",

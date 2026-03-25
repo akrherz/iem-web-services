@@ -2,32 +2,28 @@
 
 from fastapi.testclient import TestClient
 
-from iemws.main import app
 
-client = TestClient(app)
-
-
-def test_ccoop():
+def test_ccoop(client: TestClient):
     """Exercise this special selector."""
     req = client.get("/currents.json?network=CCOOP")
     assert req.status_code == 200
 
 
-def test_station():
+def test_station(client: TestClient):
     """Test that we can query by station."""
     req = client.get("/currents.json?station=AMW")
     res = req.json()
     assert res is not None
 
 
-def test_basic():
+def test_basic(client: TestClient):
     """Test that we need not provide a WFO."""
     req = client.get("/currents.json")
     res = req.json()
     assert res is not None
 
 
-def test_issue61_uscurrents():
+def test_issue61_uscurrents(client: TestClient):
     """Test that we can query by networkclass and country."""
     req = client.get("/currents.txt?networkclass=ASOS&country=US")
     assert req.text is not None

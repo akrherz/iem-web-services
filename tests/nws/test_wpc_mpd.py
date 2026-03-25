@@ -1,15 +1,9 @@
 """Test the nws/wpc_mpd service."""
 
-# third party
 from fastapi.testclient import TestClient
 
-# Local
-from iemws.main import app
 
-client = TestClient(app)
-
-
-def test_basic():
+def test_basic(client: TestClient):
     """Test basic calls."""
     req = client.get("/nws/wpc_mpd.geojson?hours=6")
     res = req.json()

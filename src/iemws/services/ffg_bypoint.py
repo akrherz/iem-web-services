@@ -9,6 +9,7 @@ the provided time.
 
 import os
 from datetime import datetime, timedelta
+from typing import Annotated
 
 import numpy as np
 import pygrib
@@ -21,7 +22,7 @@ URL = "https://mesonet.agron.iastate.edu/archive/"
 router = APIRouter()
 
 
-def get_grib_filename(valid):
+def get_grib_filename(valid: datetime):
     """Figure out which file we have for this valid timestamp."""
     # Rectify to six hourly
     valid = valid.replace(hour=valid.hour - valid.hour % 6)
@@ -35,7 +36,7 @@ def get_grib_filename(valid):
     return None, valid
 
 
-def handler(valid, lon, lat):
+def handler(valid: datetime, lon: float, lat: float):
     """Handle the request, return dict"""
     res = {"ffg": []}
     gribfn, lvalid = get_grib_filename(valid)
@@ -81,9 +82,13 @@ def handler(valid, lon, lat):
     ],
 )
 def ffg_bypoint_service(
-    valid: datetime = Query(None),
-    lon: float = Query(...),
-    lat: float = Query(...),
+    lon: Annotated[
+        float, Query(ge=-140, le=-60, description="Longitude degree E")
+    ],
+    lat: Annotated[
+        float, Query(ge=10, le=80, description="Latitude degrees N")
+    ],
+    valid: Annotated[datetime | None, Query(description="Date Time")] = None,
 ):
     """Replaced above."""
     if valid is None:

@@ -2,12 +2,8 @@
 
 from fastapi.testclient import TestClient
 
-from iemws.main import app
 
-client = TestClient(app)
-
-
-def test_nodata():
+def test_nodata(client: TestClient):
     """Test a 404."""
     resp = client.get(
         "/asos_interval_summary.json?"
@@ -16,7 +12,7 @@ def test_nodata():
     assert resp.status_code == 404
 
 
-def test_gh217_wind_fields():
+def test_gh217_wind_fields(client: TestClient):
     """Test that wind fields are properly provided."""
     resp = client.get(
         "/asos_interval_summary.json?"
@@ -31,7 +27,7 @@ def test_gh217_wind_fields():
     assert jdata["data"][0]["max_gust_time_utc"] == "2020-01-11T01:14:00Z"
 
 
-def test_logic():
+def test_logic(client: TestClient):
     """Test something with data."""
     resp = client.get(
         "/asos_interval_summary.json?"
@@ -42,7 +38,7 @@ def test_logic():
     assert jdata["data"][0]["min_tmpf"] == 61
 
 
-def test_logic_excluding_6hr():
+def test_logic_excluding_6hr(client: TestClient):
     """This request should exclude the 6 hour value at 0z."""
     resp = client.get(
         "/asos_interval_summary.json?"
@@ -53,7 +49,7 @@ def test_logic_excluding_6hr():
     assert jdata["data"][0]["min_tmpf"] == 79
 
 
-def test_logic_precip():
+def test_logic_precip(client: TestClient):
     """Test that we get precipitation right."""
     resp = client.get(
         "/asos_interval_summary.json?"
@@ -63,7 +59,7 @@ def test_logic_precip():
     assert abs(jdata["data"][0]["total_precip_in"] - 0.01) < 0.00001
 
 
-def test_logic_precip_multistations():
+def test_logic_precip_multistations(client: TestClient):
     """Test that we get precipitation right."""
     resp = client.get(
         "/asos_interval_summary.json?"
@@ -74,7 +70,7 @@ def test_logic_precip_multistations():
     assert jdata["data"][1]["total_precip_in"] == 0
 
 
-def test_comparison_issue():
+def test_comparison_issue(client: TestClient):
     """Test something found whilst manual testing."""
     resp = client.get(
         "/asos_interval_summary.json?station=DSM,Z00&"
@@ -83,7 +79,7 @@ def test_comparison_issue():
     assert resp.status_code == 200
 
 
-def test_too_large_request():
+def test_too_large_request(client: TestClient):
     """Don't allow such a large request."""
     resp = client.get(
         "/asos_interval_summary.json?station=DSM,AMW&"
