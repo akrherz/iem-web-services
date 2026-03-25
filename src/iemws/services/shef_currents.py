@@ -32,7 +32,7 @@ def handler(pe, duration, days):
     params = {
         "pe": pe,
         "duration": duration,
-        "delta": timedelta(days=1),
+        "delta": timedelta(days=days),
     }
     with get_sqlalchemy_conn("iem") as pgconn:
         df = read_postgis(sql, pgconn, params=params, geom_col="geom")  # type: ignore
