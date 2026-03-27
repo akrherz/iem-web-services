@@ -29,6 +29,7 @@ Please don't sue Iowa State University when daryl herzmann gets hit by a bus
 someday and then entire IEM goes away!
 """
 
+import os
 import threading
 import time
 import warnings
@@ -126,6 +127,11 @@ dictConfig(log_config)
 # Queue for writing telemetry data to database
 TELEMETRY_QUEUE = Queue()
 TELEMETRY_QUEUE_THREAD = {"worker": None, "dbconn": None, "lasterr": utc(1980)}
+TELEMETRY_ENABLED = os.getenv("IEMWS_DISABLE_TELEMETRY", "0").lower() not in (
+    "1",
+    "true",
+    "yes",
+)
 TELEMETRY = namedtuple(
     "TELEMETRY",
     ["timing", "status_code", "client_addr", "app", "request_uri", "vhost"],
@@ -135,7 +141,11 @@ TELEMETRY = namedtuple(
 def _writer(data):
     """Actually write the data."""
     if TELEMETRY_QUEUE_THREAD["dbconn"] is None:
-        TELEMETRY_QUEUE_THREAD["dbconn"] = get_dbconn("mesosite", rw=True)
+        host = os.getenv("IEMWS_DBHOST_MESOSITE") or os.getenv("IEMWS_DBHOST")
+        user = os.getenv("IEMWS_DBUSER_MESOSITE") or os.getenv("IEMWS_DBUSER")
+        TELEMETRY_QUEUE_THREAD["dbconn"] = get_dbconn(
+            "mesosite", rw=True, host=host, user=user
+        )
     cursor = TELEMETRY_QUEUE_THREAD["dbconn"].cursor()
     cursor.execute(
         """
@@ -193,6 +203,8 @@ def _add_to_queue_from_request(
     request: Request, response_time: float, status_code: int
 ):
     """Add telemetry data from request."""
+    if not TELEMETRY_ENABLED:
+        return
     # within pytest, request.client is None
     clienthost = None if request.client is None else request.client.host
     remote_addr = (
