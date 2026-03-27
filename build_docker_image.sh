@@ -30,12 +30,21 @@ if [ "$START_DB" = "1" ]; then
 	done
 fi
 
-docker run --name "$CONTAINER" \
-	--network "container:$DB_CONTAINER" \
-	-e IEMWS_DBHOST="$DBHOST" \
-	-e IEMWS_DBUSER="$DBUSER" \
-	-e IEMWS_DISABLE_TELEMETRY="$DISABLE_TELEMETRY" \
-	-d "$IMAGE"
+if [ "$START_DB" = "1" ]; then
+	docker run --name "$CONTAINER" \
+		--network "container:$DB_CONTAINER" \
+		-e IEMWS_DBHOST="$DBHOST" \
+		-e IEMWS_DBUSER="$DBUSER" \
+		-e IEMWS_DISABLE_TELEMETRY="$DISABLE_TELEMETRY" \
+		-d "$IMAGE"
+else
+	docker run --name "$CONTAINER" \
+		-p 8000:8000 \
+		-e IEMWS_DBHOST="$DBHOST" \
+		-e IEMWS_DBUSER="$DBUSER" \
+		-e IEMWS_DISABLE_TELEMETRY="$DISABLE_TELEMETRY" \
+		-d "$IMAGE"
+fi
 
 # Wait for Uvicorn/FastAPI startup.
 for i in $(seq 1 30); do
