@@ -12,7 +12,7 @@ ENV PYTHONPATH=/opt/iem-web-services/src
 WORKDIR /opt/iem-web-services
 
 COPY --chown=$MAMBA_USER:$MAMBA_USER environment.yml /tmp/environment.yml
-RUN micromamba env create -y -f /tmp/environment.yml \
+RUN micromamba env create -y -n iemws -f /tmp/environment.yml \
 	&& micromamba clean --all --yes
 
 COPY --chown=$MAMBA_USER:$MAMBA_USER src ./src

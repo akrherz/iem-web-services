@@ -1,3 +1,5 @@
+#!/bin/bash
+
 set -e -x
 
 IMAGE="ghcr.io/akrherz/iem-web-services:latest"
