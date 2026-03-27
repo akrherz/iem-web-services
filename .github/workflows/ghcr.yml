@@ -1,0 +1,40 @@
+name: Docker Image Workflow
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+jobs:
+  build-linux:
+    defaults:
+      run:
+        # Ensures environment gets sourced right
+        shell: bash -e -l {0}
+    name: Build
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v6
+    - name: Run Docker build script
+      run: sh build_docker_image.sh
+
+    - name: Publish to Github Container Registry
+      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+      env:
+        CR_PAT: ${{ secrets.CR_PAT }}
+      run: |
+        echo $CR_PAT | docker login ghcr.io -u akrherz --password-stdin
+        docker push ghcr.io/akrherz/iem-web-services:latest
+
+    - name: Clean up old container images
+      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+      uses: actions/delete-package-versions@v5
+      with:
+        token: ${{ secrets.CR_PAT }}
+        package-name: 'iem-web-services'
+        package-type: 'container'
+        min-versions-to-keep: 10
+        delete-only-untagged-versions: true

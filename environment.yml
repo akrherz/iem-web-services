@@ -1,3 +1,6 @@
+name: iemws
+channels:
+  - conda-forge
 dependencies:
   - codecov
   - fastapi
@@ -14,6 +17,7 @@ dependencies:
   # For httpx request mocking
   - pytest-httpx
   - pytest-runner
+  - pyiem
   - setuptools_scm
   - sqlalchemy
   # For logging
