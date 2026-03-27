@@ -1,6 +1,9 @@
 version = 1
 
 [[analyzers]]
+name = "shell"
+
+[[analyzers]]
 name = "python"
 
   [analyzers.meta]

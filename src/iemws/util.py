@@ -1,6 +1,7 @@
 """Helpers."""
 
 import logging
+import os
 from contextlib import contextmanager
 from functools import wraps
 from io import BytesIO
@@ -76,7 +77,18 @@ def get_dbconnstr(name: str, rw: bool | None = False):
     """
     # 1. Allows us to specify the usage of psycopg as the module
     # 2. Sets the timezone to UTC
-    return pyiem_get_dbconnstr(name, rw=rw).replace(
+    host = os.getenv(f"IEMWS_DBHOST_{name.upper()}") or os.getenv(
+        "IEMWS_DBHOST"
+    )
+    user = os.getenv(f"IEMWS_DBUSER_{name.upper()}") or os.getenv(
+        "IEMWS_DBUSER"
+    )
+    kwargs = {"rw": rw}
+    if host:
+        kwargs["host"] = host
+    if user:
+        kwargs["user"] = user
+    return pyiem_get_dbconnstr(name, **kwargs).replace(
         "postgresql:", "postgresql+psycopg:"
     )
 
