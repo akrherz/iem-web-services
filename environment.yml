@@ -1,4 +1,3 @@
-name: iemws
 channels:
   - conda-forge
 dependencies:
