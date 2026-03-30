@@ -17,18 +17,15 @@ necessary.
 from datetime import datetime, timezone
 
 from fastapi import APIRouter, HTTPException, Path, Query, Response
-from pyiem.database import sql_helper, with_sqlalchemy_conn
+from pyiem.database import sql_helper
 from sqlalchemy.engine import Connection
 
-from iemws.util import cache_control
+from iemws.util import cache_control, get_sqlalchemy_conn
 
 router = APIRouter()
 
 
-@with_sqlalchemy_conn("afos")
-def handler(
-    product_id, nolimit: bool, headers, conn: Connection | None = None
-):
+def handler(conn: Connection, product_id, nolimit: bool, headers):
     """Handle the request, return dict"""
     tokens = product_id.split("-")
     bbb = None
@@ -111,7 +108,8 @@ def nwstext_service(
 ):
     """Replaced above by __doc__."""
     headers = {}
-    res = handler(product_id, nolimit, headers)
+    with get_sqlalchemy_conn("afos") as engine, engine.connect() as conn:
+        res = handler(conn, product_id, nolimit, headers)
     return Response(res, headers=headers, media_type="text/plain")
 
 
