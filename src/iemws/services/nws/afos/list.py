@@ -37,13 +37,13 @@ from datetime import timedelta
 # Third Party
 import pandas as pd
 from fastapi import APIRouter, HTTPException, Query
-from pyiem.database import get_sqlalchemy_conn, sql_helper
+from pyiem.database import sql_helper
 from pyiem.util import utc
 
 # Local
 from ....models import SupportedFormatsNoGeoJSON
 from ....models.afos.list import AFOSListSchema
-from ....util import deliver_df
+from ....util import deliver_df, get_sqlalchemy_conn
 
 ISO = "YYYY-MM-DDThh24:MI:SSZ"
 router = APIRouter()
