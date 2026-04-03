@@ -385,22 +385,23 @@ class COWSession:
                 """
             WITH stormbased as (
                 SELECT geom, wfo, eventid, phenomena, significance,
-                extract(year from issue at time zone 'UTC') as year
+                vtec_year
                 from sbw w WHERE status = 'NEW' {wlimit}
                 and issue >= :begints and issue < :endts and expire < :endts
                 and significance = 'W'
                 and phenomena = ANY(:phenomena) {taglimiter}),
             countybased as (
-                SELECT ST_Union(ST_Buffer(u.simple_geom, 0)) as geom,
+                SELECT ST_Union(ST_ReducePrecision(u.simple_geom, 0.01))
+                    as geom,
                 w.wfo, phenomena, eventid, significance,
-                extract(year from issue at time zone 'UTC') as year, w.fcster
+                vtec_year, w.fcster
                 from warnings w JOIN ugcs u on (u.gid = w.gid) WHERE
                 w.gid is not null {wlimit} and
                 issue >= :begints and issue < :endts and expire < :endts
                 and significance = 'W'
                 and phenomena = ANY(:phenomena)
                 {flimiter}
-                GROUP by w.wfo, phenomena, eventid, significance, year,
+                GROUP by w.wfo, phenomena, eventid, significance, vtec_year,
                 fcster),
             agg as (
                 SELECT ST_SetSRID(ST_intersection(
@@ -408,15 +409,15 @@ class COWSession:
                         ST_geometryn(ST_multi(c.geom),1)),0.02),
                     ST_exteriorring(ST_geometryn(
                         ST_multi(s.geom),1))), 4326) as geo,
-                c.year, c.wfo, c.phenomena, c.significance, c.eventid
+                c.vtec_year, c.wfo, c.phenomena, c.significance, c.eventid
                 from stormbased s, countybased c WHERE
                 s.wfo = c.wfo and s.eventid = c.eventid and
                 s.phenomena = c.phenomena and s.significance = c.significance
-                and s.year = c.year
+                and s.vtec_year = c.vtec_year
             )
 
             SELECT sum(ST_Length(ST_transform(geo,2163))) as s,
-            year || wfo || eventid || phenomena || significance ||
+            vtec_year || wfo || eventid || phenomena || significance ||
             '1' as key
             from agg GROUP by key
         """,
