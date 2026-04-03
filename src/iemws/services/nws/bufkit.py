@@ -39,6 +39,7 @@ import json
 import os
 from datetime import datetime, timedelta, timezone
 from io import StringIO
+from urllib.parse import quote
 
 import httpx
 import pandas as pd
@@ -263,10 +264,9 @@ def handler(ctx: dict):
             prefix = "namm"
         if model == "GFS":
             prefix = "gfs3"
-        url = runtime.strftime(
-            f"{BASEURL}/%Y/%m/%d/bufkit/%H/{model.lower()}/{prefix}_"
-            f"{station.lower()}.buf"
-        )
+        station_path = quote(station.lower(), safe="")
+        ymdh = runtime.strftime("%Y/%m/%d/bufkit/%H")
+        url = f"{BASEURL}/{ymdh}/{model.lower()}/{prefix}_{station_path}.buf"
         try:
             # Tightened up to attempt to prevent service stacking
             resp = httpx.get(url, timeout=10)
