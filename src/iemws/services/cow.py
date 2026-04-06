@@ -6,15 +6,15 @@ frontend to this API and for more discussion about what this does.
 While this service only emits JSON, the JSON response embeds two GeoJSON
 objects providing the storm reports and warnings.
 
-Updated **2025-04-11**, added `enable_shared_border` parameter to enable
-shared border calculation. This is a boolean parameter that defaults to
-False when more than one (year * wfos) of data is requested.
-It is recommended to only enable this parameter when needed.
+Updated **2025-04-06**, the `enable_shared_border` parameter was removed as
+this value is now pre-calculated and trivial to materialize in the result,
+so the value is always available except for a small window of near real-time
+warnings (~ 5 minutes) that the data is null.
 """
 
 import json
 from datetime import datetime
-from typing import List, Optional
+from typing import List
 
 import geopandas as gpd
 import pandas as pd
@@ -60,7 +60,6 @@ class COWSession:
         windhailtag: bool,
         limitwarns: bool,
         fcster,
-        enable_shared_border: bool,
     ):
         """Build out our session based on provided fields"""
         self.wfo = [x[:4] for x in wfo]
@@ -87,15 +86,12 @@ class COWSession:
         self.windhailtag = windhailtag
         self.limitwarns = limitwarns
         self.fcster = fcster
-        self.enable_shared_border = enable_shared_border
 
     def milk(self):
         """Milk the Cow and see what happens"""
         with get_sqlalchemy_conn("postgis") as dbconn:
             self.load_events(dbconn)
             self.load_stormreports(dbconn)
-            if self.enable_shared_border:
-                self.compute_shared_border(dbconn)
         self.sbw_verify()
         self.area_verify()
         self.compute_stats()
@@ -218,6 +214,8 @@ class COWSession:
             geom, significance,
             ST_area(ST_transform(geom,2163)) / 1000000.0 as parea,
             ST_perimeter(ST_transform(geom,2163)) as perimeter,
+            ST_perimeter(ST_transform(geom, 2163)) *
+            shared_border_pct / 100. as sharedborder,
             ST_xmax(geom) as lon0, ST_ymax(geom) as lat0,
             extract(year from issue at time zone 'UTC') as year,
             product_id
@@ -244,7 +242,7 @@ class COWSession:
             GROUP by w.wfo, phenomena, eventid, significance, year, fcster
         )
         SELECT s.year::int, s.wfo, s.phenomena, s.eventid, s.geom,
-        c.missue as issue,
+        s.sharedborder, c.missue as issue,
         c.mexpire as expire, c.statuses, c.fcster, svr_tornado_possible,
         s.significance, s.hailtag, s.windtag, c.carea, c.ar_ugc,
         s.lat0, s.lon0, s.perimeter, s.parea, c.ar_ugcname,
@@ -282,7 +280,6 @@ class COWSession:
         self.events[TOR_IN_SVRTORPOSSIBLE] = False
         self.events["lead0"] = None
         self.events["areaverify"] = 0.0
-        self.events["sharedborder"] = 0.0
         if self.events.empty:
             return
         self.events["visual_imgurl"] = (
@@ -375,69 +372,6 @@ class COWSession:
         )
         s2163 = self.stormreports["geom"].to_crs(epsg=2163)
         self.stormreports_buffered = s2163.buffer(self.lsrbuffer * 1000.0)
-
-    def compute_shared_border(self, dbconn):
-        """Compute a stat"""
-        # re ST_Buffer(simple_geom) see akrherz/iem#163
-        wlimit = "" if not self.wfo else " and w.wfo = ANY(:wfos) "
-        df = pd.read_sql(
-            sql_helper(
-                """
-            WITH stormbased as (
-                SELECT geom, wfo, eventid, phenomena, significance,
-                vtec_year
-                from sbw w WHERE status = 'NEW' {wlimit}
-                and issue >= :begints and issue < :endts and expire < :endts
-                and significance = 'W'
-                and phenomena = ANY(:phenomena) {taglimiter}),
-            countybased as (
-                SELECT ST_Union(ST_ReducePrecision(u.simple_geom, 0.01))
-                    as geom,
-                w.wfo, phenomena, eventid, significance,
-                vtec_year, w.fcster
-                from warnings w JOIN ugcs u on (u.gid = w.gid) WHERE
-                w.gid is not null {wlimit} and
-                issue >= :begints and issue < :endts and expire < :endts
-                and significance = 'W'
-                and phenomena = ANY(:phenomena)
-                {flimiter}
-                GROUP by w.wfo, phenomena, eventid, significance, vtec_year,
-                fcster),
-            agg as (
-                SELECT ST_SetSRID(ST_intersection(
-                    ST_buffer(ST_exteriorring(
-                        ST_geometryn(ST_multi(c.geom),1)),0.02),
-                    ST_exteriorring(ST_geometryn(
-                        ST_multi(s.geom),1))), 4326) as geo,
-                c.vtec_year, c.wfo, c.phenomena, c.significance, c.eventid
-                from stormbased s, countybased c WHERE
-                s.wfo = c.wfo and s.eventid = c.eventid and
-                s.phenomena = c.phenomena and s.significance = c.significance
-                and s.vtec_year = c.vtec_year
-            )
-
-            SELECT sum(ST_Length(ST_transform(geo,2163))) as s,
-            vtec_year || wfo || eventid || phenomena || significance ||
-            '1' as key
-            from agg GROUP by key
-        """,
-                wlimit=wlimit,
-                taglimiter=self.sql_tag_limiter(),
-                flimiter=self.sql_fcster_limiter(),
-            ),
-            dbconn,
-            params={
-                "begints": self.begints,
-                "endts": self.endts,
-                "phenomena": self.phenomena,
-                "wfos": self.wfo,
-                "fcster": self.fcster,
-                "wind": self.wind,
-                "hailsize": self.hailsize,
-            },
-            index_col="key",
-        )
-        self.events["sharedborder"] = df["s"]
 
     def sbw_verify(self):
         """Verify the events"""
@@ -578,7 +512,6 @@ def handler(
     windhailtag,
     limitwarns,
     fcster,
-    enable_shared_border,
 ):
     """Handle the request, return dict"""
     cow = COWSession(
@@ -594,7 +527,6 @@ def handler(
         windhailtag,
         limitwarns,
         fcster,
-        enable_shared_border,
     )
     cow.milk()
     # Some stuff is not JSON serializable
@@ -613,7 +545,7 @@ def handler(
             "begints": cow.begints.strftime(ISO8601),
             "endts": cow.endts.strftime(ISO8601),
             "warningbuffer": cow.warningbuffer,
-            "enable_shared_border": cow.enable_shared_border,
+            "enable_shared_border": True,
         },
         "stats": cow.stats,
         "events": json.loads(cow.events.to_json()),
@@ -646,14 +578,8 @@ def cow_service(
     windhailtag: bool = Query(default=False),
     limitwarns: bool = Query(default=False),
     fcster: str = None,
-    enable_shared_border: Optional[bool] = Query(
-        default=None, title="Enable Shared Border calculation"
-    ),
 ):
     """Replaced by __doc__."""
-    if enable_shared_border is None:
-        # When ambiguous, set it to False for requests > 1 yr * wfos
-        enable_shared_border = (len(wfo) * (endts - begints).days) < 365
     return handler(
         wfo,
         begints,
@@ -667,7 +593,6 @@ def cow_service(
         windhailtag,
         limitwarns,
         fcster,
-        enable_shared_border,
     )
 
 
