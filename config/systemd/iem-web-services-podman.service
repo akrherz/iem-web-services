@@ -1,0 +1,28 @@
+[Unit]
+Description=IEM Web Services (Podman)
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Environment="IMAGE=ghcr.io/akrherz/iem-web-services:latest"
+Environment="CONTAINER_NAME=iem-web-services"
+Environment="WORKERS=6"
+Environment="MAX_REQUESTS=2000"
+Environment="IEMWS_DBHOST=127.0.0.1"
+Environment="IEMWS_DBUSER=mesonet"
+Environment="IEMWS_DISABLE_TELEMETRY=0"
+EnvironmentFile=-/etc/iem-web-services/iemws.env
+
+ExecStartPre=-/usr/bin/podman rm -f ${CONTAINER_NAME}
+ExecStartPre=/usr/bin/podman pull ${IMAGE}
+ExecStart=/usr/bin/podman run --name ${CONTAINER_NAME} --replace --publish 127.0.0.1:8000:8000 --volume /mesonet/data:/mesonet/data:ro --volume /opt/bufkit:/opt/bufkit:ro --env IEMWS_DBHOST=${IEMWS_DBHOST} --env IEMWS_DBUSER=${IEMWS_DBUSER} --env IEMWS_DISABLE_TELEMETRY=${IEMWS_DISABLE_TELEMETRY} --log-driver=journald ${IMAGE} micromamba run -n iemws gunicorn -w ${WORKERS} --graceful-timeout 60 -k iemws.worker.RestartableUvicornWorker -b 0.0.0.0:8000 --max-requests ${MAX_REQUESTS} --max-requests-jitter 500 --log-level warning iemws.main:app
+ExecStop=/usr/bin/podman stop -t 30 ${CONTAINER_NAME}
+ExecStopPost=-/usr/bin/podman rm -f ${CONTAINER_NAME}
+
+Restart=always
+RestartSec=5
+TimeoutStartSec=120
+TimeoutStopSec=60
+
+[Install]
+WantedBy=multi-user.target

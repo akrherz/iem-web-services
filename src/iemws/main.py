@@ -141,8 +141,9 @@ TELEMETRY = namedtuple(
 def _writer(data):
     """Actually write the data."""
     if TELEMETRY_QUEUE_THREAD["dbconn"] is None:
-        host = os.getenv("IEMWS_DBHOST_MESOSITE") or os.getenv("IEMWS_DBHOST")
-        user = os.getenv("IEMWS_DBUSER_MESOSITE") or os.getenv("IEMWS_DBUSER")
+        # If not set, will default to hostname iemdb-mesosite.local
+        host = os.getenv("IEMWS_DBHOST_MESOSITE")
+        user = os.getenv("IEMWS_DBUSER")
         db_kwargs = {"rw": True}
         if host:
             db_kwargs["host"] = host
