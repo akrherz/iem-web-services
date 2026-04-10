@@ -20,7 +20,9 @@ GHCR image with Podman:
 2. Host paths available:
    - `/mesonet/data` (mounted read-only into container at same path)
    - `/opt/bufkit` (mounted read-only into container at same path)
-3. Reverse proxy targets `127.0.0.1:8000`.
+3. Configure publish binding in `iemws.env`:
+   - local proxy on same host: `PUBLISH_HOST=127.0.0.1`
+   - proxy on remote host: `PUBLISH_HOST=0.0.0.0` or a specific interface IP
 
 ### Install
 
@@ -44,6 +46,9 @@ rm -f /tmp/iemws.pgpass
 ```
 
 Set `PGPASS_SECRET` in `iemws.env` if you use a different secret name.
+
+Set `PUBLISH_HOST` and `PUBLISH_PORT` in `iemws.env` to control where Podman
+publishes the API port.
 
 1. Install and enable the service:
 
