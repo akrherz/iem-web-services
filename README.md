@@ -35,6 +35,16 @@ sudo $EDITOR /etc/iem-web-services/iemws.env
 Use per-database host variables in `iemws.env` for sharded deployments (for
 example `IEMWS_DBHOST_MESOSITE`, `IEMWS_DBHOST_IEM`, `IEMWS_DBHOST_POSTGIS`).
 
+1. Create a Podman secret from your shard-aware PostgreSQL passfile:
+
+```bash
+install -m 600 /path/to/pgpass /tmp/iemws.pgpass
+sudo podman secret create iemws-pgpass /tmp/iemws.pgpass
+rm -f /tmp/iemws.pgpass
+```
+
+Set `PGPASS_SECRET` in `iemws.env` if you use a different secret name.
+
 1. Install and enable the service:
 
 ```bash
@@ -56,6 +66,14 @@ curl -sS http://127.0.0.1:8000/api/1/servertime.json
 The unit pulls `ghcr.io/akrherz/iem-web-services:latest` on each restart.
 
 ```bash
+sudo systemctl restart iem-web-services-podman.service
+```
+
+### Rotate database credentials
+
+```bash
+sudo podman secret rm iemws-pgpass
+sudo podman secret create iemws-pgpass /path/to/new-pgpass
 sudo systemctl restart iem-web-services-podman.service
 ```
 
