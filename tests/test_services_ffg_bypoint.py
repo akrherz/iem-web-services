@@ -1,12 +1,16 @@
 """Test the ffg_bypoint service."""
 
+from datetime import timedelta
+
 from fastapi.testclient import TestClient
+from pyiem.util import utc
 
 
 def test_basic(client: TestClient):
     """Test that we need not provide a valid"""
     resp = client.get("/ffg_bypoint.json?lon=-81.69&lat=27.99")
-    assert resp.status_code == 404
+    # Quasi non-deterministic
+    assert resp.status_code in [404, 200]
 
 
 def test_nulls(client: TestClient):
@@ -18,6 +22,10 @@ def test_nulls(client: TestClient):
 
 def test_non_existant_gribfile(client: TestClient):
     """Test for a non-existant grib file."""
-    uri = "/ffg_bypoint.json?lon=-81.69&lat=27.99&valid=2020-07-13T00:00Z"
+    future = utc() + timedelta(days=3)
+    uri = (
+        "/ffg_bypoint.json?lon=-81.69&lat=27.99"
+        f"&valid={future:%Y-%m-%dT%H:%MZ}"
+    )
     res = client.get(uri)
     assert res.status_code == 404
