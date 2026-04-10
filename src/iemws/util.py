@@ -80,9 +80,7 @@ def get_dbconnstr(name: str, rw: bool | None = False):
     host = os.getenv(f"IEMWS_DBHOST_{name.upper()}") or os.getenv(
         "IEMWS_DBHOST"
     )
-    user = os.getenv(f"IEMWS_DBUSER_{name.upper()}") or os.getenv(
-        "IEMWS_DBUSER"
-    )
+    user = os.getenv("IEMWS_DBUSER")
     kwargs = {"rw": rw}
     if host:
         kwargs["host"] = host

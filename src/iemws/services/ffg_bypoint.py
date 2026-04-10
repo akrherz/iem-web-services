@@ -7,7 +7,6 @@ service will look for the nearest forecast made within the past 24 hours of
 the provided time.
 """
 
-import os
 from datetime import datetime, timedelta
 from typing import Annotated
 
@@ -16,39 +15,39 @@ import pygrib
 import pyproj
 from fastapi import APIRouter, HTTPException, Query
 from pyiem.reference import ISO8601
-from pyiem.util import utc
+from pyiem.util import archive_fetch, utc
 
-URL = "https://mesonet.agron.iastate.edu/archive/"
 router = APIRouter()
 
 
-def get_grib_filename(valid: datetime):
+def locate_gribfile(valid: datetime) -> tuple[datetime | None, str | None]:
     """Figure out which file we have for this valid timestamp."""
     # Rectify to six hourly
     valid = valid.replace(hour=valid.hour - valid.hour % 6)
     for hr in range(0, 25, 6):
         lvalid = valid - timedelta(hours=hr)
-        testfn = lvalid.strftime(
-            "/mesonet/ARCHIVE/data/%Y/%m/%d/model/ffg/5kmffg_%Y%m%d%H.grib2"
-        )
-        if os.path.isfile(testfn):
-            return testfn, lvalid
-    return None, valid
+        ppath = lvalid.strftime("%Y/%m/%d/model/ffg/5kmffg_%Y%m%d%H.grib2")
+        with archive_fetch(ppath, method="HEAD") as testfn:
+            if testfn == "":
+                return lvalid, ppath
+    return None, None
 
 
 def handler(valid: datetime, lon: float, lat: float):
     """Handle the request, return dict"""
     res = {"ffg": []}
-    gribfn, lvalid = get_grib_filename(valid)
-    if gribfn is None:
+    lvalid, ppath = locate_gribfile(valid)
+    if lvalid is None:
         raise HTTPException(
             status_code=404,
             detail="unable to find grib file to use for valid time",
         )
     res["forecast_initial_time"] = lvalid.strftime(ISO8601)
-    res["grib_source"] = gribfn.replace("/mesonet/ARCHIVE/", URL)
+    res["grib_source"] = (
+        f"https://mesonet.agron.iastate.edu/archive/data/{ppath}"
+    )
     idxx, idxy = None, None
-    with pygrib.open(gribfn) as grbs:
+    with archive_fetch(ppath) as gribfn, pygrib.open(gribfn) as grbs:
         for grb in grbs:
             if idxx is None:
                 proj = pyproj.Proj(grb.projparams)
