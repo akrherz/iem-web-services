@@ -4,6 +4,7 @@ dependencies:
   - codecov
   - fastapi
   - geopandas
+  - gunicorn
   - httpx
   - metpy
   # Modern
