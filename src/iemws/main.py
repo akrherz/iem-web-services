@@ -40,7 +40,7 @@ from queue import Queue
 
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
-from pyiem.database import get_dbconn
+from pyiem.database import USERNAME_MAPPER, get_dbconn
 from pyiem.util import LOG, utc
 from shapely.errors import ShapelyDeprecationWarning
 
@@ -100,6 +100,9 @@ from .services.vtec import county_zone, events_status, sbw_interval
 
 # Stop a Shapely deprecation warning until geopandas is updated
 warnings.filterwarnings("ignore", category=ShapelyDeprecationWarning)
+
+# Le Sigh, add in another hack until akrherz/pyIEM#1191 is fixed in a release
+USERNAME_MAPPER["mambauser"] = "nobody"
 
 # Order here controls the order of the API documentation
 tags_metadata = [

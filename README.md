@@ -19,6 +19,7 @@ GHCR image with Podman:
 1. Podman installed (`/usr/bin/podman`).
 2. Host paths available:
    - `/mesonet/data` (mounted read-only into container at same path)
+   - `/mnt/mesonet2` (mounted read-only for symlink targets under `/mesonet/data`)
    - `/opt/bufkit` (mounted read-only into container at same path)
 3. Configure publish binding in `iemws.env`:
    - local proxy on same host: `PUBLISH_HOST=127.0.0.1`
