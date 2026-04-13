@@ -3,6 +3,8 @@
 Unuseful for you all :)
 """
 
+from typing import Annotated
+
 from fastapi import APIRouter, HTTPException, Query
 from pyiem.database import get_dbconnc
 from pyiem.observation import Observation
@@ -12,20 +14,18 @@ PROPS = {}
 router = APIRouter()
 
 
-def handler(
-    key, time, tmpf, max_tmpf, min_tmpf, dwpf, relh, sknt, pday, alti, drct
-):
+def handler(key: str, data: dict):
     """Handle the request, return dict"""
     if not PROPS:
         PROPS.update(get_properties())
     lookup = {}
     for sid in ["OT0013", "OT0014", "OT0015", "OT0016"]:
-        lookup[PROPS.get("meteobridge.key." + sid)] = sid
+        lookup[PROPS.get(f"meteobridge.key.{sid}")] = sid
     if key not in lookup:
         raise HTTPException(status_code=404, detail="BAD_KEY")
     sid = lookup[key]
-    if len(time) == 14:
-        _t = time
+    if len(data["time"]) == 14:
+        _t = data["time"]
         now = utc(
             int(_t[:4]),
             int(_t[4:6]),
@@ -48,9 +48,8 @@ def handler(
         "alti",
         "drct",
     ]:
-        if vars()[fname] == "M":
-            continue
-        ob.data[fname] = float(vars()[fname])
+        if data[fname] != "M":
+            ob.data[fname] = float(data[fname])
     pgconn, cursor = get_dbconnc("iem", rw=True)
     ob.save(cursor)
     cursor.close()
@@ -66,31 +65,39 @@ def handler(
     ],
 )
 def meteobridge_service(
-    key: str = Query(...),
-    time: str = Query(...),
-    tmpf: str = Query(...),
-    max_tmpf: str = Query(...),
-    min_tmpf: str = Query(...),
-    dwpf: str = Query(...),
-    relh: str = Query(...),
-    sknt: str = Query(...),
-    pday: str = Query(...),
-    alti: str = Query(...),
-    drct: str = Query(...),
+    key: Annotated[str, Query(description="IEM Provided API Key")],
+    time: Annotated[
+        str, Query(description="Timestamp in YYYYMMDDHHMMSS format")
+    ],
+    tmpf: Annotated[str, Query(description="Temperature in Fahrenheit")],
+    max_tmpf: Annotated[
+        str, Query(description="Maximum Temperature in Fahrenheit")
+    ],
+    min_tmpf: Annotated[
+        str, Query(description="Minimum Temperature in Fahrenheit")
+    ],
+    dwpf: Annotated[str, Query(description="Dew Point in Fahrenheit")],
+    relh: Annotated[str, Query(description="Relative Humidity in Percent")],
+    sknt: Annotated[str, Query(description="Wind Speed in Knots")],
+    pday: Annotated[str, Query(description="Precipitation in Inches")],
+    alti: Annotated[str, Query(description="Pressure in Inches of Mercury")],
+    drct: Annotated[str, Query(description="Wind Direction in Degrees")],
 ):
     """Replaced above with __doc__."""
     return handler(
         key,
-        time,
-        tmpf,
-        max_tmpf,
-        min_tmpf,
-        dwpf,
-        relh,
-        sknt,
-        pday,
-        alti,
-        drct,
+        {
+            "time": time,
+            "tmpf": tmpf,
+            "max_tmpf": max_tmpf,
+            "min_tmpf": min_tmpf,
+            "dwpf": dwpf,
+            "relh": relh,
+            "sknt": sknt,
+            "pday": pday,
+            "alti": alti,
+            "drct": drct,
+        },
     )
 
 
