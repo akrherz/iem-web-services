@@ -8,8 +8,9 @@ from typing import Annotated
 from fastapi import APIRouter, HTTPException, Query
 from pyiem.database import get_dbconnc
 from pyiem.observation import Observation
-from pyiem.util import get_properties, utc
+from pyiem.util import get_properties, logger, utc
 
+LOG = logger()
 PROPS = {}
 router = APIRouter()
 
@@ -51,7 +52,11 @@ def handler(key: str, data: dict):
         if data[fname] != "M":
             ob.data[fname] = float(data[fname])
     pgconn, cursor = get_dbconnc("iem", rw=True)
-    ob.save(cursor)
+    try:
+        ob.save(cursor)
+    except Exception as exp:
+        LOG.warning("Exp: %s ob.data: %s", exp, repr(ob.data))
+        return "NOT_OK"
     cursor.close()
     pgconn.commit()
     return "OK"
