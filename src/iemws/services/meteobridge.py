@@ -52,11 +52,7 @@ def handler(key: str, data: dict):
         if data[fname] != "M":
             ob.data[fname] = float(data[fname])
     pgconn, cursor = get_dbconnc("iem", rw=True)
-    try:
-        ob.save(cursor)
-    except Exception as exp:
-        LOG.warning("Exp: %s ob.data: %s", exp, repr(ob.data))
-        return "NOT_OK"
+    ob.save(cursor)
     cursor.close()
     pgconn.commit()
     return "OK"
