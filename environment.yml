@@ -10,6 +10,8 @@ dependencies:
   # Modern
   - pandas>=3
   - pygrib
+  # rls has fix needed for meteobridge 
+  - pyiem>=1.27.0
   - pyogrio
   - pyproj
   - pytest
@@ -17,7 +19,6 @@ dependencies:
   # For httpx request mocking
   - pytest-httpx
   - pytest-runner
-  - pyiem
   - setuptools_scm
   - sqlalchemy
   # For logging
