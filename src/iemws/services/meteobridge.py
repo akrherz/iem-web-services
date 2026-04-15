@@ -3,6 +3,7 @@
 Unuseful for you all :)
 """
 
+import os
 from typing import Annotated
 
 from fastapi import APIRouter, HTTPException, Query
@@ -51,7 +52,9 @@ def handler(key: str, data: dict):
     ]:
         if data[fname] != "M":
             ob.data[fname] = float(data[fname])
-    pgconn, cursor = get_dbconnc("iem", rw=True)
+    pgconn, cursor = get_dbconnc(
+        "iem", user=os.getenv("IEMWS_DBUSER", "mesonet"), rw=True
+    )
     ob.save(cursor)
     cursor.close()
     pgconn.commit()
