@@ -1,7 +1,7 @@
 """Models for iemre API."""
 
 # pylint: disable=no-name-in-module,too-few-public-methods
-from typing import List
+from typing import Annotated, List
 
 from pydantic import BaseModel, Field
 
@@ -23,6 +23,9 @@ class LastSHEFItem(BaseModel):
     unit_convention: str = Field(..., title="Unit Convention")
     value: float = Field(..., title="Value")
     product_id: str = Field(..., title="NWS Product Source Identifier")
+    comment: Annotated[
+        str, Field(description="Comment and SHEF when comment present")
+    ]
 
 
 class LastSHEFSchema(BaseModel):

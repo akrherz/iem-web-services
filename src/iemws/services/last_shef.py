@@ -9,8 +9,9 @@ the request time.
 
 from typing import Annotated
 
+import pandas as pd
 from fastapi import APIRouter, Query
-from pandas.io.sql import read_sql
+from pyiem.database import sql_helper
 
 from ..models import SupportedFormatsNoGeoJSON
 from ..models.last_shef import LastSHEFSchema
@@ -19,18 +20,19 @@ from ..util import deliver_df, get_sqlalchemy_conn
 router = APIRouter()
 
 
-def handler(station):
+def handler(station: str) -> pd.DataFrame:
     """Handle the request, return dict"""
     with get_sqlalchemy_conn("iem") as conn:
-        df = read_sql(
-            "select station, to_char(valid at time zone 'UTC', "
-            "'YYYY-MM-DDThh24:MI:SSZ') as utc_valid, "
-            "physical_code, duration, source, type, extremum, probability, "
-            "depth, dv_interval, depth, qualifier, unit_convention, "
-            "product_id, value from current_shef where station = %s "
-            "ORDER by physical_code ASC",
+        df = pd.read_sql(
+            sql_helper("""
+    select station, to_char(valid at time zone 'UTC',
+    'YYYY-MM-DDThh24:MI:SSZ') as utc_valid,
+    physical_code, duration, source, type, extremum, probability,
+    depth, dv_interval, depth, qualifier, unit_convention,
+    product_id, comment, value from current_shef where station = :station
+    ORDER by physical_code ASC"""),
             conn,
-            params=(station,),
+            params={"station": station},
             index_col=None,
         )
     return df
