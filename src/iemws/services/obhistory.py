@@ -29,7 +29,7 @@ from pyiem.network import Table as NetworkTable
 
 from ..models import SupportedFormatsNoGeoJSON
 from ..models.obhistory import ObHistoryDataItem, ObHistorySchema
-from ..util import deliver_df, get_sqlalchemy_conn
+from ..util import cache_control, deliver_df, get_sqlalchemy_conn
 
 router = APIRouter()
 
@@ -315,6 +315,7 @@ def handler(network, station, dt, full):
         "iem",
     ],
 )
+@cache_control(600)
 def service(
     fmt: SupportedFormatsNoGeoJSON,
     network: Annotated[

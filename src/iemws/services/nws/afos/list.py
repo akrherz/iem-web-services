@@ -43,7 +43,7 @@ from pyiem.util import utc
 # Local
 from ....models import SupportedFormatsNoGeoJSON
 from ....models.afos.list import AFOSListSchema
-from ....util import deliver_df, get_sqlalchemy_conn
+from ....util import cache_control, deliver_df, get_sqlalchemy_conn
 
 ISO = "YYYY-MM-DDThh24:MI:SSZ"
 router = APIRouter()
@@ -117,6 +117,7 @@ def handler(cccc, pil, dt):
         "nws",
     ],
 )
+@cache_control(600)
 def service(
     fmt: SupportedFormatsNoGeoJSON,
     cccc: str = Query(None, min_length=3, max_length=4),
