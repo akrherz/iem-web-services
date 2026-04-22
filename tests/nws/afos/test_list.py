@@ -16,6 +16,12 @@ def test_badcall(client: TestClient):
     assert req.status_code == 400
 
 
+def test_unknown_param(client: TestClient):
+    """Ensure unknown URL parameters are rejected."""
+    req = client.get("/nws/afos/list.json?cccc=KDMX&cachebuster=123")
+    assert req.status_code == 422
+
+
 def test_basic(client: TestClient):
     """Test basic calls."""
     req = client.get("/nws/afos/list.json?cccc=KWNO")

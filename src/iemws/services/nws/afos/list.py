@@ -19,6 +19,13 @@ Sadly, NWS directives are not always followed for how this is not supposed to
 be an ambiguous situation.  The `count` attribute provides the number of
 products that exist at the given `product_id`.
 
+Changelog
+---------
+
+- 2026-04-21: This service continues to be abused by folks wagering on
+  weather, what a life.  This service has strict parameter validation now
+  to prevent cache busting.
+
 Examples
 --------
 
@@ -33,10 +40,12 @@ KDMX text TOR products for the UTC date of 28 Oct 2022.
 
 from datetime import date as dateobj
 from datetime import timedelta
+from typing import Annotated
 
 # Third Party
 import pandas as pd
 from fastapi import APIRouter, HTTPException, Query
+from pydantic import BaseModel, ConfigDict, Field
 from pyiem.database import sql_helper
 from pyiem.util import utc
 
@@ -47,6 +56,15 @@ from ....util import cache_control, deliver_df, get_sqlalchemy_conn
 
 ISO = "YYYY-MM-DDThh24:MI:SSZ"
 router = APIRouter()
+
+
+class AFOSListQuery(BaseModel):
+    """Allowed query parameters for AFOS list endpoint."""
+
+    model_config = ConfigDict(extra="forbid")
+    cccc: Annotated[str | None, Field(min_length=3, max_length=4)] = None
+    pil: Annotated[str | None, Field(min_length=3, max_length=6)] = None
+    date: dateobj | None = None
 
 
 def handler(cccc, pil, dt):
@@ -120,11 +138,12 @@ def handler(cccc, pil, dt):
 @cache_control(600)
 def service(
     fmt: SupportedFormatsNoGeoJSON,
-    cccc: str = Query(None, min_length=3, max_length=4),
-    pil: str = Query(None, min_length=3, max_length=6),
-    date: dateobj = Query(None),
+    qp: Annotated[AFOSListQuery, Query()],
 ):
     """Replaced above."""
+    cccc = qp.cccc
+    pil = qp.pil
+    date = qp.date
     if date is None:
         date = utc()
     if cccc is None and pil is None:
