@@ -132,6 +132,7 @@ class CurrentsQuery(BaseModel):
     ] = 1440 * 10
 
     @field_validator("wfo", mode="before")
+    @classmethod
     def rectify_wfo(cls, v: str | None):
         """Rectify WFO to 3 or 4 chars."""
         if v is not None:
