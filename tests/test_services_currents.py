@@ -3,6 +3,12 @@
 from fastapi.testclient import TestClient
 
 
+def test_event_not_allowed(client: TestClient):
+    """Test that event is no longer supported."""
+    resp = client.get("/currents.json?event=ice_accretion_1hr")
+    assert resp.status_code == 422
+
+
 def test_networkclass_and_wfo(client: TestClient):
     """Test this combination."""
     resp = client.get("/currents.json?networkclass=ASOS&wfo=KDMX")

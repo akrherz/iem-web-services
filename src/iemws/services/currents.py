@@ -134,7 +134,7 @@ class CurrentsQuery(BaseModel):
     @field_validator("wfo", mode="before")
     @classmethod
     def rectify_wfo(cls, v: str | None):
-        """Rectify WFO to 3 or 4 chars."""
+        """Rectify WFO to identifier used within IEM database."""
         if v is not None:
             if len(v) == 4 and v.startswith("K"):
                 return v[1:]
