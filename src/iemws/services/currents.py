@@ -13,14 +13,21 @@ You can approach this API via the following ways:
 For better or worse, the ".json" in the URI path above controls the output
 format that the service emits.  This service supports ".json", ".geojson",
 and ".txt" (comma delimited) formats.
+
+Changelog
+
+- 28 Apr 2026: Due to incessant pollers that add cache busters, this service
+  has restrictive checks on the URL parameters.
+
 """
 
 from datetime import date, timedelta
-from typing import List
+from typing import Annotated, List
 
 import geopandas as gpd
 import numpy as np
 from fastapi import APIRouter, Query
+from pydantic import BaseModel, ConfigDict, field_validator
 from pyiem.database import sql_helper
 
 from ..models import SupportedFormats
@@ -79,62 +86,113 @@ WITH agg as (
 """
 
 
+class CurrentsQuery(BaseModel):
+    """Allowed query parameters for currents endpoint."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    network: Annotated[
+        str | None, Query(description="IEM Network Identifier")
+    ] = None
+    networkclass: Annotated[
+        str | None, Query(description="Generic network class to filter on.")
+    ] = None
+    wfo: Annotated[
+        str | None,
+        Query(
+            description="Filter by given 3 or 4 character WFO code.",
+            max_length=4,
+        ),
+    ] = None
+    country: Annotated[
+        str | None,
+        Query(
+            description="Two letter country code to filter on.", max_length=2
+        ),
+    ] = None
+    state: Annotated[
+        str | None,
+        Query(description="Two letter state code to filter on.", max_length=2),
+    ] = None
+    station: Annotated[
+        List[str] | None,
+        Query(description=("Station identifier to return currents for.")),
+    ] = None
+    event: Annotated[
+        str | None,
+        Query(
+            description=(
+                "A special column name to filter on.  Only rows with a "
+                "non-null value in this column will be returned."
+            )
+        ),
+    ] = None
+    minutes: Annotated[
+        int,
+        Query(
+            description=(
+                "The age of the current observation allowed to be returned. "
+                "NOTE, this parameter may be removed in the future due to it "
+                "being not very useful."
+            ),
+            ge=0,
+            le=14400,
+        ),
+    ] = 1440 * 10
+
+    @field_validator("wfo", mode="before")
+    def rectify_wfo(cls, v: str | None):
+        """Rectify WFO to 3 or 4 chars."""
+        if v is not None:
+            if len(v) == 4 and v.startswith("K"):
+                return v[1:]
+        return v
+
+
 def compute(df):
     """Compute other things that we can't easily do in the database"""
     # replace any None values with np.nan
     return df.fillna(value=np.nan)
-    # contraversy here, drop any columns that are all missing
-    # df.dropna(how='all', axis=1, inplace=True)
 
 
-def handler(
-    network,
-    networkclass,
-    wfo,
-    country,
-    state,
-    station,
-    event,
-    minutes,
-):
+def handler(qp: CurrentsQuery):
     """Handle the request, return dict"""
     params = {}
-    if network == "CCOOP":
+    if qp.network == "CCOOP":
         sql = SQL.replace(
             "REPLACEME", "t.network ~* 'DCP' and t.name ~* 'CCOOP' and"
         )
-    elif station is not None:
+    elif qp.station is not None:
         sql = SQL.replace("REPLACEME", "t.id = ANY(:ids) and")
-        params["ids"] = list(station)
-    elif networkclass is not None and wfo is not None:
+        params["ids"] = list(qp.station)
+    elif qp.networkclass is not None and qp.wfo is not None:
         sql = SQL.replace(
             "REPLACEME", "t.wfo = :wfo and t.network ~* :network and"
         )
-        params["wfo"] = wfo
-        params["network"] = networkclass
-    elif networkclass is not None and country is not None:
+        params["wfo"] = qp.wfo
+        params["network"] = qp.networkclass
+    elif qp.networkclass is not None and qp.country is not None:
         sql = SQL.replace(
             "REPLACEME", "t.country = :country and t.network ~* :network and"
         )
-        params["country"] = country
-        params["network"] = networkclass
-    elif wfo is not None:
+        params["country"] = qp.country
+        params["network"] = qp.networkclass
+    elif qp.wfo is not None:
         sql = SQL.replace("REPLACEME", "t.wfo = :wfo and")
-        params["wfo"] = wfo
-    elif state is not None:
+        params["wfo"] = qp.wfo
+    elif qp.state is not None:
         sql = SQL.replace("REPLACEME", "t.state = :state and")
-        params["state"] = state
-    elif network is not None:
+        params["state"] = qp.state
+    elif qp.network is not None:
         sql = SQL.replace("REPLACEME", "t.network = :network and")
-        params["network"] = network
+        params["network"] = qp.network
     else:
         # This is expensive, throttle things back some
         sql = SQL.replace("REPLACEME", "").replace(
             " summary ", f" summary_{date.today().year} "
         )
-        minutes = min([minutes, 600])
 
-    params["dtinterval"] = timedelta(minutes=minutes)
+    params["dtinterval"] = timedelta(minutes=qp.minutes)
     with get_sqlalchemy_conn("iem") as conn:
         df = gpd.read_postgis(
             sql_helper(sql),
@@ -142,9 +200,9 @@ def handler(
             params=params,
             index_col="station",
             geom_col="geom",
-        )
-    if event is not None and event in df.columns:
-        df = df[df[event].notna()]
+        )  # type: ignore
+    if qp.event is not None and qp.event in df.columns:
+        df = df[df[qp.event].notna()]
     df = compute(df)
     return df
 
@@ -160,28 +218,10 @@ def handler(
 @cache_control(120)
 def currents_service(
     fmt: SupportedFormats,
-    network: str = Query(None, description="IEM Network Identifier"),
-    networkclass: str = Query(None),
-    wfo: str = Query(None, max_length=4),
-    country: str = Query(None, max_length=2),
-    state: str = Query(None, max_length=2),
-    station: List[str] = Query(None),
-    event: str = Query(None),
-    minutes: int = Query(1440 * 10),
+    qp: Annotated[CurrentsQuery, Query()],
 ):
     """Replaced above with module __doc__"""
-
-    df = handler(
-        network,
-        networkclass,
-        wfo,
-        country,
-        state,
-        station,
-        event,
-        minutes,
-    )
-    return deliver_df(df, fmt)
+    return deliver_df(handler(qp), fmt)
 
 
 # Not really used
