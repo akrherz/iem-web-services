@@ -101,7 +101,7 @@ class CurrentsQuery(BaseModel):
         str | None,
         Query(
             description="Filter by given 3 or 4 character WFO code.",
-            max_length=4,
+            pattern="^[A-Z]{3,4}$",
         ),
     ] = None
     country: Annotated[
