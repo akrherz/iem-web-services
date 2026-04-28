@@ -7,7 +7,6 @@ You can approach this API via the following ways:
  - `/currents.json?state=IA` :: Everything the IEM has for Iowa
  - `/currents.json?wfo=DMX` :: Everything the IEM has for WFO DMX
  - `/currents.json?station=DSM&station=AMW` :: Explicit listing of stations
- - `/currents.json?event=ice_accretion_1hr` :: Special METAR service.
  - `/currents.json?network=CCOOP` :: Special for CCOOP sites.
 
 For better or worse, the ".json" in the URI path above controls the output
@@ -18,6 +17,7 @@ Changelog
 
 - 28 Apr 2026: Due to incessant pollers that add cache busters, this service
   has restrictive checks on the URL parameters.
+- 28 Apr 2026: The `event` parameter was removed as it was ill-formed.
 
 """
 
@@ -118,15 +118,6 @@ class CurrentsQuery(BaseModel):
         List[str] | None,
         Query(description=("Station identifier to return currents for.")),
     ] = None
-    event: Annotated[
-        str | None,
-        Query(
-            description=(
-                "A special column name to filter on.  Only rows with a "
-                "non-null value in this column will be returned."
-            )
-        ),
-    ] = None
     minutes: Annotated[
         int,
         Query(
@@ -201,8 +192,6 @@ def handler(qp: CurrentsQuery):
             index_col="station",
             geom_col="geom",
         )  # type: ignore
-    if qp.event is not None and qp.event in df.columns:
-        df = df[df[qp.event].notna()]
     df = compute(df)
     return df
 
