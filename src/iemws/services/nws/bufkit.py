@@ -35,6 +35,7 @@ The service will return a HTTP status code of 422 for requests that are
 slightly not what we expect.
 """
 
+import asyncio
 import json
 import os
 from datetime import datetime, timedelta, timezone
@@ -203,7 +204,7 @@ def do_gr(ctx: dict):
     return res
 
 
-def handler(ctx: dict):
+async def handler(ctx: dict):
     """Handle the request, return dict"""
     begin = utc()
     model = ctx["model"].upper()
@@ -255,42 +256,45 @@ def handler(ctx: dict):
     sio = StringIO()
     sz = 0
     url = ""
-    for station, runtime in [(x, y) for x in stations for y in runtimes]:
-        runtime = runtime.replace(tzinfo=timezone.utc)
-        prefix = model.lower()
-        if model in [
-            "NAM",
-        ] and runtime.hour in [6, 18]:
-            prefix = "namm"
-        if model == "GFS":
-            prefix = "gfs3"
-        station_path = quote(station.lower(), safe="")
-        ymdh = runtime.strftime("%Y/%m/%d/bufkit/%H")
-        url = f"{BASEURL}/{ymdh}/{model.lower()}/{prefix}_{station_path}.buf"
-        try:
-            # Tightened up to attempt to prevent service stacking
-            resp = httpx.get(url, timeout=10)
-        except Exception as exp:
-            LOG.warning("URL %s download failed with %s", url, exp)
-            raise HTTPException(
-                503,
-                detail="mtarchive backend failed, try later please.",
-            ) from exp
-        if resp.status_code == 200:
-            sz = sio.write(resp.text)
-            row = LOCS[(LOCS["model"] == model) & (LOCS["sid"] == station)]
-            if isinstance(row, pd.DataFrame):
-                row = row.iloc[0]
-            lat = float(row["lat"])
-            lon = float(row["lon"])
-            break
+    async with httpx.AsyncClient(timeout=10) as client:
+        for station, runtime in [(x, y) for x in stations for y in runtimes]:
+            runtime = runtime.replace(tzinfo=timezone.utc)
+            prefix = model.lower()
+            if model in [
+                "NAM",
+            ] and runtime.hour in [6, 18]:
+                prefix = "namm"
+            if model == "GFS":
+                prefix = "gfs3"
+            station_path = quote(station.lower(), safe="")
+            ymdh = runtime.strftime("%Y/%m/%d/bufkit/%H")
+            url = (
+                f"{BASEURL}/{ymdh}/{model.lower()}/{prefix}_{station_path}.buf"
+            )
+            try:
+                # Tightened up to attempt to prevent service stacking
+                resp = await client.get(url)
+            except Exception as exp:
+                LOG.warning("URL %s download failed with %s", url, exp)
+                raise HTTPException(
+                    503,
+                    detail="mtarchive backend failed, try later please.",
+                ) from exp
+            if resp.status_code == 200:
+                sz = sio.write(resp.text)
+                row = LOCS[(LOCS["model"] == model) & (LOCS["sid"] == station)]
+                if isinstance(row, pd.DataFrame):
+                    row = row.iloc[0]
+                lat = float(row["lat"])
+                lon = float(row["lon"])
+                break
     if sz == 0:
         raise HTTPException(422, detail="Could not find any profile.")
     if ctx["fmt"] == "txt":
         return sio.getvalue()
 
     try:
-        sndf, stndf = read_bufkit(sio)
+        sndf, stndf = await asyncio.to_thread(read_bufkit, sio)
     except Exception as exp:
         LOG.warning("URL %s failed bufkit reader with %s", url, exp)
         raise HTTPException(
@@ -337,7 +341,7 @@ def handler(ctx: dict):
 
 
 @router.get("/nws/bufkit.{fmt}", description=__doc__, tags=["nws"])
-def service(
+async def service(
     fmt: SupportedFormatsNoGeoJSON,
     lon: float = Query(None, ge=-180, le=180, description="degrees E"),
     lat: float = Query(None, ge=-90, le=90, description="degrees N"),
@@ -365,7 +369,7 @@ def service(
         "fall": fall,
         "gr": gr,
     }
-    return Response(handler(ctx), media_type=MEDIATYPES[fmt])
+    return Response(await handler(ctx), media_type=MEDIATYPES[fmt])
 
 
 service.__doc__ = __doc__
