@@ -40,6 +40,7 @@ import json
 import os
 from datetime import datetime, timedelta, timezone
 from io import StringIO
+from typing import Annotated
 from urllib.parse import quote
 
 import httpx
@@ -256,6 +257,7 @@ async def handler(ctx: dict):
     sio = StringIO()
     sz = 0
     url = ""
+    last_request_error = None
     async with httpx.AsyncClient(timeout=10) as client:
         for station, runtime in [(x, y) for x in stations for y in runtimes]:
             runtime = runtime.replace(tzinfo=timezone.utc)
@@ -274,12 +276,10 @@ async def handler(ctx: dict):
             try:
                 # Tightened up to attempt to prevent service stacking
                 resp = await client.get(url)
-            except Exception as exp:
+            except httpx.RequestError as exp:
                 LOG.warning("URL %s download failed with %s", url, exp)
-                raise HTTPException(
-                    503,
-                    detail="mtarchive backend failed, try later please.",
-                ) from exp
+                last_request_error = exp
+                continue
             if resp.status_code == 200:
                 sz = sio.write(resp.text)
                 row = LOCS[(LOCS["model"] == model) & (LOCS["sid"] == station)]
@@ -289,6 +289,10 @@ async def handler(ctx: dict):
                 lon = float(row["lon"])
                 break
     if sz == 0:
+        if last_request_error is not None:
+            raise HTTPException(
+                503, detail="mtarchive backend failed, try later please."
+            ) from last_request_error
         raise HTTPException(422, detail="Could not find any profile.")
     if ctx["fmt"] == "txt":
         return sio.getvalue()
@@ -353,7 +357,13 @@ async def service(
     ),
     time: datetime = Query(None, description="Profile Valid Time in UTC"),
     runtime: datetime = Query(None, description="Model Init Time UTC"),
-    station: str = Query(None, description="bufkit site identifier"),
+    station: Annotated[
+        str | None,
+        Query(
+            description="bufkit site identifier",
+            pattern=r"^[a-zA-Z0-9\#\-]{3,5}$",
+        ),
+    ] = None,
     fall: bool = Query(False, description="Include all forecast hours"),
     gr: bool = Query(False, description="Use Gibson Ridge JSON Schema"),
 ):

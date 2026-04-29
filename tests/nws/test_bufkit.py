@@ -13,11 +13,18 @@ from iemws.services.nws import bufkit
 URLS = re.compile(r"`/api/1([^\s]*)`")
 
 
+def test_station_with_hashtag_id(client: TestClient):
+    """Test that we can deal with a station with a # in the name."""
+    resp = client.get("/nws/bufkit.json?model=GFS&station=A%231")
+    assert resp.status_code == 200
+
+
 def test_error_handling(httpx_mock: HTTPXMock, client: TestClient):
     """Test error handling code paths."""
     # Simulate a timeout
     httpx_mock.add_exception(
-        httpx.TimeoutException("Simulated timeout for testing")
+        httpx.TimeoutException("Simulated timeout for testing"),
+        is_reusable=True,
     )
     res = client.get("/nws/bufkit.json?lon=-92.5&lat=42.5")
     assert res.status_code == 503
