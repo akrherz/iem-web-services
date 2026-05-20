@@ -7,8 +7,9 @@ some county union.
 
 from datetime import datetime, timezone
 
+import geopandas as gpd
 from fastapi import APIRouter, Query
-from geopandas import read_postgis
+from pyiem.database import sql_helper
 from pyiem.util import utc
 
 from ..util import deliver_df, get_sqlalchemy_conn
@@ -20,23 +21,22 @@ def run(valid):
     """Do the work, please"""
     valid = utc() if valid is None else valid.replace(tzinfo=timezone.utc)
     with get_sqlalchemy_conn("postgis") as pgconn:
-        df = read_postgis(
-            """
+        return gpd.read_postgis(
+            sql_helper("""
             SELECT sel,
             to_char(issued at time zone 'UTC',
                     'YYYY-MM-DDThh24:MI:SSZ') as utc_issued,
             to_char(expired at time zone 'UTC',
                     'YYYY-MM-DDThh24:MI:SSZ') as utc_expired,
             type, num, geom from watches WHERE
-            issued <= %s and expired > %s
+            issued <= :valid and expired > :valid
             ORDER by issued ASC
-        """,
+        """),
             pgconn,
-            params=(valid, valid),
+            params={"valid": valid},
             index_col=None,
             geom_col="geom",
-        )
-    return df
+        )  # type: ignore
 
 
 @router.get(
