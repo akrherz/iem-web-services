@@ -150,17 +150,20 @@ def _write_telemetry_from_request(
         path = f"/api/1{path}"
     # The best that we can do.
     host = request.headers.get("x-forwarded-server", "").split(",")[0].strip()
-    write_telemetry(
-        TELEMETRY(
-            response_time,
-            status_code,
-            "127.0.0.1" if remote_addr == "testclient" else remote_addr,
-            f"{path}",
-            f"{path}?{request.url.query}",
-            host,
-            utc().strftime(ISO8601),
+    try:
+        write_telemetry(
+            TELEMETRY(
+                response_time,
+                status_code,
+                "127.0.0.1" if remote_addr == "testclient" else remote_addr,
+                f"{path}",
+                f"{path}?{request.url.query}",
+                host,
+                utc().strftime(ISO8601),
+            )
         )
-    )
+    except Exception:
+        LOG.exception("telemetry write failed")
 
 
 @app.middleware("http")
