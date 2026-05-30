@@ -21,6 +21,7 @@ GHCR image with Podman:
    - `/mesonet/data` (mounted read-only into container at same path)
    - `/mnt/mesonet2` (mounted read-only for symlink targets under `/mesonet/data`)
    - `/opt/bufkit` (mounted read-only into container at same path)
+   - host syslog socket (default `/dev/log`) if telemetry is emitted via syslog
 3. Configure publish binding in `iemws.env`:
    - local proxy on same host: `PUBLISH_HOST=127.0.0.1`
    - proxy on remote host: `PUBLISH_HOST=0.0.0.0` or a specific interface IP
@@ -50,6 +51,11 @@ Set `PGPASS_SECRET` in `iemws.env` if you use a different secret name.
 
 Set `PUBLISH_HOST` and `PUBLISH_PORT` in `iemws.env` to control where Podman
 publishes the API port.
+
+Telemetry emitted via `pyiem.webutil.write_telemetry()` should usually go to the
+host rsyslog socket, not directly to the centralized collector. This keeps relay
+policy, buffering, and forwarding centralized on the host. The systemd unit bind
+mounts `SYSLOG_SOCKET` to `/dev/log` inside the container.
 
 1. Install and enable the service:
 

@@ -29,19 +29,16 @@ Please don't sue Iowa State University when daryl herzmann gets hit by a bus
 someday and then entire IEM goes away!
 """
 
-import os
-import threading
 import time
 import warnings
-from collections import namedtuple
-from datetime import timedelta
 from logging.config import dictConfig
-from queue import Queue
 
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
-from pyiem.database import USERNAME_MAPPER, get_dbconn
+from pyiem.database import USERNAME_MAPPER
+from pyiem.reference import ISO8601
 from pyiem.util import LOG, utc
+from pyiem.webutil import TELEMETRY, write_telemetry
 from shapely.errors import ShapelyDeprecationWarning
 
 from .config import log_config
@@ -127,75 +124,6 @@ tags_metadata = [
 ]
 
 dictConfig(log_config)
-# Queue for writing telemetry data to database
-TELEMETRY_QUEUE = Queue()
-TELEMETRY_QUEUE_THREAD = {"worker": None, "dbconn": None, "lasterr": utc(1980)}
-TELEMETRY_ENABLED = os.getenv("IEMWS_DISABLE_TELEMETRY", "0").lower() not in (
-    "1",
-    "true",
-    "yes",
-)
-TELEMETRY = namedtuple(
-    "TELEMETRY",
-    ["timing", "status_code", "client_addr", "app", "request_uri", "vhost"],
-)
-
-
-def _writer(data):
-    """Actually write the data."""
-    if TELEMETRY_QUEUE_THREAD["dbconn"] is None:
-        # If not set, will default to hostname iemdb-mesosite.local
-        host = os.getenv("IEMWS_DBHOST_MESOSITE")
-        user = os.getenv("IEMWS_DBUSER")
-        db_kwargs = {"rw": True}
-        if host:
-            db_kwargs["host"] = host
-        if user:
-            db_kwargs["user"] = user
-        TELEMETRY_QUEUE_THREAD["dbconn"] = get_dbconn("mesosite", **db_kwargs)
-    cursor = TELEMETRY_QUEUE_THREAD["dbconn"].cursor()
-    cursor.execute(
-        """
-        insert into website_telemetry(timing, status_code, client_addr,
-        app, request_uri, vhost) values (%s, %s, %s, %s, %s, %s)
-        """,
-        (
-            data.timing,
-            data.status_code,
-            data.client_addr,
-            data.app,
-            data.request_uri,
-            data.vhost,
-        ),
-    )
-    cursor.close()
-    TELEMETRY_QUEUE_THREAD["dbconn"].commit()
-
-
-def _writer_thread():
-    """Runs for ever and writes telemetry data to the database."""
-    while True:
-        data = TELEMETRY_QUEUE.get()
-
-        try:
-            if utc() > TELEMETRY_QUEUE_THREAD["lasterr"]:
-                _writer(data)
-        except Exception as exp:
-            TELEMETRY_QUEUE_THREAD["lasterr"] = utc() + timedelta(minutes=5)
-            LOG.exception(exp)
-            TELEMETRY_QUEUE_THREAD["dbconn"] = None
-
-
-def _add_to_queue(data):
-    """Adds data to queue, ensures a thread is running to process."""
-    if TELEMETRY_QUEUE_THREAD["worker"] is None:
-        TELEMETRY_QUEUE_THREAD["worker"] = threading.Thread(
-            target=_writer_thread,
-            name="telemetry",
-            daemon=True,
-        )
-        TELEMETRY_QUEUE_THREAD["worker"].start()
-    TELEMETRY_QUEUE.put(data)
 
 
 app = FastAPI(
@@ -206,12 +134,10 @@ app = FastAPI(
 )
 
 
-def _add_to_queue_from_request(
+def _write_telemetry_from_request(
     request: Request, response_time: float, status_code: int
 ):
     """Add telemetry data from request."""
-    if not TELEMETRY_ENABLED:
-        return
     # within pytest, request.client is None
     clienthost = None if request.client is None else request.client.host
     remote_addr = (
@@ -224,16 +150,20 @@ def _add_to_queue_from_request(
         path = f"/api/1{path}"
     # The best that we can do.
     host = request.headers.get("x-forwarded-server", "").split(",")[0].strip()
-    _add_to_queue(
-        TELEMETRY(
-            response_time,
-            status_code,
-            "127.0.0.1" if remote_addr == "testclient" else remote_addr,
-            f"{path}",
-            f"{path}?{request.url.query}",
-            host,
+    try:
+        write_telemetry(
+            TELEMETRY(
+                response_time,
+                status_code,
+                "127.0.0.1" if remote_addr == "testclient" else remote_addr,
+                f"{path}",
+                f"{path}?{request.url.query}",
+                host,
+                utc().strftime(ISO8601),
+            )
         )
-    )
+    except Exception:
+        LOG.exception("telemetry write failed")
 
 
 @app.middleware("http")
@@ -246,7 +176,7 @@ async def record_request_timing(request: Request, call_next):
     if response.status_code not in [
         405,
     ]:
-        _add_to_queue_from_request(
+        _write_telemetry_from_request(
             request, time.time() - start_time, response.status_code
         )
 
@@ -256,7 +186,7 @@ async def record_request_timing(request: Request, call_next):
 def handle_exception(request: Request, exc):
     """Handle exceptions."""
     LOG.exception("Exception for %s", request.url, exc_info=exc)
-    _add_to_queue_from_request(request, 0, 500)
+    _write_telemetry_from_request(request, 0, 500)
     return JSONResponse(
         status_code=500,
         content="Unexpected error, email akrherz@iastate.edu if you wish :)",

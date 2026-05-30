@@ -15,6 +15,9 @@ COPY --chown=$MAMBA_USER:$MAMBA_USER environment.yml /tmp/environment.yml
 RUN micromamba env create -y -n iemws -f /tmp/environment.yml \
 	&& micromamba clean --all --yes
 
+# Le Sigh, we need pyiem installed from github
+RUN micromamba run -n iemws python -m pip install git+https://github.com/akrherz/pyiem.git --no-deps
+
 COPY --chown=$MAMBA_USER:$MAMBA_USER src ./src
 COPY --chown=$MAMBA_USER:$MAMBA_USER dev.sh ./dev.sh
 
