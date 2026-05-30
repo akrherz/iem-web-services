@@ -10,7 +10,6 @@ DB_IMAGE="${IEMWS_DB_IMAGE:-ghcr.io/akrherz/iem_database:test_data}"
 START_DB="${IEMWS_START_DB:-1}"
 DBHOST="${IEMWS_DBHOST:-127.0.0.1}"
 DBUSER="${IEMWS_DBUSER:-mesonet}"
-DISABLE_TELEMETRY="${IEMWS_DISABLE_TELEMETRY:-1}"
 
 # Build a runnable image with Python dependencies and app code.
 docker build -t "$IMAGE" -f Dockerfile .
@@ -35,14 +34,12 @@ if [ "$START_DB" = "1" ]; then
 		--network "container:$DB_CONTAINER" \
 		-e IEMWS_DBHOST="$DBHOST" \
 		-e IEMWS_DBUSER="$DBUSER" \
-		-e IEMWS_DISABLE_TELEMETRY="$DISABLE_TELEMETRY" \
 		-d "$IMAGE"
 else
 	docker run --name "$CONTAINER" \
 		-p 8000:8000 \
 		-e IEMWS_DBHOST="$DBHOST" \
 		-e IEMWS_DBUSER="$DBUSER" \
-		-e IEMWS_DISABLE_TELEMETRY="$DISABLE_TELEMETRY" \
 		-d "$IMAGE"
 fi
 
