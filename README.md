@@ -88,8 +88,3 @@ sudo podman secret rm iemws-pgpass
 sudo podman secret create iemws-pgpass /path/to/new-pgpass
 sudo systemctl restart iem-web-services-podman.service
 ```
-
-### Cutover from cron
-
-1. Enable and validate the systemd service.
-2. Disable/remove the legacy `@reboot` cron entry for `deploy.sh`.
