@@ -4,6 +4,8 @@ dependencies:
   - codecov
   - fastapi
   - geopandas
+  # lame need for docker build
+  - git
   - gunicorn
   - httpx
   - metpy
