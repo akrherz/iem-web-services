@@ -80,11 +80,3 @@ The unit pulls `ghcr.io/akrherz/iem-web-services:latest` on each restart.
 ```bash
 sudo systemctl restart iem-web-services-podman.service
 ```
-
-### Rotate database credentials
-
-```bash
-sudo podman secret rm iemws-pgpass
-sudo podman secret create iemws-pgpass /path/to/new-pgpass
-sudo systemctl restart iem-web-services-podman.service
-```
