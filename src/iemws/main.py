@@ -36,7 +36,6 @@ from logging.config import dictConfig
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 from pyiem.database import USERNAME_MAPPER
-from pyiem.reference import ISO8601
 from pyiem.util import LOG, utc
 from pyiem.webutil import TELEMETRY, write_telemetry
 from shapely.errors import ShapelyDeprecationWarning
@@ -153,13 +152,15 @@ def _write_telemetry_from_request(
     try:
         write_telemetry(
             TELEMETRY(
-                response_time,
-                status_code,
-                "127.0.0.1" if remote_addr == "testclient" else remote_addr,
-                f"{path}",
-                f"{path}?{request.url.query}",
-                host,
-                utc().strftime(ISO8601),
+                timing=response_time,
+                status_code=status_code,
+                client_addr="127.0.0.1"
+                if remote_addr == "testclient"
+                else remote_addr,
+                app=f"{path}",
+                request_uri=f"{path}?{request.url.query}",
+                vhost=host,
+                valid=utc(),
             )
         )
     except Exception:
