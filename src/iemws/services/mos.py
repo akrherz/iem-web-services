@@ -80,8 +80,8 @@ def handler(station: list, model: str, runtime: datetime, fmt: str) -> str:
     runtimes = [runtime]
     if runtime is None:
         # This checks cache, which may return a runtime that is currently
-        # being ingested, so we forgive this by trying a valid time of six
-        # hours ago, but only when valid is not specified by the user
+        # being ingested, so we forgive this by trying a runtime of six
+        # hours ago, but only when runtime is not specified by the user
         runtime = find_runtime(station, model)
         runtimes = [runtime, runtime - timedelta(hours=12)]
 
