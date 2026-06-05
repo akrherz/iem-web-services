@@ -61,7 +61,7 @@ def find_runtime(station: list, model: str) -> datetime:
             {"model": model, "stations": station},
         )
         rows = res.fetchone()
-        if not rows:
+        if rows[0] is None:
             raise HTTPException(
                 404,
                 detail=(
@@ -77,26 +77,38 @@ def find_runtime(station: list, model: str) -> datetime:
 
 def handler(station: list, model: str, runtime: datetime, fmt: str) -> str:
     """Handle the request."""
+    runtimes = [runtime]
     if runtime is None:
+        # This checks cache, which may return a runtime that is currently
+        # being ingested, so we forgive this by trying a runtime of six
+        # hours ago, but only when runtime is not specified by the user
         runtime = find_runtime(station, model)
+        runtimes = [runtime, runtime - timedelta(hours=12)]
 
     # Ready to get the data!
     with get_sqlalchemy_conn("mos") as conn:
-        df = pd.read_sql(
-            sql_helper(
-                """
-                SELECT *, t06_1 ||'/'||t06_2 as t06, t12_1 ||'/'|| t12_2
-                    as t12,
-                runtime at time zone 'UTC' as runtime_utc,
-                ftime at time zone 'UTC' as ftime_utc
-                from alldata where model = :model and station = ANY(:ids) and
-                runtime = :runtime ORDER by station ASC, ftime ASC
-                """
-            ),
-            conn,
-            params={"model": model, "ids": station, "runtime": runtime},
-            index_col=None,
-        )
+        for try_runtime in runtimes:
+            df = pd.read_sql(
+                sql_helper(
+                    """
+    SELECT *, t06_1 ||'/'||t06_2 as t06, t12_1 ||'/'|| t12_2
+        as t12,
+    runtime at time zone 'UTC' as runtime_utc,
+    ftime at time zone 'UTC' as ftime_utc
+    from alldata where model = :model and station = ANY(:ids) and
+    runtime = :runtime ORDER by station ASC, ftime ASC
+                    """
+                ),
+                conn,
+                params={
+                    "model": model,
+                    "ids": station,
+                    "runtime": try_runtime,
+                },
+                index_col=None,
+            )
+            if not df.empty:
+                break
     if df.empty:
         raise HTTPException(
             404,
