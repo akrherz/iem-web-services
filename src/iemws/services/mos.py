@@ -61,7 +61,7 @@ def find_runtime(station: list, model: str) -> datetime:
             {"model": model, "stations": station},
         )
         rows = res.fetchone()
-        if not rows:
+        if rows[0] is None:
             raise HTTPException(
                 404,
                 detail=(
