@@ -3,6 +3,21 @@
 from fastapi.testclient import TestClient
 
 
+def test_providing_csv_params(client: TestClient):
+    """Test that we can now provide CSV parameters."""
+    resp = client.get(
+        "/cow.json?wfo=BGM,DMX&phenomena=SQ,TO&lsrtype=SQ,TO&"
+        "begints=2023-11-28T00:00Z&endts=2023-11-29T00:00Z",
+    )
+    assert resp.status_code == 200
+    cow = resp.json()
+    assert cow["params"]["wfo"] == ["BGM", "DMX"]
+    assert cow["params"]["phenomena"] == ["SQ", "TO"]
+    assert cow["params"]["lsrtype"] == ["SQ", "TO"]
+    assert cow["stats"]["events_total"] == 2
+    assert cow["stats"]["events_verified"] == 1
+
+
 def test_gh163_snow_squall(client: TestClient):
     """Test that we can exercise snow squall warnings."""
     params = {
