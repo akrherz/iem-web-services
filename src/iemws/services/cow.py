@@ -14,7 +14,7 @@ warnings (~ 5 minutes) that the data is null.
 
 import json
 from datetime import datetime
-from typing import List
+from typing import Annotated
 
 import geopandas as gpd
 import pandas as pd
@@ -22,6 +22,7 @@ from fastapi import APIRouter, Query
 from pyiem.database import sql_helper
 from pyiem.reference import ISO8601
 from pyiem.util import utc
+from pyiem.webutil import ListOrCSVType
 from shapely.ops import unary_union
 
 from ..util import get_sqlalchemy_conn
@@ -566,18 +567,31 @@ def handler(
     ],
 )
 def cow_service(
-    wfo: List[str] = Query([], title="WFO Identifiers"),
-    begints: datetime = Query(...),
-    endts: datetime = Query(...),
-    phenomena: List[str] = Query([]),
-    lsrtype: List[str] = Query([]),
-    hailsize: float = Query(1),
-    lsrbuffer: float = Query(15),
-    warningbuffer: float = Query(1),
-    wind: float = Query(58),
-    windhailtag: bool = Query(default=False),
-    limitwarns: bool = Query(default=False),
-    fcster: str = None,
+    wfo: Annotated[
+        ListOrCSVType,
+        Query(default_factory=list, description="WFO Identifiers"),
+    ],
+    begints: Annotated[
+        datetime, Query(description="Beginning timestamp in ISO8601 format")
+    ],
+    endts: Annotated[
+        datetime, Query(description="Ending timestamp in ISO8601 format")
+    ],
+    phenomena: Annotated[
+        ListOrCSVType,
+        Query(default_factory=list, title="Phenomena to include"),
+    ],
+    lsrtype: Annotated[
+        ListOrCSVType,
+        Query(default_factory=list, title="LSR Types to include"),
+    ],
+    hailsize: Annotated[float, Query(description="Hail Size [inch]")] = 1.0,
+    lsrbuffer: Annotated[float, Query(description="LSR Buffer")] = 15,
+    warningbuffer: Annotated[float, Query(description="Warning Buffer")] = 1,
+    wind: Annotated[float, Query(description="Wind Speed")] = 58,
+    windhailtag: Annotated[bool, Query(description="Wind Hail Tag")] = False,
+    limitwarns: Annotated[bool, Query(description="Limit Warnings")] = False,
+    fcster: Annotated[str, Query(description="Forecaster")] = None,
 ):
     """Replaced by __doc__."""
     return handler(
