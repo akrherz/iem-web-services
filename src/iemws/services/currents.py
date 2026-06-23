@@ -22,13 +22,14 @@ Changelog
 """
 
 from datetime import date, timedelta
-from typing import Annotated, List
+from typing import Annotated
 
 import geopandas as gpd
 import numpy as np
 from fastapi import APIRouter, Query
 from pydantic import BaseModel, ConfigDict, field_validator
 from pyiem.database import sql_helper
+from pyiem.webutil import ListOrCSVType
 
 from ..models import SupportedFormats
 from ..models.currents import CurrentsSchema
@@ -115,7 +116,7 @@ class CurrentsQuery(BaseModel):
         Query(description="Two letter state code to filter on.", max_length=2),
     ] = None
     station: Annotated[
-        List[str] | None,
+        ListOrCSVType | None,
         Query(description=("Station identifier to return currents for.")),
     ] = None
     minutes: Annotated[
