@@ -159,7 +159,7 @@ def service(
         description="MOS Model Cycle Time in UTC please.",
     ),
 ):
-    """Replaced above with module __doc__"""
+    """Unused docstring."""
     if runtime is not None and runtime.tzinfo is None:
         runtime = runtime.replace(tzinfo=timezone.utc)
     # Ensure that provided stations are uppercase and reasonable size
@@ -176,7 +176,3 @@ def service(
     return Response(
         handler(station, model, runtime, fmt), media_type=MEDIATYPES[fmt]
     )
-
-
-# Not really used
-service.__doc__ = __doc__

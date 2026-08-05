@@ -61,9 +61,6 @@ def service(
     lon: float = Query(..., description="Longitude (deg E)"),
     lat: float = Query(..., description="Latitude (deg N)"),
 ):
-    """Replaced above."""
+    """Unused docstring."""
     df = handler(lon, lat)
     return deliver_df(df, fmt)
-
-
-service.__doc__ = __doc__

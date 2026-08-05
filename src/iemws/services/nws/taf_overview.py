@@ -142,9 +142,6 @@ def service(
         datetime | None, Field(description="Time to query prior to")
     ] = None,
 ):
-    """Replaced above."""
+    """Unused docstring."""
     df = handler(station, sts, ets, at)
     return deliver_df(df, fmt)
-
-
-service.__doc__ = __doc__

@@ -65,13 +65,10 @@ def idot_dashcam_service(
         description=("Number of minutes to look around the given valid."),
     ),
 ):
-    """Replaced Below."""
+    """Unused docstring."""
     if valid is None:
         valid = utc() - timedelta(minutes=window * 2)
     if valid.tzinfo is None:
         valid = valid.replace(tzinfo=timezone.utc)
     df = handler(valid, window)
     return deliver_df(df, fmt)
-
-
-idot_dashcam_service.__doc__ = __doc__

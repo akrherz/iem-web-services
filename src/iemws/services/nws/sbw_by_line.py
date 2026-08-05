@@ -129,11 +129,8 @@ def service(
         description="Include Severe Weather Statements Polygons in the output",
     ),
 ):
-    """Replaced above."""
+    """Unused docstring."""
     sts = begints.replace(tzinfo=timezone.utc)
     ets = endts.replace(tzinfo=timezone.utc)
     df = handler(start_lat, start_lon, end_lat, end_lon, sts, ets, include_svs)
     return deliver_df(df, fmt)
-
-
-service.__doc__ = __doc__

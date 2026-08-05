@@ -153,12 +153,9 @@ def nwstext_service(
         ),
     ] = False,
 ):
-    """Replaced above by __doc__."""
+    """Unused docstring."""
     if fmt == "json" and year is None and sortby is None:
         raise HTTPException(
             status_code=422, detail="JSON requires a year or sortby set"
         )
     return deliver_df(handler(station, year, sortby, limit, asc), fmt)
-
-
-nwstext_service.__doc__ = __doc__

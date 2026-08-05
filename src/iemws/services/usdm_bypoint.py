@@ -57,9 +57,6 @@ def usdm_bypoint_service(
     lon: Annotated[float, Query(description="Longitude degrees E")],
     lat: Annotated[float, Query(description="Latitude degrees E")],
 ):
-    """Replaced above."""
+    """Unused docstring."""
     df = run(sdate, edate, lon, lat)
     return deliver_df(df, "json")
-
-
-usdm_bypoint_service.__doc__ = __doc__

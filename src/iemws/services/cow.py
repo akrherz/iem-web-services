@@ -608,6 +608,3 @@ def cow_service(
         limitwarns,
         fcster,
     )
-
-
-cow_service.__doc__ = __doc__

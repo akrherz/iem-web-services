@@ -93,6 +93,3 @@ def ffg_bypoint_service(
     if valid is None:
         valid = utc()
     return handler(valid, lon, lat)
-
-
-ffg_bypoint_service.__doc__ = __doc__

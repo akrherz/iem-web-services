@@ -101,8 +101,5 @@ def service(
         Query(description="Valid time to look for most recent TAF before"),
     ] = None,
 ):
-    """Replaced above."""
+    """Unused docstring."""
     return Response(handler(fmt, station, issued), media_type=MEDIATYPES[fmt])
-
-
-service.__doc__ = __doc__

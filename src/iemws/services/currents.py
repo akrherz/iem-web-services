@@ -213,7 +213,3 @@ def currents_service(
 ):
     """Replaced above with module __doc__"""
     return deliver_df(handler(qp), fmt)
-
-
-# Not really used
-currents_service.__doc__ = __doc__

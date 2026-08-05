@@ -140,7 +140,7 @@ def service(
     fmt: SupportedFormatsNoGeoJSON,
     qp: Annotated[AFOSListQuery, Query()],
 ):
-    """Replaced above."""
+    """Unused docstring."""
     cccc = qp.cccc
     pil = qp.pil
     date = qp.date
@@ -156,6 +156,3 @@ def service(
         pil = pil.upper().strip()
     df = handler(cccc, pil, date)
     return deliver_df(df, fmt)
-
-
-service.__doc__ = __doc__

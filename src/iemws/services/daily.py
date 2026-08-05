@@ -204,7 +204,3 @@ def service(
 
     df = get_df(network, station, date, month, year)
     return deliver_df(df, fmt)
-
-
-# Not really used
-service.__doc__ = __doc__

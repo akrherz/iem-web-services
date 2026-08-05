@@ -106,11 +106,8 @@ def nwstext_service(
     product_id: str = Path(..., max_length=35, min_length=28),
     nolimit: bool = Query(False, description="Return all products"),
 ):
-    """Replaced above by __doc__."""
+    """Unused docstring."""
     headers = {}
     with get_sqlalchemy_conn("afos") as engine, engine.connect() as conn:
         res = handler(conn, product_id, nolimit, headers)
     return Response(res, headers=headers, media_type="text/plain")
-
-
-nwstext_service.__doc__ = __doc__

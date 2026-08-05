@@ -71,9 +71,6 @@ def service(
         None, description="Return events that are valid at this time."
     ),
 ):
-    """Replaced above."""
+    """Unused docstring."""
     df = handler(valid)
     return deliver_df(df, fmt)
-
-
-service.__doc__ = __doc__

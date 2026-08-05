@@ -6,11 +6,12 @@ are shared between multiple IEM network labels, so you will get multiple
 results in some cases.
 """
 
+from typing import Annotated
+
 import geopandas as gpd
 from fastapi import APIRouter, HTTPException, Path
 from pyiem.database import sql_helper
 
-# Local
 from ..models import SupportedFormats
 from ..util import deliver_df, get_sqlalchemy_conn
 
@@ -50,11 +51,8 @@ def handler(station_id):
 )
 def service(
     fmt: SupportedFormats,
-    station_id: str = Path(..., description="IEM Station Identifier."),
+    station_id: Annotated[str, Path(description="IEM Station Identifier.")],
 ):
-    """Replaced above."""
+    """Unused docstring."""
     df = handler(station_id)
     return deliver_df(df, fmt)
-
-
-service.__doc__ = __doc__

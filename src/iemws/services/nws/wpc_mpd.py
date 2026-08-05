@@ -68,9 +68,6 @@ def service(
         None, description="Return MPDs issued given hours prior to valid time"
     ),
 ):
-    """Replaced above."""
+    """Unused docstring."""
     df = handler(valid, hours)
     return deliver_df(df, fmt)
-
-
-service.__doc__ = __doc__

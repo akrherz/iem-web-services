@@ -91,9 +91,6 @@ def service(
         max_length=4,
     ),
 ):
-    """Replaced above."""
+    """Unused docstring."""
     df = handler(valid, varname, wfo)
     return deliver_df(df, fmt)
-
-
-service.__doc__ = __doc__

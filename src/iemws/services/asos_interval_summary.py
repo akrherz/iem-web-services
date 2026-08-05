@@ -160,7 +160,7 @@ def service(
         description="UTC Inclusive End Timestamp, best to be top of the hour",
     ),
 ):
-    """Replaced above with module __doc__"""
+    """Unused docstring."""
     sts = sts.replace(tzinfo=timezone.utc)
     ets = ets.replace(tzinfo=timezone.utc)
     stations = [x.strip()[:4].upper() for x in station.split(",")]

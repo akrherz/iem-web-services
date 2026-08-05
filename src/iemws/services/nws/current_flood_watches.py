@@ -36,9 +36,6 @@ def service(
     state: str = Query(None, min_length=2, max_length=2),
     wfo: str = Query(None, min_length=3, max_length=3),
 ):
-    """Replaced above."""
+    """Unused docstring."""
     df = handler(state, wfo, "A")
     return deliver_df(df, fmt)
-
-
-service.__doc__ = __doc__

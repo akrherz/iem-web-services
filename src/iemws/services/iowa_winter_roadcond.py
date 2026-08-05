@@ -58,7 +58,7 @@ def service(
         Query(description="UTC timestamp to look for conditions."),
     ] = None,
 ):
-    """Replaced Below."""
+    """Unused docstring."""
     if valid is None:
         valid = utc()
     if valid.tzinfo is None:
@@ -67,6 +67,3 @@ def service(
         raise HTTPException(422, detail="Valid must be later than 1900!")
     df = handler(valid)
     return deliver_df(df, fmt)
-
-
-service.__doc__ = __doc__
