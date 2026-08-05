@@ -1,6 +1,7 @@
 """# Backend for FACTS Drydown tool.
 
-The drydown tool website [FACTS](https://facts.extension.iastate.edu/corn-drydown-calculator).
+The drydown tool website
+[FACTS](https://facts.extension.iastate.edu/corn-drydown-calculator).
 
 ## Changelog
 
@@ -11,7 +12,6 @@ The drydown tool website [FACTS](https://facts.extension.iastate.edu/corn-drydow
 
 from typing import Annotated
 
-import numpy as np
 import pandas as pd
 from fastapi import APIRouter, HTTPException, Query
 from metpy.units import units
@@ -23,13 +23,6 @@ from ..util import get_sqlalchemy_conn
 
 LOG = logger()
 router = APIRouter()
-
-
-def _i(val):
-    """Safe conversion to int."""
-    if np.ma.is_masked(val):
-        return None
-    return int(val)
 
 
 def handler(lon: float, lat: float, sday: str, eday: str):
