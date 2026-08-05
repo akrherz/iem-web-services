@@ -66,9 +66,6 @@ def service(
     fmt: SupportedFormats,
     network_id: str = Path(..., description="IEM Network Identifier."),
 ):
-    """Replaced above."""
+    """Unused docstring."""
     df = handler(network_id)
     return deliver_df(df, fmt)
-
-
-service.__doc__ = __doc__

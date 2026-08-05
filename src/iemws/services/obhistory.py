@@ -334,14 +334,10 @@ def service(
     ] = None,
     full: Annotated[bool, Query(description="Include all variables?")] = False,
 ):
-    """Replaced above with module __doc__"""
+    """Unused docstring."""
     df = handler(network.upper(), station.upper(), date, full)
     if df is None:
         raise HTTPException(
             status_code=404, detail="No data found for request"
         )
     return deliver_df(df, fmt)
-
-
-# Not really used
-service.__doc__ = __doc__

@@ -104,13 +104,10 @@ def service(
     lat: float = Query(..., description="Latitude (deg N)"),
     valid: datetime = Query(None, description="Outlooks valid at UTC time."),
 ):
-    """Replaced above."""
+    """Unused docstring."""
     if valid is None:
         valid = utc()
     else:
         valid = valid.replace(tzinfo=timezone.utc)
     df = handler(lon, lat, valid)
     return deliver_df(df, fmt)
-
-
-service.__doc__ = __doc__

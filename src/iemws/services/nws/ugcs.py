@@ -84,13 +84,10 @@ def service(
         False, description="Just include Fire Weather Zones"
     ),
 ):
-    """Replaced above."""
+    """Unused docstring."""
     if valid is not None:
         valid = valid.replace(tzinfo=timezone.utc)
     else:
         valid = utc()
     df = handler(state, wfo, valid, just_firewx)
     return deliver_df(df, fmt)
-
-
-service.__doc__ = __doc__

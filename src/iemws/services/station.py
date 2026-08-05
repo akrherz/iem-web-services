@@ -52,9 +52,6 @@ def service(
     fmt: SupportedFormats,
     station_id: str = Path(..., description="IEM Station Identifier."),
 ):
-    """Replaced above."""
+    """Used docstring."""
     df = handler(station_id)
     return deliver_df(df, fmt)
-
-
-service.__doc__ = __doc__

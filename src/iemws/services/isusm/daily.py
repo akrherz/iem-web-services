@@ -188,9 +188,6 @@ def service(
     gddbase: int = Query(50),
     gddceil: int = Query(86),
 ):
-    """Replaced above."""
+    """Unused docstring."""
     df = handler(sdate, edate, gddbase, gddceil)
     return deliver_df(df, fmt)
-
-
-service.__doc__ = __doc__

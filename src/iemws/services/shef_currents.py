@@ -64,9 +64,5 @@ def shef_currents_service(
         ),
     ] = 1,
 ):
-    """Replaced above with __doc__."""
-
+    """Unused docstring."""
     return deliver_df(handler(pe, duration, days), fmt)
-
-
-shef_currents_service.__doc__ = __doc__

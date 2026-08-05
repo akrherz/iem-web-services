@@ -367,7 +367,7 @@ async def service(
     fall: bool = Query(False, description="Include all forecast hours"),
     gr: bool = Query(False, description="Use Gibson Ridge JSON Schema"),
 ):
-    """Replaced above."""
+    """Unused docstring."""
     ctx = {
         "fmt": fmt,
         "lon": lon,
@@ -380,6 +380,3 @@ async def service(
         "gr": gr,
     }
     return Response(await handler(ctx), media_type=MEDIATYPES[fmt])
-
-
-service.__doc__ = __doc__

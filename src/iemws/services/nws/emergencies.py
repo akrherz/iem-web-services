@@ -93,9 +93,6 @@ def handler():
 def service(
     fmt: SupportedFormats,
 ):
-    """Replaced above."""
+    """Unused docstring."""
     df = handler()
     return deliver_df(df, fmt)
-
-
-service.__doc__ = __doc__

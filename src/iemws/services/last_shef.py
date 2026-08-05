@@ -50,9 +50,6 @@ def last_shef_service(
     fmt: SupportedFormatsNoGeoJSON,
     station: Annotated[str, Query(max_length=8)],
 ):
-    """Replaced above with __doc__."""
+    """Unused docstring."""
 
     return deliver_df(handler(station), fmt)
-
-
-last_shef_service.__doc__ = __doc__

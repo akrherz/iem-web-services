@@ -95,7 +95,7 @@ def idot_rwiscam_service(
         ),
     ] = 15,
 ):
-    """Replaced Below."""
+    """Unused docstring."""
     if valid is None:
         # We want the closest to now, but need to expand the window some
         valid = utc()
@@ -105,6 +105,3 @@ def idot_rwiscam_service(
         valid = valid.replace(tzinfo=timezone.utc)
     df = handler(valid, window)
     return deliver_df(df, fmt)
-
-
-idot_rwiscam_service.__doc__ = __doc__

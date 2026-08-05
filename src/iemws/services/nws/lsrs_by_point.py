@@ -102,11 +102,8 @@ def service(
         None, description="UTC Timestamp to end search for LSRs."
     ),
 ):
-    """Replaced above."""
+    """Unused docstring."""
     if radius_degrees is None and radius_miles is None:
         radius_degrees = 1
     df = handler(lon, lat, radius_degrees, radius_miles, begints, endts)
     return deliver_df(df, fmt)
-
-
-service.__doc__ = __doc__

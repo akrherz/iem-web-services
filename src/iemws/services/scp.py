@@ -104,9 +104,6 @@ def service(
     date: dateobj = Query(..., description="Date of interest"),
     tz: str = Query("UTC", description="Timezone to report timestamps in"),
 ):
-    """Replaced above by __doc__."""
+    """Unused docstring."""
     df = handler(station, date, tz)
     return deliver_df(df, "json")
-
-
-service.__doc__ = __doc__

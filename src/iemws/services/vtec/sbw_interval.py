@@ -135,7 +135,7 @@ def service(
         ),
     ),
 ):
-    """Replaced above."""
+    """Unused docstring."""
     if begints is not None:
         begints = begints.replace(tzinfo=timezone.utc)
     if endts is not None:
@@ -146,6 +146,3 @@ def service(
 
     df = handler(begints, endts, wfo, only_new, ph, include_can)
     return deliver_df(df, fmt)
-
-
-service.__doc__ = __doc__

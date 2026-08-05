@@ -73,14 +73,10 @@ def rwis_service(
     fmt: SupportedFormats,
     valid: datetime = Query(None, description="UTC Timestamp"),
 ):
-    """Replaced above with module __doc__"""
+    """Unused docstring."""
     if valid is None:
         valid = utc()
     elif valid.tzinfo is None:
         valid = valid.replace(tzinfo=timezone.utc)
 
     return deliver_df(handler(valid), fmt)
-
-
-# Not really used
-rwis_service.__doc__ = __doc__

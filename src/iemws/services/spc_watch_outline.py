@@ -49,9 +49,6 @@ def run(valid):
 def service(
     valid: datetime = Query(None),
 ):
-    """Replaced above."""
+    """Unused docstring."""
     df = run(valid)
     return deliver_df(df, "geojson")
-
-
-service.__doc__ = __doc__

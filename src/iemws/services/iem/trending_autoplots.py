@@ -60,8 +60,5 @@ def handler():
 def service(
     fmt: SupportedFormatsNoGeoJSON,
 ):
-    """Replaced above."""
+    """Unused docstring."""
     return deliver_df(handler(), fmt)
-
-
-service.__doc__ = __doc__

@@ -87,7 +87,7 @@ def meteobridge_service(
     alti: Annotated[str, Query(description="Pressure in Inches of Mercury")],
     drct: Annotated[str, Query(description="Wind Direction in Degrees")],
 ):
-    """Replaced above with __doc__."""
+    """Unused docstring."""
     return handler(
         key,
         {
@@ -103,6 +103,3 @@ def meteobridge_service(
             "drct": drct,
         },
     )
-
-
-meteobridge_service.__doc__ = __doc__

@@ -37,8 +37,5 @@ def handler():
 def networks_service(
     fmt: SupportedFormats,
 ):
-    """Replaced above."""
+    """Unused docstring."""
     return deliver_df(handler(), fmt)
-
-
-networks_service.__doc__ = __doc__

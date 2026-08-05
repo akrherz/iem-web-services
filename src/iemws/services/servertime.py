@@ -15,8 +15,5 @@ router = APIRouter()
     ],
 )
 def time_service():
-    """Babysteps."""
+    """Unused docstring."""
     return utc().strftime(ISO8601)
-
-
-time_service.__doc__ = __doc__
