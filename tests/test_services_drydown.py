@@ -1,32 +1,38 @@
 """Test the drydown service."""
 
-import os
-from datetime import datetime, timedelta
-
 from fastapi.testclient import TestClient
 
-from iemws.services.drydown import append_cfs
+# These are provided by the test data.
+TESTDB_HAS_LON = -96.0
+TESTDB_HAS_LAT = 43.0
 
 
-def test_append_cfs(client: TestClient):
-    """Test that we can append CFS data."""
-    res = {"data": {2021: {"dates": ["2021-11-01"]}}}
-    assert append_cfs(res, -95, 42) is None
-    # Create an empty netcdf to exercise more API
-    fn = (datetime.now() - timedelta(days=2)).strftime(
-        "/mesonet/data/iemre/cfs_%Y%m%d00.nc"
-    )
-    should_delete = not os.path.isfile(fn)
-    if should_delete:
-        with open(fn, "w") as fh:
-            fh.write("BAH")
-    assert append_cfs(res, -95, 42) is None
-    if should_delete:
-        os.unlink(fn)
+def test_sday_after_eday(client: TestClient):
+    """Test that sday makes sense."""
+    resp = client.get("/drydown.json?sday=0601&eday=0501&lat=42.2&lon=-95.2")
+    assert resp.status_code == 400
+    assert resp.json()["detail"].startswith("Start date")
+
+
+def test_nodata_found(client: TestClient):
+    """Test something with no data."""
+    resp = client.get("/drydown.json?lat=24.4&lon=-84.5&sday=0101&eday=1231")
+    assert resp.status_code == 404
+    assert resp.json()["detail"].startswith("No data found")
+
+
+def test_out_of_iemre_bounds(client: TestClient):
+    """Test something with no data."""
+    resp = client.get("/drydown.json?lat=84.4&lon=-84.5&sday=0101&eday=1231")
+    assert resp.status_code == 404
+    assert resp.json()["detail"].startswith("Point outside of IEMRE")
 
 
 def test_basic(client: TestClient):
-    """Test that we need not provide a WFO."""
-    req = client.get("/drydown.json")
-    res = req.json()
-    assert res is not None
+    """Test a basic request."""
+    resp = client.get(
+        f"/drydown.json?lat={TESTDB_HAS_LAT}&lon={TESTDB_HAS_LON}&"
+        "sday=0101&eday=1231"
+    )
+    res = resp.json()
+    assert "data" in res
