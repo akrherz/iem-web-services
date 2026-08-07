@@ -35,13 +35,7 @@ jobs:
         cat .github/workflows/etchosts.txt | sudo tee -a /etc/hosts
 
     - name: Setup Directory Structure
-      # Use discipline here to not introduce NFS failure points.
-      # /mesonet/data is mostly netcdf files, so we are stuck with that one
-      run: |
-        sudo mkdir -p /mesonet/data/iemre
-        sudo chown -R runner /mesonet
-        sudo mkdir /opt/bufkit
-        sudo git clone https://github.com/ckarstens/bufkit.git /opt/bufkit
+      run: bash .github/setupdata.sh
 
     # setup conda-forge with micromamba
     - name: Setup Python
