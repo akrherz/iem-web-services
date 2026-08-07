@@ -94,7 +94,6 @@ def append_cfs(lon: float, lat: float, res: dict) -> None:
             res["forecast"]["high"].append(hval)
             res["forecast"]["low"].append(_i(low[i]))
             res["forecast"]["rh"].append(_i(rh[i]))
-    return res
 
 
 def handler(lon: float, lat: float, sday: str, eday: str) -> dict:
