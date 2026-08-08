@@ -1,16 +1,16 @@
 #!/bin/bash
 # Setup data things
+set -euo pipefail
 
 # Setup a local folder to write into
 mkdir -p _local/mesonet/data/iemre
 sudo ln -s "$(pwd)/_local/mesonet" /mesonet
 
-# Get a recent CFS file for drydown service to use
-dt="$(date -u --date '7 days ago' +'%Y%m%d')00"
+# Get current CFS file for drydown service to use
 curl --fail --silent --show-error \
-  --output "/mesonet/data/iemre/cfs_${dt}.nc.tmp" \
-  "https://mesonet.agron.iastate.edu/onsite/iemre/cfs_${dt}.nc"
-mv "/mesonet/data/iemre/cfs_${dt}.nc.tmp" "/mesonet/data/iemre/cfs_${dt}.nc"
+  --output "/mesonet/data/iemre/cfs_current.nc.tmp" \
+  "https://mesonet.agron.iastate.edu/onsite/iemre/cfs_current.nc"
+mv "/mesonet/data/iemre/cfs_current.nc.tmp" "/mesonet/data/iemre/cfs_current.nc"
 
 sudo mkdir /opt/bufkit
 sudo git clone --recurse-submodules https://github.com/iowamesonet/bufkit.git /opt/bufkit
