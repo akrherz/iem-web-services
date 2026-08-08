@@ -1,5 +1,6 @@
 #!/bin/bash
 # Setup data things
+set -euo pipefail
 
 # Setup a local folder to write into
 mkdir -p _local/mesonet/data/iemre
