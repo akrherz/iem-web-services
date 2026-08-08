@@ -5,6 +5,7 @@ The drydown tool website
 
 ## Changelog
 
+- 8 August 2026: This service now emits a CFS forecast for all IEMRE domains.
 - 7 August 2026: The CFS forecast is back, but the data is included in the
   root `forecast` key within the JSON response. It also ignores whatever
   `sday` and `eday` parameters are set.
@@ -42,16 +43,13 @@ def _i(val):
 
 def append_cfs(lon: float, lat: float, res: dict) -> None:
     """Handle the request for the latest CFS forecast."""
-    gridx, gridy = find_ij(lon, lat)
-    # go find the most recent CFS 0z file
-    for offset in range(2, 11):
-        valid = date.today() - timedelta(days=offset)
-        testfn = valid.strftime("/mesonet/data/iemre/cfs_%Y%m%d00.nc")
-        if Path(testfn).is_file():
-            break
-        if offset == 10:
-            LOG.info("No CFS file found for %s", valid)
-            return
+    domain = get_domain(lon, lat)
+    gridx, gridy = find_ij(lon, lat, domain=domain)
+    mydir = "iemre" if domain == "conus" else f"iemre_{domain}"
+    testfn = f"/mesonet/data/{mydir}/cfs_current.nc"
+    if not Path(testfn).is_file():
+        LOG.info("No CFS file found for %s", testfn)
+        return
     try:
         nc = ncopen(testfn, timeout=NCOPEN_TIMEOUT)
     except Exception as exp:
@@ -81,6 +79,7 @@ def append_cfs(lon: float, lat: float, res: dict) -> None:
     )
     rh = np.where(rh > 95, 95, rh)
     times = nc.variables["time"][:]  # days since the start of this year
+    baseyear = int(nc.getncattr("model_init")[:4])
     nc.close()
     skip_first_row = True
     for i, tidx in enumerate(times):
@@ -89,7 +88,7 @@ def append_cfs(lon: float, lat: float, res: dict) -> None:
             if skip_first_row:
                 skip_first_row = False
                 continue
-            lts = date(valid.year, 1, 1) + timedelta(days=tidx)
+            lts = date(baseyear, 1, 1) + timedelta(days=tidx)
             res["forecast"]["dates"].append(lts.strftime("%Y-%m-%d"))
             res["forecast"]["high"].append(hval)
             res["forecast"]["low"].append(_i(low[i]))
