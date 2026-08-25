@@ -61,6 +61,17 @@ def handler(valid: datetime, lon: float, lat: float):
                 idxy = int((y - llcrnry) / dy)
                 res["gridx"] = idxx
                 res["gridy"] = idxy
+                # Ensure grid values are within bounds
+                if (
+                    idxx < 0
+                    or idxy < 0
+                    or idxx >= grb["Ni"]
+                    or idxy >= grb["Nj"]
+                ):
+                    raise HTTPException(
+                        status_code=404,
+                        detail="lon/lat is outside of the domain bounds",
+                    )
 
             val = grb.values[idxy, idxx]
             if np.ma.is_masked(val) or np.isnan(val):
