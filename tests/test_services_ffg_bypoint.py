@@ -6,6 +6,14 @@ from fastapi.testclient import TestClient
 from pyiem.util import utc
 
 
+def test_260824_out_of_bounds(client: TestClient):
+    """Test a request that is outside of the domain bounds."""
+    resp = client.get(
+        "/ffg_bypoint.json?lat=18.4655&lon=-66.1057&valid=2026-08-24T00:00Z"
+    )
+    assert resp.status_code == 404
+
+
 def test_basic(client: TestClient):
     """Test that we need not provide a valid"""
     resp = client.get("/ffg_bypoint.json?lon=-81.69&lat=27.99")
