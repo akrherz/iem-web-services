@@ -5,6 +5,8 @@ The drydown tool website
 
 ## Changelog
 
+- 2 September 2026: The CFS data was replaced with the control and 30 member
+  GEFS ensemble.
 - 8 August 2026: This service now emits a CFS forecast for all IEMRE domains.
 - 7 August 2026: The CFS forecast is back, but the data is included in the
   root `forecast` key within the JSON response. It also ignores whatever
@@ -14,23 +16,20 @@ The drydown tool website
 
 """
 
-from datetime import date, timedelta
-from pathlib import Path
+from datetime import datetime, timezone
 from typing import Annotated
 
 import numpy as np
 import pandas as pd
 from fastapi import APIRouter, HTTPException, Query
-from metpy.calc import relative_humidity_from_dewpoint
-from metpy.units import masked_array, units
+from metpy.units import units
 from pyiem.database import sql_helper
-from pyiem.iemre import find_ij, get_domain, get_gid
-from pyiem.util import logger, ncopen
+from pyiem.iemre import get_domain, get_gid
+from pyiem.util import get_properties, logger
 
 from ..util import get_sqlalchemy_conn
 
 LOG = logger()
-NCOPEN_TIMEOUT = 30
 router = APIRouter()
 
 
@@ -41,58 +40,45 @@ def _i(val):
     return int(val)
 
 
-def append_cfs(lon: float, lat: float, res: dict) -> None:
-    """Handle the request for the latest CFS forecast."""
+def append_gefs(lon: float, lat: float, res: dict) -> None:
+    """Handle the request for the latest GEFS forecast."""
+    # This can't fail as it didn't fail in handler
     domain = get_domain(lon, lat)
-    gridx, gridy = find_ij(lon, lat, domain=domain)
-    mydir = "iemre" if domain == "conus" else f"iemre_{domain}"
-    testfn = f"/mesonet/data/{mydir}/cfs_current.nc"
-    if not Path(testfn).is_file():
-        LOG.info("No CFS file found for %s", testfn)
+    gid = get_gid(lon, lat, domain=domain)
+    gefs_valid = datetime.strptime(
+        get_properties().get(f"iemre.gefs.{domain}", "2026-05-01T12:00Z"),
+        "%Y-%m-%dT%H:%MZ",
+    ).replace(tzinfo=timezone.utc)
+    with get_sqlalchemy_conn(
+        "iemre" if domain == "conus" else f"iemre_{domain}"
+    ) as conn:
+        fxdf = pd.read_sql(
+            sql_helper("""
+            select ens_member, valid, high_tmpk, low_tmpk, avg_rh
+            from iemre_gefs where model_valid = :mv and gid = :gid
+            order by ens_member asc, valid asc
+            """),
+            conn,
+            params={"mv": gefs_valid, "gid": gid},
+            parse_dates=["valid"],
+            index_col=None,
+        )
+    if fxdf.empty:
         return
-    try:
-        nc = ncopen(testfn, timeout=NCOPEN_TIMEOUT)
-    except Exception as exp:
-        LOG.error(exp)
-        return
-    if nc is None:
-        LOG.debug("Failing %s as nc is None", testfn)
-        return
-    high = (
-        masked_array(nc.variables["high_tmpk"][:, gridy, gridx], units.degK)
-        .to(units.degF)
-        .m
-    )
-    low = (
-        masked_array(nc.variables["low_tmpk"][:, gridy, gridx], units.degK)
-        .to(units.degF)
-        .m
-    )
-    # RH hack
-    # found ~20% bias with this value, so arb addition for now
-    rh = (
-        relative_humidity_from_dewpoint(
-            masked_array(high, units.degF), masked_array(low, units.degF)
-        ).m
-        * 100.0
-        + 20.0
-    )
-    rh = np.where(rh > 95, 95, rh)
-    times = nc.variables["time"][:]  # days since the start of this year
-    baseyear = int(nc.getncattr("model_init")[:4])
-    nc.close()
-    skip_first_row = True
-    for i, tidx in enumerate(times):
-        hval = _i(high[i])
-        if hval is not None:
-            if skip_first_row:
-                skip_first_row = False
-                continue
-            lts = date(baseyear, 1, 1) + timedelta(days=tidx)
-            res["forecast"]["dates"].append(lts.strftime("%Y-%m-%d"))
-            res["forecast"]["high"].append(hval)
-            res["forecast"]["low"].append(_i(low[i]))
-            res["forecast"]["rh"].append(_i(rh[i]))
+    fxdf["high"] = (fxdf["high_tmpk"].to_numpy() * units.degK).to(units.degF).m
+    fxdf["low"] = (fxdf["low_tmpk"].to_numpy() * units.degK).to(units.degF).m
+    for ens in range(31):
+        df2 = fxdf[fxdf["ens_member"] == ens]
+        if df2.empty:
+            continue
+        if ens == 0:
+            res["forecast"]["dates"] = (
+                df2["valid"].dt.strftime("%Y-%m-%d").values.tolist()
+            )
+        # list of lists
+        res["forecast"]["high"].append(df2["high"].values.astype("i").tolist())
+        res["forecast"]["low"].append(df2["low"].values.astype("i").tolist())
+        res["forecast"]["rh"].append(df2["avg_rh"].values.astype("i").tolist())
 
 
 def handler(lon: float, lat: float, sday: str, eday: str) -> dict:
@@ -160,5 +146,5 @@ def drydown_service(
             status_code=400, detail="Start date must be before end date"
         )
     res = handler(lon, lat, sday, eday)
-    append_cfs(lon, lat, res)
+    append_gefs(lon, lat, res)
     return res
