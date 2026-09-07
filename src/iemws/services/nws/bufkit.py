@@ -246,7 +246,7 @@ async def handler(ctx: dict):
     if ctx["time"] is not None:
         valid = ctx["time"].replace(tzinfo=timezone.utc)
     if ctx["runtime"] is None:
-        if model in ["HRRR", "RAP", "RRFS"]:
+        if model in ["HRRR", "RAP"]:
             hr1 = timedelta(hours=1)
             runtimes = [valid, valid - hr1, valid - hr1 * 2, valid - hr1 * 3]
         else:
