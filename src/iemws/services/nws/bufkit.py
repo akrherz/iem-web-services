@@ -62,7 +62,7 @@ router = APIRouter()
 def load_stations():
     """Need station details."""
     rows = []
-    for name in ["gfs", "hrrr", "nam", "rap", "nam4km"]:
+    for name in ["gfs", "hrrr", "nam", "rap", "nam4km", "rrfs"]:
         tablefn = f"/opt/bufkit/bufrgruven/stations/{name}_bufrstations.txt"
         if not os.path.isfile(tablefn):
             continue
@@ -246,7 +246,7 @@ async def handler(ctx: dict):
     if ctx["time"] is not None:
         valid = ctx["time"].replace(tzinfo=timezone.utc)
     if ctx["runtime"] is None:
-        if model in ["HRRR", "RAP"]:
+        if model in ["HRRR", "RAP", "RRFS"]:
             hr1 = timedelta(hours=1)
             runtimes = [valid, valid - hr1, valid - hr1 * 2, valid - hr1 * 3]
         else:
@@ -349,12 +349,16 @@ async def service(
     fmt: SupportedFormatsNoGeoJSON,
     lon: float = Query(None, ge=-180, le=180, description="degrees E"),
     lat: float = Query(None, ge=-90, le=90, description="degrees N"),
-    model: str = Query(
-        "RAP",
-        description="Model in 'GFS', 'HRRR', 'NAM', 'NAM4KM', 'RAP'",
-        max_length=6,
-        pattern="^(GFS|HRRR|NAM|NAM4KM|RAP)$",
-    ),
+    model: Annotated[
+        str,
+        Query(
+            description=(
+                "Model in 'GFS', 'HRRR', 'NAM', 'NAM4KM', 'RAP', 'RRFS'"
+            ),
+            max_length=6,
+            pattern="^(GFS|HRRR|NAM|NAM4KM|RAP|RRFS)$",
+        ),
+    ] = "RAP",
     time: datetime = Query(None, description="Profile Valid Time in UTC"),
     runtime: datetime = Query(None, description="Model Init Time UTC"),
     station: Annotated[
