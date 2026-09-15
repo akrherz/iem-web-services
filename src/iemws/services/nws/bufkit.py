@@ -33,6 +33,13 @@ specify both or set `fall=1` to get all forecast hours for that `runtime`.
 
 The service will return a HTTP status code of 422 for requests that are
 slightly not what we expect.
+
+Changelog
+---------
+
+- *14 Sep 2026*: Due to folks adding cache busters and a poor design of the
+  service, any extra query parameters will now result in a 422 error.
+
 """
 
 import asyncio
@@ -47,6 +54,7 @@ import httpx
 import pandas as pd
 from fastapi import APIRouter, HTTPException, Query, Response
 from metpy.units import units
+from pydantic import BaseModel, ConfigDict
 from pyiem.nws.bufkit import read_bufkit
 from pyiem.reference import ISO8601
 from pyiem.util import logger, utc
@@ -54,9 +62,52 @@ from pyiem.util import logger, utc
 # local
 from ...models import SupportedFormatsNoGeoJSON
 from ...reference import MEDIATYPES
+from ...util import cache_control
 
 LOG = logger()
 router = APIRouter()
+
+
+class BufkitQuery(BaseModel):
+    """Allowed query parameters for currents endpoint."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    lon: Annotated[
+        float | None, Query(ge=-180, le=180, description="degrees E")
+    ] = None
+    lat: Annotated[
+        float | None, Query(ge=-90, le=90, description="degrees N")
+    ] = None
+    model: Annotated[
+        str,
+        Query(
+            description=(
+                "Model in 'GFS', 'HRRR', 'NAM', 'NAM4KM', 'RAP', 'RRFS'"
+            ),
+            max_length=6,
+            pattern="^(GFS|HRRR|NAM|NAM4KM|RAP|RRFS)$",
+        ),
+    ] = "RAP"
+    time: Annotated[
+        datetime | None, Query(description="Profile Valid Time in UTC")
+    ] = None
+    runtime: Annotated[
+        datetime | None, Query(description="Model Init Time UTC")
+    ] = None
+    station: Annotated[
+        str | None,
+        Query(
+            description="bufkit site identifier",
+            pattern=r"^[a-zA-Z0-9\#\-]{3,5}$",
+        ),
+    ] = None
+    fall: Annotated[bool, Query(description="Include all forecast hours")] = (
+        False
+    )
+    gr: Annotated[bool, Query(description="Use Gibson Ridge JSON Schema")] = (
+        False
+    )
 
 
 def load_stations():
@@ -205,15 +256,15 @@ def do_gr(ctx: dict):
     return res
 
 
-async def handler(ctx: dict):
+async def handler(fmt: str, query: BufkitQuery):
     """Handle the request, return dict"""
     begin = utc()
-    model = ctx["model"].upper()
+    model = query.model.upper()
     # compute stations to attempt requests
-    station = ctx["station"]
-    if ctx["station"] is None:
-        lon = ctx["lon"]
-        lat = ctx["lat"]
+    station = query.station
+    if query.station is None:
+        lon = query.lon
+        lat = query.lat
         if lat is None or lon is None:
             raise HTTPException(422, detail="Need to provide lat/lon")
         df = LOCS[LOCS["model"] == model]
@@ -240,12 +291,12 @@ async def handler(ctx: dict):
         stations = [station]
     # compute runtimes to attempt to request model data for
     runtimes = [
-        ctx["runtime"],
+        query.runtime,
     ]
     valid = utc().replace(minute=0, second=0, microsecond=0)
-    if ctx["time"] is not None:
-        valid = ctx["time"].replace(tzinfo=timezone.utc)
-    if ctx["runtime"] is None:
+    if query.time is not None:
+        valid = query.time.replace(tzinfo=timezone.utc)
+    if query.runtime is None:
         if model in ["HRRR", "RAP"]:
             hr1 = timedelta(hours=1)
             runtimes = [valid, valid - hr1, valid - hr1 * 2, valid - hr1 * 3]
@@ -294,7 +345,7 @@ async def handler(ctx: dict):
                 503, detail="mtarchive backend failed, try later please."
             ) from last_request_error
         raise HTTPException(422, detail="Could not find any profile.")
-    if ctx["fmt"] == "txt":
+    if fmt == "txt":
         return sio.getvalue()
 
     try:
@@ -307,7 +358,7 @@ async def handler(ctx: dict):
         ) from exp
     fhour = int((valid - runtime).total_seconds() / 3600)
     fhours = [fhour]
-    if ctx["gr"]:
+    if query.gr:
         res = do_gr(vars())
         return json.dumps(res)
     stndf = stndf.drop("utc_valid", axis=1)
@@ -325,7 +376,7 @@ async def handler(ctx: dict):
             "url": url,
         },
     }
-    if ctx["fall"]:
+    if query.fall:
         fhours = stndf.index.values
     for fhour in fhours:
         if fhour not in sndf.index or fhour not in stndf.index:
@@ -345,42 +396,10 @@ async def handler(ctx: dict):
 
 
 @router.get("/nws/bufkit.{fmt}", description=__doc__, tags=["nws"])
+@cache_control(3600)
 async def service(
     fmt: SupportedFormatsNoGeoJSON,
-    lon: float = Query(None, ge=-180, le=180, description="degrees E"),
-    lat: float = Query(None, ge=-90, le=90, description="degrees N"),
-    model: Annotated[
-        str,
-        Query(
-            description=(
-                "Model in 'GFS', 'HRRR', 'NAM', 'NAM4KM', 'RAP', 'RRFS'"
-            ),
-            max_length=6,
-            pattern="^(GFS|HRRR|NAM|NAM4KM|RAP|RRFS)$",
-        ),
-    ] = "RAP",
-    time: datetime = Query(None, description="Profile Valid Time in UTC"),
-    runtime: datetime = Query(None, description="Model Init Time UTC"),
-    station: Annotated[
-        str | None,
-        Query(
-            description="bufkit site identifier",
-            pattern=r"^[a-zA-Z0-9\#\-]{3,5}$",
-        ),
-    ] = None,
-    fall: bool = Query(False, description="Include all forecast hours"),
-    gr: bool = Query(False, description="Use Gibson Ridge JSON Schema"),
+    bq: Annotated[BufkitQuery, Query()],
 ):
     """Unused docstring."""
-    ctx = {
-        "fmt": fmt,
-        "lon": lon,
-        "lat": lat,
-        "model": model,
-        "time": time,
-        "runtime": runtime,
-        "station": station,
-        "fall": fall,
-        "gr": gr,
-    }
-    return Response(await handler(ctx), media_type=MEDIATYPES[fmt])
+    return Response(await handler(fmt, bq), media_type=MEDIATYPES[fmt])

@@ -1,5 +1,6 @@
 """Helpers."""
 
+import inspect
 import logging
 import os
 from contextlib import contextmanager
@@ -24,6 +25,17 @@ def cache_control(max_age: int):
     """Add cache control headers to response."""
 
     def decorator(func: Callable):
+        if inspect.iscoroutinefunction(func):
+
+            @wraps(func)
+            async def async_wrapper(*args, **kwargs):
+                res = await func(*args, **kwargs)
+                if isinstance(res, Response):
+                    res.headers["Cache-Control"] = f"public, max-age={max_age}"
+                return res
+
+            return async_wrapper
+
         @wraps(func)
         def wrapper(*args, **kwargs):
             res = func(*args, **kwargs)

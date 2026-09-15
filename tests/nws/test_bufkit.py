@@ -13,6 +13,13 @@ from iemws.services.nws import bufkit
 URLS = re.compile(r"`/api/1([^\s]*)`")
 
 
+def test_cache_buster_422s(client: TestClient):
+    """Test that we don't permit extra args."""
+    resp = client.get("/nws/bufkit.json?model=RRFS&station=KDSM&15555")
+    assert b"Extra inputs are not permitted" in resp.content
+    assert resp.status_code == 422
+
+
 def test_station_with_hashtag_id(client: TestClient):
     """Test that we can deal with a station with a # in the name."""
     resp = client.get("/nws/bufkit.json?model=GFS&station=A%231")
