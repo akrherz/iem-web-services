@@ -13,11 +13,19 @@ Ames ASOS data for June 2021.
 Note that this service can emit GeoJSON, but sometimes that format does not
 make much sense, for example when requesting just one station's worth of data.
 
+Changelog
+=========
+
+- **5 Oct 2026**: The service was changed to require a date be specified or
+  at least a month or year.  Previously when no time information was specified,
+  it would return the period of record, which was not desired.
+
 """
 
 import re
 from datetime import date as dateobj
 from datetime import timedelta
+from typing import Annotated
 
 import geopandas as gpd
 from fastapi import APIRouter, HTTPException, Query
@@ -32,7 +40,13 @@ router = APIRouter()
 CLIMATE_NETWORK_RE = re.compile(r"^[A-Z]{2}CLIMATE$")
 
 
-def get_df(network: str, station, dt, month, year):
+def get_df(
+    network: str,
+    station: str | None,
+    dt: dateobj | None,
+    month: int | None,
+    year: int | None,
+):
     """Handle the request, return dict"""
     params = {
         "station": station,
@@ -43,12 +57,11 @@ def get_df(network: str, station, dt, month, year):
     }
     if CLIMATE_NETWORK_RE.match(network):
         sl = " and station = :station " if station is not None else ""
-        dl = ""
         if dt is not None:
             dl = " and day = :day "
         elif month is None and year is not None:
             dl = " and year = :year "
-        elif month is not None and year is not None:
+        else:
             dl = " and year = :year and month = :month "
         with get_sqlalchemy_conn("coop") as conn:
             table = f"alldata_{network[:2].lower()}"
@@ -80,14 +93,16 @@ def get_df(network: str, station, dt, month, year):
             )  # type: ignore
     elif network.endswith("COCORAHS"):
         sl = " and id = :station " if station is not None else ""
-        dl = ""
+        # Date is specified
         if dt is not None:
             dl = " and day = :day "
+        # Or if only the year is specified
         elif month is None and year is not None:
             dl = " and day >= :sts and day < :ets "
             params["sts"] = dateobj(year, 1, 1)
             params["ets"] = dateobj(year + 1, 1, 1)
-        elif month is not None and year is not None:
+        # Or if both the month and year are specified
+        else:
             dl = " and day >= :sts and day < :ets "
             params["sts"] = dateobj(year, month, 1)
             params["ets"] = (
@@ -121,14 +136,13 @@ def get_df(network: str, station, dt, month, year):
 
     else:
         sl = " and id = :station " if station is not None else ""
-        dl = ""
-        table = "summary"
         if dt is not None:
             table = f"summary_{dt:%Y}"
             dl = " and day = :day "
         elif month is None and year is not None:
             table = f"summary_{year}"
-        elif month is not None and year is not None:
+            dl = ""
+        else:
             table = f"summary_{year}"
             dt2 = (dateobj(year, month, 1) + timedelta(days=35)).replace(day=1)
             params["sts"] = dateobj(year, month, 1)
@@ -177,30 +191,45 @@ def get_df(network: str, station, dt, month, year):
 @cache_control(300)
 def service(
     fmt: SupportedFormats,
-    network: str = Query(
-        ...,
-        description="IEM Network Identifier",
-        max_length=20,
-        pattern=r"^[A-Z0-9_]+$",
-    ),
-    station: str = Query(
-        None,
-        description="IEM Station Identifier",
-        max_length=20,
-        pattern=r"^[A-Z0-9_\-]+$",
-    ),
-    date: dateobj = Query(
-        None,
-        description="Local station calendar date",
-        ge=dateobj(1900, 1, 1),
-        le=dateobj(2030, 1, 1),
-    ),
-    month: int = Query(None, ge=1, le=12, description="Local station month"),
-    year: int = Query(None, ge=1849, le=2030, description="Local station day"),
+    network: Annotated[
+        str,
+        Query(
+            description="IEM Network Identifier",
+            max_length=20,
+            pattern=r"^[A-Z0-9_]+$",
+        ),
+    ],
+    station: Annotated[
+        str | None,
+        Query(
+            description="IEM Station Identifier",
+            max_length=20,
+            pattern=r"^[A-Z0-9_\-]+$",
+        ),
+    ] = None,
+    date: Annotated[
+        dateobj | None,
+        Query(
+            description="Local station calendar date",
+            ge=dateobj(1900, 1, 1),
+            le=dateobj(2030, 1, 1),
+        ),
+    ] = None,
+    month: Annotated[
+        int | None, Query(ge=1, le=12, description="Local station month")
+    ] = None,
+    year: Annotated[
+        int | None,
+        Query(ge=1849, le=2030, description="Local station day"),
+    ] = None,
 ):
     """Replaced above with module __doc__"""
-    if all(x is None for x in [station, date, month, year]):
-        raise HTTPException(422, detail="Not enough arguments provided.")
+    # Validate that at least one of date, month+year, or year is provided
+    if date is None and (month is None or year is None) and year is None:
+        raise HTTPException(
+            422,
+            detail="Either date or (month + year) or year must be provided.",
+        )
 
     df = get_df(network, station, date, month, year)
     return deliver_df(df, fmt)

@@ -3,6 +3,18 @@
 from fastapi.testclient import TestClient
 
 
+def test_cocorahs_for_date(client: TestClient):
+    """Test a CoCoRaHS request for a single date."""
+    req = client.get("/daily.json?date=2023-01-01&network=IA_COCORAHS")
+    assert req.status_code == 200
+
+
+def test_cocorahs_for_month(client: TestClient):
+    """Test a CoCoRaHS request for a single month."""
+    req = client.get("/daily.json?year=2023&month=1&network=IA_COCORAHS")
+    assert req.status_code == 200
+
+
 def test_pre1900_request(client: TestClient):
     """Test that this is handled."""
     req = client.get(
