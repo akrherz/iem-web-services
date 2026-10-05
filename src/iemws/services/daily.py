@@ -16,9 +16,9 @@ make much sense, for example when requesting just one station's worth of data.
 Changelog
 =========
 
-- **5 Oct 2026**: The service was changed to require a date be specified or
-  at least a month or year.  Previously when no time information was specified,
-  it would return the period of record, which was not desired.
+- **5 Oct 2026**: The service now requires either a date or year or month plus
+  year to be specified.  Previously it emitted period of record, which was
+  unintended functionality for this service.
 
 """
 
