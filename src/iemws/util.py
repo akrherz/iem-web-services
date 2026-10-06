@@ -102,7 +102,7 @@ def deliver_df(df: DataFrame, fmt: str):
         else:
             with BytesIO() as tmp:
                 (
-                    df.set_crs("EPSG:4326", allow_override=True).to_file(
+                    df.set_crs("EPSG:4326", allow_override=True).to_file(  # type: ignore
                         tmp, driver="GeoJSON", engine="pyogrio"
                     )
                 )
