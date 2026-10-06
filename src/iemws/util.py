@@ -3,11 +3,14 @@
 import inspect
 import logging
 import os
-from contextlib import contextmanager
+import time
+from collections.abc import AsyncGenerator
+from contextlib import asynccontextmanager, contextmanager
 from functools import wraps
 from io import BytesIO
 from typing import Callable
 
+import psycopg
 from fastapi import Response
 from pandas import DataFrame
 from pandas.api.types import is_datetime64_any_dtype as isdt
@@ -19,6 +22,33 @@ from .models import SupportedFormats
 from .reference import MEDIATYPES
 
 LOG = logging.getLogger("iemws")
+DBFAIL_LOG_INTERVAL = 60  # seconds between logged database failures
+_DBFAIL_LAST_LOGGED: float | None = None
+
+
+def log_database_failure(exc: Exception) -> bool:
+    """Log a database connectivity failure at most once per interval.
+
+    A transient outage can fail thousands of requests, so only the first
+    failure within the interval is logged, and without a traceback.
+
+    Returns:
+      bool: True if a line was logged.
+    """
+    global _DBFAIL_LAST_LOGGED  # noqa: PLW0603
+    now = time.monotonic()
+    if (
+        _DBFAIL_LAST_LOGGED is not None
+        and now - _DBFAIL_LAST_LOGGED < DBFAIL_LOG_INTERVAL
+    ):
+        return False
+    _DBFAIL_LAST_LOGGED = now
+    LOG.error(
+        "Database unavailable (%s), suppressing similar messages for %ss",
+        " ".join(str(exc).split()) or type(exc).__name__,
+        DBFAIL_LOG_INTERVAL,
+    )
+    return True
 
 
 def cache_control(max_age: int):
@@ -80,15 +110,8 @@ def deliver_df(df: DataFrame, fmt: str):
     return Response(res, media_type=MEDIATYPES[fmt])
 
 
-def get_dbconnstr(name: str, rw: bool | None = False):
-    """Get a database connection string.
-
-    Args:
-      name (str): The name of the database to connect to
-      rw (bool | None): Should a read-write connection be required?
-    """
-    # 1. Allows us to specify the usage of psycopg as the module
-    # 2. Sets the timezone to UTC
+def _get_pg_dbconnstr(name: str, rw: bool | None = False) -> str:
+    """Get a plain libpq connection string, honoring env overrides."""
     host = os.getenv(f"IEMWS_DBHOST_{name.upper()}") or os.getenv(
         "IEMWS_DBHOST"
     )
@@ -98,9 +121,37 @@ def get_dbconnstr(name: str, rw: bool | None = False):
         kwargs["host"] = host
     if user:
         kwargs["user"] = user
-    return pyiem_get_dbconnstr(name, **kwargs).replace(
+    return pyiem_get_dbconnstr(name, **kwargs)
+
+
+def get_dbconnstr(name: str, rw: bool | None = False) -> str:
+    """Get a SQLAlchemy database connection string using psycopg.
+
+    Args:
+      name (str): The name of the database to connect to
+      rw (bool | None): Should a read-write connection be required?
+    """
+    return _get_pg_dbconnstr(name, rw=rw).replace(
         "postgresql:", "postgresql+psycopg:"
     )
+
+
+@asynccontextmanager
+async def get_async_conn(
+    name: str, rw: bool | None = False
+) -> AsyncGenerator[psycopg.AsyncConnection]:
+    """Return a context managed async psycopg connection with UTC timezone.
+
+    Args:
+      name (str): The name of the database to connect to
+      rw (bool | None): Should a read-write connection be required?
+    """
+    async with await psycopg.AsyncConnection.connect(
+        _get_pg_dbconnstr(name, rw=rw),
+        options="-c TimeZone=UTC",
+        connect_timeout=5,
+    ) as conn:
+        yield conn
 
 
 @contextmanager
