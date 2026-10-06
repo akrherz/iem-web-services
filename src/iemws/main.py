@@ -33,12 +33,14 @@ import time
 import warnings
 from logging.config import dictConfig
 
+import psycopg
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 from pyiem.database import USERNAME_MAPPER
 from pyiem.util import LOG, utc
 from pyiem.webutil import TELEMETRY, write_telemetry
 from shapely.errors import ShapelyDeprecationWarning
+from sqlalchemy.exc import OperationalError as SAOperationalError
 
 from .config import log_config
 from .services import (
@@ -93,6 +95,7 @@ from .services.nws import (
 )
 from .services.nws.afos import list as nws_afos_list
 from .services.vtec import county_zone, events_status, sbw_interval
+from .util import log_database_failure
 
 # Stop a Shapely deprecation warning until geopandas is updated
 warnings.filterwarnings("ignore", category=ShapelyDeprecationWarning)
@@ -194,7 +197,21 @@ def handle_exception(request: Request, exc):
     )
 
 
+def handle_database_unavailable(request: Request, exc: Exception):
+    """Return a 503 for database connectivity failures, logging sparingly."""
+    log_database_failure(exc)
+    return JSONResponse(
+        status_code=503,
+        content="Database temporarily unavailable, please retry shortly.",
+        headers={"Retry-After": "30"},
+    )
+
+
 app.add_exception_handler(Exception, handle_exception)
+app.add_exception_handler(
+    psycopg.OperationalError, handle_database_unavailable
+)
+app.add_exception_handler(SAOperationalError, handle_database_unavailable)
 
 # The order here impacts the docs order
 app.include_router(ffg_bypoint.router)
