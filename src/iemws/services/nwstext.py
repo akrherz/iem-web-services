@@ -15,17 +15,22 @@ necessary.
 """
 
 from datetime import datetime, timezone
+from typing import Annotated
 
+import psycopg
 from fastapi import APIRouter, HTTPException, Path, Query, Response
-from pyiem.database import sql_helper
-from sqlalchemy.engine import Connection
 
-from iemws.util import cache_control, get_sqlalchemy_conn
+from iemws.util import cache_control, get_async_conn
 
 router = APIRouter()
 
 
-def handler(conn: Connection, product_id, nolimit: bool, headers):
+async def handler(
+    conn: psycopg.AsyncConnection,
+    product_id: str,
+    nolimit: bool,
+    headers: dict,
+):
     """Handle the request, return dict"""
     tokens = product_id.split("-")
     bbb = None
@@ -48,29 +53,24 @@ def handler(conn: Connection, product_id, nolimit: bool, headers):
         ) from exp
     ts = ts.replace(tzinfo=timezone.utc)
 
-    params = {
-        "pil": pil,
-        "entered": ts,
-        "bbb": bbb,
-        "source": source,
-    }
-    blim = "" if bbb is None else " and bbb = :bbb"
+    args = [pil, ts]
+    blim = ""
+    if bbb is not None:
+        blim = " and bbb = %s"
+        args.append(bbb)
     # When bbb is unset, we can hit some ambiguity, so we prioritize the
     # entry that has no bbb
-    rs = conn.execute(
-        sql_helper(
-            """
-    SELECT data, source from products where pil = :pil and entered = :entered
+    rs = await conn.execute(
+        f"""
+    SELECT data, source from products where pil = %s and entered = %s
     {blim} order by bbb ASC NULLS FIRST
         """,
-            blim=blim,
-        ),
-        params,
+        args,
     )
 
     res = []
     res_all = []
-    for row in rs:
+    async for row in rs:
         payload = row[0].replace("\r", "")
         # Can we remove ambiguity by checking the source
         if row[1] == source:
@@ -102,12 +102,12 @@ def handler(conn: Connection, product_id, nolimit: bool, headers):
     ],
 )
 @cache_control(300)
-def nwstext_service(
-    product_id: str = Path(..., max_length=35, min_length=28),
-    nolimit: bool = Query(False, description="Return all products"),
+async def nwstext_service(
+    product_id: Annotated[str, Path(max_length=35, min_length=28)],
+    nolimit: Annotated[bool, Query(description="Return all products")] = False,
 ):
     """Unused docstring."""
     headers = {}
-    with get_sqlalchemy_conn("afos") as engine, engine.connect() as conn:
-        res = handler(conn, product_id, nolimit, headers)
+    async with get_async_conn("afos") as conn:
+        res = await handler(conn, product_id, nolimit, headers)
     return Response(res, headers=headers, media_type="text/plain")
