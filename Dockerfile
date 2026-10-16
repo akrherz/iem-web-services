@@ -1,6 +1,6 @@
 
 FROM docker.io/mambaorg/micromamba:2.5.0 AS hostslink
-RUN ln -s /run/hostsdir/hosts /tmp/hosts-link
+RUN mkdir -p /tmp/rootfs/etc && ln -s /run/hostsdir/hosts /tmp/rootfs/etc/hosts
 
 FROM docker.io/mambaorg/micromamba:2.5.0
 
@@ -27,7 +27,7 @@ COPY --chown=$MAMBA_USER:$MAMBA_USER dev.sh ./dev.sh
 # /etc/hosts is provided by a host directory mount at /run/hostsdir so that
 # atomic replacement of the file on the host is seen by the container.
 # RUN cannot replace /etc/hosts (builder bind mounts it), but COPY can.
-COPY --from=hostslink /tmp/hosts-link /etc/hosts
+COPY --from=hostslink /tmp/rootfs/ /
 
 EXPOSE 8000
 
