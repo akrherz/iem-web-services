@@ -21,6 +21,12 @@ RUN micromamba run -n iemws python -m pip install git+https://github.com/akrherz
 COPY --chown=$MAMBA_USER:$MAMBA_USER src ./src
 COPY --chown=$MAMBA_USER:$MAMBA_USER dev.sh ./dev.sh
 
+# /etc/hosts is provided by a host directory mount at /run/hostsdir so that
+# atomic replacement of the file on the host is seen by the container
+USER root
+RUN rm -f /etc/hosts && ln -s /run/hostsdir/hosts /etc/hosts
+USER $MAMBA_USER
+
 EXPOSE 8000
 
 ENTRYPOINT ["/usr/local/bin/_entrypoint.sh"]
