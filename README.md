@@ -22,7 +22,7 @@ GHCR image with Podman:
    - `/mnt/mesonet2` (mounted read-only for symlink targets under `/mesonet/data`)
    - `/opt/bufkit` (mounted read-only into container at same path)
    - host syslog socket (default `/dev/log`) if telemetry is emitted via syslog
-   - `/etc/iem-web-services/hostdir` contains a copy of the host `/etc/hosts`, so
+   - `/etc/iem-web-services/hostsdir` contains a copy of the host `/etc/hosts`, so
      to allow DNS updates on-the-fly within the running container.  Meh.
 3. Configure publish binding in `iemws.env`:
    - local proxy on same host: `PUBLISH_HOST=127.0.0.1`
