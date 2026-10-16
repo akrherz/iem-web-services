@@ -1,4 +1,7 @@
 
+FROM docker.io/mambaorg/micromamba:2.5.0 AS hostslink
+RUN ln -s /run/hostsdir/hosts /tmp/hosts-link
+
 FROM docker.io/mambaorg/micromamba:2.5.0
 
 LABEL org.opencontainers.image.source=https://github.com/akrherz/iem-web-services
@@ -22,10 +25,9 @@ COPY --chown=$MAMBA_USER:$MAMBA_USER src ./src
 COPY --chown=$MAMBA_USER:$MAMBA_USER dev.sh ./dev.sh
 
 # /etc/hosts is provided by a host directory mount at /run/hostsdir so that
-# atomic replacement of the file on the host is seen by the container
-USER root
-RUN rm -f /etc/hosts && ln -s /run/hostsdir/hosts /etc/hosts
-USER $MAMBA_USER
+# atomic replacement of the file on the host is seen by the container.
+# RUN cannot replace /etc/hosts (builder bind mounts it), but COPY can.
+COPY --from=hostslink /tmp/hosts-link /etc/hosts
 
 EXPOSE 8000
 
