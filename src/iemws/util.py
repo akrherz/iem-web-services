@@ -17,6 +17,7 @@ from pandas.api.types import is_datetime64_any_dtype as isdt
 from pyiem.database import get_dbconnstr as pyiem_get_dbconnstr
 from pyiem.reference import ISO8601
 from sqlalchemy import engine
+from sqlalchemy.exc import OperationalError as SAOperationalError
 
 from .models import SupportedFormats
 from .reference import MEDIATYPES
@@ -26,7 +27,9 @@ DBFAIL_LOG_INTERVAL = 60  # seconds between logged database failures
 _DBFAIL_LAST_LOGGED: float | None = None
 
 
-def log_database_failure(exc: Exception) -> bool:
+def log_database_failure(
+    exc: Exception, database_name: str | None = None
+) -> bool:
     """Log a database connectivity failure at most once per interval.
 
     A transient outage can fail thousands of requests, so only the first
@@ -43,11 +46,22 @@ def log_database_failure(exc: Exception) -> bool:
     ):
         return False
     _DBFAIL_LAST_LOGGED = now
-    LOG.error(
-        "Database unavailable (%s), suppressing similar messages for %ss",
-        " ".join(str(exc).split()) or type(exc).__name__,
-        DBFAIL_LOG_INTERVAL,
-    )
+    message = " ".join(str(exc).split()) or type(exc).__name__
+    database_name = database_name or getattr(exc, "database_name", None)
+    if database_name:
+        LOG.error(
+            "Database %s unavailable (%s), suppressing similar messages "
+            "for %ss",
+            database_name,
+            message,
+            DBFAIL_LOG_INTERVAL,
+        )
+    else:
+        LOG.error(
+            "Database unavailable (%s), suppressing similar messages for %ss",
+            message,
+            DBFAIL_LOG_INTERVAL,
+        )
     return True
 
 
@@ -146,12 +160,16 @@ async def get_async_conn(
       name (str): The name of the database to connect to
       rw (bool | None): Should a read-write connection be required?
     """
-    async with await psycopg.AsyncConnection.connect(
-        _get_pg_dbconnstr(name, rw=rw),
-        options="-c TimeZone=UTC",
-        connect_timeout=5,
-    ) as conn:
-        yield conn
+    try:
+        async with await psycopg.AsyncConnection.connect(
+            _get_pg_dbconnstr(name, rw=rw),
+            options="-c TimeZone=UTC",
+            connect_timeout=5,
+        ) as conn:
+            yield conn
+    except psycopg.OperationalError as exc:
+        exc.database_name = name
+        raise
 
 
 @contextmanager
@@ -163,5 +181,10 @@ def get_sqlalchemy_conn(name: str, rw: bool | None = False):
         get_dbconnstr(name, rw=rw),
         connect_args={"options": "-c TimeZone=UTC"},
     )
-    yield pgconn
-    pgconn.dispose()
+    try:
+        yield pgconn
+    except (psycopg.OperationalError, SAOperationalError) as exc:
+        exc.database_name = name
+        raise
+    finally:
+        pgconn.dispose()
