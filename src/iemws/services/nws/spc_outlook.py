@@ -79,9 +79,7 @@ def service(
     valid: date = Query(..., description="SPC Outlook Date"),
     cycle: int = Query(..., description="SPC Outlook Cycle"),
     outlook_type: str = Query(
-        "C",
-        description="SPC Outlook Type",
-        enum=["C", "F"],
+        "C", description="SPC Outlook Type", pattern="^[CF]$"
     ),
 ):
     """Unused docstring."""
