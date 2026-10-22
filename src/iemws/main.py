@@ -132,8 +132,10 @@ dictConfig(log_config)
 @asynccontextmanager
 async def lifespan(_app: FastAPI):
     """Close database pools at shutdown."""
-    yield
-    await close_async_pools()
+    try:
+        yield
+    finally:
+        await close_async_pools()
 
 
 app = FastAPI(

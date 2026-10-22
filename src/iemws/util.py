@@ -154,18 +154,18 @@ def get_dbconnstr(name: str, rw: bool | None = False) -> str:
     )
 
 
-_ASYNC_POOLS: dict[tuple[str, bool], tuple[AsyncConnectionPool, object]] = {}
+_ASYNC_POOLS: dict[
+    tuple[str, bool, asyncio.AbstractEventLoop], AsyncConnectionPool
+] = {}
 
 
 async def _get_async_pool(name: str, rw: bool | None) -> AsyncConnectionPool:
     """Get (lazily creating) the async pool for this database."""
-    key = (name, bool(rw))
     loop = asyncio.get_running_loop()
-    entry = _ASYNC_POOLS.get(key)
-    # A pool is bound to the event loop that opened it.  This only differs
-    # in testing, where each request may get its own loop.
-    if entry is not None and entry[1] is loop:
-        return entry[0]
+    key = (name, bool(rw), loop)
+    pool = _ASYNC_POOLS.get(key)
+    if pool is not None:
+        return pool
     pool = AsyncConnectionPool(
         _get_pg_dbconnstr(name, rw=rw),
         kwargs={"options": "-c TimeZone=UTC", "connect_timeout": 5},
@@ -176,16 +176,16 @@ async def _get_async_pool(name: str, rw: bool | None) -> AsyncConnectionPool:
         open=False,
     )
     await pool.open()
-    _ASYNC_POOLS[key] = (pool, loop)
+    _ASYNC_POOLS[key] = pool
     return pool
 
 
 async def close_async_pools():
     """Close all pools, called at application shutdown."""
-    entries = list(_ASYNC_POOLS.values())
-    _ASYNC_POOLS.clear()
-    for pool, loop in entries:
-        if loop is asyncio.get_running_loop():
+    loop = asyncio.get_running_loop()
+    for key, pool in list(_ASYNC_POOLS.items()):
+        if key[2] is loop:
+            del _ASYNC_POOLS[key]
             await pool.close()
 
 
