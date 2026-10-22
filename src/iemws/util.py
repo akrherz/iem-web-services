@@ -1,5 +1,6 @@
 """Helpers."""
 
+import asyncio
 import inspect
 import logging
 import os
@@ -14,6 +15,7 @@ import psycopg
 from fastapi import Response
 from pandas import DataFrame
 from pandas.api.types import is_datetime64_any_dtype as isdt
+from psycopg_pool import AsyncConnectionPool
 from pyiem.database import get_dbconnstr as pyiem_get_dbconnstr
 from pyiem.reference import ISO8601
 from sqlalchemy import engine
@@ -25,6 +27,8 @@ from .reference import MEDIATYPES
 LOG = logging.getLogger("iemws")
 DBFAIL_LOG_INTERVAL = 60  # seconds between logged database failures
 _DBFAIL_LAST_LOGGED: float | None = None
+ASYNC_POOL_MIN_SIZE = int(os.getenv("IEMWS_POOL_MIN", "2"))
+ASYNC_POOL_MAX_SIZE = int(os.getenv("IEMWS_POOL_MAX", "20"))
 
 
 def log_database_failure(
@@ -150,22 +154,54 @@ def get_dbconnstr(name: str, rw: bool | None = False) -> str:
     )
 
 
+_ASYNC_POOLS: dict[
+    tuple[str, bool, asyncio.AbstractEventLoop], AsyncConnectionPool
+] = {}
+
+
+async def _get_async_pool(name: str, rw: bool | None) -> AsyncConnectionPool:
+    """Get (lazily creating) the async pool for this database."""
+    loop = asyncio.get_running_loop()
+    key = (name, bool(rw), loop)
+    pool = _ASYNC_POOLS.get(key)
+    if pool is not None:
+        return pool
+    pool = AsyncConnectionPool(
+        _get_pg_dbconnstr(name, rw=rw),
+        kwargs={"options": "-c TimeZone=UTC", "connect_timeout": 5},
+        min_size=ASYNC_POOL_MIN_SIZE,
+        max_size=ASYNC_POOL_MAX_SIZE,
+        timeout=5,
+        max_idle=300,
+        open=False,
+    )
+    await pool.open()
+    _ASYNC_POOLS[key] = pool
+    return pool
+
+
+async def close_async_pools():
+    """Close all pools, called at application shutdown."""
+    loop = asyncio.get_running_loop()
+    for key, pool in list(_ASYNC_POOLS.items()):
+        if key[2] is loop:
+            del _ASYNC_POOLS[key]
+            await pool.close()
+
+
 @asynccontextmanager
 async def get_async_conn(
     name: str, rw: bool | None = False
 ) -> AsyncGenerator[psycopg.AsyncConnection]:
-    """Return a context managed async psycopg connection with UTC timezone.
+    """Return a context managed, pooled async psycopg connection (UTC).
 
     Args:
       name (str): The name of the database to connect to
       rw (bool | None): Should a read-write connection be required?
     """
     try:
-        async with await psycopg.AsyncConnection.connect(
-            _get_pg_dbconnstr(name, rw=rw),
-            options="-c TimeZone=UTC",
-            connect_timeout=5,
-        ) as conn:
+        pool = await _get_async_pool(name, rw)
+        async with pool.connection() as conn:
             yield conn
     except psycopg.OperationalError as exc:
         exc.database_name = name

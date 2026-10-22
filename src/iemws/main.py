@@ -31,6 +31,7 @@ someday and then entire IEM goes away!
 
 import time
 import warnings
+from contextlib import asynccontextmanager
 from logging.config import dictConfig
 
 import psycopg
@@ -95,7 +96,7 @@ from .services.nws import (
 )
 from .services.nws.afos import list as nws_afos_list
 from .services.vtec import county_zone, events_status, sbw_interval
-from .util import log_database_failure
+from .util import close_async_pools, log_database_failure
 
 # Stop a Shapely deprecation warning until geopandas is updated
 warnings.filterwarnings("ignore", category=ShapelyDeprecationWarning)
@@ -128,11 +129,21 @@ tags_metadata = [
 dictConfig(log_config)
 
 
+@asynccontextmanager
+async def lifespan(_app: FastAPI):
+    """Close database pools at shutdown."""
+    try:
+        yield
+    finally:
+        await close_async_pools()
+
+
 app = FastAPI(
     root_path="/api/1",
     description=__doc__,
     title="IEM API v1",
     openapi_tags=tags_metadata,
+    lifespan=lifespan,
 )
 
 
