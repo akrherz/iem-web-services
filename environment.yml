@@ -14,6 +14,7 @@ dependencies:
   - pygrib
   # rls has fix needed for meteobridge 
   - pyiem>=1.27.0
+  - psycopg-pool
   - pyogrio
   - pyproj
   - pytest
