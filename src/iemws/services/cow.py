@@ -481,8 +481,9 @@ class COWSession:
     def clean_dataframes(self):
         """Get rid of types we can not handle"""
         for df in [self.events, self.stormreports]:
+            # Match any resolution (ns, us, ...) and tz-aware columns
             for colname in df.select_dtypes(
-                include=["datetime64[ns]"]
+                include=["datetime", "datetimetz"]
             ).columns:
                 df[colname] = df[colname].dt.strftime(ISO8601)
 
