@@ -58,7 +58,10 @@ jobs:
       run: |
         psql -f .github/load_faked_mos.sql -h localhost -U mesonet mos
         python -m pip install --upgrade .
-        python -m pytest --cov=iemws
+
+    - name: Run Tests and Generate Coverage
+      run: |
+        python -m pytest --cov=iemws --timeout=300 -o faulthandler_timeout=300 tests/
         python -m coverage xml
 
     - name: Upload coverage to Codecov

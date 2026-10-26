@@ -21,6 +21,8 @@ dependencies:
   # For httpx request mocking
   - pytest-httpx
   - pytest-runner
+  # To debug hangs
+  - pytest-timeout
   - setuptools_scm
   - sqlalchemy
   - uvicorn
