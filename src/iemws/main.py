@@ -139,7 +139,6 @@ async def lifespan(_app: FastAPI):
 
 
 app = FastAPI(
-    root_path="/api/1",
     description=__doc__,
     title="IEM API v1",
     openapi_tags=tags_metadata,

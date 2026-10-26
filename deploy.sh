@@ -12,20 +12,17 @@ fi
 WORKERS=$1
 MAXREQUESTS=$2
 
-# https://www.uvicorn.org/deployment/
 # Something (likely pygrib) leaks memory, so we don't let an individual worker
 # run for too long
-# --reload is dangerous for prod and unstable
-# Shutdown with just kill <PID>, no core dumps?
-# jitter tries to keep all workers restarting at the same time
-# graceful-timeout is how long we wait for a worker to finish
+# Jitter staggers worker recycling to avoid simultaneous restarts.
 
-gunicorn \
- -w $WORKERS \
- --graceful-timeout 60 \
- -k iemws.worker.RestartableUvicornWorker \
- -b 0.0.0.0:8000 \
- --max-requests $MAXREQUESTS \
- --max-requests-jitter 500 \
- --log-level warning \
- iemws.main:app 2>&1 | logger -p local1.notice --tag iemws &
+uvicorn \
+    --host 0.0.0.0 \
+    --port 8000 \
+    --root-path /api/1 \
+    --workers "$WORKERS" \
+    --limit-max-requests "$MAXREQUESTS" \
+    --limit-max-requests-jitter 500 \
+    --timeout-graceful-shutdown 60 \
+    --log-level warning \
+    iemws.main:app 2>&1 | logger -p local1.notice --tag iemws &

@@ -6,7 +6,6 @@ dependencies:
   - geopandas
   # lame need for docker build
   - git
-  - gunicorn
   - httpx
   - metpy
   # Modern
@@ -24,5 +23,4 @@ dependencies:
   - pytest-runner
   - setuptools_scm
   - sqlalchemy
-  # For logging
   - uvicorn
