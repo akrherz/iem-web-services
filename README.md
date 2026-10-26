@@ -14,6 +14,10 @@ GHCR image with Podman:
 - `config/systemd/iem-web-services-podman.service`
 - `config/systemd/iemws.env.example`
 
+The production unit runs Uvicorn's native worker manager with the `/api/1`
+proxy root path, graceful shutdown, and max-request recycling. Recycling uses
+Uvicorn's jitter option to stagger worker restarts.
+
 ### Host prerequisites
 
 1. Podman installed (`/usr/bin/podman`).

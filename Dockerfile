@@ -32,4 +32,4 @@ COPY --from=hostslink /tmp/rootfs/ /
 EXPOSE 8000
 
 ENTRYPOINT ["/usr/local/bin/_entrypoint.sh"]
-CMD ["micromamba", "run", "-n", "iemws", "uvicorn", "--host", "0.0.0.0", "--port", "8000", "iemws.main:app"]
+CMD ["micromamba", "run", "-n", "iemws", "uvicorn", "--host", "0.0.0.0", "--port", "8000", "--root-path", "/api/1", "iemws.main:app"]
