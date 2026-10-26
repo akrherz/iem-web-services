@@ -14,7 +14,10 @@ drydown.NCOPEN_TIMEOUT = 0.01
 
 @pytest.fixture()
 def client():
-    return TestClient(app)
+    # Context manager keeps one event loop for the test and runs the lifespan
+    # so that async database pools are closed instead of leaked.
+    with TestClient(app) as test_client:
+        yield test_client
 
 
 @pytest.fixture()
