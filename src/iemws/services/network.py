@@ -2,6 +2,13 @@
 
 The IEM organizes stations into networks.  This service returns station
 metadata for a given network.
+
+Changelog
+=========
+
+- **2026-10-27** The response model was changed slightly to reflect updated
+  ``sigstage`` values provided by upstream NWPS metadata.
+
 """
 
 import geopandas as gpd
