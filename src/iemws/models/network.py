@@ -40,7 +40,7 @@ class NetworkDataItem(BaseModel):
     iemid: int = Field(..., title="IEM internal identifier")
     metasite: bool = Field(..., title="Is this a metasite, no obs")
     sigstage_action: str = Field(None, title="Action stage flood level")
-    sigstage_minor: str = Field(None, title="Bankfull stage flood level")
+    sigstage_minor: str = Field(None, title="Minor stage flood level")
     sigstage_moderate: str = Field(None, title="Moderate stage flood level")
     sigstage_major: str = Field(None, title="Major stage flood level")
     sigstage_record: str = Field(None, title="Record stage flood level")
