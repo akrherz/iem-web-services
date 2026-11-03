@@ -1,6 +1,7 @@
 """IEM Reanalysis multi-day values by point."""
 
 from datetime import date, timedelta
+from typing import Annotated
 
 import numpy as np
 import pandas as pd
@@ -31,14 +32,16 @@ def clean(val):
 )
 def service(
     fmt: SupportedFormatsNoGeoJSON,
-    sdate: date = Query(..., description="Start Date."),
-    edate: date = Query(..., description="End Date."),
-    lon: float = Query(
-        ..., description="Longitude of point of interest", ge=-180, le=180
-    ),
-    lat: float = Query(
-        ..., description="Latitude of point of interest", ge=-90, le=90
-    ),
+    sdate: Annotated[date, Query(description="Start Date.")],
+    edate: Annotated[date, Query(description="End Date.")],
+    lon: Annotated[
+        float,
+        Query(description="Longitude of point of interest", ge=-180, le=180),
+    ],
+    lat: Annotated[
+        float,
+        Query(description="Latitude of point of interest", ge=-90, le=90),
+    ],
 ):
     """Go Main Go"""
     # Make sure we aren't in the future

@@ -3,6 +3,7 @@
 import os
 from datetime import date as dateobj
 from datetime import datetime, timedelta
+from typing import Annotated
 from zoneinfo import ZoneInfo
 
 import numpy as np
@@ -95,16 +96,20 @@ def workflow(sts, ets, i, j, domain):
 )
 def service(
     fmt: SupportedFormatsNoGeoJSON,
-    date: dateobj = Query(
-        ...,
-        description="The CST/CDT date of interest.",
-    ),
-    lon: float = Query(
-        ..., description="Longitude of point of interest", ge=-180, le=180
-    ),
-    lat: float = Query(
-        ..., description="Latitude of point of interest", ge=-90, le=90
-    ),
+    date: Annotated[
+        dateobj,
+        Query(
+            description="The CST/CDT date of interest.",
+        ),
+    ],
+    lon: Annotated[
+        float,
+        Query(description="Longitude of point of interest", ge=-180, le=180),
+    ],
+    lat: Annotated[
+        float,
+        Query(description="Latitude of point of interest", ge=-90, le=90),
+    ],
 ):
     """Do Something Fun!"""
     domain = iemre.get_domain(lon, lat)
