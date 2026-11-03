@@ -2,6 +2,7 @@
 
 import os
 from datetime import date as dateobj
+from typing import Annotated
 
 import numpy as np
 import pandas as pd
@@ -32,13 +33,15 @@ def myrounder(val, precision):
 )
 def service(
     fmt: SupportedFormatsNoGeoJSON,
-    date: dateobj = Query(..., description="The date of interest."),
-    lon: float = Query(
-        ..., description="Longitude of point of interest", ge=-180, le=180
-    ),
-    lat: float = Query(
-        ..., description="Latitude of point of interest", ge=-90, le=90
-    ),
+    date: Annotated[dateobj, Query(description="The date of interest.")],
+    lon: Annotated[
+        float,
+        Query(description="Longitude of point of interest", ge=-180, le=180),
+    ],
+    lat: Annotated[
+        float,
+        Query(description="Latitude of point of interest", ge=-90, le=90),
+    ],
 ):
     """Do Something Fun!"""
 
@@ -80,7 +83,10 @@ def service(
     c2000 = date.replace(year=2000)
     coffset = iemre.daily_offset(c2000)
 
-    with ncopen(fn) as nc, ncopen(iemre.get_dailyc_ncname()) as cnc:
+    with (
+        ncopen(fn, timeout=5) as nc,
+        ncopen(iemre.get_dailyc_ncname(), timeout=5) as cnc,
+    ):
         res.append(
             {
                 "prism_precip_in": myrounder(prism_precip, 2),
