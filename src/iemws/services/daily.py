@@ -23,6 +23,7 @@ Changelog
 """
 
 import re
+import threading
 from datetime import date as dateobj
 from datetime import timedelta
 from typing import Annotated
@@ -36,6 +37,10 @@ from ..models.daily import DailySchema
 from ..util import cache_control, deliver_df, get_sqlalchemy_conn
 
 router = APIRouter()
+
+# Max concurrent requests per worker process, excess gets a 429
+MAX_CONCURRENT = 4
+_SLOTS = threading.BoundedSemaphore(MAX_CONCURRENT)
 
 CLIMATE_NETWORK_RE = re.compile(r"^[A-Z]{2}CLIMATE$")
 
@@ -231,5 +236,14 @@ def service(
             detail="Either date or (month + year) or year must be provided.",
         )
 
-    df = get_df(network, station, date, month, year)
+    if not _SLOTS.acquire(blocking=False):
+        raise HTTPException(
+            429,
+            detail="Too many concurrent requests, try again later.",
+            headers={"Retry-After": "5"},
+        )
+    try:
+        df = get_df(network, station, date, month, year)
+    finally:
+        _SLOTS.release()
     return deliver_df(df, fmt)
