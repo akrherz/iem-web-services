@@ -56,7 +56,9 @@ def service(
     offset1 = iemre.daily_offset(sdate)
     offset2 = iemre.daily_offset(edate) + 1
     # Get our netCDF vars
-    with ncopen(iemre.get_daily_ncname(sdate.year, domain=domain)) as nc:
+    with ncopen(
+        iemre.get_daily_ncname(sdate.year, domain=domain), timeout=5
+    ) as nc:
         hightemp = convert_value(
             nc.variables["high_tmpk"][offset1:offset2, j, i], "degK", "degF"
         )
@@ -79,7 +81,7 @@ def service(
     coffset1 = iemre.daily_offset(c2000)
     c2000 = edate.replace(year=2000)
     coffset2 = iemre.daily_offset(c2000) + 1
-    with ncopen(iemre.get_dailyc_ncname(domain=domain)) as cnc:
+    with ncopen(iemre.get_dailyc_ncname(domain=domain), timeout=5) as cnc:
         chigh = convert_value(
             cnc.variables["high_tmpk"][coffset1:coffset2, j, i], "degK", "degF"
         )
@@ -92,7 +94,9 @@ def service(
 
     if sdate.year > 1980:
         i2, j2 = PRISM800.find_ij(lon, lat)  # type:ignore
-        with ncopen(f"/mesonet/data/prism/{sdate.year}_daily.nc") as nc:
+        with ncopen(
+            f"/mesonet/data/prism/{sdate.year}_daily.nc", timeout=5
+        ) as nc:
             prism_precip = mm2inch(
                 nc.variables["ppt"][offset1:offset2, j2, i2],
             )

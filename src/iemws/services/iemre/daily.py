@@ -80,7 +80,10 @@ def service(
     c2000 = date.replace(year=2000)
     coffset = iemre.daily_offset(c2000)
 
-    with ncopen(fn) as nc, ncopen(iemre.get_dailyc_ncname()) as cnc:
+    with (
+        ncopen(fn, timeout=5) as nc,
+        ncopen(iemre.get_dailyc_ncname(), timeout=5) as cnc,
+    ):
         res.append(
             {
                 "prism_precip_in": myrounder(prism_precip, 2),

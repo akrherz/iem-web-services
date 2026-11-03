@@ -52,39 +52,37 @@ def workflow(sts, ets, i, j, domain):
         raise HTTPException(400, "Request outside IEMRE domain bounds.")
 
     UTC = ZoneInfo("UTC")
-    with ncopen(fn) as nc:
-        now = sts
-        while now <= ets:
-            offset = iemre.hourly_offset(now)
-            res.append(
-                {
-                    "valid_utc": now.astimezone(UTC).strftime(ISO),
-                    "valid_local": now.strftime(ISO[:-1]),
-                    "skyc_%": myrounder(nc.variables["skyc"][offset, j, i], 1),
-                    "air_temp_f": myrounder(
-                        convert_value(
-                            nc.variables["tmpk"][offset, j, i], "degK", "degF"
-                        ),
-                        1,
-                    ),
-                    "dew_point_f": myrounder(
-                        convert_value(
-                            nc.variables["dwpk"][offset, j, i], "degK", "degF"
-                        ),
-                        1,
-                    ),
-                    "uwnd_mps": myrounder(
-                        nc.variables["uwnd"][offset, j, i], 2
-                    ),
-                    "vwnd_mps": myrounder(
-                        nc.variables["vwnd"][offset, j, i], 2
-                    ),
-                    "hourly_precip_in": myrounder(
-                        mm2inch(nc.variables["p01m"][offset, j, i]), 2
-                    ),
-                }
-            )
-            now += timedelta(hours=1)
+    times = []
+    now = sts
+    while now <= ets:
+        times.append((now, iemre.hourly_offset(now)))
+        now += timedelta(hours=1)
+    offsets = [t[1] for t in times]
+    lo = min(offsets)
+    hi = max(offsets) + 1
+    data = {}
+    # One contiguous read per variable instead of one per hour
+    with ncopen(fn, timeout=5) as nc:
+        for vname in ["skyc", "tmpk", "dwpk", "uwnd", "vwnd", "p01m"]:
+            data[vname] = nc.variables[vname][lo:hi, j, i]
+    for ts, offset in times:
+        k = offset - lo
+        res.append(
+            {
+                "valid_utc": ts.astimezone(UTC).strftime(ISO),
+                "valid_local": ts.strftime(ISO[:-1]),
+                "skyc_%": myrounder(data["skyc"][k], 1),
+                "air_temp_f": myrounder(
+                    convert_value(data["tmpk"][k], "degK", "degF"), 1
+                ),
+                "dew_point_f": myrounder(
+                    convert_value(data["dwpk"][k], "degK", "degF"), 1
+                ),
+                "uwnd_mps": myrounder(data["uwnd"][k], 2),
+                "vwnd_mps": myrounder(data["vwnd"][k], 2),
+                "hourly_precip_in": myrounder(mm2inch(data["p01m"][k]), 2),
+            }
+        )
     return pd.DataFrame(res)
 
 
