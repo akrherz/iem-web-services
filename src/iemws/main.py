@@ -174,6 +174,8 @@ def _write_telemetry_from_request(
                 request_uri=f"{path}?{request.url.query}",
                 vhost=host,
                 valid=utc(),
+                xff=request.headers.get("x-forwarded-for", ""),
+                http_agent=request.headers.get("user-agent", ""),
             )
         )
     except Exception:
