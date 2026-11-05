@@ -151,11 +151,17 @@ def _write_telemetry_from_request(
 ):
     """Add telemetry data from request."""
     # within pytest, request.client is None
+    # XFF is to be read right to left
+    clients = request.headers.get("X-Forwarded-For", "").split(",")
+    xff_hit = None
+    for client in reversed(clients):
+        client = client.strip()
+        # Find first non-internal hit
+        if client and not client.startswith(("10.", "127.")):
+            xff_hit = client
+            break
     clienthost = None if request.client is None else request.client.host
-    remote_addr = (
-        request.headers.get("X-Forwarded-For", "").split(",")[0].strip()
-        or clienthost
-    )
+    remote_addr = xff_hit or clienthost
     # This is why we can't have nice things
     path = request.url.path
     if not path.startswith("/api/1"):
