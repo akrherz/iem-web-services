@@ -45,7 +45,7 @@ def test_without_year_csv(client: TestClient):
 def test_first(client: TestClient):
     """Test we can do things."""
     res = client.get(
-        "/raobs_by_year.json", params={"station": "_OAX", "year": 2023}
+        "/raobs_by_year.json", params={"station": "_MPX", "year": 2023}
     )
     j = res.json()
     assert "data" in j
