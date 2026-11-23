@@ -95,7 +95,7 @@ def service(
             cnc.variables["p01d"][coffset1:coffset2, j, i],
         )
 
-    if sdate.year > 1980:
+    if domain == "conus" and sdate.year > 1980:
         i2, j2 = PRISM800.find_ij(lon, lat)  # type:ignore
         with ncopen(
             f"/mesonet/data/prism/{sdate.year}_daily.nc", timeout=5
@@ -106,7 +106,7 @@ def service(
     else:
         prism_precip = [None] * (offset2 - offset1)
 
-    if sdate.year > 2000:
+    if domain == "conus" and sdate.year > 2000:
         j2 = int((lat - iemre.SOUTH) * 100.0)
         i2 = int((lon - iemre.WEST) * 100.0)
         with ncopen(iemre.get_daily_mrms_ncname(sdate.year)) as nc:
